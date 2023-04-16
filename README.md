@@ -1,4 +1,4 @@
-# Kompass A Laravel CMS
+# Kompass
 
 ![Kompass](https://github.com/secondnetwork/kompass/blob/main/public/assets/kompass_md.png?raw=true)
 
