@@ -1,6 +1,6 @@
 # Kompass A Laravel CMS
 
-![Kompass](https://raw.githubusercontent.com/secondnetwork/kompass/public/assets/kompass_md.png)
+![Kompass](https://github.com/secondnetwork/kompass/blob/main/public/assets/kompass_md.png?raw=true)
 
 [![Latest Kompass Version](https://img.shields.io/packagist/v/secondnetwork/kompass.svg?style=for-the-badge&label=Kompass&labelColor=FFA700&color=1A2A2C)](https://github.com/secondnetwork/kompass)
 [![Laravel](https://img.shields.io/badge/v9.46-999999?style=for-the-badge&label=Laravel&labelColor=eb4432&color=1A2A2C)](https://github.com/secondnetwork/kompass)							
@@ -40,9 +40,8 @@ composer require secondnetwork/kompass
 Documentation is available at https://kompass.secondnetwork.de
 
 ## Screenshot
-
-![screenshot-1](https://raw.githubusercontent.com/secondnetwork/kompass/public/assets/screenshot-1.png)
-![screenshot-2](https://raw.githubusercontent.com/secondnetwork/kompass/public/assets/screenshot-2.png)
+![screenshot-1](https://github.com/secondnetwork/kompass/blob/main/public/assets/screenshot-1.png?raw=true)
+![screenshot-2](https://github.com/secondnetwork/kompass/blob/main/public/assets/screenshot-2.png?raw=true)
 
 ## Postcardware
 
