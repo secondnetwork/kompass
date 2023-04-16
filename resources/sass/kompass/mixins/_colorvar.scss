@@ -1,0 +1,3 @@
+@function colorvar($color-name) {
+    @return var(--data-color-#{$color-name});
+  }

@@ -1,0 +1,11 @@
+/.idea/
+/vendor
+/composer.phar
+/composer.lock
+/.DS_Store
+/.idea
+/.php_cs.cache
+/yarn.lock
+/yarn-error.log
+node_modules
+

@@ -1,0 +1,42 @@
+.btn,
+.button,
+.read_more,
+a.button,
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  @apply py-3 px-5 rounded-lg bg-[#{$primary}] text-white transition ease-in duration-200 font-medium hover:bg-transparent hover:text-[#{$primary}] border-2 border-[#{$primary}];
+
+  &.bg-primary {
+    @apply bg-[#{$primary}] hover:bg-blue-600 hover:bg-transparent hover:text-[#{$primary}] border-2 border-[#{$primary}];
+  }
+
+}
+
+.icon--is-spinning {
+  // rotate the icon infinitely
+  animation: icon-spin 1s infinite linear;
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// --------------------------------
+
+// SVG <symbol>
+
+// --------------------------------
+
+// enable icon color corrections
+.icon use {
+  color: inherit;
+  fill: currentColor;
+}

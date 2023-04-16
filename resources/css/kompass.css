@@ -1,0 +1,43 @@
+/*!
+*
+* Built with love by secondnetwork and B&B.
+* https://secondnetwork.de
+* https://bundb.de
+*
+
+Theme Name: Kompass A Laravel CMS
+Theme URI: https://kompass.secondnetwork.de
+Description: technology by secondnetwork.
+
+License: MIT
+License URI: http://opensource.org/licenses/mit-license.php
+
+*/
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+
+@import "base/base.css";
+@import "base/grid_layout.css";
+/* @import "base/fonts.css"; */
+@import "base/typography.css";
+/* @import "base/fonts.css";
+@import "base/typography.css";
+@import "base/grid_layout.css"; */
+
+@import "blocks/admin/login.css";
+@import "blocks/admin/dashboard.css";
+@import "blocks/admin/medialibrary.css";
+@import "blocks/blockitem.css";
+
+
+@import "components/inputs.css";
+
+@import "components/button.css";
+@import "components/inputs.css";
+@import "components/editor_quill.css";
+/* @import "components/dashboard.css";
+@import "components/card.css";
+@import "components/silderrange.css"; */
+
+@import "tailwindcss/utilities";

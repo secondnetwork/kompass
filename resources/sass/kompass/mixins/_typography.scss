@@ -1,0 +1,35 @@
+// Typography mixins
+
+// Fonts in rems with px fallback
+
+// @mixin font-size($size, $is-important: false) {
+//   $size: if(unitless($size), $size, $size / 1);
+
+//   @if $is-important {
+//     //font-size: $size + px !important;
+//     font-size: ($size / strip-units($base-font-size)) + rem !important;
+//   } @else {
+//     //font-size: $size + px;
+//     font-size: ($size / strip-units($base-font-size)) + rem;
+//   }
+// }
+// @mixin font-size($sizeValue: 1.6) {
+//   //font-size: ($sizeValue * 10) + px;
+//   font-size: $sizeValue + rem;
+// }
+
+@mixin font-size($sizeValue: 1.6 ){
+	// font-size: $sizeValue + px; //fallback for old browsers
+	font-size: ($sizeValue) + rem;
+
+}
+
+@mixin line-height($heightValue: 2 ){
+	// line-height: $heightValue + px; //fallback for old browsers
+	line-height: ($heightValue) + rem;
+}
+
+@mixin font-size-line-height($sizeValue: 1.6, $heightValue: 2) {
+	@include font-size($sizeValue);
+	@include line-height($heightValue);
+}

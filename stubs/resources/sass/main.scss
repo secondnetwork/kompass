@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+ @tailwind base;
+ @tailwind components;
+ 
+ @import "neworbit/addons/bourbon/bourbon";
+
+ // Settings
+ @import "neworbit/settings";
+ @import 'neworbit/base/**/*.scss';
+ @import 'neworbit/navigation/header-navigation';
+ @import 'neworbit/navigation/footer-navigation';
+
+ @tailwind utilities;
+
+

@@ -1,0 +1,15 @@
+{
+  "resources/js/main.js": {
+    "file": "js/main.b8f7cb15.js",
+    "src": "resources/js/main.js",
+    "isEntry": true,
+    "css": [
+      "css/kompass.5e19763b.css"
+    ]
+  },
+  "resources/css/kompass.css": {
+    "file": "css/kompass.5e19763b.css",
+    "src": "resources/css/kompass.css",
+    "isEntry": true
+  }
+}

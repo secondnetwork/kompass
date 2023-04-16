@@ -1,0 +1,154 @@
+
+/* form{
+    @apply grid border-b border-gray-50 divide-y;
+}
+form > div{
+    @apply grid gap-x-5 py-20;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+
+    form{
+        @apply grid border-b border-gray-50 divide-y;
+    }
+
+    form > div{
+        @apply grid gap-x-5 py-20;
+        grid-template-columns: 2fr 4fr;
+    }
+
+} */
+
+
+[type=color],
+[type=date],
+[type=datetime],
+[type=datetime-local],
+[type=email],
+[type=month],
+[type=number],
+[type=password],
+[type=search],
+[type=tel],
+[type=text],
+[type=time],
+[type=url],
+[type=week],
+input:not([type]),
+textarea {
+
+    width: 100%;
+
+    background-color: #F2F3F7;
+    border-radius: 0.4rem;
+    @apply block p-2.5 w-full border-2 border-gray-300 text-base;    
+}
+
+[type=color]:active,
+[type=date]:active,
+[type=datetime]:active,
+[type=datetime-local]:active,
+[type=email]:active,
+[type=month]:active,
+[type=number]:active,
+[type=password]:active,
+[type=search]:active,
+[type=tel]:active,
+[type=text]:active,
+[type=time]:active,
+[type=url]:active,
+[type=week]:active,
+input:not([type]):active,
+textarea:active {
+    @apply border-blue-500;
+    outline: none !important;
+}
+
+[type=color]:focus,
+[type=date]:focus,
+[type=datetime]:focus,
+[type=datetime-local]:focus,
+[type=email]:focus,
+[type=month]:focus,
+[type=number]:focus,
+[type=password]:focus,
+[type=search]:focus,
+[type=tel]:focus,
+[type=text]:focus,
+[type=time]:focus,
+[type=url]:focus,
+[type=week]:focus,
+input:not([type]):focus,
+textarea:focus {
+    @apply border-blue-500;
+    outline: none !important;
+}
+
+[type=color]:hover,
+[type=date]:hover,
+[type=datetime]:hover,
+[type=datetime-local]:hover,
+[type=email]:hover,
+[type=month]:hover,
+[type=number]:hover,
+[type=password]:hover,
+[type=search]:hover,
+[type=tel]:hover,
+[type=text]:hover,
+[type=time]:hover,
+[type=url]:hover,
+[type=week]:hover,
+input:not([type]):hover,
+textarea:hover {
+    @apply border-blue-500;
+    outline: none !important;
+}
+
+/* [type=color]:invalid,
+[type=date]:invalid,
+[type=datetime]:invalid,
+[type=datetime-local]:invalid,
+[type=email]:invalid,
+[type=month]:invalid,
+[type=number]:invalid,
+[type=password]:invalid,
+[type=search]:invalid,
+[type=tel]:invalid,
+[type=text]:invalid,
+[type=time]:invalid,
+[type=url]:invalid,
+[type=week]:invalid,
+input:not([type]):invalid,
+textarea:invalid {
+    @apply border-blue-500;
+    outline: none !important;
+} */
+
+[type=submit]:disabled {
+    cursor: not-allowed;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af
+}
+
+
+select::-ms-expand {
+    display: none;
+}
+select{
+    width: 100%;
+
+
+    outline: none !important;
+    border-radius: 0.4rem;
+    background-color: #F2F3F7;
+    @apply block p-2.5 w-full border-2 border-gray-300 text-base;    
+}
+
+[type=submit]:disabled {
+    cursor: not-allowed;
+}

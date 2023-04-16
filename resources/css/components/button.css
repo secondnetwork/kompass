@@ -1,0 +1,33 @@
+.btn,
+.button,
+.read_more,
+a.button,
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  @apply py-2 px-3 rounded bg-primary-500 text-white transition ease-in duration-200 font-medium hover:bg-transparent hover:text-primary-500 border-2 border-primary-500;
+
+  &.bg-primary {
+    @apply bg-primary-500 hover:bg-blue-600 hover:bg-transparent hover:text-primary-500 border-2 border-primary-500;
+  }
+
+}
+
+.icon--is-spinning {
+  animation: icon-spin 1s infinite linear;
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.icon use {
+  color: inherit;
+  fill: currentColor;
+}

@@ -1,0 +1,4 @@
+card-box{
+
+    @apply flex flex-col gap-2 min-h-[18rem] items-start shadow bg-white p-5 cursor-pointer;
+}

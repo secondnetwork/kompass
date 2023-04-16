@@ -1,0 +1,44 @@
+{
+  "name": "kompass",
+  "description": "Kompass CMS Admin Panel",
+  "license": "MIT",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Andreas Farah"
+    }
+  ],
+  "scripts": {
+    "dev": "APP_URL='http://laravel10-app.test' vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@alpinejs/collapse": "^3.9.2",
+    "@lehoczky/postcss-fluid": "^1.0.2",
+    "@tabler/icons": "^2.2.0",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/typography": "^0.5.0",
+    "alpinejs": "^3.10.2",
+    "dotenv": "^16.0.3",
+    "quill": "1.3.7"
+  },
+  "devDependencies": {
+    "@nextapps-be/livewire-sortablejs": "^0.2.0",
+    "@ryangjchandler/alpine-clipboard": "^2.2.0",
+    "autoprefixer": "^10.4.8",
+    "laravel-vite-plugin": "^0.6.0",
+    "postcss": "^8.4.14",
+    "postcss-fluid": "^1.4.2",
+    "postcss-import": "^15.1.0",
+    "postcss-import-ext-glob": "^2.1.1",
+    "postcss-mixins": "^9.0.4",
+    "postcss-nesting": "^11.2.1",
+    "postcss-preset-env": "^8.0.1",
+    "sass": "^1.34.1",
+    "tailwindcss": "^3.1.7",
+    "vite": "^3.0.4",
+    "vite-plugin-sass-glob-import": "^1.3.0"
+  }
+}
