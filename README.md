@@ -62,6 +62,6 @@ If you discover any security related issues, please email <github@secondnetwork.
 
 ## License
 
-The Kompass CMS is open-sourced software licensed under the [MIT](LICENSE.md) for more information.
+The Kompass CMS is open-sourced software licensed under the [MIT](LICENSE.md).
 
 
