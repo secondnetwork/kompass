@@ -1,7 +1,9 @@
 * text=auto
-
+*.php linguist-language=PHP
+*.js linguist-language=PHP
 *.md diff=markdown
 *.php diff=php
+
 
 /.github export-ignore
 /tests export-ignore
