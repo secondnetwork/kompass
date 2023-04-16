@@ -3,7 +3,7 @@
 ![Kompass](https://github.com/secondnetwork/kompass/blob/main/public/assets/kompass_md.png?raw=true)
 
 [![Latest Kompass Version](https://img.shields.io/packagist/v/secondnetwork/kompass.svg?style=for-the-badge&label=Kompass&labelColor=FFA700&color=1A2A2C)](https://github.com/secondnetwork/kompass)
-[![Laravel](https://img.shields.io/badge/v9.46-999999?style=for-the-badge&label=Laravel&labelColor=eb4432&color=1A2A2C)](https://github.com/secondnetwork/kompass)							
+[![Laravel](https://img.shields.io/badge/v9.51-999999?style=for-the-badge&label=Laravel&labelColor=eb4432&color=1A2A2C)](https://github.com/secondnetwork/kompass)							
 [![License](https://img.shields.io/github/license/secondnetwork/kompass?style=for-the-badge)](https://github.com/secondnetwork/kompass)
 						
 ## The development of Kompass
