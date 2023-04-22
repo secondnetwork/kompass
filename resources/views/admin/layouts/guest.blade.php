@@ -63,7 +63,7 @@
         <div class="text-gray-300 text-xs p-8">
         @php $version = Kompass::getVersion(); @endphp
         @if (!empty($version))
-        <strong>Kompass</strong> @if('dev-main' != $version)v{{ $version }} @else {{ $version }} @endif
+        <strong>Kompass</strong> {{ $version }}
         @endif
         </div>
     </footer>
