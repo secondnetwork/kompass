@@ -139,7 +139,7 @@ class Settings extends Component
 
     public function render()
     {
-        return view('kompass::livewire.settings', [
+        return view('kompass::livewire.settings-dev', [
             'settings' => $this->resultDate(),
             'settingsGroup' => $this->resultGroup(),
         ])->layout('kompass::admin.layouts.app');

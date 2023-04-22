@@ -1,5 +1,36 @@
 <livewire-components>
+ <grid-side class="grid grid-cols-11 h-full gap-4" x-data="{ tab: window.location.hash ? window.location.hash.substring(1) : 'global' }">
+  
+ <aside class="col-start-1 lg:col-end-3 border-r border-gray-200 h-full ">
 
+<div class="uppercase text-xs mt-5 border-r-2 border-gray-400 text-gray-500 font-semibold">{{ __('Global Settings') }}</div>
+<ul>
+@foreach ($settingsGroup as $item)
+             
+<li class="my-2">
+<a class="text-base text-gray-400 " :class="{ 'active  border-current text-blue-600': tab === '{{$item->group}}' }" @click.prevent="tab = '{{$item->group}}'; window.location.hash = '{{$item->group}}'" href="#">
+    <span class="capitalize">{{$item->group}}</span>
+</a>
+</li>
+@endforeach 
+</ul>  
+Application
+API Tokens
+Content manager
+Webhooks
+Single Sign-On
+Media Library
+Documentation
+Internationalization
+ADMINISTRATION PANEL
+<div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
+Roles
+Users
+USERs & PERMISSIONS PLUGIN
+
+<div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Advanced settings') }}</div>
+
+ </aside>
         {{-- <div class="border-b border-gray-200 px-10  grid-3-2 fixed w-full top-0">
             <div id="tab_wrapper" class="relative">
                 <!-- The tabs navigation -->
@@ -24,41 +55,11 @@
         </div>
     
         </div> --}}
-<div class="flex flex-col" x-data="{ tab: window.location.hash ? window.location.hash.substring(1) : 'sites' }">
+<div class="flex flex-col col-start-3 col-end-12" >
     <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
         <button wire:click="selectItem('', 'add')" class="flex gap-x-2 justify-center items-center text-md" @click="open = true">
             <x-tabler-square-plus stroke-width="1.5" />{{ __('New Setting') }}
          </button>
-    </div>
-
-    <div class="border-b border-gray-200 px-10 py-5 grid-3-2">
-        <div id="tab_wrapper" class="relative">
-            <!-- The tabs navigation -->
-            <nav class="absolute bottom-0 z-10">
-                
-                @foreach ($settingsGroup as $item)
-             
-
-                    <a class="text-base text-gray-400 border-b p-[1.6rem]" :class="{ 'active  border-current text-blue-600': tab === '{{$item->group}}' }" @click.prevent="tab = '{{$item->group}}'; window.location.hash = '{{$item->group}}'" href="#">
-                        <span class="capitalize">{{$item->group}}</span>
-                    </a>
-
-                @endforeach    
-              {{-- <a class="text-base text-gray-400 border-b p-[1.6rem]" :class="{ 'active  border-current text-blue-600': tab === 'sitesettings' }" @click.prevent="tab = 'sitesettings'; window.location.hash = 'sitesettings'" href="#">
-                Seiten
-            </a>
-              <a class="text-base text-gray-400 border-b p-[1.6rem]" :class="{ 'active  border-current text-blue-600': tab === 'layout' }" @click.prevent="tab = 'layout'; window.location.hash = 'layout'" href="#">
-                Layout
-            </a>
-              <a class="text-base text-gray-400 border-b p-[1.6rem]" :class="{ 'active  border-current text-blue-600': tab === 'seo' }" @click.prevent="tab = 'seo'; window.location.hash = 'seo'" href="#">
-                SEO
-            </a> --}}
-            </nav>
-          
-
-          
-          </div>
-
     </div>
 
 
@@ -75,7 +76,7 @@
                    
                 <item-setting wire:sortable="updateOrder" class="grid gap-4 my-4 p-2 border rounded-md border-dashed border-cyan-400  grid-cols-3">
                     @foreach ($settings as $key => $setting)
-                    <div wire:sortable.item="{{ $item->id }}" wire:key="task-{{ $item->id }}" class="p-2 bg-gray-200">
+                    <div wire:sortable.item="{{ $item->id }}" wire:key="task-{{ $item->id }}" class="p-2 bg-gray-200" x-show="tab === '{{$setting->group}}'">
 
                             <div class="flex justify-between items-center gap-2">
                                 <div wire:sortable.handle >
@@ -169,5 +170,5 @@
     </div>
 
 
-</div>
+</div> </grid-side> 
 </livewire-components>
