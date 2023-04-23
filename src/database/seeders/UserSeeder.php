@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
             0 => [
                 'id' => 1,
                 'name' => 'Jack Kompass',
-                'email' => 'admin@admin.de',
+                'email' => 'admin@admin.com',
                 'email_verified_at' => now(),
-                'password' => bcrypt('123456'),
+                'password' => bcrypt('password'),
                 'remember_token' => Str::random(10),
             ],
         ]);
