@@ -1,5 +1,5 @@
 @props([
-    'keyblock' => '',
+    'key' => '',
     'item' => '',
     'fields' => '',
     'page' => '',
@@ -87,11 +87,16 @@
 
     </div-nav-action>
 
-    <div x-show="expanded" x-collapse class="grid gap-6 p-6 grid-cols-{{ $item->grid }} ">
+    <div 
+    {{-- x-show="expanded" x-collapse  --}}
+    class="grid gap-6 p-6 grid-cols-{{ $item->grid }} ">
         
-        <div x-data="{id: '{{ $item->id}}', url: '{{ $item->url }}', icon_class: '{{ $item->icon_class }}', color: '{{ $item->color }}', target: '{{ $item->target }}'}">
+
+        <div x-data="{id: '{{ $item->id}}', url: '{{ $item->url }}', iconclass: '{{ $item->iconclass }}', color: '{{ $item->color }}', target: '{{ $item->target }}'}"
+            >
             <label>URL</label>
-            <input wire:model.lazy="url" x-model="url" type="text" class="form-control" />
+            <input wire:model.lazy="url" x-on:blur="$wire.set('item.url', url)" x-model="url" type="text" class="form-control" />
+            <input wire:model.lazy="iconclass" x-model="iconclass" type="text" class="form-control" />
 
             {{-- <label>icon_class</label>
             <input wire:model="icon_class" x-model="icon_class" type="text" class="form-control" />
@@ -114,6 +119,7 @@
 
             </div>
             <button class="flex gap-x-2   justify-end items-center"
+            
             wire:click="updateitem({{ $item->id }})">
             <x-tabler-device-floppy class="icon-lg" />
             {{ __('Save') }}

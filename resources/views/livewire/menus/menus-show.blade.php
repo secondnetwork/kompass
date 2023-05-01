@@ -70,14 +70,13 @@
 wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
 wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
 >
-@forelse ($menuitem as $item)
+
+
+@forelse ($menuitem as $key => $item)
               
+<x-kompass::menugroup :item="$item" :fields="$menuitem" :key="$key" :class="'itemblock border-blue-400 shadow border-r-4 border-b-2 mt-4'" />
 
-{{-- <x-kompass::blocksgroup :itemblocks="$itemblocks" :keyblock="$keyblock" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-8'" /> --}}
-<x-kompass::menugroup :item="$item"  :class="'itemblock border-blue-400 shadow border-r-4 border-b-2 mt-4'" />
-
-
-@empty
+@empty 
 <div
 class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
 
@@ -85,6 +84,7 @@ class="grid place-content-center border-2 border-dashed border-gray-300 rounded-
 
 </div>
 @endforelse
+
 </div>
 
 

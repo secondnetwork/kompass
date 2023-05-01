@@ -9,7 +9,7 @@
     }
   ],
   "scripts": {
-    "dev": "APP_URL='http://laravel10-app.test' vite",
+    "dev": "APP_URL='http://kompass-cms-dev.test' vite",
     "build": "vite build",
     "preview": "vite preview"
   },

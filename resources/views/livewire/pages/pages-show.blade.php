@@ -117,9 +117,9 @@
                 
                 <span class="text-gray-400 text-base block">Block Builder</span>
 
-                @forelse ($blocks as $keyblock => $itemblocks)
+                @forelse ($blocks as $itemblocks)
 
-                        <x-kompass::blocksgroup :itemblocks="$itemblocks" :keyblock="$keyblock" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-5'" />   
+                        <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-5'" />   
                                        
                 @empty
                     <div class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">

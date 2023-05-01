@@ -18,7 +18,8 @@ class MenuData extends Component
 
     public $color;
 
-    public $icon_class;
+    public $iconclass;
+    public $item;
 
     public $target = '_self';
 
@@ -43,7 +44,7 @@ class MenuData extends Component
         'title' => 'required|string|min:3',
         'url' => 'required|string|min:1',
         'color' => '',
-        'icon_class' => '',
+        'iconclass' => '',
         'target' => '',
     ];
 
@@ -80,7 +81,7 @@ class MenuData extends Component
             'url' => $validate['url'],
             'target' => $validate['target'],
             'color' => $validate['color'],
-            'icon_class' => $validate['icon_class'],
+            'iconclass' => $validate['iconclass'],
             'subgroup' => $this->groupId,
         ]);
 
@@ -89,13 +90,14 @@ class MenuData extends Component
 
     public function updateitem($id)
     {
+
         $menuitem = Menuitem::findOrFail($id);
 
         $menuitem->update([
             'url' => $this->url,
             'target' => $this->target,
             'color' => $this->color,
-            'icon_class' => $this->icon_class,
+            'iconclass' => $this->iconclass,
         ]);
 
         $this->call_emit_reset();

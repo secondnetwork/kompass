@@ -33,6 +33,9 @@
         background-color: #f8f9fa;
     }
 
+
+
+
     .sidenav {
         display: block;
         position: fixed;
@@ -42,7 +45,17 @@
         height: 100%;
         border-right: .1rem solid #e9ecef;
     
-        a {
+
+    
+        span {
+            margin-left: 0.8rem;
+        }
+    
+        .logo {
+            padding: 1rem 1.6rem;
+        }
+    }
+    .sidenav a{
             display: flex;
             padding: 0.35rem 1.5rem;
             align-items: center;
@@ -69,16 +82,13 @@
                 }
             }
         }
-    
-        span {
-            margin-left: 0.8rem;
+        nav.setting a{
+            display: flex;
+            align-items: center;
+            @apply text-sm py-1;
+            font-weight: 600;
+            position: relative;
         }
-    
-        .logo {
-            padding: 1rem 1.6rem;
-        }
-    }
-
     /* // .sidenav {
     //   grid-area: sidenav;
     //   background-color: #394263;
