@@ -1,5 +1,4 @@
 @props([
-    'keyblock' => '',
     'itemblocks' => '',
     'fields' => '',
     'page' => '',
@@ -233,6 +232,7 @@ x-data="{ expanded: false }" >
         @endif
 
     </div>
+    
     </div>
 
 </div>

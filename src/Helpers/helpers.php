@@ -19,17 +19,6 @@ use Secondnetwork\Kompass\KompassFacade;
 //     }
 // }
 
-if (! function_exists('lit')) {
-    /**
-     * Get the Lit facade.
-     *
-     * @return \Ignite\Foundation\Litstack
-     */
-    function lit()
-    {
-        return app()->get('lit');
-    }
-}
 if (! function_exists('vendor_path')) {
     /**
      * Get the path to the litstack package vendor folder.
@@ -106,15 +95,31 @@ if (! function_exists('nameWithLastInitial')) {
 if (! function_exists('setting')) {
     function setting($key)
     {
-   
-        if (! empty(Arr::get(config('settings'), $key))) {
-            return Arr::get(config('settings'), $key);
+        $keydata = explode('.', $key);
+		foreach (explode('.', $key) as $segment) {
+			$data = $segment;
+		}
+
+        if (! empty(Arr::get(config('settings'), $data ))) {
+            $data = Arr::get(config('settings'), $data );
+     
+
+            if ($data->group == $keydata[0] ) {
+              return  $data->data;
+            }
+            // return Arr::get(config('settings'), $data );
             
         } else {
-            return Arr::get(app('settings'), $key);
+            $data = Arr::get(app('settings'), $data );
+            if ($data->group == $keydata[0] ) {
+                return  $data->data;
+            }
         }
     }
+    
 }
+
+
 
 if (! function_exists('parse_video_uri')) {
     /* Parse the video uri/url to determine the video type/source and the video id */

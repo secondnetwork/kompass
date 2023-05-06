@@ -3,13 +3,16 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Settings extends Component
 {
     public $search;
 
-    protected $queryString = ['search'];
+    public $pagetap = 'application';
+
+    protected $queryString = ['pagetap'];
 
     public $orderBy = 'order';
 
@@ -29,6 +32,8 @@ class Settings extends Component
 
     public $key;
 
+    
+
     public $group;
 
     public $type;
@@ -38,7 +43,7 @@ class Settings extends Component
         'name' => '',
         'value' => '',
         'key' => '',
-        'group' => '',
+        'group' => 'required',
         'type' => '',
 
     ];
@@ -78,7 +83,6 @@ class Settings extends Component
             $this->selectedItem = null;
             $this->FormAdd = true;
             $this->name = '';
-            $this->key = '';
             $this->group = '';
             $this->value = '';
             $this->type = '';
@@ -87,7 +91,6 @@ class Settings extends Component
         if ($action == 'update') {
             $model = Setting::findOrFail($this->selectedItem);
             $this->name = $model->name;
-            $this->key = $model->key;
             $this->group = $model->group;
             $this->value = $model->data;
             $this->type = $model->type;
@@ -98,18 +101,23 @@ class Settings extends Component
             $this->FormDelete = true;
         }
     }
+    
+    public function pagetap($group)
+    {
+        $this->pagetap = $group;
+    }
 
     public function addNew()
     {
         $validate = $this->validate();
-
+        if ($this->value == '0'): $this->value = ''; endif;
         Setting::updateOrCreate([
             'id' => $this->selectedItem,
         ],
              [
                  'name' => $this->name,
                  'data' => $this->value,
-                 'key' => strtolower($this->key),
+                 'key' => Str::slug($this->name, '-', 'de'),
                  'group' => strtolower($this->group),
                  'type' => $this->type,
              ]);
@@ -125,21 +133,20 @@ class Settings extends Component
 
     private function resultDate()
     {
-        return Setting::where('key', 'like', '%'.$this->search.'%')
-                     ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')->get();
+        return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
     }
 
     private function resultGroup()
     {
         return Setting::select('group')
-        ->orderBy('group', 'desc')
+        ->orderBy('group')
         ->groupBy('group')
         ->get();
     }
 
     public function render()
     {
-        return view('kompass::livewire.settings', [
+        return view('kompass::livewire.settings-dev', [
             'settings' => $this->resultDate(),
             'settingsGroup' => $this->resultGroup(),
         ])->layout('kompass::admin.layouts.app');
@@ -147,6 +154,7 @@ class Settings extends Component
 
     public function updateOrder($list)
     {
+    
         foreach ($list as $itemg) {
             Setting::whereId($itemg['value'])->update(['order' => $itemg['order']]);
         }

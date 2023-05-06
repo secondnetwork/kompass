@@ -1,5 +1,5 @@
 @props([
-    'keyblock' => '',
+    'key' => '',
     'item' => '',
     'fields' => '',
     'page' => '',
@@ -66,6 +66,7 @@
         </span>
 
         <div class="flex items-center gap-2">
+            <span wire:click="selectItem({{ $item->id }}, 'update')" class="flex  justify-center "><x-tabler-edit class="cursor-pointer stroke-blue-500"/></span>
         
             <span wire:click="selectItem({{ $item->menu_id }}, 'additem',{{ $item->id }})">
                 <x-tabler-subtask class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
@@ -77,53 +78,12 @@
             <span wire:click="selectItem({{ $item->id }}, 'deleteblock')" class="flex justify-center">
                 <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
             </span>
-            <div class="flex items-center gap-2">
-                <span :class="!expanded ? '' : 'rotate-180'" @click="expanded = ! expanded" class="transform transition-transform duration-500">
-                    <x-tabler-chevron-down class="cursor-pointer stroke-current h-6 w-6 text-gray-900 " />
-                </span>
-            </div>
+
      
         </div>
 
     </div-nav-action>
 
-    <div x-show="expanded" x-collapse class="grid gap-6 p-6 grid-cols-{{ $item->grid }} ">
-        
-        <div x-data="{id: '{{ $item->id}}', url: '{{ $item->url }}', icon_class: '{{ $item->icon_class }}', color: '{{ $item->color }}', target: '{{ $item->target }}'}">
-            <label>URL</label>
-            <input wire:model.lazy="url" x-model="url" type="text" class="form-control" />
-
-            {{-- <label>icon_class</label>
-            <input wire:model="icon_class" x-model="icon_class" type="text" class="form-control" />
-            @if ($errors->has('icon_class'))
-            <p style="color: red;">{{ $errors->first('icon_class') }}</p>
-            @endif
-            <label>color</label>
-            <input wire:model="color"  x-model="color" type="text" class="form-control" />
-            @if ($errors->has('color'))
-            <p style="color: red;">{{ $errors->first('name') }}</p>
-            @endif --}}
-    
-            <label>{{__('Open')}}</label>
-            <select wire:model="target" x-model="target">
-                <option value="_self">{{__('Same tab')}}</option>
-                <option value="_blank">{{__('New tab')}}</option>
-            </select>
-
-            <div class="flex gap-x-2 pt-8 justify-end items-center">
-
-            </div>
-            <button class="flex gap-x-2   justify-end items-center"
-            wire:click="updateitem({{ $item->id }})">
-            <x-tabler-device-floppy class="icon-lg" />
-            {{ __('Save') }}
-            </button>
-        </div>
-
- 
-
-
-    </div>
 
 </div>
 

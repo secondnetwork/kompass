@@ -76,7 +76,7 @@ class KompassServiceProvider extends ServiceProvider
             });
 
             foreach ($settings as $setting) {
-                Config::set('settings.'.$setting->key, $setting->data);
+                Config::set('settings.'.$setting->key, $setting);
             }
         }
     }
@@ -162,7 +162,6 @@ class KompassServiceProvider extends ServiceProvider
         $this->app->singleton('settings', function ($app) {
             return $app['cache']->remember('settings', 10, function () {
                 return Setting::pluck('data', 'key', 'group')->toArray();
-                // return Setting::all()->toArray();
             });
         });
     }

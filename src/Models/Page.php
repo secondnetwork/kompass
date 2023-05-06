@@ -31,7 +31,21 @@ class Page extends Model
     ];
 
 
+    public static function boot()
+    {
+        parent::boot();
 
+        static::creating(function () {
+            cache()->flush();
+        });
+        static::updating(function () {
+            cache()->flush();
+        });
+        static::deleting(function () {
+            cache()->flush();
+        });
+    }
+    
     public $timestamps = false;
 
     public function block()
@@ -55,10 +69,6 @@ class Page extends Model
         return Carbon::parse($date)->tz($timezone)->format('d.m.Y H:i');
     }
 
-    protected static function boot()
-    {
-        parent::boot();
 
-    }
 
 }
