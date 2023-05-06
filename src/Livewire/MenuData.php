@@ -19,6 +19,7 @@ class MenuData extends Component
     public $color;
 
     public $iconclass;
+
     public $item;
 
     public $target = '_self';
@@ -64,18 +65,18 @@ class MenuData extends Component
             $this->FormEdit = true;
             $this->selectedItem = null;
             $this->title = '';
-            $this->url= '';
-            $this->target= '';
-            $this->color= '';
-            $this->iconclass= '';
+            $this->url = '';
+            $this->target = '';
+            $this->color = '';
+            $this->iconclass = '';
         }
         if ($action == 'update') {
             $model = Menuitem::findOrFail($itemId);
-            $this->title= $model->title;
-            $this->url= $model->url;
-            $this->target= $model->target;
-            $this->color= $model->color;
-            $this->iconclass= $model->iconclass;
+            $this->title = $model->title;
+            $this->url = $model->url;
+            $this->target = $model->target;
+            $this->color = $model->color;
+            $this->iconclass = $model->iconclass;
             $this->FormEdit = true;
         }
         if ($action == 'deleteblock') {
@@ -89,7 +90,7 @@ class MenuData extends Component
 
         Menuitem::updateOrCreate([
             'id' => $this->selectedItem,
-        ],[
+        ], [
             'title' => $this->title,
             'url' => $this->url,
             'target' => $this->target,
@@ -103,7 +104,6 @@ class MenuData extends Component
 
     public function updateitem($id)
     {
-
         $menuitem = Menuitem::findOrFail($id);
 
         $menuitem->update([

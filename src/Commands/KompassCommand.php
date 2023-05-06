@@ -21,9 +21,9 @@ class KompassCommand extends Command
     {
         $this->installAssets();
         $this->publishAssets();
-        
+
         $this->updateServiceProviders();
-        
+
         $this->databaserun();
 
         Artisan::call('optimize:clear');
@@ -88,7 +88,7 @@ password: password
 
         // Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Fortify/UpdateUserProfileInformation.php', app_path('Actions/Fortify/UpdateUserProfileInformation.php'));
-   
+
         // Layouts...
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/layouts', resource_path('views/layouts'));
 

@@ -2,14 +2,14 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
-use Secondnetwork\Kompass\Models\Block;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Secondnetwork\Kompass\Models\Datafields;
 
 class Pageview extends Component
 {
@@ -26,11 +26,11 @@ class Pageview extends Component
     public $blocktemplates;
 
     public $blocks_collapse;
- 
+
     public function mount($slug = null)
     {
         $this->page = $this->ResolvePath($slug);
-        
+
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
             return  Block::where('page_id', $this->page->id)->where('status', 'public')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
@@ -99,7 +99,7 @@ class Pageview extends Component
 
     // public function getDynamicSEOData(): SEOData
     // {
-        
+
     //     return new SEOData(
     //         // title: $this->page->title,
     //         description: $this->page->meta_description,
@@ -111,6 +111,6 @@ class Pageview extends Component
     {
         return view('livewire.pageview', [
             // 'SEOData' => $this->getDynamicSEOData()
-            ])->layout('layouts.main');
+        ])->layout('layouts.main');
     }
 }

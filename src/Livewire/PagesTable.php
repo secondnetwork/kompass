@@ -36,6 +36,8 @@ class PagesTable extends Component
 
     public $title;
 
+    public $headers;
+
     public $meta_description;
 
     public $timestamps = false;
@@ -267,7 +269,6 @@ class PagesTable extends Component
             //     Page::whereId($item['value'])->update(['order' => $item['order']]);
             // }
         }
-
 
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }

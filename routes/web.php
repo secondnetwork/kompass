@@ -8,7 +8,6 @@ use Secondnetwork\Kompass\Http\Controllers\KompassController;
 use Secondnetwork\Kompass\Livewire\AccountForm;
 use Secondnetwork\Kompass\Livewire\BlocksData;
 use Secondnetwork\Kompass\Livewire\BlocksTable;
-
 use Secondnetwork\Kompass\Livewire\Medialibrary;
 use Secondnetwork\Kompass\Livewire\MenuData;
 use Secondnetwork\Kompass\Livewire\MenuTable;
@@ -28,7 +27,6 @@ View::composer('*', function ($view) {
 });
 
 Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-
     Route::view('/', 'kompass::admin.dashboard')->name('dashboard');
     Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
 
@@ -37,9 +35,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
 
     Route::get('medialibrary', Medialibrary::class)->name('medialibrary');
 
-    
     Route::get('menus', MenuTable::class)->name('menus');
-    Route::get('menus/{action}/{id}', MenuData::class)->name('menus.show');   
+    Route::get('menus/{action}/{id}', MenuData::class)->name('menus.show');
 
     Route::get('blocks', BlocksTable::class)->name('blocks');
     Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
@@ -54,4 +51,3 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
     });
     Route::view('about', 'kompass::admin.about')->name('about');
 });
-

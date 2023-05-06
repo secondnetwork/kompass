@@ -131,7 +131,7 @@ class AccountForm extends Component
 
         $user = User::create($maildata);
         $user->roles()->sync($maildata['role']);
-        Mail::to($maildata['email'])->subject( __('Willkomenn bei Kompass für').env('APP_NAME'))->send(new Invitation($maildata));
+        Mail::to($maildata['email'])->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))->send(new Invitation($maildata));
 
         $this->FormAdd = false;
         $this->reset(['name', 'email', 'password', 'role']);

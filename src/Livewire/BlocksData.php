@@ -33,6 +33,7 @@ class BlocksData extends Component
     public $blocktemplatesId;
 
     public $FormBlocks = false;
+
     public $FormDelete = false;
 
     public $nofifiction = false;
@@ -83,11 +84,10 @@ class BlocksData extends Component
 
     public function selectItem($itemId, $action)
     {
-
         $this->selectedItem = $itemId;
         if ($action == 'addblock') {
             $this->FormBlocks = true;
-       }
+        }
         if ($action == 'update') {
         }
 

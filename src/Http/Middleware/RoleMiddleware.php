@@ -4,7 +4,6 @@ namespace Secondnetwork\Kompass\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Secondnetwork\Kompass\Models\Role;
 
 class RoleMiddleware
 {
@@ -27,15 +26,12 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, array|string $role)
     {
-
-
-        $hasAnyRole =  auth()->user()->hasAnyRole($role);
+        $hasAnyRole = auth()->user()->hasAnyRole($role);
         $hasRole = auth()->user()->hasRole($role);
 
         if ($hasRole && $hasAnyRole) {
             return $next($request);
         }
-
 
         return abort(401);
     }

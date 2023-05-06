@@ -15,6 +15,6 @@ use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 */
 
 Route::group(['middleware' => ['web']], function () {
-  Route::get('/', Pageview::class)->name('is_front_page');
-  Route::get('/{slug}', Pageview::class)->name('pages');
+    Route::get('/', Pageview::class)->name('is_front_page');
+    Route::get('/{slug}', Pageview::class)->name('pages');
 });

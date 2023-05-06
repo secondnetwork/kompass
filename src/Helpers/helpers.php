@@ -96,30 +96,25 @@ if (! function_exists('setting')) {
     function setting($key)
     {
         $keydata = explode('.', $key);
-		foreach (explode('.', $key) as $segment) {
-			$data = $segment;
-		}
+        foreach (explode('.', $key) as $segment) {
+            $data = $segment;
+        }
 
-        if (! empty(Arr::get(config('settings'), $data ))) {
-            $data = Arr::get(config('settings'), $data );
-     
+        if (! empty(Arr::get(config('settings'), $data))) {
+            $data = Arr::get(config('settings'), $data);
 
-            if ($data->group == $keydata[0] ) {
-              return  $data->data;
+            if ($data->group == $keydata[0]) {
+                return  $data->data;
             }
             // return Arr::get(config('settings'), $data );
-            
         } else {
-            $data = Arr::get(app('settings'), $data );
-            if ($data->group == $keydata[0] ) {
+            $data = Arr::get(app('settings'), $data);
+            if ($data->group == $keydata[0]) {
                 return  $data->data;
             }
         }
     }
-    
 }
-
-
 
 if (! function_exists('parse_video_uri')) {
     /* Parse the video uri/url to determine the video type/source and the video id */

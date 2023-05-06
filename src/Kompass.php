@@ -37,12 +37,10 @@ class Kompass
             $file = json_decode(
                 $this->filesystem->get(base_path('composer.lock'))
             );
-            
+
             // Loop through all the packages and get the version
             foreach ($file->packages as $package) {
-
                 if ($package->name == 'secondnetwork/kompass') {
-                    
                     $this->version = $package->version;
                     break;
                 }

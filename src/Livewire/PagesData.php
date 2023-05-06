@@ -2,17 +2,16 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
-use Secondnetwork\Kompass\Models\Page;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
+use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Page;
 use Spatie\LaravelIgnition\Recorders\DumpRecorder\Dump;
 
 class PagesData extends Component
@@ -116,7 +115,7 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
-        $blockTypeData = json_encode(['layout' => 'popout', 'alignment' => 'left','slider'=> '','type'=> $blockType,]);
+        $blockTypeData = json_encode(['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType]);
 
         $block = Block::create([
             'page_id' => $pageID,
@@ -209,7 +208,6 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-
     public function set($id, $set, $status)
     {
         $setblock = Block::findOrFail($id);
@@ -240,16 +238,12 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-
-
-
     public function update($id, $published = null)
     {
         $page = Page::findOrFail($id);
 
         // $this->getDynamicSEOData();
         // $page->addSEO();
-
 
         $validateData = $this->validate();
 

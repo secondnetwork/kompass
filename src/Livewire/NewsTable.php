@@ -12,6 +12,8 @@ class NewsTable extends Component
 
     public $search;
 
+    public $headers;
+
     protected $queryString = ['search'];
 
     public $perPage = 10;

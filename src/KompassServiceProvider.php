@@ -2,7 +2,6 @@
 
 namespace Secondnetwork\Kompass;
 
-
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;

@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Secondnetwork\Kompass\Models\Page;
 use Illuminate\Support\Facades\DB;
+use Secondnetwork\Kompass\Models\Page;
+
 class PageSeeder extends Seeder
 {
     /**
@@ -34,7 +35,7 @@ class PageSeeder extends Seeder
                 'key' => 'copytext',
                 'data' => 'secondnetwork',
                 'group' => 'footer',
-                'order' => 1
+                'order' => 1,
             ],
         ]);
 
@@ -43,13 +44,13 @@ class PageSeeder extends Seeder
                 'id' => 1,
                 'name' => 'Main',
                 'slug' => 'main',
-                'order' => 1
+                'order' => 1,
             ],
             1 => [
                 'id' => 2,
                 'name' => 'Footer',
                 'slug' => 'Footer',
-                'order' => 1
+                'order' => 1,
             ],
         ]);
 
@@ -60,7 +61,7 @@ class PageSeeder extends Seeder
                 'title' => 'Home',
                 'url' => '/',
                 'target' => '_self',
-                'order' => 1
+                'order' => 1,
             ],
             1 => [
                 'id' => 2,
@@ -68,7 +69,7 @@ class PageSeeder extends Seeder
                 'title' => 'About',
                 'url' => '/about',
                 'target' => '_self',
-                'order' => 2
+                'order' => 2,
             ],
             2 => [
                 'id' => 3,
@@ -76,7 +77,7 @@ class PageSeeder extends Seeder
                 'title' => 'Home',
                 'url' => '/',
                 'target' => '_self',
-                'order' => 1
+                'order' => 1,
             ],
             3 => [
                 'id' => 4,
@@ -84,10 +85,9 @@ class PageSeeder extends Seeder
                 'title' => 'About',
                 'url' => '/about',
                 'target' => '_self',
-                'order' => 2
+                'order' => 2,
             ],
         ]);
-
 
         DB::table('blocktemplates')->insert([
             0 => [
@@ -95,10 +95,9 @@ class PageSeeder extends Seeder
                 'name' => 'Longtext',
                 'slug' => 'longtext',
                 'grid' => 1,
-                'order' => 1
+                'order' => 1,
             ],
         ]);
-
 
         DB::table('blockfields')->insert([
             0 => [
@@ -108,7 +107,7 @@ class PageSeeder extends Seeder
                 'slug' => 'longtext',
                 'type' => 'wysiwyg',
                 'grid' => 1,
-                'order' => 1
+                'order' => 1,
             ],
         ]);
 
@@ -118,7 +117,7 @@ class PageSeeder extends Seeder
                 'page_id' => 1,
                 'name' => 'Longtext',
                 'slug' => 'longtext',
-                'status'  => 'public',
+                'status' => 'public',
                 'grid' => 1,
                 'order' => 1,
             ],
@@ -127,12 +126,11 @@ class PageSeeder extends Seeder
                 'page_id' => 2,
                 'name' => 'Longtext',
                 'slug' => 'longtext',
-                'status'  => 'public',
+                'status' => 'public',
                 'grid' => 1,
                 'order' => 1,
             ],
         ]);
-
 
         DB::table('datafields')->insert([
             0 => [
@@ -140,23 +138,21 @@ class PageSeeder extends Seeder
                 'block_id' => 1,
                 'name' => 'Longtext',
                 'slug' => 'longtext',
-                'type'  => 'wysiwyg',
+                'type' => 'wysiwyg',
                 'grid' => 1,
                 'order' => 1,
-                'data'=> '<h1>Welcome to Kompass</h1><p>This is a Front Page</p>'
+                'data' => '<h1>Welcome to Kompass</h1><p>This is a Front Page</p>',
             ],
             1 => [
                 'id' => 2,
                 'block_id' => 2,
                 'name' => 'Longtext',
                 'slug' => 'longtext',
-                'type'  => 'wysiwyg',
+                'type' => 'wysiwyg',
                 'grid' => 1,
                 'order' => 1,
-                'data'=> '<h1>About Page</h1>'
+                'data' => '<h1>About Page</h1>',
             ],
         ]);
-
-
     }
 }

@@ -9,6 +9,10 @@ class MenuTable extends Component
 {
     public $name;
 
+    public $headers;
+
+    public $data;
+
     public $timestamps = false;
 
     public $FormDelete = false;
@@ -36,7 +40,7 @@ class MenuTable extends Component
     {
         return [
             'name',
-         
+
         ];
     }
 

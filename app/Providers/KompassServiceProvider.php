@@ -44,7 +44,6 @@ class KompassServiceProvider extends ServiceProvider
             return view('kompass::admin.auth.verify-email');
         });
 
-    
         Fortify::confirmPasswordView(function () {
             return view('auth.confirm-password');
         });

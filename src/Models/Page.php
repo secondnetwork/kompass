@@ -3,16 +3,14 @@
 namespace Secondnetwork\Kompass\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Page extends Model
 {
     use SoftDeletes;
     use HasFactory;
-
 
     protected $casts = [
         'content' => 'array',
@@ -22,14 +20,11 @@ class Page extends Model
         'status', 'title', 'slug', 'thumbnails', 'meta_description', 'layout', 'content', 'updated_at',
     ];
 
-
-
     protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-
 
     public static function boot()
     {
@@ -45,7 +40,7 @@ class Page extends Model
             cache()->flush();
         });
     }
-    
+
     public $timestamps = false;
 
     public function block()
@@ -53,7 +48,6 @@ class Page extends Model
         return $this->belongsToMany('Secondnetwork\Kompass\Models\Block');
         // return $this->hasOne('Rote');
     }
-
 
     public function getCreatedAtAttribute($date)
     {
@@ -68,7 +62,4 @@ class Page extends Model
 
         return Carbon::parse($date)->tz($timezone)->format('d.m.Y H:i');
     }
-
-
-
 }

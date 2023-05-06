@@ -2,13 +2,15 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\Component;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Settings extends Component
 {
     public $search;
+
+    public $headers;
 
     public $pagetap = 'application';
 
@@ -31,8 +33,6 @@ class Settings extends Component
     public $value;
 
     public $key;
-
-    
 
     public $group;
 
@@ -101,7 +101,7 @@ class Settings extends Component
             $this->FormDelete = true;
         }
     }
-    
+
     public function pagetap($group)
     {
         $this->pagetap = $group;
@@ -110,7 +110,9 @@ class Settings extends Component
     public function addNew()
     {
         $validate = $this->validate();
-        if ($this->value == '0'): $this->value = ''; endif;
+        if ($this->value == '0') {
+            $this->value = '';
+        }
         Setting::updateOrCreate([
             'id' => $this->selectedItem,
         ],
@@ -154,7 +156,6 @@ class Settings extends Component
 
     public function updateOrder($list)
     {
-    
         foreach ($list as $itemg) {
             Setting::whereId($itemg['value'])->update(['order' => $itemg['order']]);
         }

@@ -17,6 +17,8 @@ class BlocksTable extends Component
 
     public $headers;
 
+    public $data;
+
     public $action;
 
     public $selectedItem;
@@ -132,16 +134,12 @@ class BlocksTable extends Component
 
     public function updateOrder($list)
     {
-     
         foreach ($list as $itemg) {
-            
             Blocktemplates::whereId($itemg['value'])->update(['order' => $itemg['order']]);
             // foreach($itemg['items'] as $item){
             //     block::whereId($item['value'])->update(['order' => $item['order']]);
             // }
-         
         }
-     
 
         // block::whereId($list['value'])->update(['order' => $list['order']]);
     }
