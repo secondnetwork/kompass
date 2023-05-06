@@ -62,26 +62,39 @@ class MenuData extends Component
 
         if ($action == 'additem') {
             $this->FormEdit = true;
+            $this->selectedItem = null;
+            $this->title = '';
+            $this->url= '';
+            $this->target= '';
+            $this->color= '';
+            $this->iconclass= '';
         }
         if ($action == 'update') {
-            $this->updateitem($itemId);
+            $model = Menuitem::findOrFail($itemId);
+            $this->title= $model->title;
+            $this->url= $model->url;
+            $this->target= $model->target;
+            $this->color= $model->color;
+            $this->iconclass= $model->iconclass;
+            $this->FormEdit = true;
         }
         if ($action == 'deleteblock') {
             $this->FormDelete = true;
         }
     }
 
-    public function addNew($menuId)
+    public function addNew()
     {
         $validate = $this->validate();
 
-        Menuitem::create([
-            'menu_id' => $menuId,
-            'title' => $validate['title'],
-            'url' => $validate['url'],
-            'target' => $validate['target'],
-            'color' => $validate['color'],
-            'iconclass' => $validate['iconclass'],
+        Menuitem::updateOrCreate([
+            'id' => $this->selectedItem,
+        ],[
+            'title' => $this->title,
+            'url' => $this->url,
+            'target' => $this->target,
+            'color' => $this->color,
+            'iconclass' => $this->iconclass,
             'subgroup' => $this->groupId,
         ]);
 
@@ -139,7 +152,6 @@ class MenuData extends Component
             Menuitem::whereId($item['value'])->update(['order' => $item['order']]);
         }
         $this->call_emit_reset();
-        // dump('sd');
     }
 
     public function updateItemsOrder($list)

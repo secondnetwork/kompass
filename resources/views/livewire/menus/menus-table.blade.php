@@ -21,7 +21,7 @@
                 <button class="flex gap-x-2 justify-center items-center text-md" @click="open = true">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New menu') }}
                 </button>
-                {{-- <template x-teleport="#navheader"> </template> --}}
+
             </div>
         </div>
 
@@ -65,10 +65,7 @@
                                                     class="flex justify-center">
                                                     <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                                 </a>
-                                                {{-- <span wire:click="clone({{ $menu->id }})"
-                                                    class="flex justify-center">
-                                                    <x-tabler-copy class="cursor-pointer    stroke-violet-500" />
-                                                </span> --}}
+                                                
                                                 <span wire:click="selectItem({{ $menu->id }}, 'delete')"
                                                     class="flex justify-center">
                                                     <x-tabler-trash class="cursor-pointer stroke-red-500" />

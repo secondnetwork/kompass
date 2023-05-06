@@ -59,7 +59,7 @@
     <footer>
         <div class="md:flex gap-4 py-8">
             <div class="copyright">
-                &COPY; {{ date('Y') }} {{ setting('copytext') }}
+                &COPY; {{ date('Y') }} {{ setting('footer.copytext') }}
             </div>
 
             <livewire:menu name="footer">

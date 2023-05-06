@@ -10,7 +10,7 @@ class Settings extends Component
 {
     public $search;
 
-    public $pagetap;
+    public $pagetap = 'application';
 
     protected $queryString = ['pagetap'];
 
@@ -102,9 +102,9 @@ class Settings extends Component
         }
     }
     
-    public function pagetap($name)
+    public function pagetap($group)
     {
-        $this->pagetap = $name;
+        $this->pagetap = $group;
     }
 
     public function addNew()
@@ -133,13 +133,13 @@ class Settings extends Component
 
     private function resultDate()
     {
-        return Setting::where('group', $this->pagetap)->get();
+        return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
     }
 
     private function resultGroup()
     {
         return Setting::select('group')
-        ->orderBy('group', 'desc')
+        ->orderBy('group')
         ->groupBy('group')
         ->get();
     }
@@ -154,6 +154,7 @@ class Settings extends Component
 
     public function updateOrder($list)
     {
+    
         foreach ($list as $itemg) {
             Setting::whereId($itemg['value'])->update(['order' => $itemg['order']]);
         }

@@ -4,11 +4,11 @@
     "src": "resources/js/main.js",
     "isEntry": true,
     "css": [
-      "css/kompass.5e19763b.css"
+      "css/kompass.51ef054c.css"
     ]
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.5e19763b.css",
+    "file": "css/kompass.51ef054c.css",
     "src": "resources/css/kompass.css",
     "isEntry": true
   }

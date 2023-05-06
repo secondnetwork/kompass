@@ -8,18 +8,17 @@
 
     
 
-<ul>
-
+<ul x-data>
 @foreach ($settingsGroup as $item)
              
 <li class="my-2">
-<a wire:click="pagetap('{{$item->group}}')" class="text-base text-gray-400" :class="{ 'active  border-current text-blue-600': '{{$pagetap}}' === '{{$item->group}}' }" >
+<a wire:click="pagetap('{{$item->group}}')" class="text-base text-gray-400 cursor-pointer" :class="{ 'active  border-current text-blue-600': '{{$pagetap}}' === '{{$item->group}}' }" >
     <span class="capitalize">{{$item->group}}</span>
 </a>
 </li>
 @endforeach 
  
-Application
+{{-- Application
 API Tokens
 Content manager
 Webhooks
@@ -31,7 +30,7 @@ ADMINISTRATION PANEL
 <div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
 
 <a class="flex gap-2 my-1" @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a>
-<a class="flex gap-2 my-1" @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a>
+<a class="flex gap-2 my-1" @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a> --}}
 
 
 <div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Advanced settings') }}</div>
@@ -67,7 +66,7 @@ ADMINISTRATION PANEL
                
             <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200">
                 @foreach ($settings as $key => $setting)
-                {{$setting->group}}
+            
                 
                     <tr wire:sortable.item="{{ $setting->id }}">
                         <td wire:sortable.handle class="px-4 w-4 ">
@@ -231,11 +230,7 @@ ADMINISTRATION PANEL
                 <x-kompass::form.input type="text" name="group" wire:model.lazy="group" />
                 <x-kompass::input-error for="group" class="mt-2" />
 
-
-
-
-
-                <button wire:click="addNew" class="btn btn-primary">Save</button>
+                <button wire:click="addNew" class="btn btn-primary">{{__('Save')}}</button>
 
             </x-slot>
         </x-kompass::offcanvas>
