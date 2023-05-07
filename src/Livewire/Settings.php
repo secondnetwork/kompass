@@ -26,6 +26,10 @@ class Settings extends Component
 
     public $FormEdit = false;
 
+    public $FormMedia = false;
+
+    public $getId;
+
     public $data;
 
     public $name;
@@ -87,7 +91,11 @@ class Settings extends Component
             $this->value = '';
             $this->type = '';
         }
-
+        if ($action == 'addMedia') {
+            $this->getId = $itemId;
+            $this->FormMedia = true;
+            $this->emit('getIdField_changnd', $this->getId, 'setting');
+        }
         if ($action == 'update') {
             $model = Setting::findOrFail($this->selectedItem);
             $this->name = $model->name;
@@ -127,6 +135,11 @@ class Settings extends Component
         $this->FormAdd = false;
     }
 
+    public function removemediaIngallery($id)
+    {
+        Setting::whereId($id)->update(['data' => '']);
+    }
+
     public function delete()
     {
         Setting::destroy($this->selectedItem);
@@ -148,7 +161,7 @@ class Settings extends Component
 
     public function render()
     {
-        return view('kompass::livewire.settings-dev', [
+        return view('kompass::livewire.settings', [
             'settings' => $this->resultDate(),
             'settingsGroup' => $this->resultGroup(),
         ])->layout('kompass::admin.layouts.app');

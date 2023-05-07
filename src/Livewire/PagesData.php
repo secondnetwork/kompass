@@ -104,7 +104,7 @@ class PagesData extends Component
         if ($action == 'addMedia') {
             $this->getIdField = $itemId;
             $this->FormMedia = true;
-            $this->emit('getIdField_changnd', $this->getIdField);
+            $this->emit('getIdField_changnd', $this->getIdField, 'page');
             $this->emit('getIdBlock', $this->blockgroupId);
         }
         if ($action == 'deleteblock') {

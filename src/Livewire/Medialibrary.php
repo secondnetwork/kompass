@@ -11,6 +11,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
+use Secondnetwork\Kompass\Models\Setting;
 use Termwind\Components\Dd;
 
 class Medialibrary extends Component
@@ -90,9 +91,10 @@ class Medialibrary extends Component
         'resetCom' => '$refresh',
     ];
 
-    public function getIdField_changnd($id_field)
+    public function getIdField_changnd($id_field, $page)
     {
         $this->field_id = $id_field;
+        $this->page = $page;
     }
 
     public function getIdBlock($id_field)
@@ -300,9 +302,9 @@ class Medialibrary extends Component
         }
     }
 
-    public function selectField($media_id, $post_type)
+    public function selectField($media_id, $page)
     {
-        if ($post_type == 'page') {
+        if ($page == 'page') {
             if ($this->field_id == '0') {
                 Datafields::updateOrCreate(['id' => $this->field_id], [
                     'name' => 'Galerie',
@@ -318,6 +320,10 @@ class Medialibrary extends Component
                         'data' => $media_id, ]);
             }
 
+            $this->emit('refreshmedia');
+        }
+        if ($page == 'setting') {
+            Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
             $this->emit('refreshmedia');
         }
     }

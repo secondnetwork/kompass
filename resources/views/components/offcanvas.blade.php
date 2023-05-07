@@ -8,9 +8,10 @@ x-transition:leave-end="translate-x-full">
 
     <div x-show="open" @click.away="open = false" class="absolute inset-0 flex flex-col ">
 
-
         <div class="body-content {{$class}}">
-
+            <span class="flex justify-end ">
+                <span @click="open = false" class="cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all"><x-tabler-x /></span>
+            </span>
             {{$body}}
 
         </div>

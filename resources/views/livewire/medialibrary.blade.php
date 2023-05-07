@@ -187,7 +187,7 @@
                             <span wire:click="selectItem({{ $item->id }}, 'edit')">
                                 <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 " />
                             </span>
-                            <span class="selectField" wire:click="selectField({{ $item->id }}, 'page')">
+                            <span class="selectField" wire:click="selectField({{ $item->id }}, '{{$page}}')">
                                 <x-tabler-square-plus class="cursor-pointer stroke-current text-gray-400 " />
                             </span>
                         </div>
