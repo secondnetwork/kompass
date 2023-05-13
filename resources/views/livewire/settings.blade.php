@@ -134,9 +134,9 @@
    
    
        <x-kompass::modal data="FormDelete" />
-   
+    
        <div x-cloak x-data="{ open: @entangle('FormAdd')}">
-           <x-kompass::offcanvas class="p-8 grid gap-4">
+           <x-kompass::offcanvas :w="'w-2/6'">
                <x-slot name="body">
                    
                    <x-kompass::form.input type="text" name="name" wire:model="name" />
@@ -163,7 +163,7 @@
                    
                            @if ($file)
                                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                               <div class="relative w-1/2">
+                               <div class="relative">
                                
                                    <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
                                        src="{{ asset('storage' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
@@ -245,7 +245,7 @@
    
    
        <div x-cloak x-data="{ open: @entangle('FormMedia'), ids: @js($getId) }" id="FormMedia">
-           <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
+           <x-kompass::offcanvas :w="'w-3/4'">
                <x-slot name="body">
                    @livewire('medialibrary', ['fieldId' => $getId])
                </x-slot>

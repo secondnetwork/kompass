@@ -148,9 +148,9 @@
 
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
-        <x-kompass::offcanvas class="grid grid-cols-4">
-            <x-slot name="body">
-
+        <x-kompass::offcanvas  :w="'w-2/4'">
+            <x-slot name="body" >
+                <div class="grid grid-cols-4">
                 @foreach ($blocktemplates as $itemblock)
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click.defer="addBlock({{ $page['id'] }},{{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['slug'] }}',{{ $itemblock['grid'] }})">
@@ -162,7 +162,7 @@
                     </div>
 
                 @endforeach
-
+            
                 <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
                 wire:click.defer="addBlock({{ $page['id'] }},'','Group','group','1','group')">
                     <img src="{{ kompass_asset('icons-blocks/group.png')}}" alt="">
@@ -173,6 +173,7 @@
                     <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png')}}" alt="">
                     <span class="text-xs block mt-2">Gallery</span>
                 </div>
+            </div>
             </x-slot>
         </x-kompass::offcanvas>
     </div>

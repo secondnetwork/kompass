@@ -1,7 +1,7 @@
 <div>
 
     <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd') }">
-        <x-kompass::offcanvas class="text-gray-500 p-8">
+        <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
                 <x-kompass::form.input type="text" name="title" wire:model="title" />

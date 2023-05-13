@@ -306,28 +306,13 @@
 
     <x-kompass::modal data="FormDelete" />
 
-
     <div  x-data="{ open: @entangle('FormEdit') }">
-
-        <div x-show="open" @click.away="open = false"
-            class="fixed top-0 shadow-lg h-full right-0 w-[40rem] bg-white z-10 flex items-center justify-center translate-x-[0]"
-            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 offcanvas-0"
-            x-transition:enter-end="opacity-100 offcanvas-100" x-transition:leave="ease-in duration-300"
-            x-transition:leave-start="opacity-100 offcanvas-100" x-transition:leave-end="opacity-0 offcanvas-0">
-
-            <div x-show="open" @click.away="open = false" class="absolute inset-0 p-8 flex flex-col ">
-
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalFormDeletePost"></h5>
-                    <button @click="open = false" type="button" class="close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+        <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
+            <x-slot name="body">
 
                 <div class="modal-body">
                     @if ($file)
                         
-                    
                     @if ($type == 'video')
                     <video controls src="{{ asset('storage' .$file) }}"></video>
                     @else
@@ -355,13 +340,8 @@
                         wire:click="selectItem({{ $iditem }}, 'delete')" “
                         class="btn-danger flex  justify-center ">Löschen</button>
                 </div>
-
-            </div>
-
-        </div>
+            </x-slot>
+        </x-kompass::offcanvas>
     </div>
-
-
-
 
 </div>

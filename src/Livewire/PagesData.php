@@ -142,7 +142,7 @@ class PagesData extends Component
                 ]);
             }
         }
-
+        $this->FormBlocks = false;
         $this->call_emit_reset();
     }
 

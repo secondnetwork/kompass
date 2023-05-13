@@ -3,7 +3,7 @@
     <x-kompass::modal data="FormDelete" />
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
-        <x-kompass::offcanvas class="grid grid-cols-4">
+        <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
             <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6">
                 Block Icon

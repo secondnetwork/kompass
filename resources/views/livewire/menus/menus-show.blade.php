@@ -17,7 +17,7 @@
 <x-kompass::modal data="FormDelete" />
 
 <div x-cloak x-data="{ open: @entangle('FormEdit') }">
-    <x-kompass::offcanvas class="p-8 grid gap-4">
+    <x-kompass::offcanvas :w="'w-2/4'">
         <x-slot name="body" >
             
             <x-kompass::form.input type="text" name="{{__('Title')}}" wire:model="title" />

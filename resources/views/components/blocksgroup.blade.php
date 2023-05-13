@@ -27,7 +27,7 @@ x-data="{ expanded: false }" >
                     @if ($itemblocks->type == 'group')
                     <x-tabler-stack class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
                     @endif
-                    <span class="text-md font-semibold">{{ $itemblocks->name }}</span>
+                    <span class="text-sm font-semibold">{{ $itemblocks->name }}</span>
                     {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
                 </a>
       

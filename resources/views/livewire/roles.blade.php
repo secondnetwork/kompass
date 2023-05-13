@@ -13,7 +13,7 @@
     <x-kompass::modal data="FormDelete" />
       
     <div x-cloak x-data="{ open: @entangle('FormEdit') }">
-      <x-kompass::offcanvas class="text-gray-500">
+      <x-kompass::offcanvas :w="'w-2/6'">
         <x-slot name="body">
           <div class="modal-body">
             <label>Role Name</label>
@@ -31,7 +31,7 @@
     </div>
 
     <div x-cloak x-data="{ open: @entangle('FormAdd') }">
-      <x-kompass::offcanvas class="text-gray-500">
+      <x-kompass::offcanvas :w="'w-2/6'">
         <x-slot name="body">
           <label>Name</label>
           <input wire:model="name" type="text" class="form-control"/>
