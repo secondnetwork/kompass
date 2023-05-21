@@ -7,32 +7,28 @@ use Illuminate\Http\Request;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param $request
-     * @param  Closure  $next
-     * @param $role
-     * @param  null  $permission
-     * @return mixed
-     */
+    protected function authorization(
+        string $type,
+        string|array $rolesPermissions,
+    ): bool {
+        $method = $type == 'roles' ? 'hasRole' : 'hasPermission';
+        $rolesPermissions = standardize($rolesPermissions, true);
 
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle(Request $request, Closure $next, array|string $role)
-    {
-        $hasAnyRole = auth()->user()->hasAnyRole($role);
-        $hasRole = auth()->user()->hasRole($role);
-
-        if ($hasRole && $hasAnyRole) {
-            return $next($request);
+        foreach ($rolesPermissions as $role) {
+            if (auth()->user()->roles->first()->slug == $role) {
+                return auth()->user()->$method($role);
+            }
         }
 
-        return abort(401);
+        return false;
+    }
+
+    public function handle(Request $request, Closure $next, string|array $role)
+    {
+        if (! $this->authorization('roles', $role)) {
+            return abort('401');
+        }
+
+        return $next($request);
     }
 }

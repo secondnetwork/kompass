@@ -115,13 +115,13 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
-        $blockTypeData = json_encode(['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType]);
+        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
 
         $block = Block::create([
             'page_id' => $pageID,
             'name' => $name,
             'subgroup' => $this->blockgroupId,
-
+            'set' => $blockTypeData,
             'status' => 'public',
             'slug' => $slug,
             'grid' => $grid,

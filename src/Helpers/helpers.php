@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Secondnetwork\Kompass\KompassFacade;
@@ -38,6 +39,41 @@ if (! function_exists('kompass_asset')) {
         return route('kompass_asset').'?path='.urlencode($path);
     }
 }
+if (! defined('AVIFE_IMAGICK_VER')) {
+    if (class_exists('Imagick')) {
+        $v = Imagick::getVersion();
+        preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
+        if (version_compare($v[1], '7.0.25') >= 0) {
+            define('AVIFE_IMAGICK_VER', $v[1]);
+        } else {
+            define('AVIFE_IMAGICK_VER', 0);
+        }
+    } else {
+        define('AVIFE_IMAGICK_VER', 0);
+    }
+}
+ function standardize(
+    string|array|BackedEnum $value,
+    bool $toArray = false
+): string|array {
+     if ($value instanceof BackedEnum) {
+         return $toArray ? [$value->value] : $value->value;
+     }
+
+     if (is_array($value)) {
+         return Collection::make($value)->map(function ($item) {
+             return $item instanceof BackedEnum
+                ? $item->value
+                : $item;
+         })->toArray();
+     }
+
+     if ((strpos($value, '|') === false) && ! $toArray) {
+         return $value;
+     }
+
+     return explode('|', $value);
+ }
 
 function sendFile(string $path)
 {

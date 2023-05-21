@@ -120,10 +120,8 @@
 
                 <data-item class="bg-white block shadow rounded">
 
-                    <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[6/4] bg-cover bg-center bg-gray-300"
-                        style="background-image: url('{{ asset('storage' .$item->path.'/'.$item->slug.'.'.$item->extension) }}')">
-
-           
+                 <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[6/4] bg-cover bg-center bg-gray-300"
+                        style="background-image: url('{{ asset($item->path.'/'.$item->slug.'.'.$item->extension) }}')">
 
                         <div class="absolute rounded top-2 right-2 text-sm text-gray-600 bg-gray-200 uppercase py-1 px-3">{{ $item->extension }}</div>
                         
@@ -173,7 +171,7 @@
                 <data-item class="bg-white block shadow rounded">
 
                     <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[6/4] bg-cover bg-center bg-gray-300"
-                        style="background-image: url('{{ asset('storage' .$item->path.'/'.$item->slug.'.'.$item->extension) }}')">
+                        style="background-image: url('{{ asset($item->path.'/'.$item->slug.'.'.$item->extension) }}')">
 
            
 
@@ -316,7 +314,8 @@
                     @if ($type == 'video')
                     <video controls src="{{ asset('storage' .$file) }}"></video>
                     @else
-                    <img wire:model="extension" class="relative text-sm rounded-lg shadow w-full aspect-[4/3] object-cover bg-cover bg-center bg-gray-300" src="{{ asset('storage' .$file) }}" alt="">
+                    <img wire:model="extension" class="relative text-sm rounded-lg shadow w-full aspect-[4/3] object-cover bg-cover bg-center bg-gray-300" src="{{ asset($file) }}" alt="">
+
                     @endif
                     @endif
                     <label>Name</label>
@@ -326,19 +325,20 @@
                     @endif
 
 
-
-            
                     <label>Alt</label>
                     <input wire:model="alt" type="text" class="form-control" />
 
                     <label>Description</label>
                     <input wire:model="description" type="text" class="form-control" />
+                    <label>Url:</label>
+                    <input value="{{ asset($file) }}" type="text" class="form-control" />
+  
 
                 </div>
                 <div class="modal-footer mt-auto flex gap-4">
-                    <button wire:click="update" class="btn btn-primary">Save</button> <button
+                    <button wire:click="update" class="btn btn-primary">{{__('Save')}}</button> <button
                         wire:click="selectItem({{ $iditem }}, 'delete')" “
-                        class="btn-danger flex  justify-center ">Löschen</button>
+                        class="btn-danger flex  justify-center ">{{__('Delete')}}</button>
                 </div>
             </x-slot>
         </x-kompass::offcanvas>

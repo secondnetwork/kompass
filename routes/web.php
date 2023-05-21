@@ -45,9 +45,10 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
 
     Route::view('profile', 'kompass::admin.profile')->name('profile');
 
-    Route::group(['middleware' => 'role:admin'], function () {
+    Route::group(['middleware' => ['role:root|admin']], function () {
         Route::get('account', AccountForm::class)->name('account');
         Route::get('roles', Roles::class)->name('roles');
     });
-    Route::view('about', 'kompass::admin.about')->name('about');
+
+    Route::view('about', 'kompass::admin.about')->name('about')->middleware('role:user|admin');
 });

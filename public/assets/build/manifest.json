@@ -1,14 +1,14 @@
 {
   "resources/js/main.js": {
-    "file": "js/main.b8f7cb15.js",
+    "file": "js/main.8beeed36.js",
     "src": "resources/js/main.js",
     "isEntry": true,
     "css": [
-      "css/kompass.6cae4fb0.css"
+      "css/kompass.d1639361.css"
     ]
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.6cae4fb0.css",
+    "file": "css/kompass.d1639361.css",
     "src": "resources/css/kompass.css",
     "isEntry": true
   }

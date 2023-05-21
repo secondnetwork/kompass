@@ -12,7 +12,6 @@ use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Setting;
-use Termwind\Components\Dd;
 
 class Medialibrary extends Component
 {
@@ -219,6 +218,54 @@ class Medialibrary extends Component
         }
     }
 
+    public static function convert($src, $des, $quality, $speed)
+    {
+        if (! function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) {
+            return;
+        }
+        if (! $src && ! $des && ! $quality && ! $speed) {
+            return false;
+        }
+
+        $fileType = getimagesize($src)['mime'];
+        // Try Imagick First
+        if (AVIFE_IMAGICK_VER > 0) {
+            $imagick = new \Imagick();
+            $imagick->readImage($src);
+            $imagick->setImageFormat('avif');
+            if ($quality > 0) {
+                $imagick->setCompressionQuality($quality);
+                $imagick->setImageCompressionQuality($quality);
+            } else {
+                $imagick->setCompressionQuality(1);
+                $imagick->setImageCompressionQuality(1);
+            }
+
+            $imagick->writeImage($des);
+
+            return;
+        }
+        //Try GD
+        if ($fileType == 'image/jpeg' || $fileType == 'image/jpg') {
+            $sourceGDImg = @imagecreatefromjpeg($src);
+        }
+        if ($fileType == 'image/png') {
+            $sourceGDImg = @imagecreatefrompng($src);
+        }
+        if ($fileType == 'image/webp') {
+            $sourceGDImg = @imagecreatefromwebp($src);
+        }
+        if (gettype($sourceGDImg) == 'boolean') {
+            return;
+        }
+        @imageavif($sourceGDImg, $des, $quality, $speed);
+
+        // file_put_contents($des, "\0", FILE_APPEND);
+        // Storage::path($des);
+
+        @imagedestroy($sourceGDImg);
+    }
+
     public function finishUpload($name, $tmpPath, $isMultiple)
     {
         $this->cleanupOldUploads();
@@ -246,6 +293,9 @@ class Medialibrary extends Component
             $timefilesSlug = $time.'_'.$filesSlug;
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
+            $des = Storage::path('public/'.$timefilesSlug.'.avif');
+            self::convert(asset($storelink), $des, 50, 6);
+
             $imageMimeTypes = [
                 'image/jpeg',
                 'image/png',
@@ -253,7 +303,6 @@ class Medialibrary extends Component
                 'image/gif',
             ];
             if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
-                // $this->createThumbnail('resizes', $storelink, $details['full']['width']?? null, $details['full']['height'] ?? null, null, $details['full']['quality'], $original_ext);
                 foreach ($details['thumbnails'] as $thumbnail_data) {
                     $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
                     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 80, $original_ext);
@@ -289,6 +338,9 @@ class Medialibrary extends Component
                 $constraint->upsize();
             }, $position)
             ->encode($original_ext, ($quality ?? 90))->encoded);
+
+            $des = Storage::path('public/'.$path.'.avif');
+            self::convert(asset($path), $des, 50, 6);
         } elseif ($type == 'crop') {
             Storage::disk($this->filesystem)->put($path, $image
             ->crop($width, $height, null, null)
@@ -307,8 +359,8 @@ class Medialibrary extends Component
         if ($page == 'page') {
             if ($this->field_id == '0') {
                 Datafields::updateOrCreate(['id' => $this->field_id], [
-                    'name' => 'Galerie',
-                    'slug' => 'galerie',
+                    'name' => 'Gallery',
+                    'slug' => 'gallery',
                     'type' => 'gallery',
                     'block_id' => $this->Block_id,
                     'data' => $media_id, ]);

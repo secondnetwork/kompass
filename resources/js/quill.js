@@ -1,6 +1,6 @@
 import Quill from 'quill';
 var toolbarOptions = [
-    [{ 'header': '1' }, { 'header': '2' }],
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['link', 'blockquote', 'code-block'],
 

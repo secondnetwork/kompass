@@ -4,9 +4,14 @@
     'page' => '',
     'class' => '',
 ])
+@php
+$layout = $itemblocks->set->layout ?? '';
+$alignment = $itemblocks->set->alignment ?? '';
+$slider = $itemblocks->set->slider ?? '';
+$type = $itemblocks->set->type ?? '';
+@endphp
 
-
-<div  class="{{ $class }} @if ($itemblocks->type == 'group') bg-white  @endif  @if ($itemblocks->subgroup) group-block  border-purple-600 @endif border-b-2 " 
+<div  class="{{ $class }} @if ($type ==  'group') bg-white  @endif  @if ($itemblocks->subgroup) group-block  border-purple-600 @endif border-b-2 " 
     wire:sortable.item="{{ $itemblocks->id }}"
     @if ($itemblocks->subgroup)
     wire:sortable-group.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
@@ -24,7 +29,7 @@ x-data="{ expanded: false }" >
             @endif
             <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
-                    @if ($itemblocks->type == 'group')
+                    @if ($type ==  'group')
                     <x-tabler-stack class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
                     @endif
                     <span class="text-sm font-semibold">{{ $itemblocks->name }}</span>
@@ -62,7 +67,7 @@ x-data="{ expanded: false }" >
         </span>
 
         <div class="flex items-center gap-1">
-            @if ($itemblocks->type == 'group')
+            @if ($type ==  'group')
                 <span wire:click="selectItem({{ $page->id }}, 'addBlock', {{ $itemblocks->id }})">
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
                 </span>
@@ -70,7 +75,7 @@ x-data="{ expanded: false }" >
                   <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
               </span>
             @endif
-            @if ($itemblocks->type != 'group')
+            @if ($type != 'group')
                 @if ($itemblocks->status == 'public')
                     <span wire:click="status({{ $itemblocks->id }}, 'unpublish')">
                         <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />
@@ -101,12 +106,7 @@ x-data="{ expanded: false }" >
     <div x-show="expanded" x-collapse >
         <nav class="px-6 py-2 bg-gray-200 shadow-inner flex items-center gap-6">
             {{-- <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-yellow-900 text-yellow-300">Dev</span> --}}
-@php
-    $layout = $itemblocks->set->layout ?? '';
-    $alignment = $itemblocks->set->alignment ?? '';
-    $slider = $itemblocks->set->slider ?? '';
-    $type = $itemblocks->set->type ?? '';
-@endphp
+
 
             <nav-item class="flex items-center gap-2">
             <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid Layout</span>
@@ -195,7 +195,7 @@ x-data="{ expanded: false }" >
         
         <div class="grid gap-6 p-6 grid-cols-{{ $itemblocks->grid }}">
 
-        @if ($itemblocks->set->type ?? '' == 'gallery')
+        @if ($type == 'gallery')
         <div class="@container">
         <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6" >
 
