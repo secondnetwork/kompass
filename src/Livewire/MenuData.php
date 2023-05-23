@@ -63,7 +63,6 @@ class MenuData extends Component
 
         if ($action == 'additem') {
             $this->FormEdit = true;
-            $this->selectedItem = null;
             $this->title = '';
             $this->url = '';
             $this->target = '';
@@ -88,9 +87,8 @@ class MenuData extends Component
     {
         $validate = $this->validate();
 
-        Menuitem::updateOrCreate([
-            'id' => $this->selectedItem,
-        ], [
+        Menuitem::Create([
+            'menu_id' => $this->selectedItem,
             'title' => $this->title,
             'url' => $this->url,
             'target' => $this->target,
