@@ -135,7 +135,7 @@ class Settings extends Component
         $this->FormAdd = false;
     }
 
-    public function removemediaIngallery($id)
+    public function removemedia($id)
     {
         Setting::whereId($id)->update(['data' => '']);
     }

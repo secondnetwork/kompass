@@ -46,7 +46,7 @@
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                     <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                     <div class="flex">
-                        <span  wire:click="removemediaIngallery({{ $idField }})">
+                        <span  wire:click="removemedia({{ $idField }})">
                             <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
                         </span>
                         <span wire:click="selectItem({{ $idField }}, 'addMedia')"">
