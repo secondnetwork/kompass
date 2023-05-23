@@ -42,48 +42,51 @@
     @kompassCss
 </head>
 <body class="kompass-{{ str_replace(".","-", Route::currentRouteName()) }}">
-
+<page-main>
 <main>
     <header class="header">
         <div class="header__search">
-          
+
         </div>
-        
+
         <x-kompass::menu-profile />
-      
+
       </header>
-      
+
       <aside class="sidenav">
         <div class="sidenav__close-icon">
           <i class="fas fa-times sidenav__brand-close"></i>
         </div>
         <div class="logo"><img src="{{ kompass_asset('kompass_logo.svg')}}" alt=""></div>
         <ul class="sidenav__list">
-          
+
           <li class="sidenav__list-item"><a @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
-              
+
           {{-- <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li> --}}
           <li class="sidenav__list-item "><a @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
+
+          <livewire:adminmenu name="admin-sidebar-top">
+
           <li class="sidenav__list-item"><a @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
           <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Theme') }}</div>
-         
+
           <li class="sidenav__list-item"><a @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-layout-grid-add class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
           <li class="sidenav__list-item"><a @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
           <li class="sidenav__list-item"><a @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
-       
+
 
           @canany(['admin','user'])
           <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
           <li class="sidenav__list-item"><a @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
           <li class="sidenav__list-item"><a @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a></li>
           @endcanany
-          
+
           {{-- @canany(['update', 'view', 'delete'])
               // This user can update, view, or delete
           @elsecanany(['admin', 'user'])
               // This user can create
           @endcanany --}}
-          
+
           <li class="sidenav__list-item mt-8"><a @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
         </ul>
       </aside>
@@ -103,8 +106,8 @@
           <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} secondnetwork | Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
         </div>
         <div class="text-xs">
-          
-          <strong>Laravel</strong> v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}) 
+
+          <strong>Laravel</strong> v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
           @php $version = Kompass::getVersion(); @endphp
           @if (!empty($version))
          | <strong>Kompass</strong> {{ $version }}
@@ -112,8 +115,8 @@
         </div>
       </footer>
 </main>
-
-  @livewireScripts   
+</page-main>
+  @livewireScripts
   @kompassJs
   @stack('scripts')
 
