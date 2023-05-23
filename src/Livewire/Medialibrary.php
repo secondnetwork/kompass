@@ -362,14 +362,12 @@ class Medialibrary extends Component
                     'name' => 'Gallery',
                     'slug' => 'gallery',
                     'type' => 'gallery',
-                    'block_id' => $this->Block_id,
+                    'block_id' => $this->block_id,
                     'data' => $media_id, ]);
             } else {
                 Datafields::updateOrCreate(
                     ['id' => $this->field_id],
-                    [
-                        'block_id' => $this->Block_id,
-                        'data' => $media_id, ]);
+                    ['data' => $media_id, ]);
             }
 
             $this->emit('refreshmedia');

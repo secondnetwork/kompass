@@ -173,7 +173,7 @@
                                            <span  wire:click="removemediaIngallery({{ $setting->id }})">
                                                <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
                                            </span>
-                                           <span wire:click="selectItem({{ $setting->id }}, 'addMedia')"">
+                                           <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
                                                <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
                                            </span>
                                        </div>
@@ -191,7 +191,7 @@
                            @endif
                            @else
                     
-                           <span wire:click="selectItem({{ $setting->id }}, 'addMedia')"">
+                           <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
                                <img-block 
                                    class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
                                    <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
@@ -217,7 +217,7 @@
    
                            @break    
                            @case('file')
-                           <span wire:click="selectItem({{ $setting->id }}, 'addMedia')"">
+                           <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
                                <img-block 
                                    class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
                                    <x-tabler-file class="h-[4rem] w-[4rem] stroke-[1.5]" />
