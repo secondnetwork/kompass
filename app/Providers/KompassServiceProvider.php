@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Gate;
+use Secondnetwork\Kompass\Models\Role;
+use Illuminate\Support\ServiceProvider;
 
 class KompassServiceProvider extends ServiceProvider
 {
