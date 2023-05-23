@@ -9,6 +9,8 @@ class MenuTable extends Component
 {
     public $name;
 
+    public $group;
+
     public $headers;
 
     public $data;
@@ -71,6 +73,7 @@ class MenuTable extends Component
 
         $menu = Menu::create([
             'name' => $this->name,
+            'group' => $this->group,
         ]);
         $this->FormAdd = false;
 

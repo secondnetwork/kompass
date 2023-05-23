@@ -5,6 +5,12 @@
 
                 <x-kompass::form.input type="text" name="name" wire:model="name" />
                 <x-kompass::input-error for="name" class="mt-2" />
+
+                <select wire:model="group">
+                    <option value="page">{{__('Page')}}</option>
+                    <option value="admin_aside">{{__('Admin Sidebar')}}</option>
+                </select>
+
                 <button wire:click="addMenu" class="btn btn-primary">Save</button>
 
             </x-slot>
