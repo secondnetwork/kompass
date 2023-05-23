@@ -78,14 +78,17 @@ class Pageview extends Component
                     if ($file) {
                         if ($size) {
                             $sizes = '_'.$size;
-
-                            if ($size == 'medium') {
-                                return '<img src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'">';
-                            }
-
-                            return '<img src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'">';
+                            return '<picture>
+                            <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
+                            <img src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            </picture>
+                            ';
                         } else {
-                            return '<img src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'">';
+                            return '<picture>
+                            <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
+                            <img src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            </picture>
+                            ';
                         }
                     }
 
