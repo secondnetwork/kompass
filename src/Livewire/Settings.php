@@ -124,13 +124,13 @@ class Settings extends Component
         Setting::updateOrCreate([
             'id' => $this->selectedItem,
         ],
-             [
-                 'name' => $this->name,
-                 'data' => $this->value,
-                 'key' => Str::slug($this->name, '-', 'de'),
-                 'group' => strtolower($this->group),
-                 'type' => $this->type,
-             ]);
+            [
+                'name' => $this->name,
+                'data' => $this->value,
+                'key' => Str::slug($this->name, '-', 'de'),
+                'group' => strtolower($this->group),
+                'type' => $this->type,
+            ]);
 
         $this->FormAdd = false;
     }
@@ -154,9 +154,9 @@ class Settings extends Component
     private function resultGroup()
     {
         return Setting::select('group')
-        ->orderBy('group')
-        ->groupBy('group')
-        ->get();
+            ->orderBy('group')
+            ->groupBy('group')
+            ->get();
     }
 
     public function render()

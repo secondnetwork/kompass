@@ -69,8 +69,7 @@ class BlocksData extends Component
     public function render()
     {
         return view('kompass::livewire.blocks.blocks-show')
-
-        ->layout('kompass::admin.layouts.app');
+            ->layout('kompass::admin.layouts.app');
 
         // ->slot('main');
     }

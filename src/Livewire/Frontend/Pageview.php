@@ -32,11 +32,11 @@ class Pageview extends Component
         $this->page = $this->ResolvePath($slug);
 
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return  Block::where('page_id', $this->page->id)->where('status', 'public')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+            return Block::where('page_id', $this->page->id)->where('status', 'public')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
 
         $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
-            return  Block::where('page_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
+            return Block::where('page_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
         });
         Arr::collapse($this->blocks_id);
 

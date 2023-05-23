@@ -24,7 +24,6 @@ if (! function_exists('vendor_path')) {
     /**
      * Get the path to the litstack package vendor folder.
      *
-     * @param  string  $path
      * @return string
      */
     function vendor_path(string $path = '')
@@ -52,28 +51,28 @@ if (! defined('AVIFE_IMAGICK_VER')) {
         define('AVIFE_IMAGICK_VER', 0);
     }
 }
- function standardize(
+function standardize(
     string|array|BackedEnum $value,
     bool $toArray = false
 ): string|array {
-     if ($value instanceof BackedEnum) {
-         return $toArray ? [$value->value] : $value->value;
-     }
+    if ($value instanceof BackedEnum) {
+        return $toArray ? [$value->value] : $value->value;
+    }
 
-     if (is_array($value)) {
-         return Collection::make($value)->map(function ($item) {
-             return $item instanceof BackedEnum
-                ? $item->value
-                : $item;
-         })->toArray();
-     }
+    if (is_array($value)) {
+        return Collection::make($value)->map(function ($item) {
+            return $item instanceof BackedEnum
+               ? $item->value
+               : $item;
+        })->toArray();
+    }
 
-     if ((strpos($value, '|') === false) && ! $toArray) {
-         return $value;
-     }
+    if ((strpos($value, '|') === false) && ! $toArray) {
+        return $value;
+    }
 
-     return explode('|', $value);
- }
+    return explode('|', $value);
+}
 
 function sendFile(string $path)
 {
@@ -140,13 +139,13 @@ if (! function_exists('setting')) {
             $data = Arr::get(config('settings'), $data);
 
             if ($data->group == $keydata[0]) {
-                return  $data->data;
+                return $data->data;
             }
-            // return Arr::get(config('settings'), $data );
+        // return Arr::get(config('settings'), $data );
         } else {
             $data = Arr::get(app('settings'), $data);
             if ($data->group == $keydata[0]) {
-                return  $data->data;
+                return $data->data;
             }
         }
     }

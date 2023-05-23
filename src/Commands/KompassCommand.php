@@ -132,17 +132,17 @@ password: password
         $appConfig = file_get_contents(config_path('app.php'));
 
         if (
-                ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
-                &&
-                ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
-            ) {
+            ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
+            &&
+            ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
+        ) {
             File::put(config_path('app.php'), str_replace(
-                    "App\Providers\RouteServiceProvider::class,",
-                    "App\Providers\RouteServiceProvider::class,".PHP_EOL.
-                    "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
-                    'App\\Providers\\KompassServiceProvider::class,',
-                    $appConfig
-                ));
+                "App\Providers\RouteServiceProvider::class,",
+                "App\Providers\RouteServiceProvider::class,".PHP_EOL.
+                "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
+                'App\\Providers\\KompassServiceProvider::class,',
+                $appConfig
+            ));
         }
     }
 
@@ -201,7 +201,6 @@ password: password
     /**
      * Update the "package.json" file.
      *
-     * @param  callable  $callback
      * @param  bool  $dev
      * @return void
      */

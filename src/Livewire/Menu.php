@@ -18,7 +18,7 @@ class Menu extends Component
         $this->name = $name;
 
         $this->menu = Cache::rememberForever('kompass_menu_'.$name, function () {
-            return  Menus::where('slug', $this->name)->first();
+            return Menus::where('slug', $this->name)->first();
         });
         if ($this->menu) {
             $this->menuitem = Cache::rememberForever('kompass_menuitem_'.$name, function () {

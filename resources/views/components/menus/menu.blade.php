@@ -8,7 +8,9 @@
 <li class="sidenav__list-item">
 
     <a href="{{$item->url}}" target="{{$item->target}}" rel="noopener noreferrer">
-        @svg('tabler-'.$item->iconclass)
+        @if ($item->iconclass)
+            @svg('tabler-'.$item->iconclass)
+        @endif
         <span>{{$item->title}}</span>
     </a>
 

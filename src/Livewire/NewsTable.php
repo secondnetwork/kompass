@@ -52,8 +52,8 @@ class NewsTable extends Component
     private function resultDate()
     {
         return Page::where('title', 'like', '%'.$this->search.'%')
-                    ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
-                    ->simplePaginate($this->perPage);
+            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
+            ->simplePaginate($this->perPage);
     }
 
     public function render()

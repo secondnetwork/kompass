@@ -83,8 +83,8 @@ class BlocksTable extends Component
     private function resultDate()
     {
         return Blocktemplates::where('name', 'like', '%'.$this->search.'%')
-                    ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
-                    ->simplePaginate($this->perPage);
+            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
+            ->simplePaginate($this->perPage);
     }
     // public function mount($id)
     // {
@@ -96,8 +96,7 @@ class BlocksTable extends Component
         return view('kompass::livewire.blocks.blocks-table', [
             'pages' => $this->resultDate(),
         ])
-
-        ->layout('kompass::admin.layouts.app');
+            ->layout('kompass::admin.layouts.app');
 
         // ->slot('main');
     }

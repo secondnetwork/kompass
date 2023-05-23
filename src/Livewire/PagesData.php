@@ -330,7 +330,7 @@ class PagesData extends Component
     public function render()
     {
         return view('kompass::livewire.pages.pages-show')
-        ->layout('kompass::admin.layouts.app');
+            ->layout('kompass::admin.layouts.app');
     }
 
     public function updateOrder($list)

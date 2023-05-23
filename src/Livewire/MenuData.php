@@ -51,7 +51,6 @@ class MenuData extends Component
 
     public function mount($id)
     {
-        $this->menu_id = $id;
         $this->menu = Menu::findOrFail($id);
         $this->menuitem = Menuitem::where('menu_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
     }
@@ -62,12 +61,13 @@ class MenuData extends Component
         $this->groupId = $groupId;
 
         if ($action == 'additem') {
-            $this->FormEdit = true;
             $this->title = '';
             $this->url = '';
             $this->target = '';
             $this->color = '';
             $this->iconclass = '';
+            $this->selectedItem = false;
+            $this->FormEdit = true;
         }
         if ($action == 'update') {
             $model = Menuitem::findOrFail($itemId);
@@ -87,8 +87,10 @@ class MenuData extends Component
     {
         $validate = $this->validate();
 
-        Menuitem::Create([
-            'menu_id' => $this->selectedItem,
+        Menuitem::updateOrCreate([
+            'id' => $this->selectedItem,
+        ], [
+            'menu_id' => $this->menu->id,
             'title' => $this->title,
             'url' => $this->url,
             'target' => $this->target,
@@ -96,21 +98,7 @@ class MenuData extends Component
             'iconclass' => $this->iconclass,
             'subgroup' => $this->groupId,
         ]);
-
-        $this->call_emit_reset();
-    }
-
-    public function updateitem($id)
-    {
-        $menuitem = Menuitem::findOrFail($id);
-
-        $menuitem->update([
-            'url' => $this->url,
-            'target' => $this->target,
-            'color' => $this->color,
-            'iconclass' => $this->iconclass,
-        ]);
-
+        $this->FormEdit = false;
         $this->call_emit_reset();
     }
 
@@ -126,13 +114,12 @@ class MenuData extends Component
     public function render()
     {
         return view('kompass::livewire.menus.menus-show')
-        ->layout('kompass::admin.layouts.app');
+            ->layout('kompass::admin.layouts.app');
     }
 
     public function call_emit_reset()
     {
-        $this->FormEdit = false;
-        $this->mount($this->menu_id);
+        $this->mount($this->menu->id);
         $this->emit('refreshComponentGroup');
         $this->emit('status');
     }

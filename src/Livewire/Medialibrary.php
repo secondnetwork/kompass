@@ -334,23 +334,23 @@ class Medialibrary extends Component
 
         if ($type == 'fit') {
             Storage::disk($this->filesystem)->put($path, $image
-            ->fit($width, $height, function ($constraint) {
-                $constraint->upsize();
-            }, $position)
-            ->encode($original_ext, ($quality ?? 90))->encoded);
+                ->fit($width, $height, function ($constraint) {
+                    $constraint->upsize();
+                }, $position)
+                ->encode($original_ext, ($quality ?? 90))->encoded);
 
             $des = Storage::path('public/'.$path.'.avif');
             self::convert(asset($path), $des, 50, 6);
         } elseif ($type == 'crop') {
             Storage::disk($this->filesystem)->put($path, $image
-            ->crop($width, $height, null, null)
-            ->encode($original_ext, ($quality ?? 90))->encoded);
+                ->crop($width, $height, null, null)
+                ->encode($original_ext, ($quality ?? 90))->encoded);
         } elseif ($type == 'resize') {
             Storage::disk($this->filesystem)->put($path, $image
-            ->resize($width, $height, function ($constraint) {
-                $constraint->aspectRatio();
-            })
-            ->encode($original_ext, ($quality ?? 90))->encoded);
+                ->resize($width, $height, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->encode($original_ext, ($quality ?? 90))->encoded);
         }
     }
 
@@ -414,9 +414,9 @@ class Medialibrary extends Component
     public function folder_dir()
     {
         $folder_dir = file::select('path')
-        ->orderBy('path')
-        ->groupBy('path')
-        ->get();
+            ->orderBy('path')
+            ->groupBy('path')
+            ->get();
 
         return $folder_dir;
     }
