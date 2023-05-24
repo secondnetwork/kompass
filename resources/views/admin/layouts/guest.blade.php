@@ -58,7 +58,7 @@
 <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full" style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')">
     <footer class="items-end flex justify-between ">
         <div class="text-xs flex items-center text-gray-300 p-8">
-            <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('copytext') }}
+            <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('footer.copytext') }}
           </div>
         <div class="text-gray-300 text-xs p-8">
         @php $version = Kompass::getVersion(); @endphp
