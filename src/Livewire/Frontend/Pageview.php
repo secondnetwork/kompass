@@ -69,7 +69,7 @@ class Pageview extends Component
         }
     }
 
-    public function get_field($slug, $blockis = null, $size = null)
+    public function get_field($slug, $blockis = null, $class = null, $size = null)
     {
         foreach ($this->fields[$blockis] as $value) {
             if ($value->slug == $slug) {
@@ -80,13 +80,13 @@ class Pageview extends Component
                             $sizes = '_'.$size;
                             return '<picture>
                             <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
-                            <img src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
                             </picture>
                             ';
                         } else {
                             return '<picture>
                             <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
-                            <img src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                             </picture>
                             ';
                         }
