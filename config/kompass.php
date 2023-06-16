@@ -125,12 +125,13 @@ return [
     'components' => [
         // Rich Text
         'quill' => Components\RichText\Quill::class,
+
     ],
 
     'livewire' => [
         'menu' => Livewire\Frontend\Menu::class,
         'pageview' => Livewire\Frontend\Pageview::class,
-
+        
         'adminmenu' => Livewire\Menu::class,
         'blocks.blocks-table' => Livewire\BlocksTable::class,
         'blocks.blocks-data' => Livewire\BlocksData::class,
@@ -145,7 +146,7 @@ return [
         'account' => Livewire\AccountForm::class,
         'roles' => Livewire\Roles::class,
         'eventdata' => Livewire\Eventdata::class,
-
+'editorjs' => Livewire\EditorJS::class,
     ],
 
     'prefix' => '',

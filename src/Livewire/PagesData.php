@@ -42,6 +42,8 @@ class PagesData extends Component
 
     public $arrayIdField;
 
+    public $FormAdjustments = false;
+
     public $FormBlocks = false;
 
     public $FormMedia = false;
@@ -51,6 +53,9 @@ class PagesData extends Component
     public $FormAdd = false;
 
     public $FormEdit = false;
+
+    public $Editorjs;
+    public $data;
 
     public $selected = [];
 
@@ -68,9 +73,29 @@ class PagesData extends Component
     ];
 
     protected $listeners = [
+        'editorjssave' => 'saveEditorState',
         'refreshComponent' => '$refresh',
-        'refreshmedia' => 'call_emit_reset',
+        'refreshmedia' => 'call_emit_reset'
+        
     ];
+
+   
+
+    public function saveEditorState($editorJsonData,$id)
+    {
+        if (!empty($editorJsonData)) {
+
+         
+                Datafields::whereId($id)->update(['data' => $editorJsonData]);
+                // foreach($itemg['items'] as $item){
+                //     block::whereId($item['value'])->update(['order' => $item['order']]);
+                // }
+                // dump($itemg);
+        
+        }
+        // @dump($validateData);
+        $this->call_emit_reset();
+    }
 
     public function mount($id)
     {
@@ -115,7 +140,11 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
-        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
+        if ($blockType == 'tables') {
+            $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'tables' => '2', 'type' => $blockType];
+        } else {
+            $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
+        }
 
         $block = Block::create([
             'page_id' => $pageID,
@@ -178,7 +207,7 @@ class PagesData extends Component
             $copyitem = $item->replicate();
             $copyitem->block_id = $newblock->id;
             $copyitem->save();
-        }, );
+        },);
 
         $this->call_emit_reset();
     }
@@ -238,15 +267,28 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
+    public function statusPage($id, $status)
+    {
+        if ($status == 'unpublish') {
+            Page::where('id', $id)->update(['status' => 'unpublish']);
+        }
+        if ($status == 'public') {
+            Page::where('id', $id)->update(['status' => 'public']);
+        }
+
+        $this->call_emit_reset();
+    }
+
     public function update($id, $published = null)
     {
         $page = Page::findOrFail($id);
 
         // $this->getDynamicSEOData();
         // $page->addSEO();
+        $this->emit('savedatajs');
 
         $validateData = $this->validate();
-
+        
         $titlePageDB = Str::slug($page->title, '-', 'de');
         $slugPageDB = $page->slug;
         $titlePage = Str::slug($validateData['page']['title'], '-', 'de');
@@ -257,10 +299,10 @@ class PagesData extends Component
         if ($titlePage != $titlePageDB) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $titlePage.'-'.$numericalPrefix++;
+                $newSlug = $titlePage . '-' . $numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
+                if (!$checkSlug) {
                     $slugNameURL = $newSlug; //New Slug
                     break;
                 }
@@ -286,13 +328,15 @@ class PagesData extends Component
             'updated_at' => Carbon::now(),
         ]);
 
-        if (! empty($validateData['blocks'])) {
+        if (!empty($validateData['blocks'])) {
             foreach ($validateData['blocks'] as $itemg) {
                 Block::whereId($itemg['id'])->update($itemg);
             }
         }
-        if (! empty($validateData['fields'])) {
-            // dump($validateData);
+
+
+
+        if (!empty($validateData['fields'])) {
 
             foreach ($validateData['fields'] as $itemg) {
                 Datafields::whereId($itemg['id'])->update($itemg);

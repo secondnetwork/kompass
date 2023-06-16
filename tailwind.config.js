@@ -5,8 +5,8 @@ module.exports = {
     './storage/framework/views/*.php',
     './resources/views/**/*.blade.php',
     './resources/**/*.js',
-    './vendor/secondnetwork/kompass/**/*.blade.php',    
-  ],  
+    './vendor/secondnetwork/kompass/**/*.blade.php',
+  ],
 
   safelist: [
     'grid-cols-1',
@@ -14,12 +14,18 @@ module.exports = {
     'grid-cols-3',
     'grid-cols-4',
     'grid-cols-5',
+    'grid-cols-6',
+    'grid-cols-7',
+    'grid-cols-8',
     'col-span-1',
     'col-span-2',
     'col-span-3',
     'col-span-4',
     'col-span-5',
-    
+    'col-span-6',
+    'col-span-7',
+    'col-span-8',
+
   ],
   theme: {
     extend: {
@@ -69,6 +75,6 @@ module.exports = {
   plugins: [
     // require('@tailwindcss/forms'), 
     require('@tailwindcss/typography'),
-    require('@tailwindcss/container-queries'), 
-],
+    require('@tailwindcss/container-queries'),
+  ],
 }
