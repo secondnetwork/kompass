@@ -7,7 +7,8 @@ import click_to_edit from './alpine/click_to_edit'
 // import quill from 'quill'
 
 import quill from './quill';
-
+// const { quill } = import('./quill');
+// const { EditorJS } = import('@editorjs/editorjs');
 import EditorJS from '@editorjs/editorjs';
 // import ImageTool from '@editorjs/image';
 // import List from '@editorjs/list';

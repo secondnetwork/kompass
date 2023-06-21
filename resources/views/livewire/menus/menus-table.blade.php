@@ -24,7 +24,7 @@
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
 
-                <button class="flex gap-x-2 justify-center items-center text-md" @click="open = true">
+                <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New menu') }}
                 </button>
 
@@ -57,7 +57,7 @@
                                             <x-tabler-arrow-autofit-height
                                                 class="cursor-move stroke-current  text-gray-400" />
                                         </td>
-    
+
 
                                         @foreach ($data as $key => $value)
                                             <td wire:sortable.handle class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
@@ -71,7 +71,7 @@
                                                     class="flex justify-center">
                                                     <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                                 </a>
-                                                
+
                                                 <span wire:click="selectItem({{ $menu->id }}, 'delete')"
                                                     class="flex justify-center">
                                                     <x-tabler-trash class="cursor-pointer stroke-red-500" />
@@ -92,7 +92,7 @@
 
                 </div>
             </div>
-    
+
         </div>
 
 </div>

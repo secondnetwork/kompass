@@ -146,7 +146,8 @@ return [
         'account' => Livewire\AccountForm::class,
         'roles' => Livewire\Roles::class,
         'eventdata' => Livewire\Eventdata::class,
-'editorjs' => Livewire\EditorJS::class,
+        'editorjs' => Livewire\EditorJS::class,
+        'redirect' => Livewire\Redirection::class,
     ],
 
     'prefix' => '',

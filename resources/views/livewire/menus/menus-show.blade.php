@@ -19,7 +19,7 @@
 <div x-cloak x-data="{ open: @entangle('FormEdit') }">
     <x-kompass::offcanvas :w="'w-2/4'">
         <x-slot name="body" >
-            
+
             <x-kompass::form.input type="text" name="{{__('Title')}}" wire:model="title" />
             <x-kompass::input-error for="title" class="mt-2" />
 
@@ -28,7 +28,7 @@
 
             <x-kompass::form.input type="text" name="iconclass" wire:model="iconclass" />
             <x-kompass::input-error for="iconclass" class="mt-2" />
-            
+
             <div>
                 <label>{{__('Open')}}</label>
                 <select wire:model="target">
@@ -39,13 +39,13 @@
 
 
             <button wire:click="addNew" class="btn btn-primary">{{__('Save')}}</button>
-        
+
         </x-slot>
     </x-kompass::offcanvas>
 </div>
 
 <div class="flex justify-end my-8">
-    <button class="flex gap-x-2 justify-center items-center text-md" wire:click="selectItem({{ $menu->id }}, 'additem')">{{__('Add Menu')}}</button>
+    <button class="flex btn gap-x-2 justify-center items-center text-md" wire:click="selectItem({{ $menu->id }}, 'additem')">{{__('Add Menu')}}</button>
 </div>
 
 <div wire:sortable="updateGroupOrder" wire:sortable-group="updateItemsOrder"
@@ -56,10 +56,10 @@ wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass:
 
 
 @forelse ($menuitem as $key => $item)
-              
+
 <x-kompass::menugroup :item="$item" :fields="$menuitem" :key="$key" :class="'itemblock border-blue-400 shadow border-r-4 border-b-2 mt-4'" />
 
-@empty 
+@empty
 <div
 class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
 

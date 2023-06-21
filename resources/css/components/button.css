@@ -1,11 +1,7 @@
 .btn,
 .button,
 .read_more,
-a.button,
-button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
+a.button {
   @apply py-2 px-3 rounded bg-primary-500 text-white transition ease-in duration-200 font-medium hover:bg-transparent hover:text-primary-500 border-2 border-primary-500;
 
   &.bg-primary {

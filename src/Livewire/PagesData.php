@@ -111,7 +111,7 @@ class PagesData extends Component
 
         $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
 
-        $this->blocktemplates = Blocktemplates::get()->all();
+        $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
         // $this->blockschildren = $this->tree($this->blocks);
         // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }

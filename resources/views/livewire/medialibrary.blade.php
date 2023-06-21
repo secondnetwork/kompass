@@ -16,14 +16,14 @@
                     placeholder="Suche...">
                 <div x-data="{ open: @entangle('FormFolder') }" class="flex justify-end gap-4">
 
-                    <button class="flex gap-x-2 justify-center items-center text-md" @click="open = true">
+                    <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
                         <x-tabler-folder-plus stroke-width="1.5" />{{ __('Add new Folder') }}
                     </button>
 
 
                     <label for="file-upload"
                         class="flex btn gap-x-2 cursor-pointer justify-center items-center text-md">
-                        <x-tabler-square-plus stroke-width="1.5" />{{ __('Add new media') }}
+                        <x-tabler-square-plus stroke-width="1.5" />{{ __('Add file') }}
                     </label>
 
                     <input type="file" id="file-upload" multiple @change="handleFileSelect" class="hidden" />

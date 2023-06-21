@@ -13,11 +13,11 @@ $watch('open', value => {
 });">
 
   <div x-show="open"x-cloak class="bg-white mx-auto rounded shadow-lg z-50 text-left p-6 absolute left-2/4 translate-x-[-50%] translate-y-[-20%]"
-  x-transition:enter="ease-out duration-300" 
-  x-transition:enter-start="opacity-0 scale-0" 
-  x-transition:enter-end="opacity-100 scale-100" 
-  x-transition:leave="ease-in duration-300" 
-  x-transition:leave-start="opacity-100 scale-100" 
+  x-transition:enter="ease-out duration-300"
+  x-transition:enter-start="opacity-0 scale-0"
+  x-transition:enter-end="opacity-100 scale-100"
+  x-transition:leave="ease-in duration-300"
+  x-transition:leave-start="opacity-100 scale-100"
   x-transition:leave-end="opacity-0 scale-0">
       <div class="bg-white h-2/3">
       <div class="modal-header py-4">
@@ -33,7 +33,7 @@ $watch('open', value => {
           <button wire:click="delete" type="button" class="btn-danger">Yes</button>
       </div>
       </div>
-      
+
   </div>
   <div x-show="open" @click.away="open = false" class="absolute bg-gray-500/50 inset-0 z-10 flex items-center justify-center overflow-hidden"></div>
 
@@ -42,11 +42,11 @@ $watch('open', value => {
 <div x-cloak x-data="{ open: @entangle('FormEdit') }">
 
 <div x-show="open" @click.away="open = false" class="fixed top-0 shadow-lg h-full right-0 w-3/5 bg-white z-10 flex items-center justify-center translate-x-[0]"
-x-transition:enter="ease-out duration-300" 
-x-transition:enter-start="opacity-0 offcanvas-0" 
-x-transition:enter-end="opacity-100 offcanvas-100" 
-x-transition:leave="ease-in duration-300" 
-x-transition:leave-start="opacity-100 offcanvas-100" 
+x-transition:enter="ease-out duration-300"
+x-transition:enter-start="opacity-0 offcanvas-0"
+x-transition:enter-end="opacity-100 offcanvas-100"
+x-transition:leave="ease-in duration-300"
+x-transition:leave-start="opacity-100 offcanvas-100"
 x-transition:leave-end="opacity-0 offcanvas-0">
 
     <div x-show="open" @click.away="open = false" class="absolute inset-0 p-16 flex flex-col ">
@@ -69,7 +69,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
           @if ($errors->has('email'))
               <p style="color: red;">{{$errors->first('email')}}</p>
           @endif
-          
+
           <label>Role</label>
           <div wire:ignore>
           <select wire:model="role">
@@ -83,7 +83,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
         <div class="modal-footer mt-auto">
           <button wire:click="update" class="btn btn-primary">Save</button>
         </div>
-        
+
     </div>
 
 </div>
@@ -94,15 +94,15 @@ x-transition:leave-end="opacity-0 offcanvas-0">
 <div x-cloak x-data="{ open: @entangle('FormAdd') }">
 
   <div x-show="open" @click.away="open = false" class="fixed top-0 shadow-lg h-full right-0 w-3/5 bg-white z-10 flex items-center justify-center translate-x-[0]"
-  x-transition:enter="ease-out duration-300" 
-  x-transition:enter-start="opacity-0 offcanvas-0" 
-  x-transition:enter-end="opacity-100 offcanvas-100" 
-  x-transition:leave="ease-in duration-300" 
-  x-transition:leave-start="opacity-100 offcanvas-100" 
+  x-transition:enter="ease-out duration-300"
+  x-transition:enter-start="opacity-0 offcanvas-0"
+  x-transition:enter-end="opacity-100 offcanvas-100"
+  x-transition:leave="ease-in duration-300"
+  x-transition:leave-start="opacity-100 offcanvas-100"
   x-transition:leave-end="opacity-0 offcanvas-0">
-  
+
       <div x-show="open" @click.away="open = false" class="absolute inset-0 p-16 flex flex-col ">
-  
+
           <div class="modal-header">
               <h5 class="modal-title" id="modalFormDeletePost"></h5>
               <button @click="open = false" type="button" class="close">
@@ -110,7 +110,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
               </button>
               <h1>ADD</h1>
           </div>
-  
+
           <div class="modal-body">
             <label>Name</label>
             <input wire:model="name" type="text" class="form-control"/>
@@ -122,7 +122,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
             @if ($errors->has('email'))
                 <p style="color: red;">{{$errors->first('email')}}</p>
             @endif
-            
+
             <label>Role</label>
             <div wire:ignore>
             <select wire:model="role">
@@ -132,29 +132,29 @@ x-transition:leave-end="opacity-0 offcanvas-0">
               @endforeach
             </select>
             </div>
-  
+
           </div>
           <div class="modal-footer mt-auto">
             <button wire:click="addNewUser" class="btn btn-primary">Save</button>
           </div>
-          
+
       </div>
-  
+
   </div>
   </div>
-  
+
 
 
 
 <div class="">
 
   <div class="flex justify-end gap-4 my-4">
-    <button class="flex gap-x-2 justify-center items-center text-md" wire:click="selectItem(1, 'add')"><x-tabler-user-plus stroke-width="1.5" />{{__('Add')}} {{__('User')}} </button>
+    <button class="flex btn gap-x-2 justify-center items-center text-md" wire:click="selectItem(1, 'add')"><x-tabler-user-plus stroke-width="1.5" />{{__('Add')}} {{__('User')}} </button>
 </div>
   <div class="flex justify-between gap-4 my-4">
 
- 
-            
+
+
       <input wire:model.debounce.300ms="search" type="text" class="text-gray-700  h-16 py-3 px-4 my-2 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Search users...">
 
 
@@ -165,7 +165,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
   <div class=" align-middle inline-block min-w-full ">
     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-          
+
           <table class="min-w-full divide-y divide-gray-200">
             <thead class=" rounded">
                 @foreach ($headers as $key => $value )
@@ -178,7 +178,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
 
 
             <tbody class="bg-white divide-y divide-gray-200">
-              @if($users->count())  
+              @if($users->count())
 
               @foreach ($users as $user)
               <tr>
@@ -186,7 +186,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
                       {{-- <img class="h-12 w-12 rounded-full" src="{{ asset('storage/'.$user->profile_photo_path) }}" alt=""> --}}
-                      
+
                       {{-- @if ($user->profile_photo_url)
                       <img class="h-12 w-12 rounded-full" src="{{ $user->profile_photo_url }}" alt="">
                       @else
@@ -198,7 +198,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
                         </span>
                         <img class="absolute rounded-full h-10 w-10 z-10 items-center justify-center flex" src="{{ $user->profile_photo_url }}" alt="">
                       </div>
-                      
+
 
                     </div>
                     <div class="ml-4">
@@ -230,16 +230,16 @@ x-transition:leave-end="opacity-0 offcanvas-0">
                     @endphp
 
                     Active {{$date_email_verified_at}} --}}
-                  </span>    
+                  </span>
                   @endif
-               
+
                 </td>
                 <td class="px-2 py-1 whitespace-nowrap text-sm text-gray-500">
                     @foreach ($user->roles as $user_role)
                     {{ $user_role->name }}
                     @endforeach
-     
-                    
+
+
                 </td>
                 <td class="px-4 py-2 whitespace-nowrap text-right">
                   <div class="flex justify-end items-center gap-1">
@@ -248,12 +248,12 @@ x-transition:leave-end="opacity-0 offcanvas-0">
                   </div>
                 </td>
               </tr>
-  
-          
-              
-   
+
+
+
+
               @endforeach
-              
+
               @else
               <tr>
                   <td>{{__('No Data')}}</td>
@@ -266,7 +266,7 @@ x-transition:leave-end="opacity-0 offcanvas-0">
 
         </div>
       </div>
- 
+
 
 
 

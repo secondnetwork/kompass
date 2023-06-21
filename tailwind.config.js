@@ -1,11 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
+
+  presets: [
+    require('./vendor/wireui/wireui/tailwind.config.js')
+  ],
+
   content: [                               //CONFIGURE CORRECTLY
     './storage/framework/views/*.php',
     './resources/views/**/*.blade.php',
     './resources/**/*.js',
     './vendor/secondnetwork/kompass/**/*.blade.php',
+    './vendor/wireui/wireui/resources/**/*.blade.php',
+    './vendor/wireui/wireui/ts/**/*.ts',
+    './vendor/wireui/wireui/src/View/**/*.php'
   ],
 
   safelist: [

@@ -26,7 +26,8 @@
         "livewire/livewire": "^2.12.3",
         "secondnetwork/blade-tabler-icons": "^2.15",
         "symfony/http-client": "^6.2.7",
-        "symfony/mailgun-mailer": "^6.2.7"
+        "symfony/mailgun-mailer": "^6.2.7",
+        "wireui/wireui": "^1.17"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",

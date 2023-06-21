@@ -2,14 +2,15 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
+use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use Livewire\Component;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Redirect;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use Secondnetwork\Kompass\Models\Datafields;
 
 class Pageview extends Component
 {
@@ -31,6 +32,11 @@ class Pageview extends Component
     {
         $this->page = $this->ResolvePath($slug);
 
+        if (!empty($this->page->new_url)) {
+            return redirect($this->page->new_url, $this->page->status_code);
+        }
+
+        // dd($this->page);
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
             return Block::where('page_id', $this->page->id)->where('status', 'public')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
@@ -63,10 +69,26 @@ class Pageview extends Component
             }
         }
 
-        $page = Page::where('slug', $slug)->where('status', 'public')->firstOrFail();
-        if ($page) {
+        $page = Page::where('slug', $slug)->where('status', 'public')->first();
+        // $page = Page::where('slug', $slug)->where('status', 'public')->first();
+
+        // $redirect = Redirect::where('old_url', '/'.$slug)->firstOrFail();
+
+        if (!empty($page)) {
             return $page;
         }
+        else{
+            $redirect = Redirect::where('old_url', '/' . $slug)->firstOrFail();
+            return $redirect;
+        }
+
+        // if (!empty($redirect)) {
+
+        //     return $redirect;
+        // }
+
+
+
     }
 
     public function get_field($slug, $blockis = null, $class = null, $size = null)

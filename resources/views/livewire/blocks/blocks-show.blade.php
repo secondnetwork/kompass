@@ -66,7 +66,7 @@
         <div class="flex justify-end items-center">
             <div class="flex justify-end gap-4">
 
-        <button class="flex gap-x-2   justify-center items-center"
+        <button class="flex btn gap-x-2   justify-center items-center"
             wire:click="saveUpdate('{{ $blocktemplatesId }}')">
             <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
         </button>
@@ -79,13 +79,13 @@
         <div class="flex justify-between gap-4">
             <div class=" flex-auto">
                 <span class="text-gray-400 text-base">Block Titel</span>
-    
-    
+
+
                 <div x-data="click_to_edit()">
                     <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="select-none cursor-pointer">
                         <h3>{{ $name }}</h3>
                     </a>
-    
+
                     <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
                         wire:model="data.name" x-show="isEditing" @click.away="toggleEditingState"
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
@@ -93,7 +93,7 @@
                 <div class="col-span-6 text-md">
                     {{ $data->slug }}
                 </div>
-    
+
             </div>
 
         </div>
@@ -130,25 +130,25 @@
                     @else
                     <x-tabler-square-number-3/>
                     @endif
-                </span>  
+                </span>
                 <span class="cursor-pointer" x-data @click="$dispatch('input', '4')">
                     @if ($layout == '4')
                     <x-tabler-square-number-4 class="stroke-blue-500"/>
                     @else
                     <x-tabler-square-number-4/>
                     @endif
-                </span>  
+                </span>
                 <span class="cursor-pointer" x-data @click="$dispatch('input', '5')">
                     @if ($layout == '5')
                     <x-tabler-square-number-5 class="stroke-blue-500"/>
                     @else
                     <x-tabler-square-number-5/>
                     @endif
-                </span>  
-                
-               
+                </span>
+
+
             </nav-item>
-     
+
 
         <nav-item class="flex items-center gap-2">
             <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Block Icon</span>
@@ -157,8 +157,8 @@
                     <x-tabler-photo-cog/>
 
                 </span>
-                
-               
+
+
             </nav-item>
         </nav>
 
@@ -173,7 +173,7 @@
                         <div wire:sortable.handle>
                             <x-tabler-grip-horizontal class="cursor-move stroke-current  text-gray-900" />
                         </div>
-  
+
 
                         <span wire:click="selectItem({{ $fields[$key]->id }}, 'delete')" class="flex justify-end">
                             <x-tabler-trash class="cursor-pointer stroke-current  text-red-500" />
@@ -198,7 +198,7 @@
 
                         {{-- <x-kompass::form.input wire:model="fields.{{ $key }}.slug" label="Feldname" type="text" disabled />
             {{$fields[$key]->slug}} --}}
-                     
+
 
                         {{-- wire:model="fields.{{ $key }}.slug" --}}
                         {{-- <x-kompass::form.input wire:model="fields.{{ $key }}.type" label="Feldtyp" type="text" /> --}}
@@ -260,7 +260,7 @@
                 </div>
             @endforeach
         </block-ltem>
-        <button class="flex gap-x-2   justify-center items-center"
+        <button class="flex btn gap-x-2   justify-center items-center"
             wire:click="addNewField('{{ $blocktemplatesId }}')">
             <x-tabler-square-plus class="icon-lg" />{{ __('Add') }}
         </button>

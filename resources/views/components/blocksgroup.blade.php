@@ -120,8 +120,8 @@
                         <x-tabler-carousel-vertical />
                     @endif
                 </span>
-                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'layout', 'full')">
-                    @if ($layout == 'full')
+                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'layout', 'fullpage')">
+                    @if ($layout == 'fullpage')
                         <x-tabler-arrow-autofit-width class="stroke-blue-500" />
                     @else
                         <x-tabler-arrow-autofit-width />

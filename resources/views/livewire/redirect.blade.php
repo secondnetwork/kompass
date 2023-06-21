@@ -1,29 +1,9 @@
-<div>
-
-    <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd') }">
-        <x-kompass::offcanvas :w="'w-2/6'">
-            <x-slot name="body">
-
-                <x-kompass::form.input type="text" name="title" wire:model="title" />
-                <x-kompass::input-error for="title" class="mt-2" />
-                <x-kompass::form.textarea wire:model.defer="meta_description" id="name" name="Description"
-                    label="Description" type="text" class="mt-1 block w-full h-[15rem]" />
-
-                <button wire:click="addPage" class="btn btn-primary">{{ __('Save') }}</button>
-
-            </x-slot>
-        </x-kompass::offcanvas>
-    </div>
-
-    <x-kompass::modal data="FormDelete" />
-
-
     <div class="flex flex-col">
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
 
                 <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
-                    <x-tabler-square-plus stroke-width="1.5" />{{ __('New page') }}
+                    <x-tabler-square-plus stroke-width="1.5" />{{ __('Add') }}
                 </button>
                 {{-- <template x-teleport="#navheader"> </template> --}}
             </div>
@@ -31,8 +11,6 @@
 
         <div class=" align-middle inline-block min-w-full ">
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-
 
                 @if ($pages->count())
                     <table class="min-w-full divide-y divide-gray-200">
@@ -86,23 +64,7 @@
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                             </a>
 
-                                            @if ($page->status == 'public')
-                                                <span wire:click="status({{ $page->id }}, 'unpublish')">
-                                                    <x-tabler-eye class="cursor-pointer stroke-gray-400" />
-                                                </span>
-                                            @else
-                                                <span wire:click="status({{ $page->id }}, 'public')">
-                                                    <x-tabler-eye-off class="cursor-pointer stroke-red-500" />
-                                                </span>
-                                            @endif
 
-                                            <a target="_blank" href="/{{ $page->slug }}" class="flex justify-center">
-                                                <x-tabler-external-link class="cursor-pointer stroke-gray-400" />
-                                            </a>
-
-                                            <span wire:click="clone({{ $page->id }})" class="flex justify-center">
-                                                <x-tabler-copy class="cursor-pointer    stroke-violet-500" />
-                                            </span>
 
                                             <span wire:click="selectItem({{ $page->id }}, 'delete')"
                                                 class="flex justify-center">
@@ -126,5 +88,3 @@
         </div>
 
     </div>
-
-</div>

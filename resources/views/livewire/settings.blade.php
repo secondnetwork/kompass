@@ -5,10 +5,12 @@
    
    <div class="uppercase text-xs mt-5 border-r-2 border-gray-400 text-gray-500 font-semibold">{{ __('Global Settings') }}</div>
    <nav class="setting">
-   
-       
-   
+
+  
+   {{-- <livewire:adminsettings name="admin-sidebar-top"> --}}
    <ul x-data>
+   <livewire:adminmenu name="adminsettings">
+
    @foreach ($settingsGroup as $item)
                 
    <li class="my-2">

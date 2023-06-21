@@ -13,6 +13,7 @@ use Secondnetwork\Kompass\Livewire\MenuData;
 use Secondnetwork\Kompass\Livewire\MenuTable;
 use Secondnetwork\Kompass\Livewire\PagesData;
 use Secondnetwork\Kompass\Livewire\PagesTable;
+use Secondnetwork\Kompass\Livewire\Redirection;
 use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 
@@ -42,6 +43,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
     Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
 
     Route::get('settings', Settings::class)->name('settings');
+
+    Route::get('redirect', Redirection::class)->name('redirect');
 
     Route::view('profile', 'kompass::admin.profile')->name('profile');
 
