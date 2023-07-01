@@ -55,6 +55,7 @@ class PagesData extends Component
     public $FormEdit = false;
 
     public $Editorjs;
+
     public $data;
 
     public $selected = [];
@@ -65,6 +66,10 @@ class PagesData extends Component
         'page.meta_description' => '',
         'page.slug' => '',
         'page.layout' => '',
+        'page.status' => '',
+        'page.password' => '',
+        'page.begin_at' => '',
+        'page.end_at' => '',
         'blocks.*.id' => '',
         'blocks.*.name' => '',
         'fields.*.id' => '',
@@ -75,26 +80,24 @@ class PagesData extends Component
     protected $listeners = [
         'editorjssave' => 'saveEditorState',
         'refreshComponent' => '$refresh',
-        'refreshmedia' => 'call_emit_reset'
-        
+        'refreshmedia' => 'call_emit_reset',
+
     ];
 
-   
-
-    public function saveEditorState($editorJsonData,$id)
+    public function saveEditorState($editorJsonData, $id)
     {
-        if (!empty($editorJsonData)) {
 
-         
-                Datafields::whereId($id)->update(['data' => $editorJsonData]);
-                // foreach($itemg['items'] as $item){
-                //     block::whereId($item['value'])->update(['order' => $item['order']]);
-                // }
-                // dump($itemg);
-        
+        if (! empty($editorJsonData)) {
+
+            Datafields::whereId($id)->update(['data' => $editorJsonData]);
+            // foreach($itemg['items'] as $item){
+            //     block::whereId($item['value'])->update(['order' => $item['order']]);
+            // }
+            // dump($itemg);
+
         }
-        // @dump($validateData);
-        $this->call_emit_reset();
+
+        // $this->call_emit_reset();
     }
 
     public function mount($id)
@@ -151,11 +154,21 @@ class PagesData extends Component
             'name' => $name,
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
-            'status' => 'public',
+            'status' => 'published',
             'slug' => $slug,
             'grid' => $grid,
             'order' => '999',
         ]);
+        if ($blockType == 'tables') {
+            Datafields::create([
+                'block_id' => $block->id,
+                'name' => 'tables',
+                'slug' => 'tables',
+                'type' => 'tables',
+                'grid' => '1',
+                'order' => '1',
+            ]);
+        }
 
         if ($blocktemplatesID != null) {
             $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
@@ -207,7 +220,7 @@ class PagesData extends Component
             $copyitem = $item->replicate();
             $copyitem->block_id = $newblock->id;
             $copyitem->save();
-        },);
+        }, );
 
         $this->call_emit_reset();
     }
@@ -256,12 +269,12 @@ class PagesData extends Component
 
     public function status($id, $status)
     {
-        if ($status == 'unpublish') {
-            Block::where('id', $id)->update(['status' => 'unpublish']);
+        if ($status == 'draft') {
+            Block::where('id', $id)->update(['status' => 'draft']);
             $this->emit('status');
         }
-        if ($status == 'public') {
-            Block::where('id', $id)->update(['status' => 'public']);
+        if ($status == 'published') {
+            Block::where('id', $id)->update(['status' => 'published']);
             $this->emit('status');
         }
         $this->call_emit_reset();
@@ -269,17 +282,17 @@ class PagesData extends Component
 
     public function statusPage($id, $status)
     {
-        if ($status == 'unpublish') {
-            Page::where('id', $id)->update(['status' => 'unpublish']);
+        if ($status == 'draft') {
+            Page::where('id', $id)->update(['status' => 'draft']);
         }
-        if ($status == 'public') {
-            Page::where('id', $id)->update(['status' => 'public']);
+        if ($status == 'published') {
+            Page::where('id', $id)->update(['status' => 'published']);
         }
 
         $this->call_emit_reset();
     }
 
-    public function update($id, $published = null)
+    public function update($id, $publisheded = null)
     {
         $page = Page::findOrFail($id);
 
@@ -288,7 +301,7 @@ class PagesData extends Component
         $this->emit('savedatajs');
 
         $validateData = $this->validate();
-        
+
         $titlePageDB = Str::slug($page->title, '-', 'de');
         $slugPageDB = $page->slug;
         $titlePage = Str::slug($validateData['page']['title'], '-', 'de');
@@ -299,10 +312,10 @@ class PagesData extends Component
         if ($titlePage != $titlePageDB) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $titlePage . '-' . $numericalPrefix++;
+                $newSlug = $titlePage.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (!$checkSlug) {
+                if (! $checkSlug) {
                     $slugNameURL = $newSlug; //New Slug
                     break;
                 }
@@ -312,8 +325,8 @@ class PagesData extends Component
             $slugNameURL = $titlePage;
         }
 
-        if ($published == true) {
-            Page::where('id', $id)->update(['status' => 'public']);
+        if ($publisheded == true) {
+            Page::where('id', $id)->update(['status' => 'published']);
             $this->emit('status');
         }
 
@@ -321,6 +334,10 @@ class PagesData extends Component
             'title' => $validateData['page']['title'],
             'meta_description' => $validateData['page']['meta_description'],
             'layout' => $validateData['page']['layout'],
+            'status' => $validateData['page']['status'],
+            'password' => $validateData['page']['password'],
+            'begin_at' => $validateData['page']['begin_at'],
+            'end_at' => $validateData['page']['end_at'],
         ]);
 
         $page->update([
@@ -328,15 +345,13 @@ class PagesData extends Component
             'updated_at' => Carbon::now(),
         ]);
 
-        if (!empty($validateData['blocks'])) {
+        if (! empty($validateData['blocks'])) {
             foreach ($validateData['blocks'] as $itemg) {
                 Block::whereId($itemg['id'])->update($itemg);
             }
         }
 
-
-
-        if (!empty($validateData['fields'])) {
+        if (! empty($validateData['fields'])) {
 
             foreach ($validateData['fields'] as $itemg) {
                 Datafields::whereId($itemg['id'])->update($itemg);
@@ -346,7 +361,7 @@ class PagesData extends Component
                 // dump($itemg);
             }
         }
-        // @dump($validateData);
+
         $this->call_emit_reset();
     }
 

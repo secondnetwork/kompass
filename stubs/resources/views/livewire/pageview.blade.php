@@ -18,7 +18,7 @@
     <x-blocks.accordion layout="{{$item->slug}}" blockid="{{$item->id}}" :set="$item->set"/>
     <x-blocks.oembed layout="{{$item->slug}}" blockid="{{$item->id}}" :set="$item->set"/>
 
-    <x-blocks.group layout="{{$item->type}}" blockid="{{$item->id}}" :children="$item['children']->where('status', 'public')->sortBy('order')" />
+    <x-blocks.group layout="{{$item->type}}" blockid="{{$item->id}}" :children="$item['children']->where('status', 'published')->sortBy('order')" />
 
 @endforeach
 <section></section>

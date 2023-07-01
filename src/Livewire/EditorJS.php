@@ -36,8 +36,9 @@ class EditorJS extends Component
     protected $listeners = [
         'savedatajs' => 'save',
     ];
+
     public function mount(
-        $editorId,
+        $editorId = [],
         $value = [],
         $class = '',
         $style = '',
@@ -106,9 +107,9 @@ class EditorJS extends Component
 
     public function save()
     {
-      
         // $this->emitUp("editorjssave:{$this->editorId}", $this->data);
- $this->emit("editorjssave", $this->data, $this->editorId);
+        // dump($this->editorId);
+        $this->emit('editorjssave', $this->data, $this->editorId);
     }
 
     public function render()

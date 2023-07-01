@@ -12,7 +12,7 @@ class Settings extends Component
 
     public $headers;
 
-    public $pagetap = 'application';
+    public $pagetap = 'admin';
 
     protected $queryString = ['pagetap'];
 

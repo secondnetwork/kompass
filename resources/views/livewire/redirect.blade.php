@@ -39,7 +39,7 @@
                                                 <a target="_blank" href="/{{ $page->slug }}">
                                             @endif
                                             @if ($key == 2)
-                                                @if ($page->$value == 'public')
+                                                @if ($page->$value == 'published')
                                                     <span
                                                         class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                     @else
@@ -60,13 +60,16 @@
                                     <td class="px-4 py-3 whitespace-nowrap bg-white">
                                         <div class="flex justify-end items-center gap-1">
 
-                                            <a href="/admin/pages/show/{{ $page->id }}" class="flex justify-center">
+                                            <a 
+                                            {{-- href="/admin/pages/show/{{ $page->id }}"  --}}
+                                            class="flex justify-center">
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                             </a>
 
 
 
-                                            <span wire:click="selectItem({{ $page->id }}, 'delete')"
+                                            <span 
+                                            {{-- wire:click="selectItem({{ $page->id }}, 'delete')" --}}
                                                 class="flex justify-center">
                                                 <x-tabler-trash class="cursor-pointer stroke-red-500" />
                                             </span>

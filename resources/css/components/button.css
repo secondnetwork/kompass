@@ -10,6 +10,18 @@ a.button {
 
 }
 
+.btn-danger
+{
+  @apply py-2 px-3 rounded text-white hover:bg-transparent hover:text-red-500 border-2 border-red-500;
+
+}
+
+.btn-secondary
+{
+  @apply py-2 px-3 rounded text-white hover:bg-transparent hover:text-slate-400 border-2 border-slate-400;
+
+}
+
 .icon--is-spinning {
   animation: icon-spin 1s infinite linear;
 }

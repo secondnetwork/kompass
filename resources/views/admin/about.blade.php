@@ -12,12 +12,7 @@
 
     </div>
     </div>
-    <div class="">
-    <div>
-        {{-- <x-jet-application-logo class="block h-12 w-auto" /> --}}
-    </div>
 
-</div>
 
 <div class="mt-4 bg-white rounded-2xl border border-gray-100 shadow bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
     <div class="p-8">

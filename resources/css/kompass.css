@@ -19,7 +19,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 @import "base/base.css";
 @import "base/grid_layout.css";
-@import "base/fonts.css";
+/* @import "base/fonts.css"; */
 @import "base/typography.css";
 
 @import "blocks/admin/login.css";
@@ -28,7 +28,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @import "blocks/blockitem.css";
 
 
-@import "components/inputs.css";
+/* @import "components/inputs.css"; */
 @import "components/button.css";
 @import "components/editor_quill.css";
 

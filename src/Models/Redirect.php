@@ -2,12 +2,8 @@
 
 namespace Secondnetwork\Kompass\Models;
 
-
-use Illuminate\Database\Eloquent\Model;
-
-use SiroDiaz\Redirection\Models\Redirection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use SiroDiaz\Redirection\Models\Redirection as RedirectionBaseModel;
+use SiroDiaz\Redirection\Models\Redirection;
 
 class Redirect extends Redirection
 {

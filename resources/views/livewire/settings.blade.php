@@ -1,25 +1,27 @@
+
+  
 <livewire-components>
     <grid-side class="grid grid-cols-11 h-full gap-4">
      
     <aside class="col-start-1 lg:col-end-3 border-r border-gray-200 h-full ">
-   
+
    <div class="uppercase text-xs mt-5 border-r-2 border-gray-400 text-gray-500 font-semibold">{{ __('Global Settings') }}</div>
    <nav class="setting">
 
   
    {{-- <livewire:adminsettings name="admin-sidebar-top"> --}}
    <ul x-data>
-   <livewire:adminmenu name="adminsettings">
+      
 
    @foreach ($settingsGroup as $item)
                 
    <li class="my-2">
-   <a wire:click="pagetap('{{$item->group}}')" class="text-base text-gray-400 cursor-pointer" :class="{ 'active  border-current text-blue-600': '{{$pagetap}}' === '{{$item->group}}' }" >
+   <a wire:click="pagetap('{{$item->group}}')" class="text-base text-gray-600 cursor-pointer" :class="{ 'active  border-current text-blue-600': '{{$pagetap}}' === '{{$item->group}}' }" >
        <span class="capitalize">{{$item->group}}</span>
    </a>
    </li>
    @endforeach 
-    
+
    {{-- Application
    API Tokens
    Content manager
@@ -37,12 +39,16 @@
    
    {{-- <div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Advanced settings') }}</div> --}}
    </ul>
-   </nav> 
+   </nav>
+   
+      <div class="uppercase text-xs mt-5  text-gray-500 font-semibold">{{ __('Tools') }}</div>
+
+           <livewire:adminmenu name="adminsettings">
     </aside>
    
    <div class="flex flex-col lg:col-start-3 col-end-12" >
        <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-           <button wire:click="selectItem('', 'add')" class="flex gap-x-2 justify-center items-center text-md" @click="open = true">
+           <button wire:click="selectItem('', 'add')" class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
                <x-tabler-square-plus stroke-width="1.5" />{{ __('New Setting') }}
             </button>
        </div>
@@ -73,7 +79,7 @@
                        <tr wire:sortable.item="{{ $setting->id }}">
                            <td wire:sortable.handle class="px-4 w-4 ">
                                <x-tabler-arrow-autofit-height
-                                   class="cursor-move stroke-current text-gray-400" />
+                                   class="cursor-move stroke-current text-gray-600" />
                            </td>
                           
                            @foreach ($data as $key => $value) 
@@ -98,16 +104,17 @@
                             <span class="px-2.5 py-2 inline-flex font-semibold rounded-lg text-xs whitespace-nowrap  bg-green-100 text-green-800">
                                @php echo '{{' @endphp setting('{{ $setting->group }}.{{ $setting->key }}') @php echo '}}' @endphp
                                </span></td>
-                           <td class="px-4 py-3 whitespace-nowrap bg-white flex justify-end items-center gap-2">
+                           <td class="px-4 py-3 whitespace-nowrap bg-white">
                                <div class="flex items-center justify-end">
 
-                                   <span wire:click="selectItem({{ $setting->id }}, 'update')" class="flex justify-center""
-                                       class="flex justify-center">
+                                   <span wire:click="selectItem({{ $setting->id }}, 'update')" class="flex justify-center">
                                        <x-tabler-edit class="cursor-pointer stroke-blue-500" />
-                                   </spam>
-                                   <spam x-clipboard.raw="@php echo '{{' @endphp setting('{{ $setting->key }}') @php echo '}}' @endphp">
+                                   </span>
+
+                                   <span x-clipboard.raw="@php echo '{{' @endphp setting('{{ $setting->key }}') @php echo '}}' @endphp">
                                     <x-tabler-clipboard class="cursor-pointer stroke-violet-500" />
-                                </spam>
+                                    </span>
+
                                    <span wire:click="selectItem({{ $setting->id }}, 'delete')" class="flex justify-center">
                                        <x-tabler-trash class="cursor-pointer stroke-red-500" />
                                    </span>

@@ -185,14 +185,17 @@
                         <div>
                             Feldname: <strong>{{ $fields[$key]->slug }}</strong>
                         </div>
-                        Gird
-                        <select wire:model="fields.{{ $key }}.grid">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+           
 
+                    <x-native-select label="Gird" :options="[
+                        ['name' => '1', 'id' => '1'],
+                        ['name' => '2', 'id' => '2'],
+                        ['name' => '3', 'id' => '3'],
+                        ['name' => '4', 'id' => '4'],
+
+
+                    ]" option-label="name"
+                        option-value="id" wire:model="fields.{{ $key }}.grid" />
 
 
 
@@ -202,9 +205,11 @@
 
                         {{-- wire:model="fields.{{ $key }}.slug" --}}
                         {{-- <x-kompass::form.input wire:model="fields.{{ $key }}.type" label="Feldtyp" type="text" /> --}}
-                        <select wire:model="fields.{{ $key }}.type" label="Feldtyp"
+                        <select class="form-select block w-full pl-3 pr-10 py-2 text-base sm:text-sm shadow-sm
+                rounded-md border bg-white focus:ring-1 focus:outline-none
+                dark:bg-secondary-800 dark:border-secondary-600 dark:text-secondary-400 border-secondary-300 focus:ring-primary-500 focus:border-primary-500" wire:model="fields.{{ $key }}.type" label="Feldtyp"
                             data-placeholder="{{__('Select')}}">
-
+                            <option value="">{{__('Select')}}</option>
                             <optgroup label="{{__('Basis')}}">
                                 <option value="text">Text einzeilig</option>
                                 {{-- <option value="textarea">Text mehrzeilig</option> --}}

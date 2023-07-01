@@ -27,9 +27,21 @@
                 <x-tabler-grip-vertical wire:sortable.handle
                     class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
             @endif
+
+            <span @click="expanded = ! expanded"
+                class="text-xs inline-flex items-center gap-1.5 py-1 px-1 capitalize rounded font-semibold  text-gray-400 cursor-pointer">
+                @if ($itemblocks->iconclass)
+                    @svg('tabler-' . $itemblocks->iconclass, 'w-5')
+                @else
+                    @svg('tabler-section', 'w-5')
+                @endif
+                {{-- {{ $itemblocks->slug }} --}}
+
+            </span>
+            <span class="inline-block border-r border-gray-400 w-px h-5 ml-1 mr-2"></span>
             <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
-                    class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
+                    class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
                     @if ($type == 'group')
                         <x-tabler-stack class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
                     @endif
@@ -55,8 +67,8 @@
                         <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
                     </span>
 
-                </div><span
-                    class="text-xs ml-2 inline-flex items-center gap-1.5 py-1 px-2 capitalize rounded font-semibold bg-gray-200 text-gray-500">{{ $itemblocks->slug }}</span>
+                </div>
+
             </div>
 
         </span>
@@ -66,17 +78,26 @@
                 <span wire:click="selectItem({{ $page->id }}, 'addBlock', {{ $itemblocks->id }})">
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
                 </span>
+                @if ($itemblocks->status == 'published')
+                    <span wire:click="status({{ $itemblocks->id }}, 'draft')">
+                        <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />
+                    </span>
+                @else
+                    <span wire:click="status({{ $itemblocks->id }}, 'published')">
+                        <x-tabler-eye-off class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
+                    </span>
+                @endif
                 <span wire:click="selectItem({{ $itemblocks->id }}, 'deleteblock')" class="flex justify-center">
                     <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                 </span>
             @endif
             @if ($type != 'group')
-                @if ($itemblocks->status == 'public')
-                    <span wire:click="status({{ $itemblocks->id }}, 'unpublish')">
+                @if ($itemblocks->status == 'published')
+                    <span wire:click="status({{ $itemblocks->id }}, 'draft')">
                         <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />
                     </span>
                 @else
-                    <span wire:click="status({{ $itemblocks->id }}, 'public')">
+                    <span wire:click="status({{ $itemblocks->id }}, 'published')">
                         <x-tabler-eye-off class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                     </span>
                 @endif
@@ -134,7 +155,7 @@
             <nav-item class="flex items-center gap-2">
                 <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>
                 <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'alignment', '')">
-                    @if ($alignment == '' || 'left')
+                    @if ($alignment == 'left')
                         <x-tabler-box-align-left class="stroke-blue-500" />
                     @else
                         <x-tabler-box-align-left />
@@ -196,28 +217,60 @@
                 @break
 
                 @case('tables')
-                
                     @foreach ($fields as $key => $itemfields)
                         @if ($itemblocks->id == $itemfields->block_id)
                             <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
-                         
+
                                 @php
                                     $jsfield = json_decode($fields[$key]['data'], true);
                                     $gridtables = $fields[$key]['grid'];
                                 @endphp
-                 
-                    @livewire('editorjs', [
-                        'editorId' => $fields[$key]['id'],
-                        'value' => $jsfield,
-                        'uploadDisk' => 'public',
-                        'downloadDisk' => 'public',
-                        'class' => 'cdx-input',
-                        'style' => '',
-                        // 'readOnly' => true,
-                        'placeholder' => 'Lorem ipsum dolor sit amet',
-                       
-                    ])
-                    </div>
+
+                                @livewire(
+                                    'editorjs',
+                                    [
+                                        'editorId' => $fields[$key]['id'],
+                                        'value' => $jsfield,
+                                        'uploadDisk' => 'publish',
+                                        'downloadDisk' => 'publish',
+                                        'class' => 'cdx-input',
+                                        'style' => '',
+                                        // 'readOnly' => true,
+                                        'placeholder' => 'Lorem ipsum dolor sit amet',
+                                    ],
+                                    key($fields[$key]['id'])
+                                )
+                            </div>
+                        @endif
+                    @endforeach
+                @break
+
+                @case('wysiwyg')
+                    sdf
+                    @foreach ($fields as $key => $itemfields)
+                        @if ($itemblocks->id == $itemfields->block_id)
+                            <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
+
+                                @php
+                                    $jsfield = json_decode($fields[$key]['data'], true);
+                                    $gridtables = $fields[$key]['grid'];
+                                @endphp
+
+                                @livewire(
+                                    'editorjs',
+                                    [
+                                        'editorId' => $fields[$key]['id'],
+                                        'value' => $jsfield,
+                                        'uploadDisk' => 'publish',
+                                        'downloadDisk' => 'publish',
+                                        'class' => 'cdx-input',
+                                        'style' => '',
+                                        // 'readOnly' => true,
+                                        'placeholder' => 'Lorem ipsum dolor sit amet',
+                                    ],
+                                    key($fields[$key]['id'])
+                                )
+                            </div>
                         @endif
                     @endforeach
                 @break

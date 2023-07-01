@@ -1,15 +1,15 @@
 {
-  "resources/js/main.js": {
-    "file": "js/main.50cd5637.js",
-    "src": "resources/js/main.js",
-    "isEntry": true,
-    "css": [
-      "css/kompass.53b8ca5c.css"
-    ]
-  },
   "resources/css/kompass.css": {
-    "file": "css/kompass.53b8ca5c.css",
-    "src": "resources/css/kompass.css",
-    "isEntry": true
+    "file": "css/kompass.d5ec1ce4.css",
+    "isEntry": true,
+    "src": "resources/css/kompass.css"
+  },
+  "resources/js/main.js": {
+    "css": [
+      "css/kompass.d5ec1ce4.css"
+    ],
+    "file": "js/main.625a87c7.js",
+    "isEntry": true,
+    "src": "resources/js/main.js"
   }
 }

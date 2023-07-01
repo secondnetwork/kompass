@@ -78,8 +78,6 @@ class Medialibrary extends Component
 
     public $perPage = 50;
 
-
-
     public $orderBy = 'created_at';
 
     public $orderAsc = true;
@@ -159,7 +157,7 @@ class Medialibrary extends Component
             $this->description = $model->description;
             $this->type = $model->type;
 
-            $this->file = $model->path . '/' . $model->slug . '.' . $model->extension;
+            $this->file = $model->path.'/'.$model->slug.'.'.$model->extension;
 
             $this->updated_at = $model->updated_at;
             $this->FormEdit = true;
@@ -190,7 +188,7 @@ class Medialibrary extends Component
         foreach ($storage->allFiles('livewire-tmp') as $filePathname) {
             // On busy websites, this cleanup code can run in multiple threads causing part of the output
             // of allFiles() to have already been deleted by another thread.
-            if (!$storage->exists($filePathname)) {
+            if (! $storage->exists($filePathname)) {
                 continue;
             }
 
@@ -231,10 +229,10 @@ class Medialibrary extends Component
 
     public static function convert($src, $des, $quality, $speed)
     {
-        if (!function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) {
+        if (! function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) {
             return;
         }
-        if (!$src && !$des && !$quality && !$speed) {
+        if (! $src && ! $des && ! $quality && ! $speed) {
             return false;
         }
 
@@ -301,10 +299,9 @@ class Medialibrary extends Component
             $type = $file->getType($original_ext);
             $time = date('Y_m_B');
             $details = config('kompass.media') ?? '{}';
-            $timefilesSlug = $time . '_' . $filesSlug;
+            $timefilesSlug = $time.'_'.$filesSlug;
 
-            $storelink = $filedata->storeAs($this->dir, $time . '_' . $filesSlug . '.' . $original_ext, $this->filesystem);
-
+            $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
 
             $imageMimeTypes = [
                 'image/jpeg',
@@ -313,10 +310,10 @@ class Medialibrary extends Component
                 'image/gif',
             ];
             if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
-                $des = Storage::path('public/' . $timefilesSlug . '.avif');
+                $des = Storage::path('public/'.$timefilesSlug.'.avif');
                 self::convert(asset($storelink), $des, 50, 6);
                 foreach ($details['thumbnails'] as $thumbnail_data) {
-                    $thumbnail = $filedata->storeAs($this->dir, $time . '_' . $filesSlug . '_' . $thumbnail_data['name'] . '.' . $original_ext, $this->filesystem);
+                    $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
                     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 80, $original_ext);
                 }
             }
@@ -351,7 +348,7 @@ class Medialibrary extends Component
                 }, $position)
                 ->encode($original_ext, ($quality ?? 90))->encoded);
 
-            $des = Storage::path('public/' . $path . '.avif');
+            $des = Storage::path('public/'.$path.'.avif');
             self::convert(asset($path), $des, 50, 6);
         } elseif ($type == 'crop') {
             Storage::disk($this->filesystem)->put($path, $image
@@ -380,7 +377,7 @@ class Medialibrary extends Component
             } else {
                 Datafields::updateOrCreate(
                     ['id' => $this->field_id],
-                    ['data' => $media_id,]
+                    ['data' => $media_id]
                 );
             }
 
@@ -413,8 +410,8 @@ class Medialibrary extends Component
     {
         $file = File::findOrFail($this->iditem);
 
-        if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension)) {
-            if (Storage::disk('local')->delete('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension)) {
+        if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
+            if (Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
                 File::destroy($this->iditem);
                 $this->FormDelete = false;
                 $this->FormEdit = false;
@@ -425,7 +422,7 @@ class Medialibrary extends Component
 
     private function resultDate()
     {
-        return file::where('name', 'like', '%' . $this->search . '%')->Paginate(100);
+        return file::where('name', 'like', '%'.$this->search.'%')->Paginate(100);
         // return file::whereLike(['name', 'description'], '%' . $this->search . '%')->Paginate(100);
     }
 

@@ -55,21 +55,45 @@
                                     </td>
 
                                     @foreach ($data as $key => $value)
-                                        <td
-                                            class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                        <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
                                             @if ($key == 0)
                                                 <a target="_blank" href="/{{ $page->slug }}">
                                             @endif
                                             @if ($key == 2)
-                                                @if ($page->$value == 'public')
-                                                    <span
-                                                        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                    @else
+                                                @switch($page->$value)
+                                                    @case('published')
                                                         <span
-                                                            class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                @endif
+                                                            class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            <span class="relative flex h-2 w-2">
+                                                                <span
+                                                                    class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
+                                                                <span
+                                                                    class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                                                            </span>
+                                                        @break
+
+                                                        @case('password')
+                                                            <span
+                                                                class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
+                                                                <span class="relative flex h-2 w-2">
+                                                                    <span
+                                                                        class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
+                                                                    <span
+                                                                        class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                                                                </span>
+                                                            @break
+
+                                                            @default
+                                                                <span
+                                                                    class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                    <span class="relative flex h-2 w-2">
+
+                                                                        <span
+                                                                            class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
+                                                                    </span>
+                                                            @endswitch
                                             @endif
-                                            {{ $page->$value }}
+                                            {{ __($page->$value) }}
                                             @if ($key == 0)
                                                 </a>
                                             @endif
@@ -86,12 +110,12 @@
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                             </a>
 
-                                            @if ($page->status == 'public')
-                                                <span wire:click="status({{ $page->id }}, 'unpublish')">
+                                            @if ($page->status == 'published')
+                                                <span wire:click="status({{ $page->id }}, 'draft')">
                                                     <x-tabler-eye class="cursor-pointer stroke-gray-400" />
                                                 </span>
                                             @else
-                                                <span wire:click="status({{ $page->id }}, 'public')">
+                                                <span wire:click="status({{ $page->id }}, 'published')">
                                                     <x-tabler-eye-off class="cursor-pointer stroke-red-500" />
                                                 </span>
                                             @endif
@@ -117,7 +141,7 @@
                         </tbody>
                     </table>
                 @else
-                    <div class="h-36 text-center">{{__('No Data')}}</div>
+                    <div class="h-36 text-center">{{ __('No Data') }}</div>
 
                 @endif
 

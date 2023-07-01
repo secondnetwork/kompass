@@ -19,5 +19,5 @@
 
 <div>
     <label for='{{ $name }}' class="text-md">{{ $label }}</label>
-    <textarea name='{{ $name }}' id='{{ $name }}' {{ $attributes }}>{{ $slot }}</textarea>
+    <textarea name='{{ $name }}' id='{{ $name }}' {{ $attributes->merge(['class' => 'block p-2.5 w-full border-2 border-gray-300 text-base border-gray-300 rounded-md']) }}>{{ $slot }}</textarea>
 </div>

@@ -7,11 +7,9 @@ use Secondnetwork\Kompass\Models\Redirect;
 
 class Redirection extends Component
 {
-
     public $search = '';
 
     protected $queryString = ['search'];
-
 
     protected function headerTable(): array
     {
@@ -36,20 +34,20 @@ class Redirection extends Component
     }
 
         public function selectItem($itemId, $action)
-    {
-        $this->selectedItem = $itemId;
-        if ($action == 'add') {
-            // This will show the modal on the frontend
-            // $this->reset(['name', 'email', 'password', 'role']);
-            $this->FormAdd = true;
-        }
-        if ($action == 'update') {
-        }
+        {
+            $this->selectedItem = $itemId;
+            if ($action == 'add') {
+                // This will show the modal on the frontend
+                // $this->reset(['name', 'email', 'password', 'role']);
+                $this->FormAdd = true;
+            }
+            if ($action == 'update') {
+            }
 
-        if ($action == 'delete') {
-            $this->FormDelete = true;
+            if ($action == 'delete') {
+                $this->FormDelete = true;
+            }
         }
-    }
 
     public function mount()
     {
@@ -76,11 +74,11 @@ class Redirection extends Component
 
     private function resultDate()
     {
-        return Redirect::where('old_url', 'like', '%' . $this->search . '%')->Paginate(100);
-        
+        return Redirect::where('old_url', 'like', '%'.$this->search.'%')->Paginate(100);
+
         // return file::whereLike(['name', 'description'], '%' . $this->search . '%')->Paginate(100);
     }
-    
+
     public function render()
     {
 

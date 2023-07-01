@@ -28,6 +28,22 @@
 
 @if ($type == 'wysiwyg')
     <span class="text-md">{{ $name }}</span>
+
+                                {{-- @livewire(
+                                    'editorjs',
+                                    [
+                                        'editorId' => $idField,
+                                        'value' => json_decode($fields, true),
+                                        'uploadDisk' => 'public',
+                                        'downloadDisk' => 'public',
+                                        'class' => 'cdx-input',
+                                        'style' => '',
+                                        'readOnly' => false,
+                                        'placeholder' => 'Lorem ipsum dolor sit amet',
+                                    ],
+                  
+                                ) --}}
+
     <x-quill id="{{ $key }}" wire:model.defer="fields.{{ $key }}.data" />
 @endif
 
@@ -42,7 +58,7 @@
             <div class="relative">
             
                 <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
-                    src="{{ asset('storage' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
+                    src="{{ asset('storage/' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                     <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                     <div class="flex">
@@ -86,7 +102,7 @@
                 <div class="relative">
             
                         <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
-                            src="{{ asset('storage' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
+                            src="{{ asset('storage/' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
                         <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                             <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                             <div class="flex">

@@ -8,6 +8,7 @@ use Secondnetwork\Kompass\Http\Controllers\KompassController;
 use Secondnetwork\Kompass\Livewire\AccountForm;
 use Secondnetwork\Kompass\Livewire\BlocksData;
 use Secondnetwork\Kompass\Livewire\BlocksTable;
+use Secondnetwork\Kompass\Livewire\Brokenlink;
 use Secondnetwork\Kompass\Livewire\Medialibrary;
 use Secondnetwork\Kompass\Livewire\MenuData;
 use Secondnetwork\Kompass\Livewire\MenuTable;
@@ -45,6 +46,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
     Route::get('settings', Settings::class)->name('settings');
 
     Route::get('redirect', Redirection::class)->name('redirect');
+    Route::get('brokenlink', Brokenlink::class)->name('brokenlink');
 
     Route::view('profile', 'kompass::admin.profile')->name('profile');
 

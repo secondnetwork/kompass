@@ -118,11 +118,11 @@ class PagesTable extends Component
 
     public function status($id, $status)
     {
-        if ($status == 'unpublish') {
-            Page::where('id', $id)->update(['status' => 'unpublish']);
+        if ($status == 'draft') {
+            Page::where('id', $id)->update(['status' => 'draft']);
         }
-        if ($status == 'public') {
-            Page::where('id', $id)->update(['status' => 'public']);
+        if ($status == 'published') {
+            Page::where('id', $id)->update(['status' => 'published']);
         }
 
         // $this->resetpage();
@@ -157,7 +157,7 @@ class PagesTable extends Component
         $page = Page::create([
 
             'title' => $this->title,
-            'status' => 'unpublish',
+            'status' => 'draft',
             'meta_description' => $this->meta_description,
             'order' => '999',
             'slug' => $newpageslug,
@@ -196,7 +196,7 @@ class PagesTable extends Component
             //Slug do not exists. Just use the selected Slug.
             $newpage->slug = $slugNameURL;
         }
-        $newpage->status = 'unpublish';
+        $newpage->status = 'draft';
         $newpage->created_at = Carbon::now();
 
         $newpage->push();

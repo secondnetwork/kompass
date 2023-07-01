@@ -5,7 +5,7 @@
     'value' => '',
 ])
 
-@if ($label === '')
+{{-- @if ($label === '')
     @php
         //remove underscores from name
         $label = str_replace('_', ' ', $name);
@@ -16,9 +16,9 @@
         //uppercase first letter and lower the rest of a word
         $label = ucwords(strtolower($label));
     @endphp
-@endif
+@endif --}}
 
 <div>
-    <label for='{{ $name }}' class="text-md">{{ $label }}</label>
-    <input type='{{ $type }}' name='{{ $name }}' id='{{ $name }}' value='{{ $value }}' {{ $attributes }}>
+    @if ($label !== '')<label for='{{ $name }}' class="text-md mb-1 block">{{ $label }}</label>@endif
+    <input type='{{ $type }}' name='{{ $name }}' id='{{ $name }}' value='{{ $value }}'  {{ $attributes->merge(['class' => 'block p-2.5 w-full border-2 border-gray-300 text-base border-gray-300 rounded-md']) }}>
 </div>
