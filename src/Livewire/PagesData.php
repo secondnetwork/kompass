@@ -12,7 +12,6 @@ use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\Page;
-use Spatie\LaravelIgnition\Recorders\DumpRecorder\Dump;
 
 class PagesData extends Component
 {
@@ -143,11 +142,8 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
-        if ($blockType == 'tables') {
-            $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'tables' => '2', 'type' => $blockType];
-        } else {
-            $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
-        }
+
+        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
 
         $block = Block::create([
             'page_id' => $pageID,
@@ -159,12 +155,12 @@ class PagesData extends Component
             'grid' => $grid,
             'order' => '999',
         ]);
-        if ($blockType == 'tables') {
+        if ($blockType == 'wysiwyg') {
             Datafields::create([
                 'block_id' => $block->id,
-                'name' => 'tables',
-                'slug' => 'tables',
-                'type' => 'tables',
+                'name' => 'wysiwyg',
+                'slug' => 'wysiwyg',
+                'type' => 'wysiwyg',
                 'grid' => '1',
                 'order' => '1',
             ]);

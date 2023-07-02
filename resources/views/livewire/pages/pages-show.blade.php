@@ -268,9 +268,9 @@
                         <span class="text-xs block mt-2">Group</span>
                     </div>
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock({{ $page['id'] }},'','Tables','tables','1','tables')">
-                        <img src="{{ kompass_asset('icons-blocks/tables.png') }}" alt="">
-                        <span class="text-xs block mt-2">Tables</span>
+                        wire:click.defer="addBlock({{ $page['id'] }},'','Textblock','wysiwyg','1','wysiwyg')">
+                        <img src="{{ kompass_asset('icons-blocks/longtext.png') }}" alt="">
+                        <span class="text-xs block mt-2">Textblock</span>
                     </div>
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click.defer="addBlock({{ $page['id'] }},'','Gallery','gallery','1','gallery')">

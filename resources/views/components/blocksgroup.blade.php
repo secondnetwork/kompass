@@ -236,7 +236,7 @@
                                         'class' => 'cdx-input',
                                         'style' => '',
                                         // 'readOnly' => true,
-                                        'placeholder' => 'Lorem ipsum dolor sit amet',
+                                        'placeholder' => __('write something...'),
                                     ],
                                     key($fields[$key]['id'])
                                 )
@@ -246,7 +246,6 @@
                 @break
 
                 @case('wysiwyg')
-                    sdf
                     @foreach ($fields as $key => $itemfields)
                         @if ($itemblocks->id == $itemfields->block_id)
                             <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
@@ -266,7 +265,7 @@
                                         'class' => 'cdx-input',
                                         'style' => '',
                                         // 'readOnly' => true,
-                                        'placeholder' => 'Lorem ipsum dolor sit amet',
+                                        'placeholder' => __('write something...'),
                                     ],
                                     key($fields[$key]['id'])
                                 )

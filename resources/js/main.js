@@ -37,7 +37,7 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
         logLevel,
 
         tools: {
-
+          header: Header,
           image: {
             class: ImageTool,
 
@@ -85,22 +85,22 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
           },
           table: {
             class: Table,
-            inlineToolbar: false,
-            withHeadings: true,
+            // inlineToolbar: false,
+
 
             config: {
-
-              rows: 2,
-              cols: 3,
               withHeadings: true,
+              rows: 2,
+              cols: 3
             },
           },
           list: List,
-          header: Header,
+          
+          quote: Quote,
           // underline: Underline,
-          code: Code,
+          code: Code
           // 'inline-code': InlineCode,
-          quote: Quote
+          
         },
 
         /**

@@ -25,6 +25,8 @@ class Menu extends Component
                 return Menuitem::where('menu_id', $this->menu['id'])->orderBy('order')->where('subgroup', null)->with('children')->get();
             });
         }
+
+        return '';
     }
 
     public function render()

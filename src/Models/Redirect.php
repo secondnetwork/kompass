@@ -3,13 +3,14 @@
 namespace Secondnetwork\Kompass\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use SiroDiaz\Redirection\Models\Redirection;
+use Illuminate\Database\Eloquent\Model;
 
-class Redirect extends Redirection
+class Redirect extends Model
 {
     use HasFactory;
 
-    // protected $table = 'Datafields';
+    protected $table = 'redirections';
+
     // protected $casts = [
     //     'data' => 'array',
     // ];

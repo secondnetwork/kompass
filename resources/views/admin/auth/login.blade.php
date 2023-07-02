@@ -24,8 +24,6 @@
                 @csrf
 
                  <x-kompass::form.input label="{{ __('E-Mail Address') }}" type="email" value="{{ old('email') }}" name="email" required autofocus />
-          
-          
 
                 <div>
                     <div class="flex justify-between">

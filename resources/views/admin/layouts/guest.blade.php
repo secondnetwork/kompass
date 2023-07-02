@@ -47,7 +47,7 @@
 
 
 <div class="grid grid-cols-11 h-full items-center justify-center bg-gray-100">
-<div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-10 p-12">
+<div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
         @if (!empty(setting('admin.logo')))
             @php
@@ -63,13 +63,13 @@
                 @endif
             @endif
         @else
-<img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
+        <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         @endif
         
     
     </div>
 
-        <main>
+        <main class="grid gap-y-8">
             @yield('content')
         </main>
 

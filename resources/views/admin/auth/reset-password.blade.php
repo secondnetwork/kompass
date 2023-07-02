@@ -15,24 +15,14 @@
     @endif
     <h2>{{ __('Forgot your password?') }}</h2>
     <form class="grid gap-y-8" method="POST" action="{{ route('password.update') }}">
-        @csrf
 
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-        <div>
-        	<label class="pb-4 block">{{ __('Email') }}</label>
-        	<input class="h-16" type="email" name="email" value="{{ old('email', $request->email) }}" required autofocus />
-        </div>
+        <x-kompass::form.input label="{{ __('Email') }}" type="email" value="{{ old('email') }}" name="email" required autocomplete="name" />
 
-        <div>
-            <label class="pb-4 block">{{ __('Password') }}</label>
-            <input class="h-16" type="password" name="password" required autocomplete="new-password" />
-        </div>
+        <x-kompass::form.input label="{{ __('Password') }}" type="password" name="password" required autocomplete="new-password" />
 
-        <div>
-            <label class="pb-4 block">{{ __('Confirm Password') }}</label>
-            <input class="h-16" type="password" name="password_confirmation" required autocomplete="new-password" />
-        </div>
+        <x-kompass::form.input label="{{ __('Confirm Password') }}" type="password" value="{{ old('Name') }}" name="password_confirmation" required autocomplete="new-password" />
 
         <div class="flex">
             <button class="btn w-full h-16" type="submit">

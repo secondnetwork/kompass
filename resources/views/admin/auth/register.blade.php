@@ -2,7 +2,7 @@
 
 @section('content')
 
-        <h2>{{ __('Register') }}</h2>
+        <h3>{{ __('Register') }}</h3>
 
     @if ($errors->any())
         <div>
@@ -19,26 +19,15 @@
     <form class="grid gap-y-4" method="POST" action="{{ route('register') }}">
         @csrf
 
-        <div>
-            <label>{{ __('Name') }}</label>
-            <input type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name" />
-        </div>
+        <x-kompass::form.input label="{{ __('Name') }}" type="text" value="{{ old('Name') }}" name="name" required autofocus autocomplete="name" />
 
-        <div>
-            <label>{{ __('Email') }}</label>
-            <input type="email" name="email" value="{{ old('email') }}" required />
-        </div>
+        <x-kompass::form.input label="{{ __('Email') }}" type="email" value="{{ old('email') }}" name="email" required autocomplete="name" />
 
-        <div>
-            <label>{{ __('Password') }}</label>
-            <input type="password" name="password" required autocomplete="new-password" />
-        </div>
+        <x-kompass::form.input label="{{ __('Password') }}" type="password" name="password" required autocomplete="new-password" />
 
-        <div>
-            <label>{{ __('Confirm Password') }}</label>
-            <input type="password" name="password_confirmation" required autocomplete="new-password" />
-        </div>
+        <x-kompass::form.input label="{{ __('Confirm Password') }}" type="password" value="{{ old('Name') }}" name="password_confirmation" required autocomplete="new-password" />
 
+        
         <a class="text-center text-sm text-gray-500" href="{{ route('login') }}">
             {{ __('Already registered?') }}
         </a>
