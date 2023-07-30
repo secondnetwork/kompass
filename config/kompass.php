@@ -4,6 +4,13 @@ namespace Secondnetwork\Kompass;
 
 return [
 
+
+    'sets' => [
+        'default' => [
+            'fallback' => 'border-all',
+        ],
+    ],
+
     /*
      |--------------------------------------------------------------------------
      | Kompass Route Middleware

@@ -40,6 +40,7 @@ class PagesData extends Component
     public $getIdField;
 
     public $arrayIdField;
+    public $iconclass;
 
     public $FormAdjustments = false;
 
@@ -144,6 +145,7 @@ class PagesData extends Component
         // Layout *popout or full *** alignment* left or right
 
         $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
+        $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
 
         $block = Block::create([
             'page_id' => $pageID,
@@ -151,6 +153,7 @@ class PagesData extends Component
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
             'status' => 'published',
+            'iconclass' => $tempBlock->iconclass,
             'slug' => $slug,
             'grid' => $grid,
             'order' => '999',

@@ -12,7 +12,7 @@
 
             <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
                 <input wire:model.debounce.300ms="search" type="text"
-                    class="text-gray-70 p-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    class="block p-2 w-full border-2 border-gray-300 text-base rounded-md"
                     placeholder="Suche...">
                 <div x-data="{ open: @entangle('FormFolder') }" class="flex justify-end gap-4">
 

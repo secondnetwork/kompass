@@ -3,13 +3,13 @@
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
-                <x-kompass::form.input type="text" name="name" wire:model="name" />
+                <x-kompass::form.input label="Name" type="text" name="name" wire:model="name" />
                 <x-kompass::input-error for="name" class="mt-2" />
 
-                <select wire:model="group">
+                <x-native-select  label="Select" wire:model="group">
                     <option value="page">{{__('Page')}}</option>
                     <option value="admin_aside">{{__('Admin Sidebar')}}</option>
-                </select>
+                </x-native-select>
 
                 <button wire:click="addMenu" class="btn btn-primary">Save</button>
 
@@ -25,7 +25,7 @@
             <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
 
                 <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
-                    <x-tabler-square-plus stroke-width="1.5" />{{ __('New menu') }}
+                    <x-tabler-list-details stroke-width="1.5" />{{ __('New menu') }}
                 </button>
 
             </div>

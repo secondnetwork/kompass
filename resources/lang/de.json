@@ -210,6 +210,7 @@
   "February": "February",
   "Fiji": "Fiji",
   "File": "Datei",
+  "Find class name at": "Klassennamen finden Sie unter",
   "Finland": "Finland",
   "For your security, please confirm your password to continue.": "Um fortzufahren, bestätigen Sie zu Ihrer Sicherheit bitte Ihr Passwort.",
   "Forbidden": "Verboten",
@@ -814,6 +815,6 @@
   "url": ":Attribute muss eine URL sein.",
   "user": "Es konnte leider kein Nutzer mit dieser E-Mail-Adresse gefunden werden.",
   "uuid": ":Attribute muss ein UUID sein.",
-  "you have been granted access to Kompass admin panel": "du has Zugriff auf Kompass admin panel erhalten",
-  "write something...": "schreib was..."
+  "write something...": "schreib was...",
+  "you have been granted access to Kompass admin panel": "du has Zugriff auf Kompass admin panel erhalten"
 }

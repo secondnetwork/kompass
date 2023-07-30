@@ -44,6 +44,7 @@ class BlocksData extends Component
         'data.name' => 'required|string|min:3',
         'data.slug' => '',
         'data.grid' => '',
+        'data.iconclass' => '',
         'data.icon_img_path' => '',
         'fields.*.id' => '',
         'fields.*.name' => '',

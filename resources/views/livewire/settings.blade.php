@@ -49,7 +49,7 @@
    <div class="flex flex-col lg:col-start-3 col-end-12" >
        <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
            <button wire:click="selectItem('', 'add')" class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
-               <x-tabler-square-plus stroke-width="1.5" />{{ __('New Setting') }}
+               <x-tabler-settings-plus stroke-width="1.5" />{{ __('New Setting') }}
             </button>
        </div>
    
@@ -148,18 +148,18 @@
            <x-kompass::offcanvas :w="'w-2/6'">
                <x-slot name="body">
                    
-                   <x-kompass::form.input type="text" name="name" wire:model="name" />
+                   <x-kompass::form.input type="text" name="name" label="Name" wire:model="name" />
                    <x-kompass::input-error for="name" class="mt-2" />
    
    
-                   <select wire:model="type" name="type" class="form-control" required="required">
+                   <x-native-select wire:model="type" name="type" class="form-control" required="required">
                        <option value="text">{{__('Text')}}</option>
                        <option value="text_area">{{__('Text Area')}}</option>
                        <option value="rich_text_box">{{__('Rich Textbox')}}</option>
                        <option value="switch">{{__('true or false')}}</option>
                        {{-- <option value="file">{{__('File')}}</option> --}}
                        <option value="image">{{__('Image')}}</option>
-                   </select>
+                   </x-native-select>
                    <div x-data="{openType: @entangle('type')}">
                        
    
@@ -242,7 +242,7 @@
          
                        </div>
    
-                   <x-kompass::form.input type="text" name="group" wire:model.lazy="group" />
+                   <x-kompass::form.input type="text" label="Group" name="group" wire:model.lazy="group" />
                    <x-kompass::input-error for="group" class="mt-2" />
    
                    <button wire:click="addNew" class="btn btn-primary">{{__('Save')}}</button>

@@ -20,21 +20,24 @@
     <x-kompass::offcanvas :w="'w-2/4'">
         <x-slot name="body" >
 
-            <x-kompass::form.input type="text" name="{{__('Title')}}" wire:model="title" />
+            <x-kompass::form.input type="text" label="{{__('Title')}}" wire:model="title" />
             <x-kompass::input-error for="title" class="mt-2" />
 
-            <x-kompass::form.input type="text" name="url" wire:model="url" />
+            <x-kompass::form.input type="text" label="URL" wire:model="url" />
             <x-kompass::input-error for="url" class="mt-2" />
 
-            <x-kompass::form.input type="text" name="iconclass" wire:model="iconclass" />
+            <div>
+            <x-kompass::form.input type="text" label="Iconclass" wire:model="iconclass" />
             <x-kompass::input-error for="iconclass" class="mt-2" />
+            <p class="text-xs text-gray-400">{{__('Find class name at')}} <a class="text-blue-400" href="https://tabler-icons.io/" target="_blank">tabler-icons.io</a></p>
+            </div>
 
             <div>
                 <label>{{__('Open')}}</label>
-                <select wire:model="target">
+                <x-native-select wire:model="target">
                     <option value="_self">{{__('Same tab')}}</option>
                     <option value="_blank">{{__('New tab')}}</option>
-                </select>
+                </x-native-select>
             </div>
 
 
@@ -44,9 +47,10 @@
     </x-kompass::offcanvas>
 </div>
 
-<div class="flex justify-end my-8">
-    <button class="flex btn gap-x-2 justify-center items-center text-md" wire:click="selectItem({{ $menu->id }}, 'additem')">{{__('Add Menu')}}</button>
+<div class="flex justify-end my-4">
+    <button class="flex btn gap-x-2 justify-center items-center text-sm" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus stroke-width="1.5" />{{__('Add Menu')}}</button>
 </div>
+
 
 <div wire:sortable="updateGroupOrder" wire:sortable-group="updateItemsOrder"
 {{-- wire:sortable-group="updateOrder" --}}

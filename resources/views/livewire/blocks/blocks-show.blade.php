@@ -5,6 +5,14 @@
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
+                <div>
+
+            <div>
+             <x-kompass::form.input type="text" label="Iconclass Name" label="Iconclass" wire:model="data.iconclass" />
+                 <p class="text-xs text-gray-400">{{__('Find class name at')}} <a class="text-blue-400" href="https://tabler-icons.io/" target="_blank">tabler-icons.io</a></p>
+            </div>        
+       
+            
             <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6">
                 Block Icon
                 <input type="file" class="hidden" wire:model="filestoredata" x-ref="photo"
@@ -45,7 +53,7 @@
 
                 <x-kompass::input-error for="photo" class="mt-2" />
             </div>
-
+</div>
             </x-slot>
         </x-kompass::offcanvas>
     </div>
@@ -62,23 +70,8 @@
     </x-kompass::action-message>
 
     <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
-        <div></div>
-        <div class="flex justify-end items-center">
-            <div class="flex justify-end gap-4">
-
-        <button class="flex btn gap-x-2   justify-center items-center"
-            wire:click="saveUpdate('{{ $blocktemplatesId }}')">
-            <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
-        </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="py-8 ">
-
-        <div class="flex justify-between gap-4">
-            <div class=" flex-auto">
-                <span class="text-gray-400 text-base">Block Titel</span>
+        <div>
+                            <span class="text-gray-400 text-base">Block Titel</span>
 
 
                 <div x-data="click_to_edit()">
@@ -93,10 +86,19 @@
                 <div class="col-span-6 text-md">
                     {{ $data->slug }}
                 </div>
-
-            </div>
-
         </div>
+        <div class="flex justify-end items-center">
+            <div class="flex justify-end gap-4">
+
+        <button class="flex btn gap-x-2   justify-center items-center"
+            wire:click="saveUpdate('{{ $blocktemplatesId }}')">
+            <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
+        </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-8 ">
 
 
         <nav class="px-4 py-2 bg-gray-200 shadow-inner flex items-center gap-6">

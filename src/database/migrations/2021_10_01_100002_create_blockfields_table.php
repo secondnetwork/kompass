@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->nullable();
             $table->string('type')->nullable();
+            $table->string('iconclass')->nullable();
             $table->integer('grid')->default('1');
             $table->integer('order')->default('1');
             $table->json('data')->nullable();
