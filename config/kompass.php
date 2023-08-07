@@ -4,7 +4,6 @@ namespace Secondnetwork\Kompass;
 
 return [
 
-
     'sets' => [
         'default' => [
             'fallback' => 'border-all',

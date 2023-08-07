@@ -94,7 +94,7 @@ class Settings extends Component
         if ($action == 'addMedia') {
             $this->getId = $itemId;
             $this->FormMedia = true;
-            $this->emit('getIdField_changnd', $this->getId, 'setting');
+            $this->dispatch('getIdField_changnd', $this->getId, 'setting');
         }
         if ($action == 'update') {
             $model = Setting::findOrFail($this->selectedItem);

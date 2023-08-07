@@ -33,21 +33,21 @@ class Redirection extends Component
         ];
     }
 
-        public function selectItem($itemId, $action)
-        {
-            $this->selectedItem = $itemId;
-            if ($action == 'add') {
-                // This will show the modal on the frontend
-                // $this->reset(['name', 'email', 'password', 'role']);
-                $this->FormAdd = true;
-            }
-            if ($action == 'update') {
-            }
-
-            if ($action == 'delete') {
-                $this->FormDelete = true;
-            }
+    public function selectItem($itemId, $action)
+    {
+        $this->selectedItem = $itemId;
+        if ($action == 'add') {
+            // This will show the modal on the frontend
+            // $this->reset(['name', 'email', 'password', 'role']);
+            $this->FormAdd = true;
         }
+        if ($action == 'update') {
+        }
+
+        if ($action == 'delete') {
+            $this->FormDelete = true;
+        }
+    }
 
     public function mount()
     {

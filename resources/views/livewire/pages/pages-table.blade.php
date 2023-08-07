@@ -6,7 +6,7 @@
 
                 <x-kompass::form.input type="text" name="title" wire:model="title" />
                 <x-kompass::input-error for="title" class="mt-2" />
-                <x-kompass::form.textarea wire:model.defer="meta_description" id="name" name="Description"
+                <x-kompass::form.textarea wire:model="meta_description" id="name" name="Description"
                     label="Description" type="text" class="mt-1 block w-full h-[15rem]" />
 
                 <button wire:click="addPage" class="btn btn-primary">{{ __('Save') }}</button>
@@ -20,13 +20,12 @@
 
     <div class="flex flex-col">
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-            <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
+            <div x-data="{ open: @entangle('FormAdd').live  }" class="flex justify-end gap-4">
 
                 <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New page') }}
                 </button>
-                {{-- <template x-teleport="#navheader"> </template> --}}
-            </div>
+          </div>
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
@@ -46,7 +45,9 @@
 
                         </thead>
 
-                        <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200 ">
+                        <tbody wire:sortable="updateOrder" 
+                         wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
+                        class="bg-white divide-y divide-gray-200 ">
                             @foreach ($pages as $key => $page)
                                 <tr wire:sortable.item="{{ $page->id }}">
                                     <td wire:sortable.handle class="pl-4 w-4 bg-white">

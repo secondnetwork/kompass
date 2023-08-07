@@ -74,9 +74,9 @@ class updateprofilephoto extends Component
         //     return redirect()->route('admin.profile');
         // }
 
-        $this->emit('saved');
+        $this->dispatch('saved');
 
-        $this->emit('refresh-navigation-menu');
+        $this->dispatch('refresh-navigation-menu');
     }
 
     /**
@@ -88,7 +88,7 @@ class updateprofilephoto extends Component
     {
         Auth::user()->deleteProfilePhoto();
 
-        $this->emit('refresh-navigation-menu');
+        $this->dispatch('refresh-navigation-menu');
     }
 
     /**

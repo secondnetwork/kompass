@@ -141,7 +141,7 @@ if (! function_exists('setting')) {
             if ($data->group == $keydata[0]) {
                 return $data->data;
             }
-        // return Arr::get(config('settings'), $data );
+            // return Arr::get(config('settings'), $data );
         } else {
             $data = Arr::get(app('settings'), $data);
 

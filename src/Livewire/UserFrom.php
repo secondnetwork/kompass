@@ -101,7 +101,7 @@
 //             }
 //         }
 
-//         $this->emit('refreshParent');
+//         $this->dispatch('refreshParent');
 //         $this->dispatchBrowserEvent('closeModal');
 //         $this->cleanVars();
 //     }

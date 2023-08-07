@@ -135,7 +135,7 @@
                                                         class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
                                                 </span>
                                                 <span class="selectField"
-                                                    wire:click="selectField({{ $item->id }}, '{{ $page }}')">
+                                                    wire:click="selectField({{ $item->id }}, '{{ $page ?? '' }}')">
                                                     <x-tabler-square-plus
                                                         class="cursor-pointer stroke-current text-gray-400 " />
                                                 </span>
@@ -192,7 +192,7 @@
                                                         class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
                                                 </span>
                                                 <span class="selectField"
-                                                    wire:click="selectField({{ $item->id }}, '{{ $page }}')">
+                                                    wire:click="selectField({{ $item->id }}, '{{ $page ?? '' }}')">
                                                     <x-tabler-square-plus
                                                         class="cursor-pointer stroke-current text-gray-400 " />
                                                 </span>

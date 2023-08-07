@@ -90,7 +90,7 @@ class Pageview extends Component
     public function get_gallery($blockis = null)
     {
 
-        foreach ($this->fields[$blockis]  as $key => $value) {
+        foreach ($this->fields[$blockis] as $key => $value) {
 
             if ($value->type == 'gallery' && $value->data != null) {
                 $file = file::where('id', $value->data)->first();

@@ -23,7 +23,7 @@
 @endif
 
 @if ($type == 'text')
-    <x-kompass::form.input wire:model.defer="fields.{{ $key }}.data" label="{{ $name }}" type="text" />
+    <x-kompass::form.input wire:model="fields.{{ $key }}.data" label="{{ $name }}" type="text" />
 @endif
 
 @if ($type == 'wysiwyg')
@@ -44,7 +44,7 @@
                   
                                 ) --}}
 
-    <x-quill id="{{ $key }}" wire:model.defer="fields.{{ $key }}.data" />
+    <x-quill id="{{ $key }}" wire:model="fields.{{ $key }}.data" />
 @endif
 
 @if ($type == 'image')
@@ -136,7 +136,7 @@
 @endif
 
 @if ($type == 'oembed')
-    <x-kompass::form.input wire:model.defer="fields.{{ $key }}.data" label="{{ $name }}"
+    <x-kompass::form.input wire:model="fields.{{ $key }}.data" label="{{ $name }}"
         type="text" />
 @endif
 

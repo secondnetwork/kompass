@@ -8,7 +8,7 @@
 
 @foreach ($items as $key => $item)
 
-<input wire:model.defer="items.{{ $key }}.url" type="text">
-<input wire:model.defer="items.{{ $key }}.iconclass" type="text">target
+<input wire:model="items.{{ $key }}.url" type="text">
+<input wire:model="items.{{ $key }}.iconclass" type="text">target
 @endforeach
 

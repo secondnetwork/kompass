@@ -1,4 +1,4 @@
-<div class="bg-white" x-data="quill({
+{{-- <div class="bg-white" x-data="quill({
     @if ($hasWireModel()) value: @entangle($attributes->wire('model')),
     @elseif ($hasXModel())
      value: {{ $attributes->first('x-model') }},
@@ -11,4 +11,5 @@ x-cloak id="{{ $id }}" @class(['quill-wrapper', 'has-error' => $hasErrorsAndShow
     <div @if ($hasWireModel()) wire:ignore @endif>
         <div x-ref="quill"></div>
     </div>
-</div>
+</div> --}}
+NAGAG

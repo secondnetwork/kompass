@@ -1,14 +1,22 @@
 {
   "resources/css/kompass.css": {
-    "file": "css/kompass.d5ec1ce4.css",
+    "file": "css/kompass.2cb154e3.css",
     "isEntry": true,
     "src": "resources/css/kompass.css"
   },
+  "resources/js/livewire.sortable.js": {
+    "file": "js/livewire.sortable.2848e553.js",
+    "isDynamicEntry": true,
+    "src": "resources/js/livewire.sortable.js"
+  },
   "resources/js/main.js": {
     "css": [
-      "css/kompass.d5ec1ce4.css"
+      "css/kompass.2cb154e3.css"
     ],
-    "file": "js/main.625a87c7.js",
+    "dynamicImports": [
+      "resources/js/livewire.sortable.js"
+    ],
+    "file": "js/main.8b8d4487.js",
     "isEntry": true,
     "src": "resources/js/main.js"
   }

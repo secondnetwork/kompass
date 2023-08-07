@@ -79,7 +79,7 @@ class BlocksData extends Component
     {
         $this->reset('filestoredata');
         $this->mount($this->blocktemplatesId);
-        $this->emit('status');
+        $this->dispatch('status');
     }
 
     public function selectItem($itemId, $action)

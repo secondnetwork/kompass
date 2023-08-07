@@ -20,8 +20,8 @@
 
 
 
-            <x-kompass::form.input wire:model.defer="data.name" id="name" name="name" label="name" type="text" class="mt-1 block w-full"   />
-            {{-- <x-kompass::form.textarea wire:model.defer="dataarray.meta_description" id="name" name="title" label="Description" type="text" class="mt-1 block w-full"   /> --}}
+            <x-kompass::form.input wire:model="data.name" id="name" name="name" label="name" type="text" class="mt-1 block w-full"   />
+            {{-- <x-kompass::form.textarea wire:model="dataarray.meta_description" id="name" name="title" label="Description" type="text" class="mt-1 block w-full"   /> --}}
 
 
     <img src="{{$data->thumbnails}}" alt="">

@@ -120,8 +120,8 @@ class MenuData extends Component
     public function call_emit_reset()
     {
         $this->mount($this->menu->id);
-        $this->emit('refreshComponentGroup');
-        $this->emit('status');
+        $this->dispatch('refreshComponentGroup');
+        $this->dispatch('status');
     }
 
     public function delete()

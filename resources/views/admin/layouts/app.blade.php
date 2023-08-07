@@ -38,7 +38,7 @@
         <meta name="description" content="{{ $seo->description }}">
     @endif
 
-    @livewireStyles
+
     @kompassCss
 </head>
 <body class="kompass-{{ str_replace(".","-", Route::currentRouteName()) }}">
@@ -137,8 +137,8 @@
       </footer>
 </main>
 </page-main>
-  @livewireScripts
-  <wireui:scripts />
+
+  {{-- <wireui:scripts /> --}}
   {{-- @wireUiScripts --}}
   @kompassJs
   @stack('scripts')

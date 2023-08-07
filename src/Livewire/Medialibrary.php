@@ -164,7 +164,7 @@ class Medialibrary extends Component
         }
 
         if ($action == 'update') {
-            // $this->emit('getModelId', $this->selectedItem);
+            // $this->dispatch('getModelId', $this->selectedItem);
 
             // $model = File::findOrFail($this->selectedItem);
             // $this->Rolrs = Role::all();
@@ -219,7 +219,7 @@ class Medialibrary extends Component
                 'path' => $new_folder,
                 'user_id' => Auth::id(),
             ]);
-            $this->emit('resetCom');
+            $this->dispatch('resetCom');
         } else {
             $error = __('media.error_creating_dir');
         }
@@ -333,7 +333,7 @@ class Medialibrary extends Component
         }
         $this->reset('files');
         $this->mount('mediafiles');
-        $this->emit('resetCom');
+        $this->dispatch('resetCom');
     }
 
     public function createThumbnail($type, $path, $width, $height, $position, $quality, $original_ext)
@@ -381,11 +381,11 @@ class Medialibrary extends Component
                 );
             }
 
-            $this->emit('refreshmedia');
+            $this->dispatch('refreshmedia');
         }
         if ($page == 'setting') {
             Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
-            $this->emit('refreshmedia');
+            $this->dispatch('refreshmedia');
         }
     }
 
@@ -417,7 +417,7 @@ class Medialibrary extends Component
                 $this->FormEdit = false;
             }
         }
-        $this->emit('resetCom');
+        $this->dispatch('resetCom');
     }
 
     private function resultDate()

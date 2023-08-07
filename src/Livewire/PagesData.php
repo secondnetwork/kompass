@@ -21,7 +21,14 @@ class PagesData extends Component
      *
      * @var array
      */
+    #[Locked]
     public $page_id;
+
+    #[Locked]
+    public $selectedItem;
+
+    #[Locked]
+    public $getIdField;
 
     public $page;
 
@@ -37,9 +44,8 @@ class PagesData extends Component
 
     public $blocktemplates;
 
-    public $getIdField;
-
     public $arrayIdField;
+
     public $iconclass;
 
     public $FormAdjustments = false;
@@ -132,8 +138,8 @@ class PagesData extends Component
         if ($action == 'addMedia') {
             $this->getIdField = $itemId;
             $this->FormMedia = true;
-            $this->emit('getIdField_changnd', $this->getIdField, 'page');
-            $this->emit('getIdBlock', $this->blockgroupId);
+            $this->dispatch('getIdField_changnd', $this->getIdField, 'page');
+            $this->dispatch('getIdBlock', $this->blockgroupId);
         }
         if ($action == 'deleteblock') {
             $this->FormDelete = true;
@@ -189,8 +195,8 @@ class PagesData extends Component
 
     public function refreshmedia()
     {
-        $this->emit('refreshComponent');
-        $this->emit('status');
+        $this->dispatch('refreshComponent');
+        $this->dispatch('status');
     }
 
     public function call_emit_reset()
@@ -198,8 +204,8 @@ class PagesData extends Component
         $this->mount($this->page_id);
 
         $this->FormMedia = false;
-        $this->emit('refreshComponent');
-        $this->emit('status');
+        $this->dispatch('refreshComponent');
+        $this->dispatch('status');
 
         // return redirect()->to('admin');
     }
@@ -270,11 +276,11 @@ class PagesData extends Component
     {
         if ($status == 'draft') {
             Block::where('id', $id)->update(['status' => 'draft']);
-            $this->emit('status');
+            $this->dispatch('status');
         }
         if ($status == 'published') {
             Block::where('id', $id)->update(['status' => 'published']);
-            $this->emit('status');
+            $this->dispatch('status');
         }
         $this->call_emit_reset();
     }
@@ -293,11 +299,12 @@ class PagesData extends Component
 
     public function update($id, $publisheded = null)
     {
+
         $page = Page::findOrFail($id);
 
         // $this->getDynamicSEOData();
         // $page->addSEO();
-        $this->emit('savedatajs');
+        $this->dispatch('savedatajs');
 
         $validateData = $this->validate();
 
@@ -326,7 +333,7 @@ class PagesData extends Component
 
         if ($publisheded == true) {
             Page::where('id', $id)->update(['status' => 'published']);
-            $this->emit('status');
+            $this->dispatch('status');
         }
 
         $page->update([
@@ -393,6 +400,7 @@ class PagesData extends Component
 
     public function updateOrder($list)
     {
+
         foreach ($list as $items) {
             // $boardgroub = $itemg['value'];
             foreach ($items['items'] as $item) {
@@ -401,7 +409,7 @@ class PagesData extends Component
         }
 
         $this->call_emit_reset();
-        $this->emit('status');
+        $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
@@ -431,7 +439,7 @@ class PagesData extends Component
         }
 
         $this->call_emit_reset();
-        $this->emit('status');
+        $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 }

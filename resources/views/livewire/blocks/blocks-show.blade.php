@@ -183,7 +183,7 @@
 
                     </div>
                     <div class="p-4 flex flex-col gap-4 bg-blue-100 rounded-b-md" wire:key="field-{{ $item->id }}">
-                        <x-kompass::form.input wire:model.defer="fields.{{ $key }}.name" label="Feldbeschriftung" type="text" />
+                        <x-kompass::form.input wire:model="fields.{{ $key }}.name" label="Feldbeschriftung" type="text" />
                         <div>
                             Feldname: <strong>{{ $fields[$key]->slug }}</strong>
                         </div>

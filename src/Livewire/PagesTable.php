@@ -40,6 +40,9 @@ class PagesTable extends Component
 
     public $meta_description;
 
+    #[Locked]
+    public $selectedItem;
+
     public $timestamps = false;
 
     public $FormDelete = false;
@@ -230,6 +233,7 @@ class PagesTable extends Component
 
     public function delete()
     {
+
         Page::find($this->selectedItem)->delete();
 
         $blocks_id = Block::where('page_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');

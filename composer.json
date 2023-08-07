@@ -23,11 +23,10 @@
         "illuminate/support": "^9.52.4|^10",
         "intervention/image": "^2.7.2",
         "laravel/fortify": "^1.16.0",
-        "livewire/livewire": "^2.12.3",
+        "livewire/livewire": "^3.0@beta",
         "secondnetwork/blade-tabler-icons": "^2.15",
         "symfony/http-client": "^6.2.7",
-        "symfony/mailgun-mailer": "^6.2.7",
-        "wireui/wireui": "^1.17"
+        "symfony/mailgun-mailer": "^6.2.7"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
@@ -62,7 +61,7 @@
         },
         "platform-check": false
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "extra": {
         "laravel": {
             "providers": [

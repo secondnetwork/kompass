@@ -18,12 +18,12 @@
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
 
 
-                    <x-select label="Status" placeholder="Select one status" :options="[
+                    {{-- <x-select label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => 'Entwurf', 'id' => 'draft'],
                         ['name' => 'Passwort', 'id' => 'password'],
                     ]" option-label="name"
-                        option-value="id" wire:model="page.status" />
+                        option-value="id" wire:model="page.status" /> --}}
 
 
 
@@ -33,18 +33,18 @@
                 @switch($page->status)
                     @case('published')
                         <div class="grid grid-cols-2 gap-4">
-                            <x-datetime-picker time-format="24" label="Start Datum" wire:model="page.begin_at" />
-                            <x-datetime-picker time-format="24" label="Ende Datum" wire:model="page.end_at" />
+                            {{-- <x-datetime-picker time-format="24" label="Start Datum" wire:model="page.begin_at" />
+                            <x-datetime-picker time-format="24" label="Ende Datum" wire:model="page.end_at" /> --}}
                         </div>
                     @break
 
                     @case('password')
                         <div>
-                            <x-input  wire:model="page.password" label="Passwort" placeholder="********" />
+                            {{-- <x-input  wire:model="page.password" label="Passwort" placeholder="********" /> --}}
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            <x-datetime-picker time-format="24" label="Start Datum" wire:model="page.begin_at" />
-                            <x-datetime-picker time-format="24" label="Ende Datum" wire:model="page.end_at" />
+                            {{-- <x-datetime-picker time-format="24" label="Start Datum" wire:model="page.begin_at" />
+                            <x-datetime-picker time-format="24" label="Ende Datum" wire:model="page.end_at" /> --}}
                         </div>
                     @break
 
@@ -70,15 +70,14 @@
 
                 <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
 
-                    <x-select label="Seite Template" :options="[
+                    {{-- <x-select label="Seite Template" :options="[
                         ['name' => __('Page'), 'id' => NULL],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]" option-label="name"
-                        option-value="id" wire:model="page.layout" />
+                        option-value="id" wire:model="page.layout" /> --}}
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model.defer="page.meta_description" id="name" name="title"
-                    label="Description" type="text" class="block w-full h-[10rem]" />
+                {{-- <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" /> --}}
                 {{-- Thumbnails
                 <img src="{{ $page->thumbnails }}" alt=""> --}}
                 {{-- <pre>
@@ -90,7 +89,7 @@
         </x-kompass::offcanvas>
     </div>
 
-    <x-kompass::action-message class="" on="status" />
+    {{-- <x-kompass::action-message class="" on="status" /> --}}
     <x-kompass::modal data="FormDelete" />
 
     <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
@@ -102,7 +101,9 @@
 
 
                 <div x-data="click_to_edit()">
-                    <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center"
+                    <a 
+                    @click.prevent @click="toggleEditingState" x-show="!isEditing" 
+                    class="flex items-center"
                         class="select-none cursor-pointer">
                         <h4 class="text-gray-600">{{ $page->title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
@@ -235,14 +236,16 @@
         </div>
     </div>
 
-
-    <div x-cloak x-data="{ open: @entangle('FormMedia'), ids: @js($getIdField) }" id="FormMedia">
+    @isset($getIdField))
+            <div x-cloak x-data="{ open: @entangle('FormMedia'), ids: @js($getIdField) }" id="FormMedia">
         <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
             <x-slot name="body">
                 @livewire('medialibrary', ['fieldId' => $getIdField])
             </x-slot>
         </x-kompass::offcanvas>
     </div>
+    @endisset
+
 
 
 
@@ -281,4 +284,5 @@
             </x-slot>
         </x-kompass::offcanvas>
     </div>
+
 </div>
