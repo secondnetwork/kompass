@@ -24,7 +24,7 @@ export default defineConfig({
         config: { delay: 300 },
       },
     }),
-    // splitVendorChunkPlugin(),
+    splitVendorChunkPlugin(),
   ],
   server: {
     port: 5088,

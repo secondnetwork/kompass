@@ -2,6 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Livewire\Attributes\Locked;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

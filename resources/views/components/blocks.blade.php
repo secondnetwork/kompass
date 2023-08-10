@@ -29,7 +29,7 @@
 @if ($type == 'wysiwyg')
     <span class="text-md">{{ $name }}</span>
 
-                                {{-- @livewire(
+                                @livewire(
                                     'editorjs',
                                     [
                                         'editorId' => $idField,
@@ -39,12 +39,14 @@
                                         'class' => 'cdx-input',
                                         'style' => '',
                                         'readOnly' => false,
-                                        'placeholder' => 'Lorem ipsum dolor sit amet',
+                                        'placeholder' => '...scheiben',
                                     ],
                   
-                                ) --}}
+                                )
 
-    <x-quill id="{{ $key }}" wire:model="fields.{{ $key }}.data" />
+                                
+
+    {{-- <x-quill id="{{ $key }}" wire:model="fields.{{ $key }}.data" /> --}}
 @endif
 
 @if ($type == 'image')

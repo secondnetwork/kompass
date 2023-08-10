@@ -227,7 +227,7 @@
                 @endforelse
                 <div class="flex  justify-end my-6">
                     <button class="btn"
-                        wire:click="selectItem({{ $page->id }}, 'addBlock')">{{ __('Add') }}</button>
+                        wire:click="selectitem({{ $page->id }}, 'addBlock')">{{ __('Add') }}</button>
                 </div>
 
 

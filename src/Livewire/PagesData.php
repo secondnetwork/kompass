@@ -2,9 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Livewire\Attributes\Locked;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -24,7 +26,7 @@ class PagesData extends Component
     #[Locked]
     public $page_id;
 
-    #[Locked]
+
     public $selectedItem;
 
     #[Locked]
@@ -125,12 +127,15 @@ class PagesData extends Component
         // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
-    public function selectItem($itemId, $action, $groupId = null)
+    public function selectitem($itemId, $action, $groupId = null)
     {
+        
+        
         $this->selectedItem = $itemId;
         $this->blockgroupId = $groupId;
 
         if ($action == 'addBlock') {
+            
             $this->FormBlocks = true;
         }
         if ($action == 'update') {
@@ -392,11 +397,6 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-    public function render()
-    {
-        return view('kompass::livewire.pages.pages-show')
-            ->layout('kompass::admin.layouts.app');
-    }
 
     public function updateOrder($list)
     {
@@ -442,4 +442,17 @@ class PagesData extends Component
         $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
+
+
+
+    #[Layout('kompass::admin.layouts.app')]
+    public function render()
+    {
+
+
+        return view('kompass::livewire.pages.pages-show');
+        // ->layout('kompass::admin.layouts.app');
+    }
+
+
 }
