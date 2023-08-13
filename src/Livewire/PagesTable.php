@@ -2,10 +2,10 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Attributes\Locked;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;

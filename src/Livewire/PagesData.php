@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Attributes\Locked;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -25,7 +25,6 @@ class PagesData extends Component
      */
     #[Locked]
     public $page_id;
-
 
     public $selectedItem;
 
@@ -110,6 +109,7 @@ class PagesData extends Component
 
     public function mount($id)
     {
+
         $this->page_id = $id;
         $this->page = Page::findOrFail($id);
         $this->blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
@@ -127,15 +127,19 @@ class PagesData extends Component
         // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
+    public function naff()
+    {
+        dump('naff');
+    }
+
     public function selectitem($itemId, $action, $groupId = null)
     {
-        
-        
+
         $this->selectedItem = $itemId;
         $this->blockgroupId = $groupId;
 
         if ($action == 'addBlock') {
-            
+
             $this->FormBlocks = true;
         }
         if ($action == 'update') {
@@ -154,7 +158,6 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
-
         $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
 
@@ -397,7 +400,6 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-
     public function updateOrder($list)
     {
 
@@ -443,16 +445,11 @@ class PagesData extends Component
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
-
-
     #[Layout('kompass::admin.layouts.app')]
     public function render()
     {
 
-
         return view('kompass::livewire.pages.pages-show');
         // ->layout('kompass::admin.layouts.app');
     }
-
-
 }

@@ -3,6 +3,7 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -112,6 +113,7 @@ class EditorJS extends Component
         $this->dispatch('editorjssave', $this->data, $this->editorId);
     }
 
+    #[Layout('kompass::admin.layouts.app')]
     public function render()
     {
         return view('kompass::livewire.editorjs');
