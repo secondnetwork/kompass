@@ -188,12 +188,6 @@
 
             </span>
 
-
-
-
-
-
-
         </div>
 
     </div>
@@ -216,7 +210,7 @@
                 class="py-5  ">
 
                 <span class="text-gray-600 text-sm block">Block Builder</span>
-
+                
                 @forelse ($blocks as $itemblocks)
                     <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-5'" />
 

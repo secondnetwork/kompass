@@ -8,7 +8,7 @@ class BladeDirectives
 {
     public static function kompassCss()
     {
-        $url = 'http://localhost:5088:' . env('VITE_PORT_KOMPASS', '5088') . '/resources/js/main.js';
+        $url = 'http://localhost:5088:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/main.js';
         $url200 = @get_headers($url);
         if (! $url200) {
             $content = file_get_contents(asset('vendor/kompass/asset/manifest.json'));

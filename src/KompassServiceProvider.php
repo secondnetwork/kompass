@@ -69,20 +69,20 @@ class KompassServiceProvider extends ServiceProvider
             ]);
         }
 
-        View::composer('*', function ($view) {
-            $view_name = str_replace('.', ' ', $view->getName());
-            View::share('view_name', $view_name);
-        });
+        // View::composer('*', function ($view) {
+        //     $view_name = str_replace('.', ' ', $view->getName());
+        //     View::share('view_name', $view_name);
+        // });
 
-        if (Schema::hasTable('settings')) {
-            $settings = Cache::rememberForever('settings', function () {
-                return Setting::all();
-            });
+        // if (Schema::hasTable('settings')) {
+        //     $settings = Cache::rememberForever('settings', function () {
+        //         return Setting::all();
+        //     });
 
-            foreach ($settings as $setting) {
-                Config::set('settings.'.$setting->key, $setting);
-            }
-        }
+        //     foreach ($settings as $setting) {
+        //         Config::set('settings.'.$setting->key, $setting);
+        //     }
+        // }
     }
 
     private function bootBladeComponents(): void

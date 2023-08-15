@@ -107,7 +107,7 @@
                                     <td class="px-4 py-3 whitespace-nowrap bg-white">
                                         <div class="flex justify-end items-center gap-1">
 
-                                            <a href="/admin/pages/show/{{ $page->id }}" class="flex justify-center">
+                                            <a wire:navigate href="/admin/pages/show/{{ $page->id }}" class="flex justify-center">
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                             </a>
 

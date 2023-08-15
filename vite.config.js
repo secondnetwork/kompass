@@ -14,7 +14,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    
+    splitVendorChunkPlugin(),
     laravel({
       input: ['resources/js/main.js', 'resources/css/kompass.css'],
       buildDirectory: 'assets/build',
@@ -24,7 +24,7 @@ export default defineConfig({
         config: { delay: 300 },
       },
     }),
-    splitVendorChunkPlugin(),
+    
   ],
   server: {
     port: 5088,

@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Livewire\Attributes\Locked;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -15,6 +15,7 @@ use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\Page;
 
+#[Layout('kompass::admin.layouts.app')]
 class PagesData extends Component
 {
     // use WithPagination;
@@ -26,6 +27,7 @@ class PagesData extends Component
     #[Locked]
     public $page_id;
 
+    #[Locked]
     public $selectedItem;
 
     #[Locked]
@@ -35,11 +37,11 @@ class PagesData extends Component
 
     public $title;
 
-    public $blocks;
+    public $blocks = [];
 
     public $blockgroupId;
 
-    public $fields;
+    public $fields = [];
 
     public $newName;
 
@@ -94,7 +96,7 @@ class PagesData extends Component
     public function saveEditorState($editorJsonData, $id)
     {
 
-        if (! empty($editorJsonData)) {
+        if (!empty($editorJsonData)) {
 
             Datafields::whereId($id)->update(['data' => $editorJsonData]);
             // foreach($itemg['items'] as $item){
@@ -109,37 +111,36 @@ class PagesData extends Component
 
     public function mount($id)
     {
-
         $this->page_id = $id;
         $this->page = Page::findOrFail($id);
-        $this->blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-        // $this->blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->get();
-        // $this->blocks = Block::whereNull('subgroup')->with(['children'])->get();
+     
+        $blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
-        $blocks_id = Block::where('page_id', $id)->orderBy('order', 'asc')->pluck('id');
+        if ($blocks->isNotEmpty()) {
+            $this->blocks = $blocks;
+            $blocks_id = Block::where('page_id', $id)->orderBy('order', 'asc')->pluck('id');
 
-        Arr::collapse($blocks_id);
+            Arr::collapse($blocks_id);
 
-        $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
+            $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
+        }
+
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
         // $this->blockschildren = $this->tree($this->blocks);
         // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
-    public function naff()
-    {
-        dump('naff');
-    }
 
     public function selectitem($itemId, $action, $groupId = null)
     {
-
+        
+        
         $this->selectedItem = $itemId;
         $this->blockgroupId = $groupId;
 
         if ($action == 'addBlock') {
-
+            
             $this->FormBlocks = true;
         }
         if ($action == 'update') {
@@ -158,6 +159,7 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
+
         $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
 
@@ -400,6 +402,7 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
+
     public function updateOrder($list)
     {
 
@@ -445,11 +448,14 @@ class PagesData extends Component
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
-    #[Layout('kompass::admin.layouts.app')]
+
+
+    // 
     public function render()
     {
-
-        return view('kompass::livewire.pages.pages-show');
-        // ->layout('kompass::admin.layouts.app');
+        return view('kompass::livewire.pages.pages-show')
+        ->layout('kompass::admin.layouts.app');
     }
+
+
 }

@@ -29,7 +29,7 @@ View::composer('*', function ($view) {
 });
 
 Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::view('/', 'kompass::admin.dashboard')->name('dashboard');
+    Route::view('/', 'kompass::admin.dashboard')->name('dashboard-root');
     Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
 
     Route::get('pages', PagesTable::class)->name('pages');
