@@ -58,7 +58,7 @@
                                     @foreach ($data as $key => $value)
                                         <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
                                             @if ($key == 0)
-                                                <a target="_blank" href="/{{ $page->slug }}">
+                                                <a wire:navigate href="/admin/pages/show/{{ $page->id }}">
                                             @endif
                                             @if ($key == 2)
                                                 @switch($page->$value)

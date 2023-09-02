@@ -216,35 +216,6 @@
                     </div>
                 @break
 
-                @case('tables')
-                    @foreach ($fields as $key => $itemfields)
-                        @if ($itemblocks->id == $itemfields->block_id)
-                            <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
-
-                                @php
-                                    $jsfield = json_decode($fields[$key]['data'], true);
-                                    $gridtables = $fields[$key]['grid'];
-                                @endphp
-
-                                {{-- @livewire(
-                                    'editorjs',
-                                    [
-                                        'editorId' => $fields[$key]['id'],
-                                        'value' => $jsfield,
-                                        'uploadDisk' => 'publish',
-                                        'downloadDisk' => 'publish',
-                                        'class' => 'cdx-input',
-                                        'style' => '',
-                                        // 'readOnly' => true,
-                                        'placeholder' => __('write something...'),
-                                    ],
-                                    key($fields[$key]['id'])
-                                ) --}}
-                            </div>
-                        @endif
-                    @endforeach
-                @break
-
                 @case('wysiwyg')
                     @foreach ($fields as $key => $itemfields)
                         @if ($itemblocks->id == $itemfields->block_id)

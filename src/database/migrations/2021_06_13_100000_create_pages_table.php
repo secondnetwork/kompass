@@ -24,9 +24,6 @@ return new class extends Migration
             $table->string('layout')->nullable();
             $table->integer('group_id')->nullable();
             $table->integer('order')->default('9999');
-            $table->bigInteger('password')->nullable();
-            $table->timestamp('begin_at')->nullable();
-            $table->timestamp('end_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

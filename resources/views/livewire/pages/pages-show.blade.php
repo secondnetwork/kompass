@@ -2,7 +2,7 @@
 
 
     <div x-data="{ open: @entangle('FormAdjustments') }">
-        <x-kompass::offcanvas :w="'w-2/3'" class="p-8 grid gap-4">
+        <x-kompass::offcanvas :w="'w-2/5'" class="p-8 grid gap-4">
             <x-slot name="button">
                 <button class="flex btn gap-x-2 justify-end items-center text-md"
                     wire:click="update('{{ $page->id }}')">
@@ -17,56 +17,21 @@
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
 
-
                     <x-kompass::select wire:model.live="page.status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
-                        ['name' => 'Entwurf', 'id' => 'draft'],
-                        ['name' => 'Passwort', 'id' => 'password'],
+                        ['name' => __('draft'), 'id' => 'draft'],
                     ]">
                     </x-kompass::select>
 
-
-
                 </div>
 
-
-                @switch($page->status)
-                    @case('published')
-                        <div class="grid grid-cols-2 gap-4">
-                            {{-- <x-datetime-picker time-format="24" label="Start Datum" wire:model="page.begin_at" />
-                            <x-datetime-picker time-format="24" label="Ende Datum" wire:model="page.end_at" /> --}}
-                        </div>
-                    @break
-
-                    @case('password')
-                        <div>
-                            {{-- <x-input  wire:model="page.password" label="Passwort" placeholder="********" /> --}}
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            {{-- <x-datetime-picker time-format="24" label="Start Datum" wire:model="page.begin_at" />
-                            <x-datetime-picker time-format="24" label="Ende Datum" wire:model="page.end_at" /> --}}
-                        </div>
-                    @break
-
-                    @default
-                @endswitch
-
-
-
-
-                {{-- @if ($page->status == 'draft')
-                        <button class="flex btn gap-x-2 justify-end items-center text-md"
+                @if ($page->status == 'draft')
+                        <button class="flex btn gap-x-2 items-center text-md"
                             wire:click="update('{{ $page->id }}','true')">
                             <x-tabler-send class="icon-lg" />
                             {{ __('published') }}
                         </button>
-                    @endif
-                    @if ($page->status != 'draft')
-   
-
-                    @endif --}}
-
-
+                @endif
 
                 <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
 
@@ -257,21 +222,22 @@
                             <span class="text-xs block mt-2">{{ $itemblock['name'] }}</span>
                         </div>
                     @endforeach
+                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click.defer="addBlock({{ $page['id'] }},'','Textblock','wysiwyg','1','wysiwyg')">
+                        <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
+                        <span class="text-xs block mt-2">Textblock</span>
+                    </div>
+
+                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click.defer="addBlock({{ $page['id'] }},'','Gallery','gallery','1','gallery')">
+                        <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
+                        <span class="text-xs block mt-2">Gallery</span>
+                    </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click.defer="addBlock({{ $page['id'] }},'','Group','group','1','group')">
                         <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
                         <span class="text-xs block mt-2">Group</span>
-                    </div>
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock({{ $page['id'] }},'','Textblock','wysiwyg','1','wysiwyg')">
-                        <img src="{{ kompass_asset('icons-blocks/longtext.png') }}" alt="">
-                        <span class="text-xs block mt-2">Textblock</span>
-                    </div>
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock({{ $page['id'] }},'','Gallery','gallery','1','gallery')">
-                        <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
-                        <span class="text-xs block mt-2">Gallery</span>
                     </div>
                 </div>
             </x-slot>
