@@ -33,7 +33,7 @@
     "@editorjs/quote": "^2.4.0",
     "@editorjs/table": "^2.2.1",
     "@editorjs/underline": "^1.0.0",
-    "@nextapps-be/livewire-sortablejs": "^0.2.0",
+    "@nextapps-be/livewire-sortablejs": "^0.2.1",
     "@ryangjchandler/alpine-clipboard": "^2.2.0",
     "autoprefixer": "^10.4.8",
     "laravel-vite-plugin": "^0.7.8",

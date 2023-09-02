@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Attributes\Locked;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -96,7 +96,7 @@ class PagesData extends Component
     public function saveEditorState($editorJsonData, $id)
     {
 
-        if (!empty($editorJsonData)) {
+        if (! empty($editorJsonData)) {
 
             Datafields::whereId($id)->update(['data' => $editorJsonData]);
             // foreach($itemg['items'] as $item){
@@ -111,9 +111,10 @@ class PagesData extends Component
 
     public function mount($id)
     {
+
         $this->page_id = $id;
         $this->page = Page::findOrFail($id);
-     
+
         $blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
         if ($blocks->isNotEmpty()) {
@@ -125,22 +126,19 @@ class PagesData extends Component
             $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
         }
 
-
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
         // $this->blockschildren = $this->tree($this->blocks);
         // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
-
     public function selectitem($itemId, $action, $groupId = null)
     {
-        
-        
+
         $this->selectedItem = $itemId;
         $this->blockgroupId = $groupId;
 
         if ($action == 'addBlock') {
-            
+
             $this->FormBlocks = true;
         }
         if ($action == 'update') {
@@ -169,7 +167,7 @@ class PagesData extends Component
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
             'status' => 'published',
-            'iconclass' => $tempBlock->iconclass,
+            'iconclass' => $tempBlock->iconclass ?? null,
             'slug' => $slug,
             'grid' => $grid,
             'order' => '999',
@@ -402,7 +400,6 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-
     public function updateOrder($list)
     {
 
@@ -448,14 +445,11 @@ class PagesData extends Component
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
-
-
-    // 
+    //
     public function render()
     {
+
         return view('kompass::livewire.pages.pages-show')
-        ->layout('kompass::admin.layouts.app');
+            ->layout('kompass::admin.layouts.app');
     }
-
-
 }

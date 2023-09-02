@@ -26,6 +26,8 @@ class BlocksData extends Component
 
     public $title;
 
+    public $name;
+
     public $slug;
 
     public $icon_img_path;

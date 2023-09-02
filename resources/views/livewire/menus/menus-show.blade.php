@@ -34,10 +34,11 @@
 
             <div>
                 <label>{{__('Open')}}</label>
-                <x-native-select wire:model="target">
-                    <option value="_self">{{__('Same tab')}}</option>
-                    <option value="_blank">{{__('New tab')}}</option>
-                </x-native-select>
+                <x-kompass::select wire:model="target" :options="[
+                            ['name' => __('Same tab'),  'id' => '_self'],
+                            ['name' => __('New tab'),  'id' => '_blank'],
+                        ]">
+                </x-kompass::select>
             </div>
 
 

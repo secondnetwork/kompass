@@ -1,0 +1,60 @@
+{
+  "ui": {
+    "blockTunes": {
+      "toggler": {
+        "Click to tune": "Klicken Sie, um die Einstellung vorzunehmen",
+        "or drag to move": "oder ziehen Sie, um es zu verschieben"
+      },
+    },
+    "inlineToolbar": {
+      "converter": {
+        "Convert to": "Konvertieren zu"
+      }
+    },
+    "toolbar": {
+      "toolbox": {
+        "Add": "Hinzufügen"
+      }
+    }
+  },
+  "toolNames": {
+    "Text": "Text",
+    "Heading": "Überschrift",
+    "List": "List",
+    "Warning": "Warnung",
+    "Checklist": "Checkliste",
+    "Quote": "Zitieren",
+    "Code": "Code",
+    "Delimiter": "Trennzeichen",
+    "Raw HTML": "Raw HTML",
+    "Table": "Table",
+    "Link": "Link",
+    "Marker": "Marker",
+    "Bold": "Bold",
+    "Italic": "Kursiv",
+    "InlineCode": "Inline-Code"
+  },
+  "tools": {
+    "warning": {
+      "Title": "Titel",
+      "Message": "Nachricht"
+    },
+    "link": {
+      "Add a link": "Link hinzufügen"
+    },
+    "stub": {
+      "The block can not be displayed correctly.": "'Der Block kann nicht korrekt angezeigt werden."
+    }
+  },
+  "blockTunes": {
+    "delete": {
+      "Delete": "Löschen"
+    },
+    "moveUp": {
+      "Move up": "oben bewegen"
+    },
+    "moveDown": {
+      "Move down": "unten bewegen"
+    }
+  }
+}

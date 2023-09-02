@@ -55,6 +55,7 @@ class Blocktemplates extends Model
                 }
             }
         }
+
         //Slug do not exists. Just use the selected Slug.
         return $businessNameURL;
     }

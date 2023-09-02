@@ -1,12 +1,14 @@
 import EditorJS from '@editorjs/editorjs';
-import ImageTool from '@editorjs/image';
+// import ImageTool from '@editorjs/image';
 import List from '@editorjs/list';
 import Header from '@editorjs/header';
 import Underline from '@editorjs/underline';
-import Code from '@editorjs/code';
-import InlineCode from '@editorjs/inline-code';
-import Quote from '@editorjs/quote';
+// import Code from '@editorjs/code';
+// import InlineCode from '@editorjs/inline-code';
+// import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
+
+
 window.editorInstance = function (dataProperty, editorId, readOnly, placeholder, logLevel) {
 
 
@@ -29,54 +31,54 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
 
         tools: {
           header: Header,
-          image: {
-            class: ImageTool,
+          // image: {
+          //   class: ImageTool,
 
-            config: {
-              uploader: {
-                uploadByFile: (file) => {
-                  return new Promise((resolve) => {
-                    this.$wire.upload(
-                      'uploads',
-                      file,
-                      (uploadedFilename) => {
-                        const eventName = `fileupload:${uploadedFilename.substr(0, 20)}`;
+          //   config: {
+          //     uploader: {
+          //       uploadByFile: (file) => {
+          //         return new Promise((resolve) => {
+          //           this.$wire.upload(
+          //             'uploads',
+          //             file,
+          //             (uploadedFilename) => {
+          //               const eventName = `fileupload:${uploadedFilename.substr(0, 20)}`;
 
-                        const storeListener = (event) => {
-                          resolve({
-                            success: 1,
-                            file: {
-                              url: event.detail.url
-                            }
-                          });
+          //               const storeListener = (event) => {
+          //                 resolve({
+          //                   success: 1,
+          //                   file: {
+          //                     url: event.detail.url
+          //                   }
+          //                 });
 
-                          window.removeEventListener(eventName, storeListener);
-                        };
+          //                 window.removeEventListener(eventName, storeListener);
+          //               };
 
-                        window.addEventListener(eventName, storeListener);
+          //               window.addEventListener(eventName, storeListener);
 
-                        this.$wire.call('completedImageUpload', uploadedFilename, eventName);
-                      }
-                    );
-                  });
-                },
+          //               this.$wire.call('completedImageUpload', uploadedFilename, eventName);
+          //             }
+          //           );
+          //         });
+          //       },
 
-                uploadByUrl: (url) => {
-                  return this.$wire.loadImageFromUrl(url).then(result => {
-                    return {
-                      success: 1,
-                      file: {
-                        url: result
-                      }
-                    }
-                  });
-                }
-              }
-            }
-          },
+          //       uploadByUrl: (url) => {
+          //         return this.$wire.loadImageFromUrl(url).then(result => {
+          //           return {
+          //             success: 1,
+          //             file: {
+          //               url: result
+          //             }
+          //           }
+          //         });
+          //       }
+          //     }
+          //   }
+          // },
           table: {
             class: Table,
-            // inlineToolbar: false,
+            inlineToolbar: false,
 
 
             config: {
@@ -87,9 +89,9 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
           },
           list: List,
           
-          quote: Quote,
-          // underline: Underline,
-          code: Code
+          // quote: Quote,
+          underline: Underline,
+          // code: Code
           // 'inline-code': InlineCode,
           
         },
@@ -97,104 +99,7 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
         /**
  * Internationalzation config
  */
-        i18n: {
-          /**
-           * @type {I18nDictionary}
-           */
-          messages: {
-            /**
-             * Other below: translation of different UI components of the editor.js core
-             */
-            ui: {
-              "blockTunes": {
-                "toggler": {
-                  "Click to tune": "Klicken Sie, um die Einstellung vorzunehmen",
-                  "or drag to move": "oder ziehen Sie, um es zu verschieben"
-                },
-              },
-              "inlineToolbar": {
-                "converter": {
-                  "Convert to": "Konvertieren zu"
-                }
-              },
-              "toolbar": {
-                "toolbox": {
-                  "Add": "Hinzufügen"
-                }
-              }
-            },
-
-            /**
-             * Section for translation Tool Names: both block and inline tools
-             */
-            toolNames: {
-              "Text": "Text",
-              "Heading": "Überschrift",
-              "List": "List",
-              "Warning": "Warnung",
-              "Checklist": "Checkliste",
-              "Quote": "Zitieren",
-              "Code": "Code",
-              "Delimiter": "Trennzeichen",
-              "Raw HTML": "Raw HTML",
-              "Table": "Table",
-              "Link": "Link",
-              "Marker": "Marker",
-              "Bold": "Bold",
-              "Italic": "Kursiv",
-              "InlineCode": "Inline-Code",
-            },
-
-            /**
-             * Section for passing translations to the external tools classes
-             */
-            tools: {
-              /**
-               * Each subsection is the i18n dictionary that will be passed to the corresponded plugin
-               * The name of a plugin should be equal the name you specify in the 'tool' section for that plugin
-               */
-              "warning": { // <-- 'Warning' tool will accept this dictionary section
-                "Title": "Titel",
-                "Message": "Nachricht",
-              },
-
-              /**
-               * Link is the internal Inline Tool
-               */
-              "link": {
-                "Add a link": "Link hinzufügen"
-              },
-              /**
-               * The "stub" is an internal block tool, used to fit blocks that does not have the corresponded plugin
-               */
-              "stub": {
-                'The block can not be displayed correctly.': 'Der Block kann nicht korrekt angezeigt werden.'
-              }
-            },
-
-            /**
-             * Section allows to translate Block Tunes
-             */
-            blockTunes: {
-              /**
-               * Each subsection is the i18n dictionary that will be passed to the corresponded Block Tune plugin
-               * The name of a plugin should be equal the name you specify in the 'tunes' section for that plugin
-               *
-               * Also, there are few internal block tunes: "delete", "moveUp" and "moveDown"
-               */
-              
-              "delete": {
-                "Delete": "Löschen"
-              },
-              "moveUp": {
-                "Move up": "oben bewegen"
-              },
-              "moveDown": {
-                "Move down": "unten bewegen"
-              }
-            },
-          }
-        },
+        // i18n: i18n,
 
         data: this.data,
       

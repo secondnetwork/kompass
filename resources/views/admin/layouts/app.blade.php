@@ -42,13 +42,15 @@
     @kompassCss
 </head>
 <body class="kompass-{{ str_replace(".","-", Route::currentRouteName()) }}">
+         @env('local') 
+         <div style="background-image: linear-gradient(45deg, #fed7aa 25%, #ea580c 25%, #ea580c 50%, #fed7aa 50%, #fed7aa 75%, #ea580c 75%, #ea580c 100%); background-size: 56.57px 56.57px;" class="flex items-center gap-1 bg-orange-600 text-orange-800 h-2 w-full text-center text-xs fixed z-50">
+        </div> 
+        @endenv
 <page-main>
 <main>
     <header class="header">
-        <div class="header__search">
-         @if (setting('admin.devmode'))
-             <span class="flex items-center gap-1 rounded bg-amber-700 text-amber-400 px-2 py-1 text-sm"><x-tabler-hexagons/>Entwicklungsmodus</span>
-         @endif 
+      
+        <div class="header__search flex items-center gap-1">
 
         </div>
 
@@ -57,9 +59,7 @@
       </header>
 
       <aside class="sidenav">
-        <div class="sidenav__close-icon">
-          <i class="fas fa-times sidenav__brand-close"></i>
-        </div>
+        <div class="flex flex-col h-screen">
         <div class="logo">
                 @if (!empty(setting('admin.logo')))
             @php
@@ -82,7 +82,7 @@
 
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
 
-          {{-- <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li> --}}
+          <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
           <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
           <livewire:adminmenu name="admin-sidebar-top">
@@ -110,11 +110,18 @@
 
           <li class="sidenav__list-item mt-8"><a wire:navigate @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
         </ul>
+
+
+
+        <div class="mt-auto mb-4 mx-6">
+          <x-tabler-layout-sidebar-left-collapse class="text-gray-400"/>
+        </div>
+        </div>
       </aside>
 
 
 
-      <section class="main-content">
+      <section class="main-content" wire:transition x-transition>
         @isset($slot)
           {{ $slot }}
         @else

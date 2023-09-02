@@ -14,16 +14,16 @@
 
 
                 <div>
-                    {{-- <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br> --}}
+                    <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
 
 
-                    {{-- <x-select label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model.live="page.status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => 'Entwurf', 'id' => 'draft'],
                         ['name' => 'Passwort', 'id' => 'password'],
-                    ]" option-label="name"
-                        option-value="id" wire:model="page.status" /> --}}
+                    ]">
+                    </x-kompass::select>
 
 
 
@@ -70,26 +70,25 @@
 
                 <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
 
-                    {{-- <x-select label="Seite Template" :options="[
+                    <x-kompass::select wire:model.live="page.layout" label="Seite Template" :options="[
                         ['name' => __('Page'), 'id' => NULL],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
-                    ]" option-label="name"
-                        option-value="id" wire:model="page.layout" /> --}}
+                    ]"  />
 
                 <strong class="text-gray-600">SEO:</strong>
-                {{-- <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" /> --}}
-                {{-- Thumbnails
-                <img src="{{ $page->thumbnails }}" alt=""> --}}
-                {{-- <pre>
+                <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                Thumbnails
+                <img src="{{ $page->thumbnails }}" alt="">
+                <pre>
                 {{ $page->content }}
                 {{ $page->layout }}
-            </pre> --}}
+            </pre>
 
             </x-slot>
         </x-kompass::offcanvas>
     </div>
 
-    {{-- <x-kompass::action-message class="" on="status" /> --}}
+    <x-kompass::action-message class="" on="status" />
     <x-kompass::modal data="FormDelete" />
 
     <div class="border-b border-gray-200  py-5 grid-3-2 items-center">

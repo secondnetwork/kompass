@@ -1,6 +1,7 @@
-body,
-html {
-    @apply grid h-full
+page-main {
+    @apply h-screen block;
+    /* grid-template-rows: 1fr 1fr; */
+    /* height: 100vh */
 }
 
 /* html {

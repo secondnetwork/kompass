@@ -2,11 +2,16 @@ import Sortable from 'sortablejs';
 
 window.Sortable = Sortable;
 
-Livewire.directive('sortable', ({ el, directive, component, cleanup }) => { 
+if (typeof window.Livewire === 'undefined') {
+    throw 'Livewire Sortable.js Plugin: window.Livewire is undefined. Make sure @livewireScripts is placed above this script include';
+}
+
+window.Livewire.directive('sortable', ({ el, directive, component }) => {
     // Only fire this handler on the "root" directive.
     if (directive.modifiers.length > 0) {
         return;
     }
+
     let options = {};
 
     if (el.hasAttribute('wire:sortable.options')) {
@@ -20,10 +25,10 @@ Livewire.directive('sortable', ({ el, directive, component, cleanup }) => {
         sort: true,
         dataIdAttr: 'wire:sortable.item',
         group: {
-            ...options.group,
-            name: el.getAttribute('wire:sortable'),
             pull: false,
             put: false,
+            ...options.group,
+            name: el.getAttribute('wire:sortable'),
         },
         store: {
             ...options.store,
@@ -41,7 +46,7 @@ Livewire.directive('sortable', ({ el, directive, component, cleanup }) => {
     });
 });
 
-Livewire.directive('sortable-group', ({ el, directive, component, cleanup }) => {
+window.Livewire.directive('sortable-group', ({ el, directive, component }) => {
     // Only fire this handler on the "root" group directive.
     if (!directive.modifiers.includes('item-group')) {
         return;
@@ -60,10 +65,10 @@ Livewire.directive('sortable-group', ({ el, directive, component, cleanup }) => 
         sort: true,
         dataIdAttr: 'wire:sortable-group.item',
         group: {
-            ...options.group,
-            name: el.closest('[wire\\:sortable-group]').getAttribute('wire:sortable-group'),
             pull: true,
             put: true,
+            ...options.group,
+            name: el.closest('[wire\\:sortable-group]').getAttribute('wire:sortable-group'),
         },
         onSort: () => {
             let masterEl = el.closest('[wire\\:sortable-group]');

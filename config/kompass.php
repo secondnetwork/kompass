@@ -128,12 +128,6 @@ return [
 
     'hidden_files' => false,
 
-    'components' => [
-        // Rich Text
-        'quill' => Components\RichText\Quill::class,
-
-    ],
-
     'livewire' => [
         'menu' => Livewire\Frontend\Menu::class,
         'pageview' => Livewire\Frontend\Pageview::class,

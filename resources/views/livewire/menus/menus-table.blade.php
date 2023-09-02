@@ -6,10 +6,14 @@
                 <x-kompass::form.input label="Name" type="text" name="name" wire:model="name" />
                 <x-kompass::input-error for="name" class="mt-2" />
 
-                <x-native-select  label="Select" wire:model="group">
-                    <option value="page">{{__('Page')}}</option>
-                    <option value="admin_aside">{{__('Admin Sidebar')}}</option>
-                </x-native-select>
+                <x-kompass::select  label="Select" wire:model="group"
+                :options="[
+                            ['name' => __('Page'),  'id' => 'page'],
+                            ['name' => __('Admin Sidebar'),  'id' => 'admin_aside'],
+                            ['name' => __('Image'),  'id' => 'image'],
+                            ['name' => __('true or false'),  'id' => 'switch'],
+                        ]">
+                </x-kompass::select>
 
                 <button wire:click="addMenu" class="btn btn-primary">Save</button>
 
@@ -67,7 +71,7 @@
 
                                         <td class="px-4 py-3 whitespace-nowrap bg-white">
                                             <div class="flex justify-end items-center gap-1">
-                                                <a href="/admin/menus/show/{{ $menu->id }}"
+                                                <a wire:navigate href="/admin/menus/show/{{ $menu->id }}"
                                                     class="flex justify-center">
                                                     <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                                 </a>

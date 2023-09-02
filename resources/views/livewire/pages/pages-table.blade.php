@@ -16,7 +16,7 @@
     </div>
 
     <x-kompass::modal data="FormDelete" />
-
+<x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">

@@ -75,7 +75,7 @@
 
         <div class="flex items-center gap-1">
             @if ($type == 'group')
-                <span wire:click="selectItem({{ $page->id }}, 'addBlock', {{ $itemblocks->id }})">
+                <span wire:click="selectitem({{ $page->id }}, 'addBlock', {{ $itemblocks->id }})">
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
                 </span>
                 @if ($itemblocks->status == 'published')
@@ -87,7 +87,7 @@
                         <x-tabler-eye-off class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                     </span>
                 @endif
-                <span wire:click="selectItem({{ $itemblocks->id }}, 'deleteblock')" class="flex justify-center">
+                <span wire:click="selectitem({{ $itemblocks->id }}, 'deleteblock')" class="flex justify-center">
                     <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                 </span>
             @endif
@@ -106,7 +106,7 @@
                     <x-tabler-copy class="cursor-pointer  h-6 w-6  stroke-violet-500" />
                 </span>
 
-                <span wire:click="selectItem({{ $itemblocks->id }}, 'deleteblock')" class="flex justify-center">
+                <span wire:click="selectitem({{ $itemblocks->id }}, 'deleteblock')" class="flex justify-center">
                     <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                 </span>
                 <div class="flex items-center gap-2">
@@ -208,7 +208,7 @@
                                     </x-kompass::blocks>
                                 @endif
                             @endforeach
-                            <img-block wire:click="selectItem(0, 'addMedia' ,{{ $itemblocks->id }})"
+                            <img-block wire:click="selectitem(0, 'addMedia' ,{{ $itemblocks->id }})"
                                 class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
                                 <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
                             </img-block>
@@ -226,7 +226,7 @@
                                     $gridtables = $fields[$key]['grid'];
                                 @endphp
 
-                                @livewire(
+                                {{-- @livewire(
                                     'editorjs',
                                     [
                                         'editorId' => $fields[$key]['id'],
@@ -239,7 +239,7 @@
                                         'placeholder' => __('write something...'),
                                     ],
                                     key($fields[$key]['id'])
-                                )
+                                ) --}}
                             </div>
                         @endif
                     @endforeach
@@ -293,9 +293,9 @@
         </div>
 
     </div>
-
-</div>
-
 <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-8 bg-purple-100">
     <x-kompass::blocksgroupsub :childrensub="$itemblocks['children']->sortBy('order')" :fields="$fields" :page="$page" />
 </div>
+</div>
+
+

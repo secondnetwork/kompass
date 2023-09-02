@@ -1,6 +1,6 @@
 
   
-<livewire-components>
+<div>
     <grid-side class="grid grid-cols-11 h-full gap-4">
      
     <aside class="col-start-1 lg:col-end-3 border-r border-gray-200 h-full ">
@@ -43,7 +43,7 @@
    
       <div class="uppercase text-xs mt-5  text-gray-500 font-semibold">{{ __('Tools') }}</div>
 
-           <livewire:adminmenu name="adminsettings">
+           {{-- <livewire:adminmenu name="adminsettings"> --}}
     </aside>
    
    <div class="flex flex-col lg:col-start-3 col-end-12" >
@@ -150,16 +150,17 @@
                    
                    <x-kompass::form.input type="text" name="name" label="Name" wire:model="name" />
                    <x-kompass::input-error for="name" class="mt-2" />
+                
    
-   
-                   <x-native-select wire:model="type" name="type" class="form-control" required="required">
-                       <option value="text">{{__('Text')}}</option>
-                       <option value="text_area">{{__('Text Area')}}</option>
-                       <option value="rich_text_box">{{__('Rich Textbox')}}</option>
-                       <option value="switch">{{__('true or false')}}</option>
-                       {{-- <option value="file">{{__('File')}}</option> --}}
-                       <option value="image">{{__('Image')}}</option>
-                   </x-native-select>
+                   <x-kompass::select wire:model.live="type" name="type" 
+                       :options="[
+                            ['name' => __('Text'),  'id' => 'text'],
+                            ['name' => __('Rich Textbox'),  'id' => 'rich_text_box'],
+                            ['name' => __('Image'),  'id' => 'image'],
+                            ['name' => __('true or false'),  'id' => 'switch'],
+                        ]">
+                   </x-kompass::select>
+
                    <div x-data="{openType: @entangle('type')}">
                        
    
@@ -213,7 +214,7 @@
                      
                            @break
                            @case('rich_text_box')
-                                   <x-quill id="{{ $key }}" wire:model="value" />
+                                   {{-- <x-quill id="{{ $key }}" wire:model="value" /> --}}
                                @break
                            @case('switch')
    

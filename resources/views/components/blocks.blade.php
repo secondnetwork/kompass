@@ -29,7 +29,7 @@
 @if ($type == 'wysiwyg')
     <span class="text-md">{{ $name }}</span>
 
-                                @livewire(
+                                {{-- @livewire(
                                     'editorjs',
                                     [
                                         'editorId' => $idField,
@@ -42,7 +42,7 @@
                                         'placeholder' => '...scheiben',
                                     ],
                   
-                                )
+                                ) --}}
 
                                 
 
