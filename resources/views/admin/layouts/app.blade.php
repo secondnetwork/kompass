@@ -43,7 +43,7 @@
 </head>
 <body class="kompass-{{ str_replace(".","-", Route::currentRouteName()) }}">
          @env('local') 
-         <div style="background-image: linear-gradient(45deg, #fed7aa 25%, #ea580c 25%, #ea580c 50%, #fed7aa 50%, #fed7aa 75%, #ea580c 75%, #ea580c 100%); background-size: 56.57px 56.57px;" class="flex items-center gap-1 bg-orange-600 text-orange-800 h-2 w-full text-center text-xs fixed z-50">
+         <div style="background-image: linear-gradient(45deg, #fed7aa 25%, #ea580c 25%, #ea580c 50%, #fed7aa 50%, #fed7aa 75%, #ea580c 75%, #ea580c 100%); background-size: 56.57px 56.57px;" class="flex items-center gap-1 bg-orange-600 text-orange-800 h-1 w-full text-center text-xs fixed z-50">
         </div> 
         @endenv
 <page-main>
@@ -96,11 +96,13 @@
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
 
 
-          @canany(['admin','user'])
+          @canany(['admin','user']) 
+            
+          @endcanany
           <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a></li>
-          @endcanany
+          
 
           {{-- @canany(['update', 'view', 'delete'])
               // This user can update, view, or delete
@@ -131,7 +133,7 @@
 
       <footer>
         <div class="text-xs flex items-center">
-          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('admin.copyright' ?? 'secondnetwork') }} | Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
+          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }}  @if (!empty(setting('admin.copyright'))){{ setting('admin.copyright') }}@else secondnetwork @endif| Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
         </div>
         <div class="text-xs">
 

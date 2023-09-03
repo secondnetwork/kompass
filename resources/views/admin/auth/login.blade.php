@@ -23,7 +23,7 @@
             <form method="POST" action="{{ route('login') }}" class="grid gap-y-6">
                 @csrf
 
-                 <x-kompass::form.input label="{{ __('E-Mail Address') }}" type="email" value="{{ old('email') }}" name="email" required autofocus />
+                 <x-kompass::form.input label="{{ __('E-Mail Address') }}" type="email" value="{{ old('email') }}" name="email" required autocomplete="on" />
 
                 <div>
                     <div class="flex justify-between">

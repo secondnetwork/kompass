@@ -10,17 +10,17 @@
 
   
    {{-- <livewire:adminsettings name="admin-sidebar-top"> --}}
-   <ul x-data>
+   <ul>
       
 
-   @foreach ($settingsGroup as $item)
-                
+   {{-- @foreach ($settingsGroup as $item)
    <li class="my-2">
-   <a wire:click="pagetap('{{$item->group}}')" class="text-base text-gray-600 cursor-pointer" :class="{ 'active  border-current text-blue-600': '{{$pagetap}}' === '{{$item->group}}' }" >
+
+   <a wire:click="pagetaps('{{$item->group}}')" class="text-base text-gray-600 cursor-pointer" :class="{ 'active  border-current text-blue-600': '{{$pagetap}}' === '{{$item->group}}' }" >
        <span class="capitalize">{{$item->group}}</span>
    </a>
    </li>
-   @endforeach 
+   @endforeach  --}}
 
    {{-- Application
    API Tokens
@@ -41,9 +41,9 @@
    </ul>
    </nav>
    
-      <div class="uppercase text-xs mt-5  text-gray-500 font-semibold">{{ __('Tools') }}</div>
+      {{-- <div class="uppercase text-xs mt-5  text-gray-500 font-semibold">{{ __('Tools') }}</div>
 
-           {{-- <livewire:adminmenu name="adminsettings"> --}}
+           <livewire:adminmenu name="adminsettings"> --}}
     </aside>
    
    <div class="flex flex-col lg:col-start-3 col-end-12" >
@@ -261,4 +261,4 @@
                </x-slot>
            </x-kompass::offcanvas>
        </div>
-   </livewire-components>
+    </div>

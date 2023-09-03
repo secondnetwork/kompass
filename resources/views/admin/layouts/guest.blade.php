@@ -46,7 +46,7 @@
 
 
 
-<div class="grid grid-cols-11 h-full items-center justify-center bg-gray-100">
+<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
         @if (!empty(setting('admin.logo')))

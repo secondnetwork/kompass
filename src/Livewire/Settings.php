@@ -12,6 +12,8 @@ class Settings extends Component
 
     public $headers;
 
+    public $selectedItem;
+
     public $pagetap = 'admin';
 
     protected $queryString = ['pagetap'];
@@ -110,9 +112,12 @@ class Settings extends Component
         }
     }
 
-    public function pagetap($group)
+    public function pagetaps($group)
     {
+        $this->reset($this->pagetap);
         $this->pagetap = $group;
+        // dump(Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get());
+
     }
 
     public function addNew()
@@ -148,7 +153,8 @@ class Settings extends Component
 
     private function resultDate()
     {
-        return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
+        // return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
+        return Setting::orderBy('order', 'asc')->get();
     }
 
     private function resultGroup()
