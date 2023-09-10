@@ -9,9 +9,7 @@
                 <x-kompass::select  label="Select" wire:model="group"
                 :options="[
                             ['name' => __('Page'),  'id' => 'page'],
-                            ['name' => __('Admin Sidebar'),  'id' => 'admin_aside'],
-                            ['name' => __('Image'),  'id' => 'image'],
-                            ['name' => __('true or false'),  'id' => 'switch'],
+                            ['name' => __('Admin Sidebar'),  'id' => 'admin_aside']
                         ]">
                 </x-kompass::select>
 

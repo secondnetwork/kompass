@@ -2,7 +2,7 @@
 
 
     <div x-data="{ open: @entangle('FormAdjustments') }">
-        <x-kompass::offcanvas :w="'w-2/5'" class="p-8 grid gap-4">
+        <x-kompass::offcanvas :w="'w-2/4'" class="p-8 grid gap-4">
             <x-slot name="button">
                 <button class="flex btn gap-x-2 justify-end items-center text-md"
                     wire:click="update('{{ $page->id }}')">
@@ -36,7 +36,7 @@
                 <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
 
                     <x-kompass::select wire:model.live="page.layout" label="Seite Template" :options="[
-                        ['name' => __('Page'), 'id' => NULL],
+                        ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />
 
@@ -44,10 +44,7 @@
                 <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
                 Thumbnails
                 <img src="{{ $page->thumbnails }}" alt="">
-                <pre>
-                {{ $page->content }}
-                {{ $page->layout }}
-            </pre>
+
 
             </x-slot>
         </x-kompass::offcanvas>

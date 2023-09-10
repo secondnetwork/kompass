@@ -2,7 +2,7 @@
 import '/resources/css/kompass.css'
 import click_to_edit from './alpine/click_to_edit'
 
-
+import quill from './quill';
 import * as livewiresortable from './livewire.sortable';
 
 import * as editorjs from './editorjs';
@@ -18,5 +18,9 @@ import * as editorjs from './editorjs';
 //     app();
 // }
 
+document.addEventListener('alpine:init', () => {
 
+  Alpine.data('quill', quill);
+
+});
 window.click_to_edit = click_to_edit;

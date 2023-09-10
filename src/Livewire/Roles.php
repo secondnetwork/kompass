@@ -52,7 +52,7 @@ class Roles extends Component
 
     private function resultDate()
     {
-        return Role::where('name', 'like', '%'.$this->search.'%')->Paginate(100);
+        return Role::where('name', 'like', '%'.$this->search.'%');
     }
 
     public function selectItem($itemId, $action)

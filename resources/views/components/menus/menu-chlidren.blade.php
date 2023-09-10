@@ -1,11 +1,13 @@
 @foreach ($childrensub as $childitem )
 
     @if ($loop->first)
-    <ul class="submenu">
+ 
+
+                <div x-show="expanded" x-collapse>
+    <ul class="submenu pl-4 shadow  bg-slate-50">
     @endif
 
-        <x-kompass::menus.menu :item="$childitem" class="itemblock shadow border-r-4  border-b-2 border-purple-500"/>
-
+        <x-kompass::menus.menu :item="$childitem" />
     @if ($loop->last)
     </ul>
     @endif

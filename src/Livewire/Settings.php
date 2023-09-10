@@ -81,6 +81,17 @@ class Settings extends Component
         $this->data = $this->dataTable();
     }
 
+    protected $listeners = [
+        'editorjssave' => 'saveEditorState',
+    ];
+
+    public function saveEditorState($editorJsonData, $id)
+    {
+        if (! empty($editorJsonData)) {
+            Setting::whereId($id)->update(['data' => $editorJsonData]);
+        }
+    }
+
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
@@ -105,6 +116,7 @@ class Settings extends Component
             $this->value = $model->data;
             $this->type = $model->type;
             $this->FormAdd = true;
+
         }
 
         if ($action == 'delete') {
@@ -116,7 +128,7 @@ class Settings extends Component
     {
         $this->reset($this->pagetap);
         $this->pagetap = $group;
-        // dump(Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get());
+        dump(Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get());
 
     }
 
@@ -126,6 +138,8 @@ class Settings extends Component
         if ($this->value == '0') {
             $this->value = '';
         }
+        $this->dispatch('savedatajs');
+
         Setting::updateOrCreate([
             'id' => $this->selectedItem,
         ],

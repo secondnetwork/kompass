@@ -11,7 +11,7 @@ class Setting extends Model
 
     protected $guarded = [];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     protected static function boot()
     {

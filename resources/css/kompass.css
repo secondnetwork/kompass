@@ -28,7 +28,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @import "blocks/blockitem.css";
 
 
-/* @import "components/inputs.css"; */
+@import "components/inputs.css";
 @import "components/button.css";
 @import "components/editor_quill.css";
 

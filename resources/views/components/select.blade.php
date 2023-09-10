@@ -70,22 +70,26 @@
         <div class="w-full relative">
             {{ $label }}
             <div class="flex items-center cursor-pointer rounded-md border bg-white border-secondary-300 text-base ">
+         
+              
 
+                   
 
                    <template x-for="item in filteredPeople">
                         <div x-show="selected == item.id" @click="toggle"
-                            class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base
-              ">                            
+                            class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">                            
                             <span class="block truncate" x-text="item.name"></span>
                         </div>
+                                                
                     </template>
-                
-                {{-- <input placeholder="Search or select" x-ref="query" @click="toggle"
-                 @input="countFilteredPeople, query = $refs.query.value, open = true" :value="selected" class="w-full" type="text"> --}}
+                    <div x-show="!selected"  @click="toggle" class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">                            
+                        <span class="block truncate">{{ __('Select') }}</span>
+                    </div>
 
                 <button @click="toggle" class="px-1 h-auto absolute right-0">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.41 8.83984L12 13.4198L16.59 8.83984L18 10.2498L12 16.2498L6 10.2498L7.41 8.83984Z" fill="currentColor"></path></svg>
                 </button>
+                
             </div>
 
             <div class="absolute z-50 w-full">

@@ -1,4 +1,4 @@
-{{-- <div class="bg-white" x-data="quill({
+<div class="bg-white" x-data="quill({
     @if ($hasWireModel()) value: @entangle($attributes->wire('model')),
     @elseif ($hasXModel())
      value: {{ $attributes->first('x-model') }},
@@ -11,5 +11,13 @@ x-cloak id="{{ $id }}" @class(['quill-wrapper', 'has-error' => $hasErrorsAndShow
     <div @if ($hasWireModel()) wire:ignore @endif>
         <div x-ref="quill"></div>
     </div>
-</div> --}}
-NAGAG
+</div>
+
+@push('scripts')
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        document.addEventListener('livewire:load', function () {
+            // Your JavaScript code here
+        });
+    </script>
+@endpush
