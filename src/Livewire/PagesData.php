@@ -263,8 +263,16 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-    public function set($id, $set, $status)
+    public function updateGrid($id, $grid)
     {
+        $setblock = Block::findOrFail($id);
+        $setblock->update(['grid' => $grid]);
+        $this->call_emit_reset();
+    }
+
+    public function saveset($id, $set, $status)
+    {
+
         $setblock = Block::findOrFail($id);
 
         if ($set == 'layout') {

@@ -194,7 +194,7 @@ class BlocksData extends Component
 
     public function updateOrder($list)
     {
-        // dd($list);
+
         foreach ($list as $item) {
             blockfields::whereId($item['value'])->update(['order' => $item['order']]);
             // foreach($itemg['items'] as $item){

@@ -1,7 +1,7 @@
 [class*="kompass-admin-"] {
 
     overflow-y: scroll;
-
+    .test{background-color: antiquewhite;}
     main {
         display: grid;
         grid-template-columns: 15rem 1fr;

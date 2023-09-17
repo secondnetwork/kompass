@@ -5,13 +5,11 @@
     'class' => '',
 ])
 @php
-    $layout = $itemblocks->set->layout ?? '';
-    $alignment = $itemblocks->set->alignment ?? '';
-    $slider = $itemblocks->set->slider ?? '';
+
     $type = $itemblocks->set->type ?? '';
     
 @endphp
-<div class="{{ $class }} @if ($type == 'group') bg-white @endif  @if ($itemblocks->subgroup) group-block  border-purple-600 @endif border-b-2 "
+<div class="{{ $class }} @if ($itemblocks->subgroup) group-block  border-purple-600 @endif border-b-2 "
     wire:sortable.item="{{ $itemblocks->id }}"
     @if ($itemblocks->subgroup) wire:sortable-group.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else
@@ -19,7 +17,7 @@
     x-data="{ expanded: false }">
 
     <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4">
-        <span class="flex items-center py-3 w-full ">
+        <span class="flex items-center py-2 w-full ">
             @if ($itemblocks->subgroup)
                 <x-tabler-grip-vertical wire:sortable-group.handle
                     class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
@@ -120,80 +118,14 @@
 
     </div-nav-action>
 
-    <div x-show="expanded" x-collapse>
-        <nav class="px-6 py-2 bg-gray-200 shadow-inner flex items-center gap-6">
+    <div @if ($type !== 'group') x-show="expanded" x-collapse @endif>
+        <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6 @if ($type == 'group')  border-b-4 border-purple-700 @endif">
             {{-- <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-yellow-900 text-yellow-300">Dev</span> --}}
 
-
-            <nav-item class="flex items-center gap-2">
-                <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid Layout</span>
-                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'layout', '')">
-                    @if ($layout == '')
-                        <x-tabler-columns-3 class="stroke-blue-500" />
-                    @else
-                        <x-tabler-columns-3 />
-                    @endif
-                </span>
-                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'layout', 'popout')">
-                    @if ($layout == 'popout')
-                        <x-tabler-carousel-vertical class="stroke-blue-500" />
-                    @else
-                        <x-tabler-carousel-vertical />
-                    @endif
-                </span>
-                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'layout', 'fullpage')">
-                    @if ($layout == 'fullpage')
-                        <x-tabler-arrow-autofit-width class="stroke-blue-500" />
-                    @else
-                        <x-tabler-arrow-autofit-width />
-                    @endif
-                </span>
-
-
-            </nav-item>
-
-            <nav-item class="flex items-center gap-2">
-                <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>
-                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'alignment', '')">
-                    @if ($alignment == 'left')
-                        <x-tabler-box-align-left class="stroke-blue-500" />
-                    @else
-                        <x-tabler-box-align-left />
-                    @endif
-                </span>
-                <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'alignment', 'right')">
-                    @if ($alignment == 'right')
-                        <x-tabler-box-align-right class="stroke-blue-500" />
-                    @else
-                        <x-tabler-box-align-right />
-                    @endif
-                </span>
-
-            </nav-item>
-
-            @if ($type == 'gallery')
-                <nav-item class="flex items-center gap-2">
-                    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">Slider</span>
-                    <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'slider', '')">
-                        @if ($slider == '')
-                            <x-tabler-layout-dashboard class="stroke-blue-500 rotate-90" />
-                        @else
-                            <x-tabler-layout-dashboard class="rotate-90" />
-                        @endif
-                    </span>
-                    <span class="cursor-pointer" wire:click="set({{ $itemblocks->id }},'slider', 'true')">
-                        @if ($slider == 'true')
-                            <x-tabler-carousel-horizontal class="stroke-blue-500" />
-                        @else
-                            <x-tabler-carousel-horizontal />
-                        @endif
-                    </span>
-                </nav-item>
-            @endif
-
+            <x-kompass::nav-item :itemblocks="$itemblocks" />
+            
         </nav>
-
-        <div class="grid gap-6 p-6 grid-cols-{{ $itemblocks->grid }}">
+        <div class="@if ($type !== 'group')grid gap-6 p-6 grid-cols-{{ $itemblocks->grid }} @endif" >
 
             @switch($type)
                 @case('gallery')
@@ -264,7 +196,7 @@
         </div>
 
     </div>
-<div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-8 bg-purple-100">
+<div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-4 bg-purple-700">
     <x-kompass::blocksgroupsub :childrensub="$itemblocks['children']->sortBy('order')" :fields="$fields" :page="$page" />
 </div>
 </div>

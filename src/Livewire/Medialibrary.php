@@ -38,6 +38,8 @@ class Medialibrary extends Component
 
     public $name;
 
+    public $page;
+
     public $file;
 
     public $description;
@@ -89,12 +91,12 @@ class Medialibrary extends Component
     private $directory = '';
 
     protected $listeners = [
-        'getIdField_changnd' => 'getIdField_changnd',
+        'getIdField_changnd' => 'getIdField',
         'getIdBlock' => 'getIdBlock',
         'resetCom' => '$refresh',
     ];
 
-    public function getIdField_changnd($id_field, $page)
+    public function getIdField($id_field, $page)
     {
         $this->field_id = $id_field;
         $this->page = $page;
@@ -150,7 +152,6 @@ class Medialibrary extends Component
         }
         if ($action == 'edit') {
             $model = File::findOrFail($itemId);
-
             $this->iditem = $itemId;
             $this->name = $model->name;
             $this->alt = $model->alt;
@@ -275,7 +276,7 @@ class Medialibrary extends Component
         @imagedestroy($sourceGDImg);
     }
 
-    public function finishUpload($name, $tmpPath, $isMultiple)
+    public function uploadMultiple($name, $tmpPath, $isMultiple)
     {
         $this->cleanupOldUploads();
         $this->filesystem = config('kompass.storage.disk');
@@ -283,7 +284,7 @@ class Medialibrary extends Component
         $files = collect($tmpPath)->map(function ($i) {
             return TemporaryUploadedFile::createFromLivewire($i);
         })->toArray();
-
+        dump($files);
         $this->emitSelf('upload:finished', $name, collect($files)->map->getFilename()->toArray());
 
         $files = array_merge($this->getPropertyValue($name), $files);
@@ -302,7 +303,7 @@ class Medialibrary extends Component
             $timefilesSlug = $time.'_'.$filesSlug;
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
-
+            dump($storelink);
             $imageMimeTypes = [
                 'image/jpeg',
                 'image/png',
@@ -311,13 +312,14 @@ class Medialibrary extends Component
             ];
             if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
                 $des = Storage::path('public/'.$timefilesSlug.'.avif');
+                dump($des);
                 self::convert(asset($storelink), $des, 50, 6);
                 foreach ($details['thumbnails'] as $thumbnail_data) {
                     $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
                     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 80, $original_ext);
                 }
             }
-
+            dump($storelink);
             if ($storelink) {
                 $file::create([
                     'path' => $this->dir,

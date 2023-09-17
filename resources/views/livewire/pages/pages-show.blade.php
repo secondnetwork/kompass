@@ -128,7 +128,7 @@
 
                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-gray-500"></span>
                             </span>
-                            Entwurf
+                            {{ __('draft') }}
                         </span>
                 @endswitch
 
@@ -173,7 +173,7 @@
                 <span class="text-gray-600 text-sm block">Block Builder</span>
                 
                 @forelse ($blocks as $itemblocks)
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-5'" />
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
                 @empty
                     <div
@@ -191,7 +191,7 @@
         </div>
     </div>
 
-    @isset($getIdField))
+    @isset($getIdField)
             <div x-cloak x-data="{ open: @entangle('FormMedia'), ids: @js($getIdField) }" id="FormMedia">
         <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
             <x-slot name="body">
@@ -234,8 +234,14 @@
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click.defer="addBlock({{ $page['id'] }},'','Group','group','1','group')">
                         <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
-                        <span class="text-xs block mt-2">Group</span>
+                        <span class="text-xs block mt-2">Layout Block</span>
                     </div>
+
+                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click.defer="addBlock({{ $page['id'] }},'','Accordion Group','group','1','accordiongroup')">
+                    <img src="{{ kompass_asset('icons-blocks/accordion.png') }}" alt="">
+                    <span class="text-xs block mt-2">Accordion Group</span>
+                </div>
                 </div>
             </x-slot>
         </x-kompass::offcanvas>

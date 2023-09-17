@@ -167,13 +167,15 @@ class Settings extends Component
 
     private function resultDate()
     {
+
+        // dd(Setting::query()->orderBy('order', 'asc')->get());
         // return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
-        return Setting::orderBy('order', 'asc')->get();
+        return Setting::query()->orderBy('order', 'asc')->get();
     }
 
     private function resultGroup()
     {
-        return Setting::select('group')
+        return Setting::query()->select('group')
             ->orderBy('group')
             ->groupBy('group')
             ->get();

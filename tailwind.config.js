@@ -4,11 +4,9 @@ module.exports = {
 
 
 
-  content: [                               //CONFIGURE CORRECTLY
-    './storage/framework/views/*.php',
+  content: [                  
     './resources/views/**/*.blade.php',
     './resources/**/*.js',
-    './vendor/secondnetwork/kompass/**/*.blade.php',
   ],
 
   safelist: [
@@ -28,7 +26,6 @@ module.exports = {
     'col-span-6',
     'col-span-7',
     'col-span-8',
-
   ],
   theme: {
     extend: {

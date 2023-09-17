@@ -1,20 +1,28 @@
 {
-  "_vendor.4259223b.js": {
-    "file": "js/vendor.4259223b.js"
-  },
   "resources/css/kompass.css": {
-    "file": "css/kompass.ace052d8.css",
+    "file": "css/kompass.1cd28a05.css",
     "isEntry": true,
     "src": "resources/css/kompass.css"
   },
+  "resources/js/editorjs.js": {
+    "file": "js/editorjs.076134d2.js",
+    "isDynamicEntry": true,
+    "src": "resources/js/editorjs.js"
+  },
+  "resources/js/livewire.sortable.js": {
+    "file": "js/livewire.sortable.3966c898.js",
+    "isDynamicEntry": true,
+    "src": "resources/js/livewire.sortable.js"
+  },
   "resources/js/main.js": {
     "css": [
-      "css/kompass.ace052d8.css"
+      "css/kompass.1cd28a05.css"
     ],
-    "file": "js/main.91c54bff.js",
-    "imports": [
-      "_vendor.4259223b.js"
+    "dynamicImports": [
+      "resources/js/livewire.sortable.js",
+      "resources/js/editorjs.js"
     ],
+    "file": "js/main.6b2b922d.js",
     "isEntry": true,
     "src": "resources/js/main.js"
   }

@@ -18,11 +18,11 @@ export default defineConfig({
     laravel({
       input: ['resources/js/main.js', 'resources/css/kompass.css'],
       buildDirectory: 'assets/build',
-      // refresh: true,
-      refresh: {
-        paths: ['resources/**', 'routes/**'],
-        config: { delay: 300 },
-      },
+      refresh: true,
+      // refresh: {
+      //   paths: ['resources/**', 'routes/**'],
+      //   config: { delay: 300 },
+      // },
     }),
     
   ],
