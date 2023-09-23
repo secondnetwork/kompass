@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Livewire\Component;
-use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafields;
@@ -193,8 +192,8 @@ class Medialibrary extends Component
                 continue;
             }
 
-            $yesterdaysStamp = now()->subDay(1)->timestamp;
-            // $yesterdaysStamp = now()->subSeconds(5)->timestamp;
+            // $yesterdaysStamp = now()->subDay(1)->timestamp;
+            $yesterdaysStamp = now()->subSeconds(5)->timestamp;
             if ($yesterdaysStamp > $storage->lastModified($filePathname)) {
                 $storage->delete($filePathname);
             }
@@ -276,20 +275,17 @@ class Medialibrary extends Component
         @imagedestroy($sourceGDImg);
     }
 
-    public function uploadMultiple($name, $tmpPath, $isMultiple)
+    public function _finishUpload($name, $tmpPath, $isMultiple)
     {
+
         $this->cleanupOldUploads();
         $this->filesystem = config('kompass.storage.disk');
 
         $files = collect($tmpPath)->map(function ($i) {
-            return TemporaryUploadedFile::createFromLivewire($i);
+            return \Livewire\Features\SupportFileUploads\TemporaryUploadedFile::createFromLivewire($i);
         })->toArray();
-        dump($files);
-        $this->emitSelf('upload:finished', $name, collect($files)->map->getFilename()->toArray());
 
-        $files = array_merge($this->getPropertyValue($name), $files);
-
-        $this->syncInput($name, $files);
+        $this->dispatch('upload:finished', name: $name, tmpFilenames: collect($files)->map->getFilename()->toArray())->self();
 
         $file = new File;
 
@@ -303,7 +299,7 @@ class Medialibrary extends Component
             $timefilesSlug = $time.'_'.$filesSlug;
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
-            dump($storelink);
+
             $imageMimeTypes = [
                 'image/jpeg',
                 'image/png',
@@ -311,15 +307,19 @@ class Medialibrary extends Component
                 'image/gif',
             ];
             if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
-                $des = Storage::path('public/'.$timefilesSlug.'.avif');
-                dump($des);
-                self::convert(asset($storelink), $des, 50, 6);
-                foreach ($details['thumbnails'] as $thumbnail_data) {
-                    $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
-                    $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 80, $original_ext);
+                if ($this->dir) {
+                    $des = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'.avif');
+                } else {
+                    $des = Storage::path('public/'.$timefilesSlug.'.avif');
                 }
+
+                self::convert(asset($storelink), $des, 60, 6);
+                // foreach ($details['thumbnails'] as $thumbnail_data) {
+                //     $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
+                //     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 60, $original_ext);
+                // }
             }
-            dump($storelink);
+
             if ($storelink) {
                 $file::create([
                     'path' => $this->dir,
@@ -413,6 +413,19 @@ class Medialibrary extends Component
         $file = File::findOrFail($this->iditem);
 
         if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
+            $details = config('kompass.media') ?? '{}';
+            // foreach ($details['thumbnails'] as $thumbnail_data) {
+
+            //     dump($thumbnail_data);
+            //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.'.$file->extension);
+            //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif');
+            //     // if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif')) {
+            //     //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif');
+
+            //     // }
+            // }
+            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.avif');
+            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension);
             if (Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
                 File::destroy($this->iditem);
                 $this->FormDelete = false;
