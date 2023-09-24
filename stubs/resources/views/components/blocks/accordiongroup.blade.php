@@ -13,7 +13,7 @@
         <div x-data="accordion({{$blockid}})">
             <div-nav-action :class="handleAc()" class="flex items-center justify-between border-b border-gray-200 px-4 ">
                 <span class="flex items-center py-6 w-full ">
-            <h2 @click="handleClick()" >{{$this->get_field('titel',$blockid)}}</h2>
+            <h4 @click="handleClick()" >{{$this->get_field('titel',$blockid)}}</h5>
 
             </span>
             {{-- <svg

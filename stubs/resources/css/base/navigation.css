@@ -1,0 +1,20 @@
+header{
+    ul{
+        display: flex;
+        gap: 2rem;
+    }
+}
+
+footer{
+
+    nav{
+        ul{
+            display: flex;
+            gap: 1rem;
+            a{
+                @apply font-bold;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,157 @@
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Oswald', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    font-weight: 700;
+    line-height: 1.3;
+    /* @apply text-blau-600; */
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+    @apply text-white;
+}
+
+h1 {
+    font-size: fluid(35px, 60px, 720px, 1880px);
+    /* @apply font-bold text-black uppercase; */
+}
+
+h2 {
+    font-size: fluid(35px, 45px, 720px, 1880px);
+    @apply font-bold;
+}
+
+h3 {
+    font-size: fluid(25px, 30px, 720px, 1880px);
+    @apply font-bold;
+}
+
+h4 {
+    font-size: fluid(18px, 28px, 720px, 1880px);
+    @apply font-semibold;
+}
+
+h5 {
+    font-size: fluid(18px, 28px, 720px, 1880px);
+    @apply font-bold;
+}
+
+h6 {
+    font-size: fluid(16px, 26px, 720px, 1880px);
+    @apply font-bold;
+}
+
+.preline {
+    font-size: fluid(16px, 26px, 720px, 1880px);
+    @apply font-normal;
+}
+
+
+
+p {
+    font-size: fluid(16px, 20px, 720px, 1880px);
+    @apply font-normal my-4;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+
+    &.small {
+        font-size: fluid(12px, 16px, 720px, 1880px);
+        @apply font-normal;
+
+    }
+}
+
+card-box {
+    p {
+        font-size: fluid(12px, 14px, 720px, 1880px);
+        @apply font-normal text-gray-500;
+        line-height: 2;
+        letter-spacing: 0.2px;
+    }
+}
+li::marker {
+    color: hotpink;
+  }
+
+.prosetext li  {
+    /* list-style-image: url(../asset/check.svg); */
+    padding-inline-start: 1ch;
+    @apply stroke-orange-600 stroke-2
+  }
+.prosetext :where(ul):not(:where([class~="not-prose"] *)){
+    list-style-type: decimal;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+    font-size: fluid(16px, 18px, 720px, 1880px);
+    @apply font-normal my-4;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+  }
+  .prosetext :where(ol[type="A"]):not(:where([class~="not-prose"] *)){
+    list-style-type: upper-alpha;
+  }
+  .prosetext :where(ol[type="a"]):not(:where([class~="not-prose"] *)){
+    list-style-type: lower-alpha;
+  }
+  .prosetext :where(ol[type="A" s]):not(:where([class~="not-prose"] *)){
+    list-style-type: upper-alpha;
+  }
+  .prosetext :where(ol[type="a" s]):not(:where([class~="not-prose"] *)){
+    list-style-type: lower-alpha;
+  }
+  .prosetext :where(ol[type="I"]):not(:where([class~="not-prose"] *)){
+    list-style-type: upper-roman;
+  }
+  .prosetext :where(ol[type="i"]):not(:where([class~="not-prose"] *)){
+    list-style-type: lower-roman;
+  }
+  .prosetext :where(ol[type="I" s]):not(:where([class~="not-prose"] *)){
+    list-style-type: upper-roman;
+  }
+  .prosetext :where(ol[type="i" s]):not(:where([class~="not-prose"] *)){
+    list-style-type: lower-roman;
+  }
+  .prosetext :where(ol[type="1"]):not(:where([class~="not-prose"] *)){
+    list-style-type: decimal;
+  }
+  .prosetext :where(ul):not(:where([class~="not-prose"] *)){
+    list-style-type: disc;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+  }
+  .prosetext :where(ol > li):not(:where([class~="not-prose"] *))::marker{
+    font-weight: 400;
+    color: var(--tw-prose-counters);
+  }
+  .prosetext :where(ul > li):not(:where([class~="not-prose"] *))::marker{
+    color: var(--tw-prose-bullets);
+  }
+  .prosetext :where(hr):not(:where([class~="not-prose"] *)){
+    border-color: var(--tw-prose-hr);
+    border-top-width: 1px;
+    margin-top: 3em;
+    margin-bottom: 3em;
+
+  }
+  .prosetext :where(blockquote):not(:where([class~="not-prose"] *)){
+    font-weight: 500;
+    font-style: italic;
+    color: var(--tw-prose-quotes);
+    border-left-width: 0.25rem;
+    border-left-color: var(--tw-prose-quote-borders);
+    quotes: "\201C""\201D""\2018""\2019";
+    margin-top: 1.6em;
+    margin-bottom: 1.6em;
+    padding-left: 1em;
+  }

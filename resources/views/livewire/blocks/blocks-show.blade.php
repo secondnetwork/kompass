@@ -105,42 +105,42 @@
             {{-- <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-yellow-900 text-yellow-300">Dev</span> --}}
 @php
     $layout = $data->grid ?? '';
-    $alignment = $itemblocks->set->alignment ?? '';
-    $slider = $itemblocks->set->slider ?? '';
-    $type = $itemblocks->set->type ?? '';
+    $alignment = $data->set->alignment ?? '';
+    $slider = $data->set->slider ?? '';
+    $type = $data->set->type ?? '';
 @endphp
 
         <nav-item class="flex items-center gap-2" wire:model="data.grid">
             <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid Layout</span>
-                <span class="cursor-pointer" x-data @click="$dispatch('input', '1')">
+                <span class="cursor-pointer" x-data wire:click="updateGrid({{ $data->id }}, '1')">
                     @if ($layout == '1')
                     <x-tabler-square-number-1 class="stroke-blue-500"/>
                     @else
                     <x-tabler-square-number-1/>
                     @endif
                 </span>
-                <span class="cursor-pointer" x-data @click="$dispatch('input', '2')">
+                <span class="cursor-pointer" wire:click="updateGrid({{ $data->id }}, '2')">
                     @if ($layout == '2')
                     <x-tabler-square-number-2 class="stroke-blue-500"/>
                     @else
                     <x-tabler-square-number-2/>
                     @endif
                 </span>
-                <span class="cursor-pointer" x-data @click="$dispatch('input', '3')">
+                <span class="cursor-pointer" wire:click="updateGrid({{ $data->id }}, '3')">
                     @if ($layout == '3')
                     <x-tabler-square-number-3 class="stroke-blue-500"/>
                     @else
                     <x-tabler-square-number-3/>
                     @endif
                 </span>
-                <span class="cursor-pointer" x-data @click="$dispatch('input', '4')">
+                <span class="cursor-pointer" wire:click="updateGrid({{ $data->id }}, '4')">
                     @if ($layout == '4')
                     <x-tabler-square-number-4 class="stroke-blue-500"/>
                     @else
                     <x-tabler-square-number-4/>
                     @endif
                 </span>
-                <span class="cursor-pointer" x-data @click="$dispatch('input', '5')">
+                <span class="cursor-pointer" wire:click="updateGrid({{ $data->id }}, '5')">
                     @if ($layout == '5')
                     <x-tabler-square-number-5 class="stroke-blue-500"/>
                     @else

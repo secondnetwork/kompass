@@ -192,6 +192,13 @@ class BlocksData extends Component
         $this->resetpage();
     }
 
+    public function updateGrid($id, $grid)
+    {
+        $setblock = Blocktemplates::findOrFail($id);
+        $setblock->update(['grid' => $grid]);
+        $this->resetpage();
+    }
+
     public function updateOrder($list)
     {
 

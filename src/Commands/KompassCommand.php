@@ -49,7 +49,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
             ),
 
             'email' => $this->options['email'] ?? text(
-                label: 'Email address',
+                label: __('E-Mail Address'),
                 required: true,
                 validate: fn (string $email): ?string => match (true) {
                     ! filter_var($email, FILTER_VALIDATE_EMAIL) => 'The email address must be valid.',
@@ -59,7 +59,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
             ),
 
             'password' => Hash::make($this->options['password'] ?? password(
-                label: 'Password',
+                label: __('Password'),
                 required: true,
             )),
         ];
@@ -86,7 +86,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         $this->options = $this->options();
 
-        info('Welcome to the install of Kompass A Laravel CMS');
+        info('Welcome to the installation of Kompass A Laravel CMS');
 
         $publishAssets = select(
             label: 'Install Frontend Themen?',
@@ -121,21 +121,22 @@ class KompassCommand extends Command implements PromptsForMissingInput
         );
 
         if ($database) {
-
             $this->databaserun();
-        }
-
-        $addNewUser = select(
-            label: 'Create new Admin User?',
-            options: [
-                true => 'Yes',
-                false => 'no',
-            ]
-        );
-
-        if ($addNewUser) {
             $this->createUser();
+        } else {
+            $addNewUser = select(
+                label: 'Create new Admin User?',
+                options: [
+                    true => 'Yes',
+                    false => 'no',
+                ]
+            );
+
+            if ($addNewUser) {
+                $this->createUser();
+            }
         }
+
         Artisan::call('optimize:clear');
         Artisan::call('storage:link');
         $this->sendSuccessMessage();
@@ -171,9 +172,17 @@ class KompassCommand extends Command implements PromptsForMissingInput
             return [
                 '@tailwindcss/forms' => '^0.5.2',
                 '@tailwindcss/typography' => '^0.5.0',
+                '@lehoczky/postcss-fluid' => '^1.0.3',
                 'autoprefixer' => '^10.4.7',
-                'postcss' => '^8.4.14',
+                'postcss' => '^8.4.23',
+                'postcss-fluid' => '^1.4.2',
+                'postcss-import' => '^15.1.0',
+                'postcss-import-ext-glob' => '^2.1.1',
+                'postcss-mixins' => '^9.0.4',
+                'postcss-nesting' => '^11.2.1',
+                'postcss-preset-env' => '^8.0.1',
                 'tailwindcss' => '^3.1.0',
+                'plyr' => '^3.7.8',
             ] + $packages;
         });
         switch ($packagemanager) {
@@ -234,8 +243,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
             File::put(config_path('app.php'), str_replace(
                 "App\Providers\RouteServiceProvider::class,",
                 "App\Providers\RouteServiceProvider::class,".PHP_EOL.
-                "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
-                'App\\Providers\\KompassServiceProvider::class,',
+                    "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
+                    'App\\Providers\\KompassServiceProvider::class,',
                 $appConfig
             ));
         }
