@@ -1,6 +1,5 @@
 import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import laravel from 'laravel-vite-plugin';
-// import sassGlobImports from 'vite-plugin-sass-glob-import';
 
 export default defineConfig({
   build: {
@@ -24,7 +23,7 @@ export default defineConfig({
       //   config: { delay: 300 },
       // },
     }),
-    
+
   ],
   server: {
     port: 5088,
