@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Livewire\Component;
-use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafields;
@@ -17,6 +16,10 @@ class Medialibrary extends Component
 {
     use WithFileUploads;
     use WithPagination;
+
+    public $search = '';
+
+    protected $queryString = ['search'];
 
     public array $metadata = [];
 
@@ -33,6 +36,8 @@ class Medialibrary extends Component
     public $foldername;
 
     public $name;
+
+    public $page;
 
     public $file;
 
@@ -56,7 +61,7 @@ class Medialibrary extends Component
 
     public $field_id;
 
-    public $Block_id;
+    public $block_id;
 
     public $headers;
 
@@ -70,9 +75,9 @@ class Medialibrary extends Component
 
     public $FormEdit = false;
 
-    public $perPage = 50;
+    public $FormFolder = false;
 
-    public $search = '';
+    public $perPage = 50;
 
     public $orderBy = 'created_at';
 
@@ -85,12 +90,12 @@ class Medialibrary extends Component
     private $directory = '';
 
     protected $listeners = [
-        'getIdField_changnd' => 'getIdField_changnd',
+        'getIdField_changnd' => 'getIdField',
         'getIdBlock' => 'getIdBlock',
         'resetCom' => '$refresh',
     ];
 
-    public function getIdField_changnd($id_field, $page)
+    public function getIdField($id_field, $page)
     {
         $this->field_id = $id_field;
         $this->page = $page;
@@ -98,7 +103,7 @@ class Medialibrary extends Component
 
     public function getIdBlock($id_field)
     {
-        $this->Block_id = $id_field;
+        $this->block_id = $id_field;
     }
 
     private function headerConfig()
@@ -141,9 +146,11 @@ class Medialibrary extends Component
             // dd(PagesData::getName());
             // $this->belongsTo('App\PagesData');
         }
+        if ($action == 'addFolder') {
+            $this->FormFolder = true;
+        }
         if ($action == 'edit') {
             $model = File::findOrFail($itemId);
-
             $this->iditem = $itemId;
             $this->name = $model->name;
             $this->alt = $model->alt;
@@ -157,7 +164,7 @@ class Medialibrary extends Component
         }
 
         if ($action == 'update') {
-            // $this->emit('getModelId', $this->selectedItem);
+            // $this->dispatch('getModelId', $this->selectedItem);
 
             // $model = File::findOrFail($this->selectedItem);
             // $this->Rolrs = Role::all();
@@ -185,15 +192,15 @@ class Medialibrary extends Component
                 continue;
             }
 
-            $yesterdaysStamp = now()->subDay(1)->timestamp;
-            // $yesterdaysStamp = now()->subSeconds(5)->timestamp;
+            // $yesterdaysStamp = now()->subDay(1)->timestamp;
+            $yesterdaysStamp = now()->subSeconds(5)->timestamp;
             if ($yesterdaysStamp > $storage->lastModified($filePathname)) {
                 $storage->delete($filePathname);
             }
         }
     }
 
-    public function new_folder()
+    public function newFolder()
     {
         $new_folder = genSlug($this->foldername);
         $success = false;
@@ -212,10 +219,12 @@ class Medialibrary extends Component
                 'path' => $new_folder,
                 'user_id' => Auth::id(),
             ]);
-            $this->emit('resetCom');
+            $this->dispatch('resetCom');
         } else {
             $error = __('media.error_creating_dir');
         }
+
+        $this->FormFolder = false;
     }
 
     public static function convert($src, $des, $quality, $speed)
@@ -266,20 +275,17 @@ class Medialibrary extends Component
         @imagedestroy($sourceGDImg);
     }
 
-    public function finishUpload($name, $tmpPath, $isMultiple)
+    public function _finishUpload($name, $tmpPath, $isMultiple)
     {
+
         $this->cleanupOldUploads();
         $this->filesystem = config('kompass.storage.disk');
 
         $files = collect($tmpPath)->map(function ($i) {
-            return TemporaryUploadedFile::createFromLivewire($i);
+            return \Livewire\Features\SupportFileUploads\TemporaryUploadedFile::createFromLivewire($i);
         })->toArray();
 
-        $this->emitSelf('upload:finished', $name, collect($files)->map->getFilename()->toArray());
-
-        $files = array_merge($this->getPropertyValue($name), $files);
-
-        $this->syncInput($name, $files);
+        $this->dispatch('upload:finished', name: $name, tmpFilenames: collect($files)->map->getFilename()->toArray())->self();
 
         $file = new File;
 
@@ -293,8 +299,6 @@ class Medialibrary extends Component
             $timefilesSlug = $time.'_'.$filesSlug;
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
-            $des = Storage::path('public/'.$timefilesSlug.'.avif');
-            self::convert(asset($storelink), $des, 50, 6);
 
             $imageMimeTypes = [
                 'image/jpeg',
@@ -303,10 +307,17 @@ class Medialibrary extends Component
                 'image/gif',
             ];
             if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
-                foreach ($details['thumbnails'] as $thumbnail_data) {
-                    $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
-                    $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 80, $original_ext);
+                if ($this->dir) {
+                    $des = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'.avif');
+                } else {
+                    $des = Storage::path('public/'.$timefilesSlug.'.avif');
                 }
+
+                self::convert(asset($storelink), $des, 60, 6);
+                // foreach ($details['thumbnails'] as $thumbnail_data) {
+                //     $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
+                //     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 60, $original_ext);
+                // }
             }
 
             if ($storelink) {
@@ -324,7 +335,7 @@ class Medialibrary extends Component
         }
         $this->reset('files');
         $this->mount('mediafiles');
-        $this->emit('resetCom');
+        $this->dispatch('resetCom');
     }
 
     public function createThumbnail($type, $path, $width, $height, $position, $quality, $original_ext)
@@ -363,18 +374,20 @@ class Medialibrary extends Component
                     'slug' => 'gallery',
                     'type' => 'gallery',
                     'block_id' => $this->block_id,
-                    'data' => $media_id, ]);
+                    'data' => $media_id,
+                ]);
             } else {
                 Datafields::updateOrCreate(
                     ['id' => $this->field_id],
-                    ['data' => $media_id, ]);
+                    ['data' => $media_id]
+                );
             }
 
-            $this->emit('refreshmedia');
+            $this->dispatch('refreshmedia');
         }
         if ($page == 'setting') {
             Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
-            $this->emit('refreshmedia');
+            $this->dispatch('refreshmedia');
         }
     }
 
@@ -400,13 +413,32 @@ class Medialibrary extends Component
         $file = File::findOrFail($this->iditem);
 
         if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
+            $details = config('kompass.media') ?? '{}';
+            // foreach ($details['thumbnails'] as $thumbnail_data) {
+
+            //     dump($thumbnail_data);
+            //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.'.$file->extension);
+            //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif');
+            //     // if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif')) {
+            //     //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif');
+
+            //     // }
+            // }
+            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.avif');
+            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension);
             if (Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
                 File::destroy($this->iditem);
                 $this->FormDelete = false;
                 $this->FormEdit = false;
             }
         }
-        $this->emit('resetCom');
+        $this->dispatch('resetCom');
+    }
+
+    private function resultDate()
+    {
+        return file::where('name', 'like', '%'.$this->search.'%')->Paginate(100);
+        // return file::whereLike(['name', 'description'], '%' . $this->search . '%')->Paginate(100);
     }
 
     public function folder_dir()
@@ -423,6 +455,7 @@ class Medialibrary extends Component
     {
         return view('kompass::livewire.medialibrary', [
             'dirgroup' => $this->folder_dir(),
+            'filessearch' => $this->resultDate(),
         ])->layout('kompass::admin.layouts.app');
     }
 }

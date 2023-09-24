@@ -4,6 +4,12 @@
  * Copyright (c) 2014, Jason Chen
  * Copyright (c) 2013, salesforce.com
  */
+
+    .ce-block__content,
+    .ce-toolbar__content {
+        max-width: unset;
+    }
+
  .ql-container {
   box-sizing: border-box;
   font-family: Helvetica, Arial, sans-serif;

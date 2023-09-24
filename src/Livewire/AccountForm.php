@@ -97,7 +97,7 @@ class AccountForm extends Component
             $this->FormAdd = true;
         }
         if ($action == 'update') {
-            $this->emit('getModelId', $this->selectedItem);
+            $this->dispatch('getModelId', $this->selectedItem);
             $model = User::findOrFail($this->selectedItem);
             // $this->Rolrs = Role::all();
             $roleid = '3';

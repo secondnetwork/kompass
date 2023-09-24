@@ -108,11 +108,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasAnyRole(string $role)
     {
-        return null !== $this->roles()->where('slug', $role)->first();
+        return $this->roles()->where('slug', $role)->first() !== null;
     }
 
     public function hasAnyRoles(array $role)
     {
-        return null !== $this->roles()->whereIn('slug', $role)->first();
+        return $this->roles()->whereIn('slug', $role)->first() !== null;
     }
 }

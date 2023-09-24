@@ -31,7 +31,7 @@ Data: {{$fields[$key]->data}} ID:{{$fields[$key]->id}}  --}}
 {{$itemfields->grid}} --}}
 
 @if ($type == 'text' || $type == 'wysiwyg')
-{{-- <input  type="text" wire:model.defer="fields.{{$key}}.data"> -  --}}
+{{-- <input  type="text" wire:model="fields.{{$key}}.data"> -  --}}
 {!!$fields!!}
 
 @endif

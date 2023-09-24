@@ -11,9 +11,10 @@ class Setting extends Model
 
     protected $guarded = [];
 
-    public $timestamps = false;
-
+    // public $timestamps = false;
+    // protected static function boot()
     protected static function boot()
+    // public static function __callStatic($method, $parameters)
     {
         parent::boot();
         static::creating(function () {
@@ -25,9 +26,6 @@ class Setting extends Model
         static::deleting(function () {
             Cache::forget('settings');
         });
-    }
 
-    // protected $dispatchesEvents = [
-    //     'updating' => SettingUpdated::class,
-    // ];
+    }
 }

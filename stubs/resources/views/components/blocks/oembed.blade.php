@@ -1,10 +1,11 @@
 
 @props([
+    'set' => '',
     'layout' => '',
     'blockid' => '',
 ])
 @if ('video' == $layout)
-<section class="">
+<section class="{{$set->layout ?? ''}} prose m-0 max-w-none prose-p:m-0 {{$set->alignment ?? ''}}">
 
 
     @if ($this->get_field('video',$blockid))

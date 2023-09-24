@@ -1,6 +1,7 @@
-body,
-html {
-    @apply grid h-full
+page-main {
+    @apply h-screen block;
+    /* grid-template-rows: 1fr 1fr; */
+    /* height: 100vh */
 }
 
 /* html {
@@ -11,3 +12,28 @@ html {
     overflow-x: hidden;
     scroll-behavior: smooth;
 } */
+/* .ce-block__content, .ce-toolbar__content { max-width: calc(100% - 100px) !important; } .cdx-block { max-width: 100% !important; } */
+.editor {
+    .ce-block{
+        background-color: aquamarine;
+    }
+  display: flex;
+}
+.ce-toolbar__content {
+  float: left;
+}
+.ce-toolbar{
+    margin-left: 50px;
+}
+.codex-editor--narrow .codex-editor__redactor {
+  margin-left: 60px;
+  margin-right: 0;
+}
+
+.codex-editor--narrow .ce-settings .ce-popover,
+ .codex-editor--narrow .ce-toolbox .ce-popover {
+  left:0;
+  /* right:auto; */
+  /* left:initial */
+  
+ }

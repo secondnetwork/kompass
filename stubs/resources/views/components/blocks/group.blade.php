@@ -2,12 +2,13 @@
     'layout' => '',
     'blockid' => '',
     'children' => '',
+    'set' => '',
 ])
 
 @if ($layout == 'group')
 
 
-<section class="test">
+<section class="popout">
 
 @foreach ($children as $item)
 

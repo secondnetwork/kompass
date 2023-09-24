@@ -17,10 +17,7 @@
     <form method="POST" action="{{ route('password.confirm') }}">
         @csrf
 
-        <div>
-            <label>{{ __('Password') }}</label>
-            <input class="h-16" type="password" name="password" required autocomplete="current-password" />
-        </div>
+        <x-kompass::form.input label="{{ __('Password') }}" type="password" name="password" required autocomplete="current-password" />
 
         <div>
             <button class="btn w-full h-16" type="submit">

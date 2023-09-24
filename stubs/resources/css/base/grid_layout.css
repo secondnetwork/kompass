@@ -1,0 +1,123 @@
+main > div, footer,header {
+    --gap: clamp(1rem, 6vw, 3rem);
+    --full: minmax(var(--gap), 1fr);
+    --content: min(65ch, 100% - var(--gap) * 2);
+    --popout: minmax(0, 10rem);
+    --fullpage: minmax(0, 10rem);
+    display: grid;
+
+    @apply gap-y-8 md:gap-y-16;
+
+    grid-template-columns: [full-start] var(--full) [fullpage-start] var(--fullpage) [popout-start] var(--popout) [content-start] var(--content) [content-end] var(--popout) [popout-end] var(--fullpage) [fullpage-end] var(--full) [full-end];
+}
+
+footer > * , header > * {
+    grid-column: fullpage;
+}
+
+main div > section{
+    grid-column: content;
+}
+
+.popout {
+    grid-column: popout;
+}
+
+.fullpage {
+    grid-column: fullpage;
+}
+
+.full {
+    grid-column: full;
+}
+
+.ql-align-center {
+    @apply text-center;
+}
+
+.ql-align-right {
+    @apply text-right;
+}
+
+.ql-align-left {
+    @apply text-left;
+}
+
+.divider {
+    height: 0.1rem;
+    background-color: #e6e6e6;
+}
+
+.grid-3-2 {
+    display: grid;
+    row-gap: 2rem;
+    grid-template-columns: 2fr 1fr;
+    grid-column: 2/3;
+}
+
+.grid-1-4 {
+    display: grid;
+    gap: 2rem;
+    row-gap: 2rem;
+    grid-template-columns: 1fr 5fr;
+    grid-column: 2/3;
+}
+
+.grid-2 {
+    display: grid;
+    gap: 2rem;
+    row-gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+
+    @apply grid-cols-1 sm:grid-cols-2 sm:gap-8 gap-0;
+}
+
+.grid-2-3 {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 2fr 4fr;
+    grid-column: 2/3;
+}
+
+grid-4 {
+    @apply grid gap-4;
+}
+
+@media screen(md) {
+    grid-4 {
+        @apply grid grid-cols-4 gap-4;
+    }
+}
+
+@media screen(md) {
+    grid-2-3 {
+        display: grid;
+        row-gap: 5rem;
+        grid-template-columns: 2fr;
+        grid-column: 2/3;
+    }
+}
+
+grid-2-3 {
+    display: grid;
+    gap: 5rem;
+    grid-template-columns: 2fr 4fr;
+    grid-column: 2/3;
+}
+
+@media screen(md) {
+    .grid-3-2,
+    grid-3-2 {
+        display: grid;
+        row-gap: 2rem;
+        grid-template-columns: 2fr;
+        grid-column: 2/3;
+    }
+}
+.grid-3-2,
+grid-3-2 {
+    display: grid;
+    row-gap: 2rem;
+    grid-template-columns: 2fr 1fr;
+    grid-column: 2/3;
+}

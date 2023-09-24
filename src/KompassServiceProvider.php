@@ -43,9 +43,14 @@ class KompassServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/kompass.php' => config_path('kompass.php'),
             ], 'config');
+
             $this->publishes([
                 __DIR__.'/Models/User.php' => app_path('Models/User.php'),
             ], 'models');
+
+            $this->publishes([
+                __DIR__.'/../public/assets/build' => public_path('vendor/kompass/asset'),
+            ], 'assets');
 
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
@@ -64,20 +69,20 @@ class KompassServiceProvider extends ServiceProvider
             ]);
         }
 
-        View::composer('*', function ($view) {
-            $view_name = str_replace('.', ' ', $view->getName());
-            View::share('view_name', $view_name);
-        });
+        // View::composer('*', function ($view) {
+        //     $view_name = str_replace('.', ' ', $view->getName());
+        //     View::share('view_name', $view_name);
+        // });
 
-        if (Schema::hasTable('settings')) {
-            $settings = Cache::rememberForever('settings', function () {
-                return Setting::all();
-            });
+        // if (Schema::hasTable('settings')) {
+        //     $settings = Cache::rememberForever('settings', function () {
+        //         return Setting::all();
+        //     });
 
-            foreach ($settings as $setting) {
-                Config::set('settings.'.$setting->key, $setting);
-            }
-        }
+        //     foreach ($settings as $setting) {
+        //         Config::set('settings.'.$setting->key, $setting);
+        //     }
+        // }
     }
 
     private function bootBladeComponents(): void

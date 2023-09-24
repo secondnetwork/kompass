@@ -4,6 +4,12 @@ namespace Secondnetwork\Kompass;
 
 return [
 
+    'sets' => [
+        'default' => [
+            'fallback' => 'border-all',
+        ],
+    ],
+
     /*
      |--------------------------------------------------------------------------
      | Kompass Route Middleware
@@ -122,11 +128,6 @@ return [
 
     'hidden_files' => false,
 
-    'components' => [
-        // Rich Text
-        'quill' => Components\RichText\Quill::class,
-    ],
-
     'livewire' => [
         'menu' => Livewire\Frontend\Menu::class,
         'pageview' => Livewire\Frontend\Pageview::class,
@@ -145,7 +146,8 @@ return [
         'account' => Livewire\AccountForm::class,
         'roles' => Livewire\Roles::class,
         'eventdata' => Livewire\Eventdata::class,
-
+        'editorjs' => Livewire\EditorJS::class,
+        'redirect' => Livewire\Redirection::class,
     ],
 
     'prefix' => '',

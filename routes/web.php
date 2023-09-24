@@ -8,11 +8,13 @@ use Secondnetwork\Kompass\Http\Controllers\KompassController;
 use Secondnetwork\Kompass\Livewire\AccountForm;
 use Secondnetwork\Kompass\Livewire\BlocksData;
 use Secondnetwork\Kompass\Livewire\BlocksTable;
+use Secondnetwork\Kompass\Livewire\Brokenlink;
 use Secondnetwork\Kompass\Livewire\Medialibrary;
 use Secondnetwork\Kompass\Livewire\MenuData;
 use Secondnetwork\Kompass\Livewire\MenuTable;
 use Secondnetwork\Kompass\Livewire\PagesData;
 use Secondnetwork\Kompass\Livewire\PagesTable;
+use Secondnetwork\Kompass\Livewire\Redirection;
 use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 
@@ -27,7 +29,7 @@ View::composer('*', function ($view) {
 });
 
 Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::view('/', 'kompass::admin.dashboard')->name('dashboard');
+    Route::view('/', 'kompass::admin.dashboard')->name('dashboard-root');
     Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
 
     Route::get('pages', PagesTable::class)->name('pages');
@@ -42,6 +44,9 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
     Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
 
     Route::get('settings', Settings::class)->name('settings');
+
+    Route::get('redirect', Redirection::class)->name('redirect');
+    Route::get('brokenlink', Brokenlink::class)->name('brokenlink');
 
     Route::view('profile', 'kompass::admin.profile')->name('profile');
 

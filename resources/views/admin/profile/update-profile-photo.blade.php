@@ -60,14 +60,14 @@
         <!-- Name -->
         <div class="col-span-6 ">
             <x-kompass::label for="name" value="{{ __('Name') }}" />
-            <x-kompass::input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" autocomplete="name" />
+            <x-kompass::input id="name" type="text" class="mt-1 block w-full" wire:model="state.name" autocomplete="name" />
             <x-kompass::input-error for="name" class="mt-2" />
         </div>
 
         <!-- Email -->
         <div class="col-span-6 ">
             <x-kompass::label for="email" value="{{ __('Email') }}" />
-            <x-kompass::input id="email" type="email" class="mt-1 block w-full" wire:model.defer="state.email" />
+            <x-kompass::input id="email" type="email" class="mt-1 block w-full" wire:model="state.email" />
             <x-kompass::input-error for="email" class="mt-2" />
         </div>
     </x-slot>

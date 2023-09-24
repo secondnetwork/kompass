@@ -1,7 +1,7 @@
 [class*="kompass-admin-"] {
 
     overflow-y: scroll;
-
+    .test{background-color: antiquewhite;}
     main {
         display: grid;
         grid-template-columns: 15rem 1fr;
@@ -44,12 +44,10 @@
         width: 15rem;
         height: 100%;
         border-right: .1rem solid #e9ecef;
-    
+        overflow-y: auto;
 
     
-        span {
-            margin-left: 0.8rem;
-        }
+
     
         .logo {
             padding: 1rem 1.6rem;
@@ -59,7 +57,7 @@
             display: flex;
             padding: 0.35rem 1.5rem;
             align-items: center;
-            @apply text-sm;
+            @apply text-sm gap-2;
             font-weight: 600;
             position: relative;
     
@@ -89,6 +87,7 @@
             font-weight: 600;
             position: relative;
         }
+    
     /* // .sidenav {
     //   grid-area: sidenav;
     //   background-color: #394263;

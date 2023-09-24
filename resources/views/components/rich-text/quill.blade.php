@@ -12,3 +12,12 @@ x-cloak id="{{ $id }}" @class(['quill-wrapper', 'has-error' => $hasErrorsAndShow
         <div x-ref="quill"></div>
     </div>
 </div>
+
+@push('scripts')
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        document.addEventListener('livewire:load', function () {
+            // Your JavaScript code here
+        });
+    </script>
+@endpush

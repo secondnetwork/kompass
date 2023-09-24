@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     protected $casts = [
         'content' => 'array',
+        'begin_at' => 'datetime:Y-m-d H:i:s',
+        'end_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    protected $fillable = [
-        'status', 'title', 'slug', 'thumbnails', 'meta_description', 'layout', 'content', 'updated_at',
-    ];
+    protected $guarded = [];
 
     protected $dates = [
         'created_at',

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import laravel from 'laravel-vite-plugin';
 // import sassGlobImports from 'vite-plugin-sass-glob-import';
 
@@ -14,16 +14,17 @@ export default defineConfig({
     },
   },
   plugins: [
-    // sassGlobImports(),
+    splitVendorChunkPlugin(),
     laravel({
       input: ['resources/js/main.js', 'resources/css/kompass.css'],
       buildDirectory: 'assets/build',
-      // refresh: true,
-      refresh: {
-        paths: ['resources/**', 'routes/**'],
-        config: { delay: 300 },
-      },
+      refresh: true,
+      // refresh: {
+      //   paths: ['resources/**', 'routes/**'],
+      //   config: { delay: 300 },
+      // },
     }),
+    
   ],
   server: {
     port: 5088,

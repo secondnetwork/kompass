@@ -38,14 +38,19 @@
         <meta name="description" content="{{ $seo->description }}">
     @endif
 
-    @livewireStyles
     @kompassCss
+
 </head>
 <body class="kompass-{{ str_replace(".","-", Route::currentRouteName()) }}">
+         @env('local') 
+         <div style="background-image: linear-gradient(45deg, #fed7aa 25%, #ea580c 25%, #ea580c 50%, #fed7aa 50%, #fed7aa 75%, #ea580c 75%, #ea580c 100%); background-size: 56.57px 56.57px;" class="flex items-center gap-1 bg-orange-600 text-orange-800 h-1 w-full text-center text-xs fixed z-50">
+        </div> 
+        @endenv
 <page-main>
 <main>
     <header class="header">
-        <div class="header__search">
+      
+        <div class="header__search flex items-center gap-1">
 
         </div>
 
@@ -54,32 +59,50 @@
       </header>
 
       <aside class="sidenav">
-        <div class="sidenav__close-icon">
-          <i class="fas fa-times sidenav__brand-close"></i>
+        <div class="flex flex-col h-screen">
+        <div class="logo">
+                @if (!empty(setting('admin.logo')))
+            @php
+                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.logo'));
+            @endphp
+
+            @if ($file)
+                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+                    <picture>
+                        <source type="image/avif" srcset="{{ asset('storage' . $file->path . '/' .$file->slug)}}.avif ">
+                        <img class="w-60" src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}" alt="{{$file->alt}}" />
+                    </picture>
+                @endif
+            @endif
+        @else
+        <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
+        @endif
         </div>
-        <div class="logo"><img src="{{ kompass_asset('kompass_logo.svg')}}" alt=""></div>
         <ul class="sidenav__list">
 
-          <li class="sidenav__list-item"><a @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
 
           {{-- <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li> --}}
-          <li class="sidenav__list-item "><a @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
+          <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
           <livewire:adminmenu name="admin-sidebar-top">
+           
 
-          <li class="sidenav__list-item"><a @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
           <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Theme') }}</div>
 
-          <li class="sidenav__list-item"><a @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-layout-grid-add class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
-          <li class="sidenav__list-item"><a @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
-          <li class="sidenav__list-item"><a @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-layout-grid-add class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
 
 
-          @canany(['admin','user'])
-          <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
-          <li class="sidenav__list-item"><a @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
-          <li class="sidenav__list-item"><a @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a></li>
+          @canany(['admin','user']) 
+            
           @endcanany
+          <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a></li>
+          
 
           {{-- @canany(['update', 'view', 'delete'])
               // This user can update, view, or delete
@@ -87,13 +110,20 @@
               // This user can create
           @endcanany --}}
 
-          <li class="sidenav__list-item mt-8"><a @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
+          <li class="sidenav__list-item mt-8"><a wire:navigate @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
         </ul>
+
+
+
+        <div class="mt-auto mb-4 mx-6">
+          <x-tabler-layout-sidebar-left-collapse class="text-gray-400"/>
+        </div>
+        </div>
       </aside>
 
 
 
-      <section class="main-content">
+      <section class="main-content" wire:transition x-transition>
         @isset($slot)
           {{ $slot }}
         @else
@@ -103,7 +133,7 @@
 
       <footer>
         <div class="text-xs flex items-center">
-          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} secondnetwork | Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
+          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }}  @if (!empty(setting('admin.copyright'))){{ setting('admin.copyright') }}@else secondnetwork @endif| Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
         </div>
         <div class="text-xs">
 
@@ -116,7 +146,9 @@
       </footer>
 </main>
 </page-main>
-  @livewireScripts
+
+  {{-- <wireui:scripts /> --}}
+  {{-- @wireUiScripts --}}
   @kompassJs
   @stack('scripts')
 

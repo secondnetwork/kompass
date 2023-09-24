@@ -3,13 +3,15 @@
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
-                <x-kompass::form.input type="text" name="name" wire:model="name" />
+                <x-kompass::form.input label="Name" type="text" name="name" wire:model="name" />
                 <x-kompass::input-error for="name" class="mt-2" />
 
-                <select wire:model="group">
-                    <option value="page">{{__('Page')}}</option>
-                    <option value="admin_aside">{{__('Admin Sidebar')}}</option>
-                </select>
+                <x-kompass::select  label="Select" wire:model="group"
+                :options="[
+                            ['name' => __('Page'),  'id' => 'page'],
+                            ['name' => __('Admin Sidebar'),  'id' => 'admin_aside']
+                        ]">
+                </x-kompass::select>
 
                 <button wire:click="addMenu" class="btn btn-primary">Save</button>
 
@@ -24,8 +26,8 @@
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
 
-                <button class="flex gap-x-2 justify-center items-center text-md" @click="open = true">
-                    <x-tabler-square-plus stroke-width="1.5" />{{ __('New menu') }}
+                <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
+                    <x-tabler-list-details stroke-width="1.5" />{{ __('New menu') }}
                 </button>
 
             </div>
@@ -57,7 +59,7 @@
                                             <x-tabler-arrow-autofit-height
                                                 class="cursor-move stroke-current  text-gray-400" />
                                         </td>
-    
+
 
                                         @foreach ($data as $key => $value)
                                             <td wire:sortable.handle class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
@@ -67,11 +69,11 @@
 
                                         <td class="px-4 py-3 whitespace-nowrap bg-white">
                                             <div class="flex justify-end items-center gap-1">
-                                                <a href="/admin/menus/show/{{ $menu->id }}"
+                                                <a wire:navigate href="/admin/menus/show/{{ $menu->id }}"
                                                     class="flex justify-center">
                                                     <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                                 </a>
-                                                
+
                                                 <span wire:click="selectItem({{ $menu->id }}, 'delete')"
                                                     class="flex justify-center">
                                                     <x-tabler-trash class="cursor-pointer stroke-red-500" />
@@ -92,7 +94,7 @@
 
                 </div>
             </div>
-    
+
         </div>
 
 </div>

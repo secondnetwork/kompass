@@ -28,9 +28,9 @@
     </div>
     <div class="mx-4 flex-row w-full">
       <div class="flex flex-row items-center justify-between">
-        <h1 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">{{ __('Saved.') }}</h1>
+        <h1 class="text-base sm:text-lg font-bold text-gray-200">{{ __('Saved.') }}</h1>
       </div>
-      <p class="text-xs sm:text-sm font-medium text-gray-500 pr-2 sm:pr-0 dark:text-gray-300">{{ __('successfully updated') }}</p>
+      <p class="text-xs sm:text-sm font-medium pr-2 sm:pr-0 text-gray-300">{{ __('successfully updated') }}</p>
     </div>
 
     {{-- {{ $slot->isEmpty() ? 'Saved.' : $slot }} --}}

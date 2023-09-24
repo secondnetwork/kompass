@@ -26,6 +26,8 @@ class BlocksData extends Component
 
     public $title;
 
+    public $name;
+
     public $slug;
 
     public $icon_img_path;
@@ -44,6 +46,7 @@ class BlocksData extends Component
         'data.name' => 'required|string|min:3',
         'data.slug' => '',
         'data.grid' => '',
+        'data.iconclass' => '',
         'data.icon_img_path' => '',
         'fields.*.id' => '',
         'fields.*.name' => '',
@@ -78,7 +81,7 @@ class BlocksData extends Component
     {
         $this->reset('filestoredata');
         $this->mount($this->blocktemplatesId);
-        $this->emit('status');
+        $this->dispatch('status');
     }
 
     public function selectItem($itemId, $action)
@@ -189,9 +192,16 @@ class BlocksData extends Component
         $this->resetpage();
     }
 
+    public function updateGrid($id, $grid)
+    {
+        $setblock = Blocktemplates::findOrFail($id);
+        $setblock->update(['grid' => $grid]);
+        $this->resetpage();
+    }
+
     public function updateOrder($list)
     {
-        // dd($list);
+
         foreach ($list as $item) {
             blockfields::whereId($item['value'])->update(['order' => $item['order']]);
             // foreach($itemg['items'] as $item){

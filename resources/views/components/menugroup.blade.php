@@ -21,7 +21,8 @@
             @if ($item->subgroup)
             <x-tabler-grip-vertical wire:sortable-group.handle class="cursor-move stroke-current h-4 w-4 text-gray-900" />
             @else
-            <x-tabler-grip-vertical wire:sortable.handle class="cursor-move stroke-current h-4 w-4 text-gray-900" />
+            <div wire:sortable.handle><x-tabler-grip-vertical class="cursor-move stroke-current h-4 w-4 text-gray-900" /></div>
+            
             @endif
             
             <div x-data="click_to_edit()" class="w-11/12 flex items-center">

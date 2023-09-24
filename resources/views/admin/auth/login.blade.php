@@ -23,23 +23,18 @@
             <form method="POST" action="{{ route('login') }}" class="grid gap-y-6">
                 @csrf
 
-                <div>
-                    <label class="text-base block">{{ __('E-Mail Address') }}</label>
-                    <input  type="email" name="email" value="{{ old('email') }}"
-                        required autofocus />
-                </div>
+                 <x-kompass::form.input label="{{ __('E-Mail Address') }}" type="email" value="{{ old('email') }}" name="email" required autocomplete="on" />
 
                 <div>
                     <div class="flex justify-between">
-                    <label class="text-base block">{{ __('Password') }}</label>
+                    <label class="text-base block mb-1">{{ __('Password') }}</label>
                     @if (Route::has('password.request'))
                         <a class="text-gray-400 hover:text-blue-500 text-base" href="{{ route('password.request') }}">
                             {{ __('Forgot your password?') }}
                         </a>
                     @endif
                     </div>
-                    <input type="password" name="password" required
-                        autocomplete="current-password" />
+                    <x-kompass::form.input name="password" type="password" required autocomplete="current-password" />
                 </div>
 
 

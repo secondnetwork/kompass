@@ -28,10 +28,9 @@
     <form class="grid gap-y-8" method="POST" action="{{ route('password.email') }}">
         @csrf
 
-        <div>
-            <label class="pb-4 block">{{ __('Email') }}</label>
-            <input class="h-16" type="email" name="email" value="{{ old('email') }}" required autofocus />
-        </div>
+
+        <x-kompass::form.input label="{{ __('Email') }}" type="email" value="{{ old('email') }}" name="email" required autocomplete="name" />
+    
 
         <div class="flex">
             <button class="btn w-full h-16" type="submit">

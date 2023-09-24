@@ -20,6 +20,8 @@ class MenuData extends Component
 
     public $iconclass;
 
+    public $selectedItem;
+
     public $item;
 
     public $target = '_self';
@@ -120,8 +122,8 @@ class MenuData extends Component
     public function call_emit_reset()
     {
         $this->mount($this->menu->id);
-        $this->emit('refreshComponentGroup');
-        $this->emit('status');
+        $this->dispatch('refreshComponentGroup');
+        $this->dispatch('status');
     }
 
     public function delete()
@@ -133,6 +135,7 @@ class MenuData extends Component
 
     public function updateGroupOrder($list)
     {
+
         foreach ($list as $item) {
             Menuitem::whereId($item['value'])->update(['order' => $item['order']]);
         }
@@ -141,6 +144,7 @@ class MenuData extends Component
 
     public function updateItemsOrder($list)
     {
+
         foreach ($list as $itemgroup) {
             Menuitem::whereId($itemgroup['value'])->update(['order' => $itemgroup['order']]);
 

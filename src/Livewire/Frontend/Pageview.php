@@ -10,6 +10,7 @@ use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Redirect;
 
 class Pageview extends Component
 {
@@ -31,8 +32,12 @@ class Pageview extends Component
     {
         $this->page = $this->ResolvePath($slug);
 
+        if (! empty($this->page->new_url)) {
+            return redirect($this->page->new_url, $this->page->status_code);
+        }
+
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return Block::where('page_id', $this->page->id)->where('status', 'public')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+            return Block::where('page_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
 
         $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
@@ -47,7 +52,6 @@ class Pageview extends Component
                 ];
             });
         }
-
         $this->fields = Cache::rememberForever('kompass_field_'.$slug, function () {
             return $this->datafields;
         });
@@ -56,17 +60,52 @@ class Pageview extends Component
     public function ResolvePath($slug)
     {
         if ($slug == null) {
-            $is_front = Page::where('layout', 'is_front_page')->where('status', 'public')->firstOrFail();
+            $is_front = Page::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
 
             if ($is_front) {
                 return $is_front;
             }
         }
 
-        $page = Page::where('slug', $slug)->where('status', 'public')->firstOrFail();
-        if ($page) {
+        $page = Page::where('slug', $slug)->whereNot('status', 'draft')->first();
+        // $page = Page::where('slug', $slug)->where('status', 'published')->first();
+
+        // $redirect = Redirect::where('old_url', '/'.$slug)->firstOrFail();
+
+        if (! empty($page)) {
             return $page;
+        } else {
+            $redirect = Redirect::where('old_url', '/'.$slug)->firstOrFail();
+
+            return $redirect;
         }
+
+        // if (!empty($redirect)) {
+
+        //     return $redirect;
+        // }
+
+    }
+
+    public function get_gallery($blockis = null)
+    {
+
+        foreach ($this->fields[$blockis] as $key => $value) {
+
+            if ($value->type == 'gallery' && $value->data != null) {
+                $file = file::where('id', $value->data)->first();
+                if ($file) {
+                    // $dataarray[] =   asset('storage/' . $file->path . '/' . $file->slug) . '.avif';
+
+                    $dataarray[] = '<picture><source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'_medium.'.$file->extension.'.avif"><img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"  src="'.asset('storage/'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" /></picture>';
+                }
+            }
+
+        }
+
+        $str = implode('', $dataarray);
+
+        return $str;
     }
 
     public function get_field($slug, $blockis = null, $class = null, $size = null)
@@ -78,14 +117,15 @@ class Pageview extends Component
                     if ($file) {
                         if ($size) {
                             $sizes = '_'.$size;
+
                             return '<picture>
-                            <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
+                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
                             <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
                             </picture>
                             ';
                         } else {
                             return '<picture>
-                            <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
+                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
                             <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                             </picture>
                             ';

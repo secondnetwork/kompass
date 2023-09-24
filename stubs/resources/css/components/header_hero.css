@@ -1,0 +1,39 @@
+.header-hero{
+    @apply pt-[4rem] pb-16;
+    /* @screen md {
+        @apply pt-[10rem] pb-16;
+    } */
+    /* background-image: url('../asset/bgshape.svg'); */
+    background-position: center 100%;
+    background-size: cover;
+    z-index: -2;
+
+    /* &:after{
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100rem;
+        height: 100rem;
+
+        background-repeat: no-repeat;
+        z-index: -1;
+    } */
+}
+.bg-logo{
+
+    @screen md {
+        &:before{
+            content: '';
+            position: absolute;
+            top: -12rem;
+            left: -10rem;
+            width: 100rem;
+            height: 100rem;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+    }
+    position: relative;
+
+}

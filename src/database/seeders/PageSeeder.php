@@ -19,13 +19,13 @@ class PageSeeder extends Seeder
         $frontPage->title = 'Startpage';
         $frontPage->slug = 'startpage';
         $frontPage->layout = 'is_front_page';
-        $frontPage->status = 'public';
+        $frontPage->status = 'published';
         $frontPage->save();
 
         $frontPage = new Page();
         $frontPage->title = 'About';
         $frontPage->slug = 'about';
-        $frontPage->status = 'public';
+        $frontPage->status = 'published';
         $frontPage->save();
 
         DB::table('settings')->insert([
@@ -117,7 +117,7 @@ class PageSeeder extends Seeder
                 'page_id' => 1,
                 'name' => 'Longtext',
                 'slug' => 'longtext',
-                'status' => 'public',
+                'status' => 'published',
                 'grid' => 1,
                 'order' => 1,
             ],
@@ -126,7 +126,7 @@ class PageSeeder extends Seeder
                 'page_id' => 2,
                 'name' => 'Longtext',
                 'slug' => 'longtext',
-                'status' => 'public',
+                'status' => 'published',
                 'grid' => 1,
                 'order' => 1,
             ],

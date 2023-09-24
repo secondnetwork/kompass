@@ -18,7 +18,7 @@
     @endphp
 @endif
 
-<div>
+<div>T
     <label for='{{ $name }}'>{{ $label }}</label>
     <select name='{{ $name }}' id='{{ $name }}' {{ $attributes }}>
     @if ($placeholder != '')

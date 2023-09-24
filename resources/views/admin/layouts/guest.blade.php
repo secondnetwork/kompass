@@ -38,7 +38,6 @@
         <meta name="description" content="{{ $seo->description }}">
     @endif
 
-@livewireStyles
 @kompassCss
 
 </head>
@@ -46,19 +45,53 @@
 
 
 
-<div class="grid grid-cols-11 h-full items-center justify-center bg-gray-100">
-<div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-10 p-12">
-    <div class="logo w-[14rem]"><img src="{{ kompass_asset('kompass_logo.svg') }}" alt=""></div>
+<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100">
+<div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
+    <div class="logo w-[14rem]">
+        @if (!empty(setting('admin.logo')))
+            @php
+                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.logo'));
+            @endphp
 
-        <main>
+            @if ($file)
+                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+                    <picture>
+                        <source type="image/avif" srcset="{{ asset('storage' . $file->path . '/' .$file->slug)}}.avif ">
+                        <img class="w-60" src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}" alt="{{$file->alt}}" />
+                    </picture>
+                @endif
+            @endif
+        @else
+        <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
+        @endif
+        
+    
+    </div>
+
+        <main class="grid gap-y-8">
             @yield('content')
         </main>
 
     </div>
-<div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full" style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')">
+  
+        @if (!empty(setting('admin.bgimg')))
+            @php
+                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.bgimg'));
+            @endphp
+
+            @if ($file)
+                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+                    <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full" style="background-image: url('{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}')">
+                @endif
+            @endif
+          
+        @else
+<div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full " style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')">
+        @endif    
+
     <footer class="items-end flex justify-between ">
         <div class="text-xs flex items-center text-gray-300 p-8">
-            <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('footer.copytext') }}
+            <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('admin.copyright') ?? 'secondnetwork'}}
           </div>
         <div class="text-gray-300 text-xs p-8">
         @php $version = Kompass::getVersion(); @endphp
@@ -69,8 +102,7 @@
     </footer>
 </div>
 </div>
-
-@livewireScripts   
+ 
 @kompassJs
 @stack('scripts')
 

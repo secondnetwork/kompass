@@ -5,6 +5,8 @@ namespace Secondnetwork\Kompass\Livewire;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -12,8 +14,8 @@ use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\Page;
-use Spatie\LaravelIgnition\Recorders\DumpRecorder\Dump;
 
+#[Layout('kompass::admin.layouts.app')]
 class PagesData extends Component
 {
     // use WithPagination;
@@ -22,25 +24,34 @@ class PagesData extends Component
      *
      * @var array
      */
+    #[Locked]
     public $page_id;
+
+    #[Locked]
+    public $selectedItem;
+
+    #[Locked]
+    public $getIdField;
 
     public $page;
 
     public $title;
 
-    public $blocks;
+    public $blocks = [];
 
     public $blockgroupId;
 
-    public $fields;
+    public $fields = [];
 
     public $newName;
 
     public $blocktemplates;
 
-    public $getIdField;
-
     public $arrayIdField;
+
+    public $iconclass;
+
+    public $FormAdjustments = false;
 
     public $FormBlocks = false;
 
@@ -52,6 +63,10 @@ class PagesData extends Component
 
     public $FormEdit = false;
 
+    public $Editorjs;
+
+    public $data;
+
     public $selected = [];
 
     protected $rules = [
@@ -60,6 +75,10 @@ class PagesData extends Component
         'page.meta_description' => '',
         'page.slug' => '',
         'page.layout' => '',
+        'page.status' => '',
+        'page.password' => '',
+        'page.begin_at' => '',
+        'page.end_at' => '',
         'blocks.*.id' => '',
         'blocks.*.name' => '',
         'fields.*.id' => '',
@@ -68,35 +87,58 @@ class PagesData extends Component
     ];
 
     protected $listeners = [
+        'editorjssave' => 'saveEditorState',
         'refreshComponent' => '$refresh',
         'refreshmedia' => 'call_emit_reset',
+
     ];
+
+    public function saveEditorState($editorJsonData, $id)
+    {
+
+        if (! empty($editorJsonData)) {
+
+            Datafields::whereId($id)->update(['data' => $editorJsonData]);
+            // foreach($itemg['items'] as $item){
+            //     block::whereId($item['value'])->update(['order' => $item['order']]);
+            // }
+            // dump($itemg);
+
+        }
+
+        // $this->call_emit_reset();
+    }
 
     public function mount($id)
     {
+
         $this->page_id = $id;
         $this->page = Page::findOrFail($id);
-        $this->blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-        // $this->blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->get();
-        // $this->blocks = Block::whereNull('subgroup')->with(['children'])->get();
 
-        $blocks_id = Block::where('page_id', $id)->orderBy('order', 'asc')->pluck('id');
+        $blocks = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
-        Arr::collapse($blocks_id);
+        if ($blocks->isNotEmpty()) {
+            $this->blocks = $blocks;
+            $blocks_id = Block::where('page_id', $id)->orderBy('order', 'asc')->pluck('id');
 
-        $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
+            Arr::collapse($blocks_id);
 
-        $this->blocktemplates = Blocktemplates::get()->all();
+            $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
+        }
+
+        $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
         // $this->blockschildren = $this->tree($this->blocks);
         // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
-    public function selectItem($itemId, $action, $groupId = null)
+    public function selectitem($itemId, $action, $groupId = null)
     {
+
         $this->selectedItem = $itemId;
         $this->blockgroupId = $groupId;
 
         if ($action == 'addBlock') {
+
             $this->FormBlocks = true;
         }
         if ($action == 'update') {
@@ -104,8 +146,8 @@ class PagesData extends Component
         if ($action == 'addMedia') {
             $this->getIdField = $itemId;
             $this->FormMedia = true;
-            $this->emit('getIdField_changnd', $this->getIdField, 'page');
-            $this->emit('getIdBlock', $this->blockgroupId);
+            $this->dispatch('getIdField_changnd', $this->getIdField, 'page');
+            $this->dispatch('getIdBlock', $this->blockgroupId);
         }
         if ($action == 'deleteblock') {
             $this->FormDelete = true;
@@ -115,18 +157,31 @@ class PagesData extends Component
     public function addBlock($pageID, $blocktemplatesID, $name, $slug, $grid, $blockType = null)
     {
         // Layout *popout or full *** alignment* left or right
+
         $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
+        $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
 
         $block = Block::create([
             'page_id' => $pageID,
             'name' => $name,
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
-            'status' => 'public',
+            'status' => 'published',
+            'iconclass' => $tempBlock->iconclass ?? null,
             'slug' => $slug,
             'grid' => $grid,
             'order' => '999',
         ]);
+        if ($blockType == 'wysiwyg') {
+            Datafields::create([
+                'block_id' => $block->id,
+                'name' => 'wysiwyg',
+                'slug' => 'wysiwyg',
+                'type' => 'wysiwyg',
+                'grid' => '1',
+                'order' => '1',
+            ]);
+        }
 
         if ($blocktemplatesID != null) {
             $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
@@ -148,8 +203,8 @@ class PagesData extends Component
 
     public function refreshmedia()
     {
-        $this->emit('refreshComponent');
-        $this->emit('status');
+        $this->dispatch('refreshComponent');
+        $this->dispatch('status');
     }
 
     public function call_emit_reset()
@@ -157,8 +212,8 @@ class PagesData extends Component
         $this->mount($this->page_id);
 
         $this->FormMedia = false;
-        $this->emit('refreshComponent');
-        $this->emit('status');
+        $this->dispatch('refreshComponent');
+        $this->dispatch('status');
 
         // return redirect()->to('admin');
     }
@@ -208,8 +263,16 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-    public function set($id, $set, $status)
+    public function updateGrid($id, $grid)
     {
+        $setblock = Block::findOrFail($id);
+        $setblock->update(['grid' => $grid]);
+        $this->call_emit_reset();
+    }
+
+    public function saveset($id, $set, $status)
+    {
+
         $setblock = Block::findOrFail($id);
 
         if ($set == 'layout') {
@@ -227,23 +290,37 @@ class PagesData extends Component
 
     public function status($id, $status)
     {
-        if ($status == 'unpublish') {
-            Block::where('id', $id)->update(['status' => 'unpublish']);
-            $this->emit('status');
+        if ($status == 'draft') {
+            Block::where('id', $id)->update(['status' => 'draft']);
+            $this->dispatch('status');
         }
-        if ($status == 'public') {
-            Block::where('id', $id)->update(['status' => 'public']);
-            $this->emit('status');
+        if ($status == 'published') {
+            Block::where('id', $id)->update(['status' => 'published']);
+            $this->dispatch('status');
         }
         $this->call_emit_reset();
     }
 
-    public function update($id, $published = null)
+    public function statusPage($id, $status)
     {
+        if ($status == 'draft') {
+            Page::where('id', $id)->update(['status' => 'draft']);
+        }
+        if ($status == 'published') {
+            Page::where('id', $id)->update(['status' => 'published']);
+        }
+
+        $this->call_emit_reset();
+    }
+
+    public function update($id, $publisheded = null)
+    {
+
         $page = Page::findOrFail($id);
 
         // $this->getDynamicSEOData();
         // $page->addSEO();
+        $this->dispatch('savedatajs');
 
         $validateData = $this->validate();
 
@@ -270,15 +347,19 @@ class PagesData extends Component
             $slugNameURL = $titlePage;
         }
 
-        if ($published == true) {
-            Page::where('id', $id)->update(['status' => 'public']);
-            $this->emit('status');
+        if ($publisheded == true) {
+            Page::where('id', $id)->update(['status' => 'published']);
+            $this->dispatch('status');
         }
 
         $page->update([
             'title' => $validateData['page']['title'],
             'meta_description' => $validateData['page']['meta_description'],
             'layout' => $validateData['page']['layout'],
+            'status' => $validateData['page']['status'],
+            'password' => $validateData['page']['password'],
+            'begin_at' => $validateData['page']['begin_at'],
+            'end_at' => $validateData['page']['end_at'],
         ]);
 
         $page->update([
@@ -291,8 +372,8 @@ class PagesData extends Component
                 Block::whereId($itemg['id'])->update($itemg);
             }
         }
+
         if (! empty($validateData['fields'])) {
-            // dump($validateData);
 
             foreach ($validateData['fields'] as $itemg) {
                 Datafields::whereId($itemg['id'])->update($itemg);
@@ -302,7 +383,7 @@ class PagesData extends Component
                 // dump($itemg);
             }
         }
-        // @dump($validateData);
+
         $this->call_emit_reset();
     }
 
@@ -327,14 +408,9 @@ class PagesData extends Component
         $this->call_emit_reset();
     }
 
-    public function render()
-    {
-        return view('kompass::livewire.pages.pages-show')
-            ->layout('kompass::admin.layouts.app');
-    }
-
     public function updateOrder($list)
     {
+
         foreach ($list as $items) {
             // $boardgroub = $itemg['value'];
             foreach ($items['items'] as $item) {
@@ -343,7 +419,7 @@ class PagesData extends Component
         }
 
         $this->call_emit_reset();
-        $this->emit('status');
+        $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
@@ -373,7 +449,15 @@ class PagesData extends Component
         }
 
         $this->call_emit_reset();
-        $this->emit('status');
+        $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
+    }
+
+    //
+    public function render()
+    {
+
+        return view('kompass::livewire.pages.pages-show')
+            ->layout('kompass::admin.layouts.app');
     }
 }

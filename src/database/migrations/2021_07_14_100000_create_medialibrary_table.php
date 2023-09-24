@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('medialibrary', function (Blueprint $table) {
             $table->increments('id');
             $table->string('path')->nullable();
+            $table->string('subgroup')->nullable();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
             $table->string('type')->nullable();

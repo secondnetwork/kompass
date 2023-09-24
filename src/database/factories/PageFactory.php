@@ -23,7 +23,7 @@ class PageFactory extends Factory
     public function definition()
     {
         return [
-            'status' => 'public',
+            'status' => 'published',
             'title' => $this->faker->realText(100),
             'slug' => Str::slug($this->faker->realText(100), '-'),
             // 'thumbnails' => 'https://picsum.photos/200/300?random='.rand(1,500),

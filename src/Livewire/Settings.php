@@ -12,7 +12,9 @@ class Settings extends Component
 
     public $headers;
 
-    public $pagetap = 'application';
+    public $selectedItem;
+
+    public $pagetap = 'admin';
 
     protected $queryString = ['pagetap'];
 
@@ -79,6 +81,17 @@ class Settings extends Component
         $this->data = $this->dataTable();
     }
 
+    protected $listeners = [
+        'editorjssave' => 'saveEditorState',
+    ];
+
+    public function saveEditorState($editorJsonData, $id)
+    {
+        if (! empty($editorJsonData)) {
+            Setting::whereId($id)->update(['data' => $editorJsonData]);
+        }
+    }
+
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
@@ -94,7 +107,7 @@ class Settings extends Component
         if ($action == 'addMedia') {
             $this->getId = $itemId;
             $this->FormMedia = true;
-            $this->emit('getIdField_changnd', $this->getId, 'setting');
+            $this->dispatch('getIdField_changnd', $this->getId, 'setting');
         }
         if ($action == 'update') {
             $model = Setting::findOrFail($this->selectedItem);
@@ -103,6 +116,7 @@ class Settings extends Component
             $this->value = $model->data;
             $this->type = $model->type;
             $this->FormAdd = true;
+
         }
 
         if ($action == 'delete') {
@@ -110,9 +124,12 @@ class Settings extends Component
         }
     }
 
-    public function pagetap($group)
+    public function pagetaps($group)
     {
+        $this->reset($this->pagetap);
         $this->pagetap = $group;
+        dump(Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get());
+
     }
 
     public function addNew()
@@ -121,6 +138,8 @@ class Settings extends Component
         if ($this->value == '0') {
             $this->value = '';
         }
+        $this->dispatch('savedatajs');
+
         Setting::updateOrCreate([
             'id' => $this->selectedItem,
         ],
@@ -148,12 +167,15 @@ class Settings extends Component
 
     private function resultDate()
     {
-        return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
+
+        // dd(Setting::query()->orderBy('order', 'asc')->get());
+        // return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
+        return Setting::query()->orderBy('order', 'asc')->get();
     }
 
     private function resultGroup()
     {
-        return Setting::select('group')
+        return Setting::query()->select('group')
             ->orderBy('group')
             ->groupBy('group')
             ->get();
