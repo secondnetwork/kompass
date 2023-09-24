@@ -86,6 +86,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         $this->options = $this->options();
 
+        info('Welcome to the install of Kompass A Laravel CMS');
+
         $publishAssets = select(
             label: 'Install Frontend Themen?',
             options: [
@@ -94,17 +96,16 @@ class KompassCommand extends Command implements PromptsForMissingInput
             ]
         );
 
-        $packagemanager = select(
-            label: 'Which package manager do you have on the system?',
-            options: [
-                'bun' => 'Bun',
-                'yarn' => 'Yarn',
-                'npm' => 'Npm',
-                'pnpm' => 'pnpm',
-            ]
-        );
-
         if ($publishAssets) {
+            $packagemanager = select(
+                label: 'Which package manager do you have on the system?',
+                options: [
+                    'bun' => 'Bun',
+                    'yarn' => 'Yarn',
+                    'npm' => 'Npm',
+                    'pnpm' => 'pnpm',
+                ]
+            );
             $this->installAssets($packagemanager);
         }
         $this->publishAssets();
@@ -120,8 +121,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         );
 
         if ($database) {
-            Artisan::call('optimize:clear');
-            Artisan::call('storage:link');
+
             $this->databaserun();
         }
 
@@ -133,12 +133,11 @@ class KompassCommand extends Command implements PromptsForMissingInput
             ]
         );
 
-        note('Create the Admin User');
-
         if ($addNewUser) {
             $this->createUser();
         }
-
+        Artisan::call('optimize:clear');
+        Artisan::call('storage:link');
         $this->sendSuccessMessage();
 
         return static::SUCCESS;
