@@ -1,6 +1,6 @@
 {
   "resources/css/kompass.css": {
-    "file": "css/kompass.1cd28a05.css",
+    "file": "css/kompass.7888907b.css",
     "isEntry": true,
     "src": "resources/css/kompass.css"
   },
@@ -16,13 +16,13 @@
   },
   "resources/js/main.js": {
     "css": [
-      "css/kompass.1cd28a05.css"
+      "css/kompass.7888907b.css"
     ],
     "dynamicImports": [
       "resources/js/livewire.sortable.js",
       "resources/js/editorjs.js"
     ],
-    "file": "js/main.6b2b922d.js",
+    "file": "js/main.0b5dd904.js",
     "isEntry": true,
     "src": "resources/js/main.js"
   }

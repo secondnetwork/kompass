@@ -38,7 +38,6 @@
         <meta name="description" content="{{ $seo->description }}">
     @endif
 
-@livewireStyles
 @kompassCss
 
 </head>
@@ -103,8 +102,7 @@
     </footer>
 </div>
 </div>
-
-@livewireScripts   
+ 
 @kompassJs
 @stack('scripts')
 

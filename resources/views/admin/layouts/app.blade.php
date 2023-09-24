@@ -38,8 +38,8 @@
         <meta name="description" content="{{ $seo->description }}">
     @endif
 
-
     @kompassCss
+
 </head>
 <body class="kompass-{{ str_replace(".","-", Route::currentRouteName()) }}">
          @env('local') 
@@ -82,7 +82,7 @@
 
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
 
-          <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
+          {{-- <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li> --}}
           <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
           <livewire:adminmenu name="admin-sidebar-top">

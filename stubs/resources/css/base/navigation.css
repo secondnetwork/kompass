@@ -6,7 +6,6 @@ header{
 }
 
 footer{
-
     nav{
         ul{
             display: flex;
@@ -16,5 +15,4 @@ footer{
             }
         }
     }
-
 }
