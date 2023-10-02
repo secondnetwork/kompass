@@ -20,8 +20,6 @@
 
 **{{__('Log in at')}} <a href="{{env('APP_URL')}}/login" target="_blank">{{env('APP_URL')}}/login</a>, {{__('to access')}}.**
 
-
-
 {{__('Have fun with it')}}.
 
 

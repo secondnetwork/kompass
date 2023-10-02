@@ -85,7 +85,7 @@
           {{-- <li class="sidenav__list-item"><a href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li> --}}
           <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
-          <livewire:adminmenu name="admin-sidebar-top">
+          {{-- <livewire:adminmenu name="admin-sidebar-top"> --}}
            
 
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
@@ -101,7 +101,7 @@
           @endcanany
           <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Roles') }}</span></a></li>
+          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Manage Role') }}</span></a></li>
           
 
           {{-- @canany(['update', 'view', 'delete'])

@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.1",
         "blade-ui-kit/blade-icons": "^1.5.2",
         "illuminate/support": "^10.21",
         "intervention/image": "^2.7.2",

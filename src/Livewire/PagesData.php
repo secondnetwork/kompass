@@ -357,9 +357,9 @@ class PagesData extends Component
             'meta_description' => $validateData['page']['meta_description'],
             'layout' => $validateData['page']['layout'],
             'status' => $validateData['page']['status'],
-            'password' => $validateData['page']['password'],
-            'begin_at' => $validateData['page']['begin_at'],
-            'end_at' => $validateData['page']['end_at'],
+            // 'password' => $validateData['page']['password'],
+            // 'begin_at' => $validateData['page']['begin_at'],
+            // 'end_at' => $validateData['page']['end_at'],
         ]);
 
         $page->update([

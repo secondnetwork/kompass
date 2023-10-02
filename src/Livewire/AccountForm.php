@@ -3,14 +3,17 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Livewire\Component;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Livewire\WithPagination;
-use Secondnetwork\Kompass\Mail\Invitation;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Secondnetwork\Kompass\Models\Role;
 use Secondnetwork\Kompass\Models\User;
+use Secondnetwork\Kompass\Mail\Invitation;
 
 class AccountForm extends Component
 {
@@ -124,26 +127,54 @@ class AccountForm extends Component
     {
         $validate = $this->validate();
 
-        $passwortrandom = Str::random(12);
+        $passwordrandom = Str::random(12);
+        $passwordHash = Hash::make($passwordrandom);
+
         $now = Carbon::now()->toDateTimeString();
-        $array = Arr::prepend($validate, $passwortrandom, 'password');
+        $array = Arr::prepend($validate, $passwordrandom, 'password');
         $maildata = Arr::prepend($array, $now, 'email_verified_at');
 
-        $user = User::create($maildata);
-        $user->roles()->sync($maildata['role']);
-        Mail::to($maildata['email'])->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))->send(new Invitation($maildata));
+        $arrayHash = Arr::prepend($validate, $passwordHash, 'password');
+        $maildataBank = Arr::prepend($arrayHash, $now, 'email_verified_at');
+    
+        $user = User::create($maildataBank);
+        $user->roles()->sync($maildataBank['role']);
 
+        Mail::to($maildata['email'])->send(new Invitation($maildata));
+
+//->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
         $this->FormAdd = false;
         $this->reset(['name', 'email', 'password', 'role']);
     }
 
-    // public function search($search)
-    // {
-    //     return empty($search) ? static::query()
-    //         : static::query()->where('id', 'like', '%'.$search.'%')
-    //             ->orWhere('name', 'like', '%'.$search.'%')
-    //             ->orWhere('email', 'like', '%'.$search.'%');
-    // }
+    public function create($id)
+    {
+        $user = User::findOrFail($id);
+        return view('auth.password.create', compact('user'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+        $user = User::findOrFail($request->input('user_id'));
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+
+        Auth::login($user);
+
+        return redirect('/admin');
+    }
+
+    public function search($search)
+    {
+        return empty($search) ? static::query()
+            : static::query()->where('id', 'like', '%'.$search.'%')
+                ->orWhere('name', 'like', '%'.$search.'%')
+                ->orWhere('email', 'like', '%'.$search.'%');
+    }
     public function update()
     {
         $user = User::findOrFail($this->selectedItem);
@@ -169,7 +200,7 @@ class AccountForm extends Component
 
         // $query = '%'.  dd(User::search);$this->searchTerm.'%';
         return view('kompass::livewire.account', [
-            'users' => $this->resultDate(),
+            // 'users' => $this->resultDate(),
             'users' => User::search($this->search)
                 ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
                 ->simplePaginate($this->perPage),
