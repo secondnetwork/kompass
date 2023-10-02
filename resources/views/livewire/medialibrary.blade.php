@@ -11,9 +11,9 @@
             </div>
 
             <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-                <input wire:model.debounce.300ms="search" type="text"
+                <input wire:model.live="search" type="text"
                     class="block p-2 w-full border-2 border-gray-300 text-base rounded-md"
-                    placeholder="Suche...">
+                    placeholder="{{ __('Search') }}...">
                 <div x-data="{ open: @entangle('FormFolder') }" class="flex justify-end gap-4">
 
                     <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">

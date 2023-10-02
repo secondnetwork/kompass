@@ -14,29 +14,24 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $Userdb = new Role();
-        $Userdb->name = 'User';
-        $Userdb->slug = 'user';
-        $Userdb->save();
 
-        $Edtor = new Role();
-        $Edtor->name = 'Edtor';
-        $Edtor->slug = 'edtor';
-        $Edtor->save();
+        Role::create([
+            'name' => 'admin',
+            'display_name' => 'Administrator', // optional
+            'description' => 'User is allowed to manage and edit other users', // optional
+        ]);
 
-        $admin = new Role();
-        $admin->name = 'Admin';
-        $admin->slug = 'admin';
-        $admin->save();
+        Role::create([
+            'name' => 'user',
+            'display_name' => 'User', // optional
+            'description' => '', // optional
+        ]);
 
-        // $manager = new Role();
-        // $manager->name = 'Project Manager';
-        // $manager->slug = 'project-manager';
-        // $manager->save();
+        Role::create([
+            'name' => 'edtor',
+            'display_name' => 'Edtor', // optional
+            'description' => '', // optional
+        ]);
 
-        // $developer = new Role();
-        // $developer->name = 'Web Developer';
-        // $developer->slug = 'web-developer';
-        // $developer->save();
     }
 }

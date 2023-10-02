@@ -70,7 +70,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         $now = Carbon::now()->toDateTimeString();
         $maildata = Arr::prepend($this->getUserData(), $now, 'email_verified_at');
         $user = User::create($maildata);
-        $user->roles()->sync(3);
+        $user->roles()->sync(1);
 
         return $user;
     }

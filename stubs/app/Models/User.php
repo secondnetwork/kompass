@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Notifications\Notifiable;
+use Secondnetwork\Kompass\Roles\HasRoles;
+use Secondnetwork\Kompass\HasProfilePhoto;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use Secondnetwork\Kompass\HasProfilePhoto;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -17,6 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
+    use HasRoles;
     // use TwoFactorAuthenticatable;
 
     /**
@@ -84,35 +86,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(File::class);
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany('Secondnetwork\Kompass\Models\Role');
-        // return $this->hasOne('Rote');
-    }
-
-    // public function setPasswordAttribute($password)
-    // {
-    //     $this->attributes['password'] = Hash::make($password);
-    // }
-
-    public function hasRole(...$roles)
-    {
-        foreach ($roles as $role) {
-            if ($this->roles->contains('slug', $role)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function hasAnyRole(string $role)
-    {
-        return $this->roles()->where('name', $role)->first() !== null;
-    }
-
-    public function hasAnyRoles(array $role)
-    {
-        return $this->roles()->whereIn('name', $role)->first() !== null;
-    }
 }

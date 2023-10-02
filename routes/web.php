@@ -21,6 +21,14 @@ use Secondnetwork\Kompass\Livewire\Settings;
 //Asset Routes
 Route::get('assets', [KompassController::class, 'assets'])->name('kompass_asset');
 
+// Route::get('/password/create/{id}', [AccountForm::class, 'create'])
+//     ->middleware(['signed'])
+//     ->name('password.create');
+
+// Route::post('/password', [AccountForm::class, 'store'])
+//     ->middleware(['signed'])
+//     ->name('password.store');
+
 View::composer('*', function ($view) {
     $vi = str_replace('.', '_', $view->getName());
     $vn = str_replace('::', '-', $vi);
@@ -50,7 +58,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 
 
     Route::view('profile', 'kompass::admin.profile')->name('profile');
 
-    Route::group(['middleware' => ['role:root|admin']], function () {
+    Route::group(['middleware' => ['role:manager|admin']], function () {
         Route::get('account', AccountForm::class)->name('account');
         Route::get('roles', Roles::class)->name('roles');
     });
