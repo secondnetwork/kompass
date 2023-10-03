@@ -16,4 +16,5 @@ return [
     'Team Settings' => 'ST',
     'Forgot your password?' => 'PAASSSSjdagjkb',
     'failed' => 'Diese Kombination aus Zugangsdaten wurde nicht in unserer Datenbank gefunden.',
+    'Invitation to access website' =>'Einladung zum Zugriff von Webseite'
 ];

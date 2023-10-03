@@ -19,6 +19,7 @@ use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
+use function Laravel\Prompts\warning;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
@@ -79,14 +80,14 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         $loginUrl = env('APP_URL').'/login';
         note('Kompass is now installed.');
-        info("Logging into your Application at {$loginUrl} with you credentials");
+        info("Logging at {$loginUrl} with you credentials.");
     }
 
     public function handle(): int
     {
         $this->options = $this->options();
 
-        info('Welcome to the installation of Kompass A Laravel CMS');
+        info('Welcome to the installation of Kompass A Laravel CMS.');
 
         $publishAssets = select(
             label: 'Install Frontend Themen?',
@@ -110,7 +111,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         }
 
         $this->publishAssets();
-
+        warning('Warning: Have you made a backup of you database?');
         $database = select(
             label: 'Drop all tables from the database? For a new installation of Kompass!',
             options: [
@@ -121,23 +122,26 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         if ($database) {
             $this->databaserun();
-            $this->createUser();
-        } else {
-            $addNewUser = select(
-                label: 'Create new Admin User?',
-                options: [
-                    true => 'Yes',
-                    false => 'no',
-                ]
-            );
-
-            if ($addNewUser) {
-                $this->createUser();
-            }
         }
 
-        Artisan::call('optimize:clear');
-        Artisan::call('storage:link');
+        $addNewUser = select(
+            label: 'Create new Admin User?',
+            options: [
+                true => 'Yes',
+                false => 'no',
+            ]
+        );
+
+        if ($addNewUser) {
+            $this->createUser();
+        }
+
+        $this->call('optimize:clear');
+
+        $linkPath = public_path('storage');
+        if (!file_exists($linkPath)) {
+            $this->call('storage:link');
+        } 
         $this->sendSuccessMessage();
 
         return static::SUCCESS;
@@ -227,8 +231,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         // Database seeders...
         (new Filesystem)->copyDirectory(__DIR__.'/../database/seeders', 'database/seeders');
-        Artisan::call('migrate:fresh');
-        Artisan::call('db:seed');
+        $this->call('migrate:fresh');
+        $this->call('db:seed');
         $this->info('migrate Database and seed data ...');
     }
 
