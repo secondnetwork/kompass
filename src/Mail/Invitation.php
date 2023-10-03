@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Queue\SerializesModels;
 
 class Invitation extends Mailable
@@ -30,6 +31,6 @@ class Invitation extends Mailable
      */
     public function build()
     {
-        return $this->markdown('kompass::mail.invitation');
+        return $this->markdown('kompass::mail.invitation')->subject(Lang::get('Invitation to access of').' '.env('APP_NAME'));
     }
 }

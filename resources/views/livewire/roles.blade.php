@@ -23,7 +23,7 @@
             @endif
             <label>Role Name</label>
             <input wire:model="display_name" type="text" class="form-control"/>
-            <label>{{ __('description') }}</label>
+            <label>{{ __('Description') }}</label>
             <textarea wire:model="description" id="" cols="30" rows="10"></textarea>
   
             
@@ -46,7 +46,7 @@
           @endif
           <label>Role Name</label>
           <input wire:model="display_name" type="text" class="form-control"/>
-          <label>{{ __('description') }}</label>
+          <label>{{ __('Description') }}</label>
           <textarea wire:model="description" id="" cols="30" rows="10"></textarea>
 
           

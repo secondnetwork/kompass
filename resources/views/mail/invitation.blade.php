@@ -12,7 +12,7 @@
 
 # {{__('Hello')}} 👋  {{ $datamessage['name'] ?? ''}},
 
-**{{__('you have been granted access to Kompass admin panel')}}.**
+**{{__('Invitation to access of').' '.env('APP_NAME')}}.**
 
 {{__('With your email')}}: **{{ $datamessage['email'] ?? ''}}**
 
