@@ -10,7 +10,6 @@ use Livewire\WithPagination;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
 use Secondnetwork\Kompass\Models\Role;
 use Secondnetwork\Kompass\Models\User;
@@ -143,6 +142,7 @@ class AccountForm extends Component
 
         Mail::to($maildata['email'])->send(new Invitation($maildata));
 
+//->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
         $this->FormAdd = false;
         $this->reset(['name', 'email', 'password', 'role']);
     }
