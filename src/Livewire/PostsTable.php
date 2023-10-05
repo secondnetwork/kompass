@@ -10,9 +10,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafields;
-use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Post;
 
-class PagesTable extends Component
+class PostsTable extends Component
 {
     /**
      * The component's listeners.
@@ -25,7 +25,7 @@ class PagesTable extends Component
 
     protected $queryString = ['search'];
 
-    public $perPage = 1000;
+    public $perPost = 1000;
 
     public $orderBy = 'order';
 
@@ -44,8 +44,6 @@ class PagesTable extends Component
     #[Locked]
     public $selectedItem;
 
-    public $timestamps = false;
-
     public $FormDelete = false;
 
     public $FormAdd = false;
@@ -54,7 +52,7 @@ class PagesTable extends Component
 
     protected $rules = [
 
-        'title' => 'unique:pages|required|string|min:3',
+        'title' => 'unique:posts|required|string|min:3',
         'meta_description' => '',
 
     ];
@@ -62,13 +60,14 @@ class PagesTable extends Component
     protected function headerTable(): array
     {
         return [
-            '',
+
             'title',
             // 'thumbnails',
             // 'description',
-            'slug',
+
             'status',
             'Updated',
+
             '',
         ];
     }
@@ -79,9 +78,10 @@ class PagesTable extends Component
             'title',
             // 'thumbnails',
             // 'meta_description',
-            'slug',
+
             'status',
             'updated_at',
+
         ];
     }
 
@@ -92,11 +92,21 @@ class PagesTable extends Component
         // $this->form->fill();
     }
 
+    public function resetpost()
+    {
+        $this->mount($this->post_id);
+    }
+
     private function resultDate()
     {
-        return Page::where('title', 'like', '%'.$this->search.'%')
-            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
-            ->simplePaginate($this->perPage);
+
+        $results = Post::query();
+
+        if ($results->count() > 0) {
+            return $results->orderBy('created_at', 'DESC')->get();
+        }
+
+        return $results;
     }
 
     public function selectItem($itemId, $action)
@@ -118,22 +128,22 @@ class PagesTable extends Component
     public function status($id, $status)
     {
         if ($status == 'draft') {
-            Page::where('id', $id)->update(['status' => 'draft']);
+            Post::where('id', $id)->update(['status' => 'draft']);
         }
         if ($status == 'published') {
-            Page::where('id', $id)->update(['status' => 'published']);
+            Post::where('id', $id)->update(['status' => 'published']);
         }
 
-        // $this->resetpage();
+        // $this->resetpost();
     }
 
-    public function addPage()
+    public function addPost()
     {
         $this->validate();
 
         $slugNameURL = Str::slug($this->title, '-', 'de'); //Convert Input to Str Slug
 
-        $placeObj = new Page;
+        $placeObj = new Post;
 
         $checkSlug = $placeObj->whereSlug($slugNameURL)->exists();
 
@@ -144,39 +154,38 @@ class PagesTable extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $newpageslug = $newSlug; //New Slug
+                    $newpostslug = $newSlug; //New Slug
                     break;
                 }
             }
         } else {
             //Slug do not exists. Just use the selected Slug.
-            $newpageslug = $slugNameURL;
+            $newpostslug = $slugNameURL;
         }
 
-        $page = Page::create([
+        $post = Post::create([
 
             'title' => $this->title,
             'status' => 'draft',
             'meta_description' => $this->meta_description,
-            'order' => '999',
-            'slug' => $newpageslug,
+            'slug' => $newpostslug,
             // 'slug' => generateSlug($this->title)
 
         ]);
         $this->FormAdd = false;
 
-        return redirect()->to('/admin/pages/show/'.$page->id);
+        return redirect()->to('/admin/posts/show/'.$post->id);
     }
 
     public function clone($id)
     {
-        $page = Page::find($id);
+        $post = Post::find($id);
 
-        $newpage = $page->replicate();
+        $newpost = $post->replicate();
 
-        $slugNameURL = Str::slug($newpage['title'], '-', 'de'); //Convert Input to Str Slug
+        $slugNameURL = Str::slug($newpost['title'], '-', 'de'); //Convert Input to Str Slug
 
-        $placeObj = new Page;
+        $placeObj = new Post;
 
         $checkSlug = $placeObj->whereSlug($slugNameURL)->exists();
 
@@ -187,32 +196,32 @@ class PagesTable extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $newpage->slug = $newSlug; //New Slug
+                    $newpost->slug = $newSlug; //New Slug
                     break;
                 }
             }
         } else {
             //Slug do not exists. Just use the selected Slug.
-            $newpage->slug = $slugNameURL;
+            $newpost->slug = $slugNameURL;
         }
-        $newpage->status = 'draft';
-        $newpage->created_at = Carbon::now();
+        $newpost->status = 'draft';
+        $newpost->created_at = Carbon::now();
 
-        $newpage->push();
+        $newpost->push();
 
-        $blocksclone = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        $blocksclone = Block::where('post_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
-        $blocksclone->each(function ($item, $key) use ($newpage) {
+        $blocksclone->each(function ($item, $key) use ($newpost) {
             $altID = $item->id;
 
             $copy = $item->replicate();
 
-            $copy->page_id = $newpage->id;
+            $copy->post_id = $newpost->id;
             $copy->save();
             if ($copy->children) {
                 foreach ($copy->children as $subgroup) {
                     $copygroup = $subgroup->replicate();
-                    $copygroup->page_id = $newpage->id;
+                    $copygroup->post_id = $newpost->id;
                     $copygroup->subgroup = $copy->id;
                     $copygroup->save();
                 }
@@ -230,13 +239,13 @@ class PagesTable extends Component
     public function delete()
     {
 
-        Page::find($this->selectedItem)->delete();
+        Post::find($this->selectedItem)->delete();
 
-        $blocks_id = Block::where('page_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');
+        $blocks_id = Block::where('post_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');
 
         Arr::collapse($blocks_id);
 
-        Block::where('page_id', $this->selectedItem)->delete();
+        Block::where('post_id', $this->selectedItem)->delete();
 
         $this->fields = Datafields::whereIn('block_id', $blocks_id)->delete();
 
@@ -245,31 +254,15 @@ class PagesTable extends Component
 
     public function addate()
     {
-        // dd($this->form->getState()); page::create
-        page::create($this->form->getState());
-        Page::where('deleted_at');
+        // dd($this->form->getState()); post::create
+        post::create($this->form->getState());
+        Post::where('deleted_at');
     }
 
     public function render()
     {
-        return view('kompass::livewire.pages.pages-table', [
-            'pages' => $this->resultDate(),
+        return view('kompass::livewire.posts.posts-table', [
+            'posts' => $this->resultDate(),
         ])->layout('kompass::admin.layouts.app');
-    }
-
-    public function updateOrder($list)
-    {
-        foreach ($list as $item) {
-            // $pageid = Page::whereId($item['value']);
-            // $pageid->timestamps = false;
-            // $pageid->order = $item['order'];
-            // $pageid->update();
-            Page::whereId($item['value'])->update(['order' => $item['order']]);
-            // foreach($itemg['items'] as $item){
-            //     Page::whereId($item['value'])->update(['order' => $item['order']]);
-            // }
-        }
-
-        // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 }

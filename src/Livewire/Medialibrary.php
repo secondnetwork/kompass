@@ -10,6 +10,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
+use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Medialibrary extends Component
@@ -97,8 +98,10 @@ class Medialibrary extends Component
 
     public function getIdField($id_field, $page)
     {
+
         $this->field_id = $id_field;
         $this->page = $page;
+
     }
 
     public function getIdBlock($id_field)
@@ -365,9 +368,9 @@ class Medialibrary extends Component
         }
     }
 
-    public function selectField($media_id, $page)
+    public function selectField($media_id, $fieldOrPageName)
     {
-        if ($page == 'page') {
+        if ($fieldOrPageName == 'gallery') {
             if ($this->field_id == '0') {
                 Datafields::updateOrCreate(['id' => $this->field_id], [
                     'name' => 'Gallery',
@@ -383,12 +386,25 @@ class Medialibrary extends Component
                 );
             }
 
-            $this->dispatch('refreshmedia');
         }
-        if ($page == 'setting') {
+        if ($fieldOrPageName == 'image') {
+            Datafields::updateOrCreate(
+                ['id' => $this->field_id],
+                ['data' => $media_id]
+            );
+        }
+        if ($fieldOrPageName == 'thumbnails') {
+            Post::updateOrCreate(
+                ['id' => $this->field_id],
+                ['thumbnails' => $media_id]
+            );
+        }
+        if ($fieldOrPageName == 'setting') {
             Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
             $this->dispatch('refreshmedia');
         }
+
+        $this->dispatch('refreshmedia');
     }
 
     public function update()

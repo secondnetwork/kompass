@@ -207,33 +207,35 @@
 
                     @switch($type)
                     @case('image')
+                    
                     @if (!empty($setting->$value))
                     @php
                     $file = Secondnetwork\Kompass\Models\File::find($setting->$value);
                     @endphp
 
-                    @if ($file)
-                    @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
-                    $file->extension))
-                    <div class="relative">
+                        @if ($file)
+                            @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
+                            $file->extension))
+                            <div class="relative">
 
-                        <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
-                            src="{{ asset('storage' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
-                        <action-button
-                            class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
-                            <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
-                            <div class="flex">
-                                <span wire:click="removemedia({{ $setting->id }})">
-                                    <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
-                                </span>
-                                <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
-                                    <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
-                                </span>
+                                <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
+                                    src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
+                                <action-button
+                                    class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
+                                    <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
+                                    <div class="flex">
+                                        <span wire:click="removemedia({{ $setting->id }})">
+                                            <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
+                                        </span>
+                                        <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
+                                            <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
+                                        </span>
+                                    </div>
+                                </action-button>
+
                             </div>
-                        </action-button>
-
-                    </div>
-                    @endif
+                            @endif
+                        @endif
                     @else
                     <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
                         <img-block
@@ -242,15 +244,7 @@
                         </img-block>
                     </span>
                     @endif
-                    @else
-
-                    <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
-                        <img-block
-                            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
-                            <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                        </img-block>
-                    </span>
-                    @endif
+                    
                     @break
                     @case('text_area')
                     <textarea name="" id="" cols="30" rows="10" wire:model="value"></textarea>
@@ -315,6 +309,4 @@
             </x-slot>
         </x-kompass::offcanvas>
     </div>
-</div>@push('qscripts')
-<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
-@endpush
+</div>

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('blocks', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('page_id')->constrained()->onDelete('cascade');
+            $table->string('blockable_id');
+            $table->string('blockable_type');
             $table->string('subgroup')->nullable();
             $table->text('set')->nullable();
             $table->string('name');

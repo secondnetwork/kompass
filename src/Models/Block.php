@@ -28,6 +28,11 @@ class Block extends Model
         });
     }
 
+    public function blockable()
+    {
+        return $this->morphTo();
+    }
+
     public function children()
     {
         return $this->hasMany(Block::class, 'subgroup')->with('children');
