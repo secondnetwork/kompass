@@ -14,6 +14,8 @@ use Secondnetwork\Kompass\Livewire\MenuData;
 use Secondnetwork\Kompass\Livewire\MenuTable;
 use Secondnetwork\Kompass\Livewire\PagesData;
 use Secondnetwork\Kompass\Livewire\PagesTable;
+use Secondnetwork\Kompass\Livewire\PostsData;
+use Secondnetwork\Kompass\Livewire\PostsTable;
 use Secondnetwork\Kompass\Livewire\Redirection;
 use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
@@ -39,6 +41,9 @@ View::composer('*', function ($view) {
 Route::group(['middleware' => ['web', 'auth', 'verified'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::view('/', 'kompass::admin.dashboard')->name('dashboard-root');
     Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
+
+    Route::get('posts', PostsTable::class)->name('posts');
+    Route::get('posts/{action}/{id}', PostsData::class)->name('posts.show');
 
     Route::get('pages', PagesTable::class)->name('pages');
     Route::get('pages/{action}/{id}', PagesData::class)->name('pages.show');

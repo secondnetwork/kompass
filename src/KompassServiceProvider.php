@@ -2,11 +2,13 @@
 
 namespace Secondnetwork\Kompass;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -15,6 +17,8 @@ use Illuminate\View\ComponentAttributeBag;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
+use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
 
 class KompassServiceProvider extends ServiceProvider
@@ -68,7 +72,24 @@ class KompassServiceProvider extends ServiceProvider
                 KompassCommand::class,
             ]);
         }
+        Gate::define('role', function ($user, ...$roles) {
+            return $user->hasRole($roles);
+        });
 
+        Blade::if('role', function (...$roles) {
+            if (auth()->check()) {
+                return auth()->user()->hasRole($roles);
+            }
+
+            return false;
+        });
+
+        Relation::morphMap(
+            [
+                'post' => Post::class,
+                'page' => Page::class,
+            ]
+        );
         // View::composer('*', function ($view) {
         //     $view_name = str_replace('.', ' ', $view->getName());
         //     View::share('view_name', $view_name);

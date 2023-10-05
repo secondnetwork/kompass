@@ -135,6 +135,8 @@ return [
         'adminmenu' => Livewire\Menu::class,
         'blocks.blocks-table' => Livewire\BlocksTable::class,
         'blocks.blocks-data' => Livewire\BlocksData::class,
+        'pages.posts-table' => Livewire\PostsTable::class,
+        'pages.posts-show' => Livewire\PostsData::class,
         'pages.pages-table' => Livewire\PagesTable::class,
         'pages.pages-show' => Livewire\PagesData::class,
         'menus.menus-table' => Livewire\MenuTable::class,

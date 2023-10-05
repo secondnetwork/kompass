@@ -60,14 +60,14 @@
             <div class="relative">
             
                 <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
-                    src="{{ asset('storage/' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
+                    src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                     <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                     <div class="flex">
                         <span  wire:click="removemedia({{ $idField }})">
                             <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
                         </span>
-                        <span wire:click="selectItem({{ $idField }}, 'addMedia')"">
+                        <span wire:click="selectitem('addMedia','{{ $type }}',{{ $blockId }})">
                             <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
                         </span>
                     </div>
@@ -77,14 +77,10 @@
        
         </div>
             @endif
-        @else
-            <img-block wire:click=" selectItem({{ $idField }}, 'addMedia' ,{{ $blockId }})"
-                class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 aspect-[4/3] ">
-                <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-            </img-block>
+
         @endif
     @else
-        <img-block wire:click="selectItem({{ $idField }}, 'addMedia',{{ $blockId }})"
+        <img-block wire:click="selectitem('addMedia',{{ $idField }},'{{ $type }}',{{ $blockId }})"
             class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 aspect-[4/3] ">
             <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
         </img-block>
@@ -104,36 +100,24 @@
                 <div class="relative">
             
                         <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
-                            src="{{ asset('storage/' . $file->path . '/' . $file->slug . '_small.' . $file->extension) }}">
+                            src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
                         <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                             <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                             <div class="flex">
                                 <span  wire:click="removemediaIngallery({{ $idField }})">
                                     <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
                                 </span>
-                                <span wire:click="selectItem({{ $idField }}, 'addMedia')">
+    
+                                <span wire:click="selectitem( 'addMedia', {{ $idField }})">
                                     <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
                                 </span>
                             </div>
                         </action-button> 
-
-
-               
                 </div>
 
-                
-            @endif
-        @else
-            <img-block wire:click=" selectItem({{ $idField }}, 'addMedia ' ,{{ $blockId }})"
-                class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-xl w-full text-gray-400 aspect-[4/3] ">
-                <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-            </img-block>
+                @endif
         @endif
-    @else
-        <img-block wire:click="selectItem({{ $idField }}, 'addMedia' ,{{ $blockId }})"
-            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-xl w-full text-gray-400 aspect-[4/3] ">
-            <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-        </img-block>
+
     @endif
 @endif
 

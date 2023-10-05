@@ -5,7 +5,7 @@
         <x-kompass::offcanvas :w="'w-2/4'" class="p-8 grid gap-4">
             <x-slot name="button">
                 <button class="flex btn gap-x-2 justify-end items-center text-md"
-                    wire:click="update('{{ $page->id }}')">
+                    wire:click="update('{{ $post->id }}')">
                     <x-tabler-device-floppy class="icon-lg" />
                     {{ __('Save') }}
                 </button>
@@ -15,9 +15,9 @@
 
                 <div>
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
-                    <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
+                    <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
 
-                    <x-kompass::select wire:model.live="page.status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model.live="post.status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -25,9 +25,9 @@
 
                 </div>
 
-                @if ($page->status == 'draft')
+                @if ($post->status == 'draft')
                         <button class="flex btn gap-x-2 items-center text-md"
-                            wire:click="update('{{ $page->id }}','true')">
+                            wire:click="update('{{ $post->id }}','true')">
                             <x-tabler-send class="icon-lg" />
                             {{ __('published') }}
                         </button>
@@ -35,17 +35,46 @@
 
                 <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
 
-                    <x-kompass::select wire:model.live="page.layout" label="Seite Template" :options="[
-                        ['name' => __('Page'), 'id' => 'page'],
-                        ['name' => __('Front Page'), 'id' => 'is_front_page'],
-                    ]"  />
-
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="post.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
                 Thumbnails
-                <img src="{{ $page->thumbnails }}" alt="">
+                {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
+                @if (!empty($post->thumbnails))
+                @php
+                $file = Secondnetwork\Kompass\Models\File::find($post->thumbnails);
+                @endphp
 
+                    @if ($file)
+                        @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
+                        $file->extension))
+                        <div class="relative">
 
+                            <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
+                                src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
+                            <action-button
+                                class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
+                                <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
+                                <div class="flex">
+                                    <span wire:click="removemediaThumbnails({{ $post->id }})">
+                                        <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
+                                    </span>
+                                    <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
+                                        <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
+                                    </span>
+                                </div>
+                            </action-button>
+
+                        </div>
+                        @endif
+                    @endif
+                @else
+                <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
+                    <img-block
+                        class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
+                        <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                    </img-block>
+                </span>
+                @endif
             </x-slot>
         </x-kompass::offcanvas>
     </div>
@@ -66,26 +95,26 @@
                     @click.prevent @click="toggleEditingState" x-show="!isEditing" 
                     class="flex items-center"
                         class="select-none cursor-pointer">
-                        <h4 class="text-gray-600">{{ $page->title }} </h4><span>
+                        <h4 class="text-gray-600">{{ $post->title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
                         </span>
                     </a>
 
                     <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model="page.title" x-show="isEditing" @click.away="toggleEditingState"
+                        wire:model="post.title" x-show="isEditing" @click.away="toggleEditingState"
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
                 </div>
                 <div class="col-span-6">
 
                 </div>
-                @if ($page->layout == 'is_front_page' || $page->layout == 'is_front_page')
+                @if ($post->layout == 'is_front_post' || $post->layout == 'is_front_post')
                     <strong class="text-gray-400 text-xs">Permalink: </strong><a
                         class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/') }}"
                         target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
                 @else
                     <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $page->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/' . $page->slug) }}</a>
+                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $post->slug) }}"
+                        target="_blank" rel="noopener noreferrer">{{ url('/' . $post->slug) }}</a>
                 @endif
             </div>
 
@@ -97,7 +126,7 @@
 
             <span x-data="{ open: false }" class="relative transition-all flex gap-4">
 
-                @switch($page->status)
+                @switch($post->status)
                     @case('published')
                         <span class="flex gap-x-2 justify-end items-center text-md  text-gray-900">
 
@@ -134,7 +163,7 @@
 
 
                 <button class="flex btn gap-x-2 justify-end items-center text-md"
-                    wire:click="update('{{ $page->id }}')">
+                    wire:click="update('{{ $post->id }}')">
                     <x-tabler-device-floppy class="icon-lg" />
                     {{ __('Save') }}
                 </button>
@@ -173,7 +202,7 @@
                 <span class="text-gray-600 text-sm block">Block Builder</span>
                 
                 @forelse ($blocks as $itemblocks)
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :post="$post" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
                 @empty
                     <div
@@ -182,7 +211,7 @@
                 @endforelse
                 <div class="flex  justify-end my-6">
                     <button class="btn"
-                        wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
+                        wire:click="selectitem('addBlock', {{ $post->id }})">{{ __('Add') }}</button>
                 </div>
 
 
@@ -191,16 +220,16 @@
         </div>
     </div>
 
-    @isset($getIdField)
-            <div x-cloak x-data="{ open: @entangle('FormMedia'), ids: @js($getIdField) }" id="FormMedia">
+
+            <div x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
         <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
             <x-slot name="body">
                 @livewire('medialibrary', ['fieldId' => $getIdField])
             </x-slot>
         </x-kompass::offcanvas>
     </div>
-    @endisset
-
+ 
+    
 
 
 

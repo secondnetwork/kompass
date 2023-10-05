@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Page extends Model
+class Post extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -41,11 +41,10 @@ class Page extends Model
         });
     }
 
-    public $timestamps = false;
-
     public function blocks()
     {
         return $this->morphMany(Block::class, 'blockable');
+        // return $this->belongsToMany('Secondnetwork\Kompass\Models\Block');
         // return $this->hasOne('Rote');
     }
 
@@ -53,7 +52,7 @@ class Page extends Model
     {
         $timezone = config('app.timezone');
 
-        return Carbon::parse($date)->tz($timezone)->format('d.m.Y h:i');
+        return Carbon::parse($date)->tz($timezone)->format('d.m.Y H:i');
     }
 
     public function getUpdatedAtAttribute($date)

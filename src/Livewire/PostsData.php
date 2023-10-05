@@ -13,12 +13,12 @@ use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafields;
-use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Post;
 
 #[Layout('kompass::admin.layouts.app')]
-class PagesData extends Component
+class PostsData extends Component
 {
-    use WithPagination;
+    // use WithPagination;
     /**
      * The component's listeners.
      *
@@ -30,7 +30,7 @@ class PagesData extends Component
     #[Locked]
     public $getIdField;
 
-    public $page;
+    public $post;
 
     public $title;
 
@@ -68,14 +68,14 @@ class PagesData extends Component
 
     protected $rules = [
 
-        'page.title' => 'required|string|min:3',
-        'page.meta_description' => '',
-        'page.slug' => '',
-        'page.layout' => '',
-        'page.status' => '',
-        'page.password' => '',
-        'page.begin_at' => '',
-        'page.end_at' => '',
+        'post.title' => 'required|string|min:3',
+        'post.meta_description' => '',
+        'post.slug' => '',
+        'post.layout' => '',
+        'post.status' => '',
+        'post.password' => '',
+        'post.begin_at' => '',
+        'post.end_at' => '',
         'blocks.*.id' => '',
         'blocks.*.name' => '',
         'fields.*.id' => '',
@@ -86,7 +86,6 @@ class PagesData extends Component
     protected $listeners = [
         'editorjssave' => 'saveEditorState',
         'refreshmedia' => 'resetPageComponent',
-
     ];
 
     public function saveEditorState($editorJsonData, $id)
@@ -107,9 +106,9 @@ class PagesData extends Component
 
     public function mount($id)
     {
-        $this->page = Page::findOrFail($id);
+        $this->post = Post::findOrFail($id);
 
-        $blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
         if ($blocks->isNotEmpty()) {
             $this->blocks = $blocks;
@@ -118,17 +117,17 @@ class PagesData extends Component
             Arr::collapse($blocks_id);
 
             $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
+
         }
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
-        // $this->blockschildren = $this->tree($this->blocks);
-        // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
+
         if ($action == 'addBlock') {
-            $this->blockgroupId = $blockgroupId;
+
             $this->FormBlocks = true;
         }
         if ($action == 'update') {
@@ -150,8 +149,7 @@ class PagesData extends Component
 
         $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
-
-        $block = $this->page->blocks()->create([
+        $block = $this->post->blocks()->create([
             'name' => $name,
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
@@ -187,20 +185,21 @@ class PagesData extends Component
             }
         }
         $this->FormBlocks = false;
-
         $this->resetPageComponent();
     }
 
     public function refreshmedia()
     {
+        $this->dispatch('refreshComponent');
         $this->dispatch('status');
     }
 
     public function resetPageComponent()
     {
+        $this->mount($this->post->id);
 
-        $this->mount($this->page->id);
         $this->FormMedia = false;
+        $this->dispatch('refreshComponent');
         $this->dispatch('status');
 
         // return redirect()->to('admin');
@@ -289,13 +288,13 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function statusPage($id, $status)
+    public function statusPost($id, $status)
     {
         if ($status == 'draft') {
-            Page::where('id', $id)->update(['status' => 'draft']);
+            Post::where('id', $id)->update(['status' => 'draft']);
         }
         if ($status == 'published') {
-            Page::where('id', $id)->update(['status' => 'published']);
+            Post::where('id', $id)->update(['status' => 'published']);
         }
 
         $this->resetPageComponent();
@@ -304,25 +303,25 @@ class PagesData extends Component
     public function update($id, $publisheded = null)
     {
 
-        $page = Page::findOrFail($id);
+        $post = Post::findOrFail($id);
 
         // $this->getDynamicSEOData();
-        // $page->addSEO();
+        // $post->addSEO();
         $this->dispatch('savedatajs');
 
         $validateData = $this->validate();
 
-        $titlePageDB = Str::slug($page->title, '-', 'de');
-        $slugPageDB = $page->slug;
-        $titlePage = Str::slug($validateData['page']['title'], '-', 'de');
-        $slugPage = $validateData['page']['slug'];
+        $titlePostDB = Str::slug($post->title, '-', 'de');
+        $slugPostDB = $post->slug;
+        $titlePost = Str::slug($validateData['post']['title'], '-', 'de');
+        $slugPost = $validateData['post']['slug'];
 
-        $placeObj = new Page;
+        $placeObj = new Post;
 
-        if ($titlePage != $titlePageDB) {
+        if ($titlePost != $titlePostDB) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $titlePage.'-'.$numericalPrefix++;
+                $newSlug = $titlePost.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
@@ -332,25 +331,25 @@ class PagesData extends Component
             }
         } else {
             //Slug do not exists. Just use the selected Slug.
-            $slugNameURL = $titlePage;
+            $slugNameURL = $titlePost;
         }
 
         if ($publisheded == true) {
-            Page::where('id', $id)->update(['status' => 'published']);
+            Post::where('id', $id)->update(['status' => 'published']);
             $this->dispatch('status');
         }
 
-        $page->update([
-            'title' => $validateData['page']['title'],
-            'meta_description' => $validateData['page']['meta_description'],
-            'layout' => $validateData['page']['layout'],
-            'status' => $validateData['page']['status'],
-            // 'password' => $validateData['page']['password'],
-            // 'begin_at' => $validateData['page']['begin_at'],
-            // 'end_at' => $validateData['page']['end_at'],
+        $post->update([
+            'title' => $validateData['post']['title'],
+            'meta_description' => $validateData['post']['meta_description'],
+            // 'layout' => $validateData['post']['layout'],
+            // 'status' => $validateData['post']['status'],
+            // 'password' => $validateData['post']['password'],
+            // 'begin_at' => $validateData['post']['begin_at'],
+            // 'end_at' => $validateData['post']['end_at'],
         ]);
 
-        $page->update([
+        $post->update([
             'slug' => $slugNameURL,
             'updated_at' => Carbon::now(),
         ]);
@@ -372,6 +371,12 @@ class PagesData extends Component
             }
         }
 
+        $this->resetPageComponent();
+    }
+
+    public function removemediaThumbnails($id)
+    {
+        Post::whereId($id)->update(['thumbnails' => null]);
         $this->resetPageComponent();
     }
 
@@ -408,7 +413,7 @@ class PagesData extends Component
 
         $this->resetPageComponent();
         $this->dispatch('status');
-        // Page::whereId($list['value'])->update(['order' => $list['order']]);
+        // Post::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
     public function updateItemsOrder($list)
@@ -432,20 +437,20 @@ class PagesData extends Component
         foreach ($list as $item) {
             Block::whereId($item['value'])->update(['order' => $item['order']]);
             // foreach($itemg['items'] as $item){
-            //     Page::whereId($item['value'])->update(['order' => $item['order']]);
+            //     Post::whereId($item['value'])->update(['order' => $item['order']]);
             // }
         }
 
         $this->resetPageComponent();
         $this->dispatch('status');
-        // Page::whereId($list['value'])->update(['order' => $list['order']]);
+        // Post::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
     //
     public function render()
     {
 
-        return view('kompass::livewire.pages.pages-show')
+        return view('kompass::livewire.posts.posts-show')
             ->layout('kompass::admin.layouts.app');
     }
 }
