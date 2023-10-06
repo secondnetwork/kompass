@@ -27,4 +27,24 @@ import * as editorjs from './editorjs';
 //     // const { app } = import('./plugins/lite-yt-embed')
 //     // app();
 // }
+
+
+Alpine.store('showside', {
+  on: false,
+
+  toggle() {
+      this.on = ! this.on
+  }
+})
+
+// Alpine.store('darkMode', {
+//   on: false,
+
+//   toggle() {
+//       this.on = ! this.on
+//   }
+// })
+
+
+
 window.click_to_edit = click_to_edit;
