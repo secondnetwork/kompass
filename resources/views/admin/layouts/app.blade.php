@@ -47,7 +47,7 @@
         </div> 
         @endenv
 <page-main>
-<main>
+<main class="transition delay-150 duration-300 ease-in-out"  x-data :class="$store.showside.on && 'sideclose'">
     <header class="header">
       
         <div class="header__search flex items-center gap-1">
@@ -75,7 +75,8 @@
                 @endif
             @endif
         @else
-        <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
+        <img class="big-logo" src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
+        <img class="favicon-logo" src="{{ kompass_asset('favicon/512.png') }}" alt="">
         @endif
         </div>
         <ul class="sidenav__list">
@@ -107,7 +108,9 @@
 
 
         <div class="mt-auto mb-4 mx-6">
-          <x-tabler-layout-sidebar-left-collapse class="text-gray-400"/>
+          <button x-data @click="$store.showside.toggle()">
+            <x-tabler-layout-sidebar-left-collapse class="text-gray-400 sidebarbutton  transition delay-150 duration-300 ease-in-out"/>
+          </button>
         </div>
         </div>
       </aside>

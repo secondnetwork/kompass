@@ -51,6 +51,9 @@
     
         .logo {
             padding: 1rem 1.6rem;
+            .favicon-logo{
+                display: none;
+            }
         }
     }
     .sidenav a{
@@ -102,4 +105,31 @@
     //   transform: translateX(-245px);
     //   transition: all 0.6s ease-in-out;
     // } */
+}
+.sideclose{
+    grid-template-columns: 4.6rem 1fr !important;
+    .logo{
+        padding: .5rem !important;
+    }
+    .big-logo{
+        display: none;
+    }
+    .favicon-logo{
+        display: block !important;
+    }
+    .sidenav{
+  
+        width: 4.6rem; 
+        a span{
+            display: none;
+        }
+    }
+    .sidebarbutton{
+        @apply text-orange-400 rotate-180;
+    }
+    ul div{
+
+        text-indent: -9999px;   
+    }
+    
 }
