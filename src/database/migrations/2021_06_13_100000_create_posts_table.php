@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
             $table->string('status')->default('draft');
             $table->text('title')->nullable();
             $table->string('slug')->nullable();
