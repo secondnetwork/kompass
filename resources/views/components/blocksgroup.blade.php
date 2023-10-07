@@ -19,11 +19,15 @@
     <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4">
         <span class="flex items-center py-2 w-full ">
             @if ($itemblocks->subgroup)
-                <x-tabler-grip-vertical wire:sortable-group.handle
+                <span wire:sortable-group.handle>
+                <x-tabler-grip-vertical 
                     class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
+                </span>
             @else
-                <x-tabler-grip-vertical wire:sortable.handle
+            <span wire:sortable.handle>
+                <x-tabler-grip-vertical 
                     class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
+                </span>
             @endif
 
             <span @click="expanded = ! expanded"

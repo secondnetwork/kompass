@@ -9,12 +9,15 @@ class Redirection extends Component
 {
     public $search = '';
 
+    public $data;
+
+    public $headers;
+
     protected $queryString = ['search'];
 
     protected function headerTable(): array
     {
         return [
-            '',
             'old url',
             'new url',
             'status code',
