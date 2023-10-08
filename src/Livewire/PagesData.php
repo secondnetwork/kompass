@@ -19,6 +19,7 @@ use Secondnetwork\Kompass\Models\Page;
 class PagesData extends Component
 {
     use WithPagination;
+
     /**
      * The component's listeners.
      *
@@ -28,7 +29,7 @@ class PagesData extends Component
     public $selectedItem;
 
     #[Locked]
-    public $getIdField;
+    public $getId;
 
     public $page;
 
@@ -102,7 +103,7 @@ class PagesData extends Component
 
         }
 
-        // $this->resetPageComponent();
+        $this->resetPageComponent();
     }
 
     public function mount($id)
@@ -127,6 +128,8 @@ class PagesData extends Component
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
+        $this->getId = $itemId;
+
         if ($action == 'addBlock') {
             $this->blockgroupId = $blockgroupId;
             $this->FormBlocks = true;
@@ -134,9 +137,8 @@ class PagesData extends Component
         if ($action == 'update') {
         }
         if ($action == 'addMedia') {
-            $this->getIdField = $itemId;
             $this->FormMedia = true;
-            $this->dispatch('getIdField_changnd', $this->getIdField, $fieldOrPageName);
+            $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
             $this->dispatch('getIdBlock', $blockgroupId);
         }
         if ($action == 'deleteblock') {
@@ -144,11 +146,11 @@ class PagesData extends Component
         }
     }
 
-    public function addBlock($blocktemplatesID, $name, $slug, $grid, $blockType = null)
+    public function addBlock($blocktemplatesID, $name, $type, $iconclass = null)
     {
         // Layout *popout or full *** alignment* left or right
 
-        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => '', 'type' => $blockType];
+        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => ''];
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
 
         $block = $this->page->blocks()->create([
@@ -156,18 +158,15 @@ class PagesData extends Component
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
             'status' => 'published',
-            'iconclass' => $tempBlock->iconclass ?? null,
-            'slug' => $slug,
-            'grid' => $grid,
+            'iconclass' => $tempBlock->iconclass ?? $iconclass,
+            'type' => $type,
             'order' => '999',
         ]);
-        if ($blockType == 'wysiwyg') {
+        if ($type == 'wysiwyg') {
             Datafields::create([
                 'block_id' => $block->id,
                 'name' => 'wysiwyg',
-                'slug' => 'wysiwyg',
                 'type' => 'wysiwyg',
-                'grid' => '1',
                 'order' => '1',
             ]);
         }
@@ -179,7 +178,6 @@ class PagesData extends Component
                 Datafields::create([
                     'block_id' => $block->id,
                     'name' => $value->name,
-                    'slug' => $value->slug,
                     'type' => $value->type,
                     'grid' => $value->grid,
                     'order' => $value->order,
@@ -389,10 +387,9 @@ class PagesData extends Component
 
     public function delete() //delete block
     {
-        Datafields::where('block_id', $this->selectedItem)->delete();
-        block::destroy($this->selectedItem);
+        Datafields::where('block_id', $this->getId)->delete();
+        block::destroy($this->getId);
         $this->FormDelete = false;
-        // $this->mount($this->selectedItem);
         $this->resetPageComponent();
     }
 

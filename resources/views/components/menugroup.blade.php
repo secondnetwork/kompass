@@ -45,7 +45,7 @@
                                 
                             <input
                                 type="text"
-                                class="px-1 border border-gray-400"                 
+                                class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
                                 x-model="name"
                                 wire:model.lazy="newName" x-ref="input"
                                 x-on:keydown.enter="isEditing = false"

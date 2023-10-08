@@ -98,10 +98,8 @@ class Medialibrary extends Component
 
     public function getIdField($id_field, $page)
     {
-
         $this->field_id = $id_field;
         $this->page = $page;
-
     }
 
     public function getIdBlock($id_field)

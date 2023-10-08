@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Notifications\Notifiable;
-use Secondnetwork\Kompass\Roles\HasRoles;
-use Secondnetwork\Kompass\HasProfilePhoto;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use Secondnetwork\Kompass\HasProfilePhoto;
+use Secondnetwork\Kompass\Roles\HasRoles;
 
 class User extends Authenticatable
 {
     // use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use Notifiable;
     use HasRoles;
+    use Notifiable;
     // use TwoFactorAuthenticatable;
 
     /**
@@ -45,11 +43,9 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
-    
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
 
     public static function search($search)
     {
@@ -85,5 +81,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(File::class);
     }
-
 }

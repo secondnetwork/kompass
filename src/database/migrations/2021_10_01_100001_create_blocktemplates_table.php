@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('blocktemplates', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('slug')->nullable();
             $table->string('iconclass')->nullable();
             $table->text('icon_img_path')->nullable();
             $table->integer('grid')->default('1');

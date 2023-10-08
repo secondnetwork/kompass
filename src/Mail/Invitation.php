@@ -4,8 +4,8 @@ namespace Secondnetwork\Kompass\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Lang;
 
 class Invitation extends Mailable
 {

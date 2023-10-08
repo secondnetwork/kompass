@@ -191,15 +191,13 @@
         </div>
     </div>
 
-    @isset($getIdField)
-            <div x-cloak x-data="{ open: @entangle('FormMedia'), ids: @js($getIdField) }" id="FormMedia">
+    <div x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
         <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
             <x-slot name="body">
-                @livewire('medialibrary', ['fieldId' => $getIdField])
+                @livewire('medialibrary', ['fieldId' => $getId])
             </x-slot>
         </x-kompass::offcanvas>
     </div>
-    @endisset
 
 
 
@@ -211,7 +209,7 @@
                 <div class="grid grid-cols-4">
                     @foreach ($blocktemplates as $itemblock)
                         <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                            wire:click.defer="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['slug'] }}',{{ $itemblock['grid'] }})">
+                            wire:click.defer="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['grid'] }})">
                             @if ($itemblock['icon_img_path'])
                                 <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
                                     src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
@@ -220,28 +218,34 @@
                         </div>
                     @endforeach
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Textblock','wysiwyg','1','wysiwyg')">
+                        wire:click.defer="addBlock('','Textblock','wysiwyg','blockquote')">
                         <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
                         <span class="text-xs block mt-2">Textblock</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Gallery','gallery','1','gallery')">
+                    wire:click.defer="addBlock('','Video','video','video')">
+                    <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
+                    <span class="text-xs block mt-2">Video</span>
+                    </div>
+
+                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click.defer="addBlock('','Gallery','gallery','photo')">
                         <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
                         <span class="text-xs block mt-2">Gallery</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Group','group','1','group')">
+                        wire:click.defer="addBlock('','Layout Block','group')">
                         <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
                         <span class="text-xs block mt-2">Layout Block</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Accordion Group','group','1','accordiongroup')">
-                    <img src="{{ kompass_asset('icons-blocks/accordion.png') }}" alt="">
-                    <span class="text-xs block mt-2">Accordion Group</span>
-                </div>
+                        wire:click.defer="addBlock('','Accordion Group','accordiongroup')">
+                        <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
+                        <span class="text-xs block mt-2">Accordion</span>
+                    </div>
                 </div>
             </x-slot>
         </x-kompass::offcanvas>
