@@ -3,17 +3,17 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Carbon\Carbon;
-use Livewire\Component;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Livewire\WithPagination;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithPagination;
+use Secondnetwork\Kompass\Mail\Invitation;
 use Secondnetwork\Kompass\Models\Role;
 use Secondnetwork\Kompass\Models\User;
-use Secondnetwork\Kompass\Mail\Invitation;
 
 class AccountForm extends Component
 {
@@ -136,13 +136,13 @@ class AccountForm extends Component
 
         $arrayHash = Arr::prepend($validate, $passwordHash, 'password');
         $maildataBank = Arr::prepend($arrayHash, $now, 'email_verified_at');
-    
+
         $user = User::create($maildataBank);
         $user->roles()->sync($maildataBank['role']);
 
         Mail::to($maildata['email'])->send(new Invitation($maildata));
 
-//->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
+        //->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
         $this->FormAdd = false;
         $this->reset(['name', 'email', 'password', 'role']);
     }
@@ -150,6 +150,7 @@ class AccountForm extends Component
     public function create($id)
     {
         $user = User::findOrFail($id);
+
         return view('auth.password.create', compact('user'));
     }
 
@@ -175,6 +176,7 @@ class AccountForm extends Component
                 ->orWhere('name', 'like', '%'.$search.'%')
                 ->orWhere('email', 'like', '%'.$search.'%');
     }
+
     public function update()
     {
         $user = User::findOrFail($this->selectedItem);

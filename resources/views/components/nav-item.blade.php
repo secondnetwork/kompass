@@ -7,13 +7,10 @@
 
 
 @php
-
     $layout = $itemblocks->set->layout ?? '';
     $alignment = $itemblocks->set->alignment ?? '';
     $slider = $itemblocks->set->slider ?? '';
-    $type = $itemblocks->set->type ?? '';
 @endphp
-
 <nav-item class="flex items-center gap-2">
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
     <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', '')">
@@ -37,8 +34,8 @@
             <x-tabler-arrow-autofit-width />
         @endif
     </span>
-</nav-item>
-@if ($type == 'group')
+</nav-item> 
+@if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
     <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid</span>
         <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '1')">
@@ -78,7 +75,7 @@
         </span>
     </nav-item>
 @endif
-@if ($type == 'wysiwyg')
+@if ($itemblocks->type == 'wysiwyg')
     <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>
         <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', 'left')">
@@ -98,7 +95,7 @@
 
     </nav-item>
 @endif
-@if ($type == 'gallery')
+@if ($itemblocks->type == 'gallery')
     <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">Slider</span>
         <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'slider', '')">

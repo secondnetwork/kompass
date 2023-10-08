@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('subgroup')->nullable();
             $table->text('set')->nullable();
             $table->string('name');
-            $table->string('slug')->nullable();
+            $table->string('type');
             $table->string('status')->nullable();
             $table->text('iconclass')->nullable();
             $table->integer('grid')->default('1');

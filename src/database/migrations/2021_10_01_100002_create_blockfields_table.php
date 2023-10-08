@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId(('blocktemplate_id'))->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('slug')->nullable();
             $table->string('type')->nullable();
             $table->string('iconclass')->nullable();
             $table->integer('grid')->default('1');

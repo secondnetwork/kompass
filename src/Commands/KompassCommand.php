@@ -9,7 +9,6 @@ use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -19,10 +18,10 @@ use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
-use function Laravel\Prompts\warning;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
+use function Laravel\Prompts\warning;
 
 class KompassCommand extends Command implements PromptsForMissingInput
 {
@@ -139,9 +138,9 @@ class KompassCommand extends Command implements PromptsForMissingInput
         $this->call('optimize:clear');
 
         $linkPath = public_path('storage');
-        if (!file_exists($linkPath)) {
+        if (! file_exists($linkPath)) {
             $this->call('storage:link');
-        } 
+        }
         $this->sendSuccessMessage();
 
         return static::SUCCESS;

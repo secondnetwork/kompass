@@ -4,11 +4,7 @@
     'page' => '',
     'class' => '',
 ])
-@php
 
-    $type = $itemblocks->set->type ?? '';
-    
-@endphp
 <div class="{{ $class }} @if ($itemblocks->subgroup) group-block  border-purple-600 @endif border-b-2 "
     wire:sortable.item="{{ $itemblocks->id }}"
     @if ($itemblocks->subgroup) wire:sortable-group.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
@@ -16,33 +12,48 @@
     wire:sortable.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}" @endif
     x-data="{ expanded: false }">
 
-    <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4">
+    <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4"
+    
+    @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-slate-200 border-slate-600'" @endif
+    >
         <span class="flex items-center py-2 w-full ">
             @if ($itemblocks->subgroup)
-                <x-tabler-grip-vertical wire:sortable-group.handle
+                <span wire:sortable-group.handle>
+                <x-tabler-grip-vertical 
                     class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
+                </span>
             @else
-                <x-tabler-grip-vertical wire:sortable.handle
+            <span wire:sortable.handle>
+                <x-tabler-grip-vertical 
                     class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
+                </span>
             @endif
 
             <span @click="expanded = ! expanded"
                 class="text-xs inline-flex items-center gap-1.5 py-1 px-1 capitalize rounded font-semibold  text-gray-400 cursor-pointer">
-                @if ($itemblocks->iconclass)
+                @switch($itemblocks->type)
+                    @case('group')
+                    <x-tabler-template class="cursor-pointer stroke-current h-6 w-6 text-violet-600" />
+                        @break
+                    @case('accordiongroup')
+                    <x-tabler-layout-list class="cursor-pointer stroke-current h-6 w-6 text-violet-600" />
+                         @break
+                    @default
+                    @if ($itemblocks->iconclass)
                     @svg('tabler-' . $itemblocks->iconclass, 'w-5')
-                @else
-                    @svg('tabler-section', 'w-5')
-                @endif
-                {{-- {{ $itemblocks->slug }} --}}
+                    @else
+                        @svg('tabler-section', 'w-5')
+                    @endif    
+                @endswitch
+                    
+        
 
             </span>
             <span class="inline-block border-r border-gray-400 w-px h-5 ml-1 mr-2"></span>
             <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
                     class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
-                    @if ($type == 'group')
-                        <x-tabler-stack class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
-                    @endif
+
                     <span class="text-sm font-semibold">{{ $itemblocks->name }}</span>
                     {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
                 </a>
@@ -54,7 +65,7 @@
 
                 <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', name: '{{ $itemblocks->name }}' }">
 
-                    <input type="text" class="px-1 border border-gray-400" x-model="name" wire:model.lazy="newName"
+                    <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="name" wire:model.lazy="newName"
                         x-ref="input" x-on:keydown.enter="isEditing = false" x-on:keydown.escape="isEditing = false"
                         {{-- @keydown.window.escape="disableEditing"  --}} x-on:click.away="isEditing = false"
                         wire:keydown.enter="savename({{ $itemblocks->id }})">
@@ -72,7 +83,10 @@
         </span>
 
         <div class="flex items-center gap-1">
-            @if ($type == 'group')
+            @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
+            <span @click="expanded = ! expanded">
+                <x-tabler-adjustments/>
+            </span>
                 <span wire:click="selectitem('addBlock', {{ $itemblocks->id }},'page',{{ $itemblocks->id }})">
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
                 </span>
@@ -88,8 +102,8 @@
                 <span wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" class="flex justify-center">
                     <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                 </span>
-            @endif
-            @if ($type != 'group')
+      
+            @else
                 @if ($itemblocks->status == 'published')
                     <span wire:click="status({{ $itemblocks->id }}, 'draft')">
                         <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />
@@ -118,16 +132,15 @@
 
     </div-nav-action>
 
-    <div @if ($type !== 'group') x-show="expanded" x-collapse @endif>
-        <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6 @if ($type == 'group')  border-b-4 border-purple-700 @endif">
-            {{-- <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-yellow-900 text-yellow-300">Dev</span> --}}
+    <div x-show="expanded" x-collapse>
+        <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')  border-b-4 border-purple-700 @endif">
 
             <x-kompass::nav-item :itemblocks="$itemblocks" />
             
         </nav>
-        <div class="@if ($type !== 'group')grid gap-6 p-6 grid-cols-{{ $itemblocks->grid }} @endif" >
+        <div class="grid gap-6 p-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @endif" >
 
-            @switch($type)
+            @switch($itemblocks->type)
                 @case('gallery')
                     <div class="@container">
                         <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">

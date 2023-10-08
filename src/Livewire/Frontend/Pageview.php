@@ -35,18 +35,18 @@ class Pageview extends Component
         if (! empty($this->page->new_url)) {
             return redirect($this->page->new_url, $this->page->status_code);
         }
-
+        //blockable_type
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return Block::where('page_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+            return Block::where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
 
         $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
-            return Block::where('page_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
+            return Block::where('blockable_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
         });
         Arr::collapse($this->blocks_id);
 
         if (! Cache::has('kompass_field_'.$slug)) {
-            $this->datafields = Datafields::whereIn('block_id', $this->blocks_id)->get()->mapToGroups(function ($item, $key) {
+            $this->datafields = Datafields::query()->whereIn('block_id', $this->blocks_id)->get()->mapToGroups(function ($item, $key) {
                 return [
                     $item['block_id'] => $item,
                 ];
@@ -55,6 +55,7 @@ class Pageview extends Component
         $this->fields = Cache::rememberForever('kompass_field_'.$slug, function () {
             return $this->datafields;
         });
+
     }
 
     public function ResolvePath($slug)
@@ -90,14 +91,18 @@ class Pageview extends Component
     public function get_gallery($blockis = null)
     {
 
-        foreach ($this->fields[$blockis] as $key => $value) {
+        foreach ($this->fields[$blockis] as $value) {
 
             if ($value->type == 'gallery' && $value->data != null) {
                 $file = file::where('id', $value->data)->first();
                 if ($file) {
-                    // $dataarray[] =   asset('storage/' . $file->path . '/' . $file->slug) . '.avif';
+                    // $dataarray[] =   asset('storage' . $file->path . '/' . $file->slug) . '.avif';
 
-                    $dataarray[] = '<picture><source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'_medium.'.$file->extension.'.avif"><img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"  src="'.asset('storage/'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" /></picture>';
+                    $dataarray[] = '<picture>
+                    <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
+                    <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"  
+                    src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                    </picture>';
                 }
             }
 

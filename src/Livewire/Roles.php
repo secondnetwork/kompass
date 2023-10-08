@@ -2,8 +2,8 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
 use Livewire\Attributes\Rule;
+use Livewire\Component;
 use Secondnetwork\Kompass\Models\Role;
 
 class Roles extends Component
@@ -25,13 +25,13 @@ class Roles extends Component
 
     protected $queryString = ['search'];
 
-    #[Rule('required|regex:/^[\pL\s\-]+$/u|min:3|max:255')] 
+    #[Rule('required|regex:/^[\pL\s\-]+$/u|min:3|max:255')]
     public $name;
-    
-    #[Rule('')] 
+
+    #[Rule('')]
     public $display_name;
-    
-    #[Rule('')] 
+
+    #[Rule('')]
     public $description;
 
     public $role;
@@ -119,7 +119,7 @@ class Roles extends Component
     public function render()
     {
         return view('kompass::livewire.roles', [
-            'roles' =>$this->Roles,
+            'roles' => $this->Roles,
 
         ])->layout('kompass::admin.layouts.app');
     }

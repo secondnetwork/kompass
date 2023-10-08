@@ -24,13 +24,8 @@
 
                         </thead>
 
-                        <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200 ">
+                        <tbody class="bg-white divide-y divide-gray-200 ">
                             @foreach ($pages as $key => $page)
-                                <tr wire:sortable.item="{{ $page->id }}">
-                                    <td wire:sortable.handle class="pl-4 w-4 bg-white">
-                                        <x-tabler-arrow-autofit-height
-                                            class="cursor-move stroke-current  text-gray-400" />
-                                    </td>
 
                                     @foreach ($data as $key => $value)
                                         <td
