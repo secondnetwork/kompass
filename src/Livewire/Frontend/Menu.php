@@ -11,7 +11,7 @@ class Menu extends Component
 {
     public $name;
 
-    public $menuitem;
+    public $menuitem = array();
 
     public function mount($name = null)
     {
