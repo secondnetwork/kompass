@@ -8,7 +8,13 @@
 
 <li class="sidenav__list-item" x-data="{ expanded: false }">
     @php
-        $groups = 0;
+
+    $string = $item->url;
+    $explode = explode('/', $string);
+    $last = end($explode);
+    $active =  request()->is('admin/'.$last.'') ? 'active' : '' ;
+    $groups = 0;
+        
     @endphp
     @foreach ($item->children as $children)
         @if ($children->subgroup)
@@ -18,7 +24,8 @@
         @endif
     @endforeach
 
-    <a @if ($groups) @click="expanded = ! expanded" @else href="{{ $item->url }}" target="{{ $item->target }}" @endif
+
+    <a class="{{ $active }}" @if ($groups) @click="expanded = ! expanded" @else href="{{ $item->url }}" target="{{ $item->target }}" @endif
         rel="noopener noreferrer" class="flex gap-2 text-sm font-semibold cursor-pointer">
         @if ($item->iconclass)
             @svg('tabler-' . $item->iconclass)
