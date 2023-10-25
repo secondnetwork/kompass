@@ -2,6 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Arr;
@@ -13,7 +14,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Mail\Invitation;
 use Secondnetwork\Kompass\Models\Role;
-use Secondnetwork\Kompass\Models\User;
 
 class AccountForm extends Component
 {

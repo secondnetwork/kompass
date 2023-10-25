@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RoleMiddleware
 {
@@ -23,10 +24,11 @@ class RoleMiddleware
         return false;
     }
 
-    public function handle(Request $request, Closure $next, string|array $role)
+    public function handle(Request $request, Closure $next, string|array $roles)
     {
-        if (! $this->authorization('roles', $role)) {
-            return abort('401');
+
+        if (Str::contains($roles, '|')) {
+            $roles = explode('|', $roles);
         }
 
         return $next($request);

@@ -156,6 +156,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // Directories...
         (new Filesystem)->deleteDirectory(resource_path('sass'));
         (new Filesystem)->deleteDirectory('resources');
+        (new Filesystem)->deleteDirectory('database');
         (new Filesystem)->deleteDirectory(app_path('Actions/Fortify'));
 
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Fortify'));

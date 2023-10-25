@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('extension')->nullable();
             $table->string('description')->nullable();
             $table->string('alt')->nullable();
-            $table->foreignId(('user_id'))->constrained()->onDelete('cascade');
+            $table->foreignUuid(('user_id'))->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
