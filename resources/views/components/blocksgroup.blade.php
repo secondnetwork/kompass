@@ -85,7 +85,7 @@
         <div class="flex items-center gap-1">
             @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
             <span @click="expanded = ! expanded">
-                <x-tabler-adjustments/>
+                <x-tabler-adjustments class="cursor-pointer stroke-current h-6 w-6 text-stone-500"/>
             </span>
                 <span wire:click="selectitem('addBlock', {{ $itemblocks->id }},'page',{{ $itemblocks->id }})">
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
@@ -138,7 +138,7 @@
             <x-kompass::nav-item :itemblocks="$itemblocks" />
             
         </nav>
-        <div class="grid gap-6 p-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @endif" >
+        <div class="grid gap-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @else p-6 @endif" >
 
             @switch($itemblocks->type)
                 @case('gallery')

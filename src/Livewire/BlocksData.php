@@ -150,12 +150,14 @@ class BlocksData extends Component
             $validate['data']['icon_img_path'] = $original_strorlink;
         }
 
-        $validate['data']['slug'] = Str::slug($validate['data']['name']);
+        // $validate['data']['slug'] = Str::slug($validate['data']['name']);
+
 
         $block->update($validate['data']);
 
+
         foreach ($validate['fields'] as $blockfields) {
-            $blockfields['slug'] = Str::slug($blockfields['name']);
+            // $blockfields['slug'] = Str::slug($blockfields['name']);
             Blockfields::whereId($blockfields['id'])->update($blockfields);
         }
 

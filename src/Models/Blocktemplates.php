@@ -21,42 +21,42 @@ class Blocktemplates extends Model
     // ];
     protected $guarded = [];
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::created(function ($menu) {
-            $menu->slug = $menu->createSlug($menu->name);
+    //     static::created(function ($menu) {
+    //         $menu->slug = $menu->createSlug($menu->name);
 
-            $menu->save();
-        });
+    //         $menu->save();
+    //     });
 
-        static::updating(function ($menu) {
-            $menu->slug = $menu->createSlug($menu->name);
-        });
-    }
+    //     static::updating(function ($menu) {
+    //         $menu->slug = $menu->createSlug($menu->name);
+    //     });
+    // }
 
-    private function createSlug($anme)
-    {
-        $businessNameURL = Str::slug($anme, '-', 'de'); //Convert Input to Str Slug
+    // private function createSlug($anme)
+    // {
+    //     $businessNameURL = Str::slug($anme, '-', 'de'); //Convert Input to Str Slug
 
-        $placeObj = new Page;
+    //     $placeObj = new Page;
 
-        $checkSlug = static::whereSlug($businessNameURL)->exists();
+    //     $checkSlug = static::whereSlug($businessNameURL)->exists();
 
-        if ($checkSlug) {
-            $numericalPrefix = 1;
-            while (1) {
-                $newSlug = $businessNameURL.'-'.$numericalPrefix++;
-                $newSlug = Str::slug($newSlug, '-', 'de');
-                $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
-                    return $newSlug; //New Slug
-                }
-            }
-        }
+    //     if ($checkSlug) {
+    //         $numericalPrefix = 1;
+    //         while (1) {
+    //             $newSlug = $businessNameURL.'-'.$numericalPrefix++;
+    //             $newSlug = Str::slug($newSlug, '-', 'de');
+    //             $checkSlug = $placeObj->whereSlug($newSlug)->exists();
+    //             if (! $checkSlug) {
+    //                 return $newSlug; //New Slug
+    //             }
+    //         }
+    //     }
 
-        //Slug do not exists. Just use the selected Slug.
-        return $businessNameURL;
-    }
+    //     //Slug do not exists. Just use the selected Slug.
+    //     return $businessNameURL;
+    // }
 }

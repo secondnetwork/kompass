@@ -1,19 +1,19 @@
 {
-  "_vendor.4259223b.js": {
-    "file": "js/vendor.4259223b.js"
+  "_vendor.d72ea5f3.js": {
+    "file": "js/vendor.d72ea5f3.js"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.13dfd741.css",
+    "file": "css/kompass.47895f0a.css",
     "isEntry": true,
     "src": "resources/css/kompass.css"
   },
   "resources/js/main.js": {
     "css": [
-      "css/kompass.13dfd741.css"
+      "css/kompass.47895f0a.css"
     ],
-    "file": "js/main.497f8671.js",
+    "file": "js/main.1b5e6d01.js",
     "imports": [
-      "_vendor.4259223b.js"
+      "_vendor.d72ea5f3.js"
     ],
     "isEntry": true,
     "src": "resources/js/main.js"

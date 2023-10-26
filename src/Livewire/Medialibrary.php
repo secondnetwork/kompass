@@ -372,7 +372,6 @@ class Medialibrary extends Component
             if ($this->field_id == '0') {
                 Datafields::updateOrCreate(['id' => $this->field_id], [
                     'name' => 'Gallery',
-                    'slug' => 'gallery',
                     'type' => 'gallery',
                     'block_id' => $this->block_id,
                     'data' => $media_id,

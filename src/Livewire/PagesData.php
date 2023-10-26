@@ -158,6 +158,7 @@ class PagesData extends Component
             'subgroup' => $this->blockgroupId,
             'set' => $blockTypeData,
             'status' => 'published',
+            'grid' => $tempBlock->grid ?? '1',
             'iconclass' => $tempBlock->iconclass ?? $iconclass,
             'type' => $type,
             'order' => '999',

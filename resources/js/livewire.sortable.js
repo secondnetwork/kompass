@@ -2,11 +2,17 @@ import Sortable from 'sortablejs';
 
 window.Sortable = Sortable;
 
-if (typeof window.Livewire === 'undefined') {
-    throw 'Livewire Sortable.js Plugin: window.Livewire is undefined. Make sure @livewireScripts is placed above this script include';
+const moveEndMorphMarker = (el) => {
+    const endMorphMarker = Array.from(el.childNodes).filter((childNode) => {
+        return childNode.nodeType === 8 && ['[if ENDBLOCK]><![endif]', '__ENDBLOCK__'].includes(childNode.nodeValue?.trim());
+    })[0];
+
+    if (endMorphMarker) {
+        el.appendChild(endMorphMarker);
+    }
 }
 
-window.Livewire.directive('sortable', ({ el, directive, component }) => {
+window.Livewire?.directive('sortable', ({ el, directive, component }) => {
     // Only fire this handler on the "root" directive.
     if (directive.modifiers.length > 0) {
         return;
@@ -19,10 +25,10 @@ window.Livewire.directive('sortable', ({ el, directive, component }) => {
     }
 
     el.livewire_sortable = window.Sortable.create(el, {
+        sort: true,
         ...options,
         draggable: '[wire\\:sortable\\.item]',
         handle: el.querySelector('[wire\\:sortable\\.handle]') ? '[wire\\:sortable\\.handle]' : null,
-        sort: true,
         dataIdAttr: 'wire:sortable.item',
         group: {
             pull: false,
@@ -40,15 +46,45 @@ window.Livewire.directive('sortable', ({ el, directive, component }) => {
                     };
                 });
 
+                moveEndMorphMarker(el);
+
                 component.$wire.call(directive.method, items);
             },
         },
     });
+
+    let hasSetHandleCorrectly = el.querySelector('[wire\\:sortable\\.item]') !== null;
+
+    // If there are already items, then the 'handle' option has already been correctly set.
+    // The option does not have to reevaluated after the next Livewire component update.
+    if (hasSetHandleCorrectly) {
+        return;
+    }
+
+    const currentComponent = component;
+
+    Livewire.hook('commit', ({ component, succeed }) => {
+        if (component.id !== currentComponent.id) {
+            return;
+        }
+
+        if (hasSetHandleCorrectly) {
+            return;
+        }
+
+        succeed(() => {
+            queueMicrotask(() => {
+                el.livewire_sortable.option('handle', el.querySelector('[wire\\:sortable\\.handle]') ? '[wire\\:sortable\\.handle]' : null);
+
+                hasSetHandleCorrectly = el.querySelector('[wire\\:sortable\\.item]') !== null;
+            });
+        });
+    });
 });
 
-window.Livewire.directive('sortable-group', ({ el, directive, component }) => {
+window.Livewire?.directive('sortable-group', ({ el, directive, component }) => {
     // Only fire this handler on the "root" group directive.
-    if (!directive.modifiers.includes('item-group')) {
+    if (! directive.modifiers.includes('item-group')) {
         return;
     }
 
@@ -59,10 +95,10 @@ window.Livewire.directive('sortable-group', ({ el, directive, component }) => {
     }
 
     el.livewire_sortable = window.Sortable.create(el, {
+        sort: true,
         ...options,
         draggable: '[wire\\:sortable-group\\.item]',
-        handle: el.querySelector('[wire\\:sortable-group\\.handle]') ? '[wire\\:sortable-group\\.handle]' : null,
-        sort: true,
+        handle: '[wire\\:sortable-group\\.handle]',
         dataIdAttr: 'wire:sortable-group.item',
         group: {
             pull: true,
@@ -70,14 +106,20 @@ window.Livewire.directive('sortable-group', ({ el, directive, component }) => {
             ...options.group,
             name: el.closest('[wire\\:sortable-group]').getAttribute('wire:sortable-group'),
         },
-        onSort: () => {
+        onSort: (evt) => {
+            if (evt.to !== evt.from && el === evt.from) {
+                return;
+            }
+
             let masterEl = el.closest('[wire\\:sortable-group]');
 
             let groups = Array.from(masterEl.querySelectorAll('[wire\\:sortable-group\\.item-group]')).map((el, index) => {
+                moveEndMorphMarker(el);
+
                 return {
                     order: index + 1,
                     value: el.getAttribute('wire:sortable-group.item-group'),
-                    items: el.livewire_sortable.toArray().map((value, index) => {
+                    items:  el.livewire_sortable.toArray().map((value, index) => {
                         return {
                             order: index + 1,
                             value: value
@@ -86,7 +128,7 @@ window.Livewire.directive('sortable-group', ({ el, directive, component }) => {
                 };
             });
 
-            component.$wire.call(masterEl.getAttribute('wire:sortable-group'), groups);
+            masterEl.closest('[wire\\:id]').__livewire.$wire.call(masterEl.getAttribute('wire:sortable-group'), groups);
         },
     });
 });
