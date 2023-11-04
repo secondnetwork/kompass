@@ -131,6 +131,7 @@ return [
     'livewire' => [
         'menu' => Livewire\Frontend\Menu::class,
         'pageview' => Livewire\Frontend\Pageview::class,
+        'blogview' => Livewire\Frontend\Blogview::class,
 
         'adminmenu' => Livewire\Menu::class,
         'blocks.blocks-table' => Livewire\BlocksTable::class,

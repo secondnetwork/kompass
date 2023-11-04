@@ -2,7 +2,7 @@
 
 
     <div x-data="{ open: @entangle('FormAdjustments') }">
-        <x-kompass::offcanvas :w="'w-2/4'" class="p-8 grid gap-4">
+        <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
                 <button class="flex btn gap-x-2 justify-end items-center text-md"
                     wire:click="update('{{ $page->id }}')">
@@ -16,8 +16,8 @@
                 <div>
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
-
-                    <x-kompass::select wire:model.live="page.status" label="Status" placeholder="Select one status" :options="[
+  
+                    <x-kompass::select wire:model="page.status" :selected="$page->status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -33,19 +33,13 @@
                         </button>
                 @endif
 
-                <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
-
-                    <x-kompass::select wire:model.live="page.layout" label="Seite Template" :options="[
+                    <x-kompass::select wire:model="page.layout" :selected="$page->layout" label="Seite Template" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />
 
                 <strong class="text-gray-600">SEO:</strong>
                 <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
-                Thumbnails
-                <img src="{{ $page->thumbnails }}" alt="">
-
-
             </x-slot>
         </x-kompass::offcanvas>
     </div>

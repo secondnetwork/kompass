@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Secondnetwork\Kompass\Livewire\Frontend\Blogview;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
 /*
@@ -16,5 +17,6 @@ use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
 Route::group(['middleware' => ['web']], function () {
     Route::get('/', Pageview::class)->name('is_front_page');
-    Route::get('/{slug}', Pageview::class)->name('pages');
+    Route::get('/{slug}', Pageview::class)->name('page');
+    Route::get('/blog/{slug}', Blogview::class)->name('post');
 });

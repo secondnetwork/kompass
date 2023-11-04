@@ -114,7 +114,7 @@
                                                 </span>
                                             @endif
 
-                                            <a target="_blank" href="/{{ $post->slug }}" class="flex justify-center">
+                                            <a target="_blank" href="/blog/{{ $post->slug }}" class="flex justify-center">
                                                 <x-tabler-external-link class="cursor-pointer stroke-gray-400" />
                                             </a>
 

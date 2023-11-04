@@ -4,6 +4,7 @@
     'value' => '',
     'options' => [],
     'placeholder' => '',
+    'selected' => '',
 ])
 
 @if ($label === '')
@@ -33,12 +34,12 @@
     <div x-data="{open: false,
         
         init() {
-            this.selected = '';
+            {{-- this.selected = ''; --}}
             this.query = '';
             this.filteredPeopleCount = this.options.length
         },
         
-        selected: @entangle($attributes->wire('model')),    
+        selected: @js($selected),    
 
         options: @js($options),
 
@@ -71,10 +72,6 @@
             {{ $label }}
             <div class="flex items-center cursor-pointer rounded-md border bg-white border-secondary-300 text-base ">
          
-              
-
-                   
-
                    <template x-for="item in filteredPeople">
                         <div x-show="selected == item.id" @click="toggle"
                             class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">                            

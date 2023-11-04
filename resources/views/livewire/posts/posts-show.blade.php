@@ -17,7 +17,7 @@
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
 
-                    <x-kompass::select wire:model.live="post.status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model.live="post.status" :selected="$post->status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -33,7 +33,6 @@
                         </button>
                 @endif
 
-                <span><strong class="text-gray-600 mt-2">Autor:</strong> Max Mustermann</br></span>
 
                 <strong class="text-gray-600">SEO:</strong>
                 <x-kompass::form.textarea wire:model="post.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
@@ -113,8 +112,8 @@
                         target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
                 @else
                     <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $post->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/' . $post->slug) }}</a>
+                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('blog/' . $post->slug) }}"
+                        target="_blank" rel="noopener noreferrer">{{ url('/blog/' . $post->slug) }}</a>
                 @endif
             </div>
 

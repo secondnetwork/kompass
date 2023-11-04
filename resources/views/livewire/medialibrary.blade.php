@@ -75,7 +75,6 @@
 
         <div class=" overflow-x-auto " x-cloak x-data="{ dir: @entangle('dir') }">
 
-            <span>Folders</span>
             <div class="grid grid-cols-4 gap-5 mb-4 @if (!empty($search)) hidden @endif">
 
                 @foreach ($dirgroup as $folder)

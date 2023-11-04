@@ -10,9 +10,9 @@ use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
-use Secondnetwork\Kompass\Models\Redirect;
+use Secondnetwork\Kompass\Models\Post;
 
-class Pageview extends Component
+class Blogview extends Component
 {
     public $page;
 
@@ -37,11 +37,11 @@ class Pageview extends Component
         }
         //blockable_type
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+            return Block::where('blockable_type', 'post')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
 
         $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
-            return Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
+            return Block::where('blockable_type', 'post')->where('blockable_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
         });
         Arr::collapse($this->blocks_id);
 
@@ -61,23 +61,20 @@ class Pageview extends Component
     public function ResolvePath($slug)
     {
         if ($slug == null) {
-            $is_front = Page::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
+            $is_front = Post::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
 
             if ($is_front) {
                 return $is_front;
             }
         }
 
-        $page = Page::where('slug', $slug)->whereNot('status', 'draft')->first();
+        $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
 
-        if (! empty($page)) {
-            return $page;
+        if (! empty($post)) {
+            return $post;
         } else {
-            $redirect = Redirect::where('old_url', '/'.$slug)->firstOrFail();
-
-            return $redirect;
+            return '';
         }
-
     }
 
     public function get_gallery($blockis = null)
