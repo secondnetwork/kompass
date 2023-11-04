@@ -3,6 +3,7 @@
     overflow-y: scroll;
     .test{background-color: antiquewhite;}
     main {
+        @apply transition-all ease-in-out duration-300 overflow-hidden;
         display: grid;
         grid-template-columns: 15rem 1fr;
         grid-template-rows: 4rem 1fr 4rem;
@@ -26,6 +27,7 @@
 
     header,
     footer {
+        @apply z-30;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -37,6 +39,7 @@
 
 
     .sidenav {
+        @apply transition-all ease-in-out duration-500 overflow-hidden;
         display: block;
         position: fixed;
         top: 0;
@@ -107,6 +110,7 @@
     // } */
 }
 .sideclose{
+    @apply transition-all ease-in-out duration-500 ;
     grid-template-columns: 4.6rem 1fr !important;
     .logo{
         padding: .5rem !important;

@@ -124,7 +124,7 @@
 
       <footer>
         <div class="text-xs flex items-center">
-          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }}  @if (!empty(setting('admin.copyright'))){{ setting('admin.copyright') }}@else secondnetwork @endif| Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
+          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }}  @if (!empty(setting('admin.copyright'))){{ setting('admin.copyright') }} @else secondnetwork @endif| Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
         </div>
         <div class="text-xs">
 

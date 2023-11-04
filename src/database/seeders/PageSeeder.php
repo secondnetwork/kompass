@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Setting;
 
 class PageSeeder extends Seeder
 {
@@ -13,30 +15,19 @@ class PageSeeder extends Seeder
      *
      * @return void
      */
+    public $page;
+
     public function run()
     {
-        $frontPage = new Page();
-        $frontPage->title = 'Startpage';
-        $frontPage->slug = 'startpage';
-        $frontPage->layout = 'is_front_page';
-        $frontPage->status = 'published';
-        $frontPage->save();
 
-        $frontPage = new Page();
-        $frontPage->title = 'About';
-        $frontPage->slug = 'about';
-        $frontPage->status = 'published';
-        $frontPage->save();
+        Setting::create([
 
-        DB::table('settings')->insert([
-            0 => [
-                'id' => 1,
-                'name' => 'Copytext',
-                'key' => 'copytext',
-                'data' => 'secondnetwork',
-                'group' => 'footer',
-                'order' => 1,
-            ],
+            'name' => 'Copytext',
+            'key' => 'copytext',
+            'data' => 'New Brand',
+            'group' => 'footer',
+            'order' => 1,
+
         ]);
 
         DB::table('menus')->insert([
@@ -89,70 +80,64 @@ class PageSeeder extends Seeder
             ],
         ]);
 
-        DB::table('blocktemplates')->insert([
-            0 => [
-                'id' => 1,
-                'name' => 'Longtext',
-                'slug' => 'longtext',
-                'grid' => 1,
-                'order' => 1,
-            ],
+        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => ''];
+        $this->page = Page::create([
+            'title' => 'Home',
+            'status' => 'published',
+            'meta_description' => 'The Homepage',
+            'order' => '999',
+            'slug' => 'home',
+            'layout' => 'is_front_page',
+            'status' => 'published',
         ]);
 
-        DB::table('blockfields')->insert([
-            0 => [
-                'id' => 1,
-                'blocktemplate_id' => '1',
-                'name' => 'Longtext',
-                'slug' => 'longtext',
-                'type' => 'wysiwyg',
-                'grid' => 1,
-                'order' => 1,
-            ],
+        $block = $this->page->blocks()->create([
+            'name' => 'Home',
+            'set' => $blockTypeData,
+            'status' => 'published',
+            'grid' => '1',
+            'iconclass' => 'blockquote',
+            'type' => 'wysiwyg',
+            'order' => '999',
         ]);
 
-        DB::table('blocks')->insert([
-            0 => [
-                'id' => 1,
-                'page_id' => 1,
-                'name' => 'Longtext',
-                'slug' => 'longtext',
-                'status' => 'published',
-                'grid' => 1,
-                'order' => 1,
-            ],
-            1 => [
-                'id' => 2,
-                'page_id' => 2,
-                'name' => 'Longtext',
-                'slug' => 'longtext',
-                'status' => 'published',
-                'grid' => 1,
-                'order' => 1,
-            ],
+        Datafields::create([
+            'block_id' => $block->id,
+            'name' => 'wysiwyg',
+            'type' => 'wysiwyg',
+            'order' => '1',
+            'data' => '{"time":1699101859852,"blocks":[{"id":"tDj43ofNgq","type":"header","data":{"text":"The Homepage","level":2}},{"id":"nB8EHgsYpy","type":"paragraph","data":{"text":"The wheel is come full circle. Harp not on that. I will no longer endure it, though yet I know no wise remedy how to avoid it. A fool, a fool! I met a fool i th forest, A motley fool. Invest me in my motley; give me leave To speak my mind, and I will through and through Cleanse the foul body of th infected world, If they will patiently receive my medicine. Then a soldier, Full of strange oaths, and bearded like the pard, Jealous in honour, sudden and quick in quarrel, Seeking the bubble reputation Even in the cannons mouth. "}}],"version":"2.28.0"}',
         ]);
 
-        DB::table('datafields')->insert([
-            0 => [
-                'id' => 1,
-                'block_id' => 1,
-                'name' => 'Longtext',
-                'slug' => 'longtext',
-                'type' => 'wysiwyg',
-                'grid' => 1,
-                'order' => 1,
-                'data' => '<h1>Welcome to Kompass</h1><p>This is a Front Page</p>',
-            ],
-            1 => [
-                'id' => 2,
-                'block_id' => 2,
-                'name' => 'Longtext',
-                'slug' => 'longtext',
-                'type' => 'wysiwyg',
-                'grid' => 1,
-                'order' => 1,
-                'data' => '<h1>About Page</h1>',
-            ],
+        $this->page = Page::create([
+
+            'title' => 'About',
+            'status' => 'published',
+            'meta_description' => 'The About',
+            'order' => '999',
+            'slug' => 'about',
+            'layout' => 'is_front_page',
+            'status' => 'published',
+            // 'slug' => generateSlug($this->title)
+
         ]);
+        $block = $this->page->blocks()->create([
+            'name' => 'About',
+            'set' => $blockTypeData,
+            'status' => 'published',
+            'grid' => '1',
+            'iconclass' => 'blockquote',
+            'type' => 'wysiwyg',
+            'order' => '999',
+        ]);
+
+        Datafields::create([
+            'block_id' => $block->id,
+            'name' => 'wysiwyg',
+            'type' => 'wysiwyg',
+            'order' => '1',
+            'data' => '{"time":1699101859852,"blocks":[{"id":"tDj43ofNgq","type":"header","data":{"text":"The About","level":2}},{"id":"nB8EHgsYpy","type":"paragraph","data":{"text":"The wheel is come full circle. Harp not on that. I will no longer endure it, though yet I know no wise remedy how to avoid it. A fool, a fool! I met a fool i th forest, A motley fool. Invest me in my motley; give me leave To speak my mind, and I will through and through Cleanse the foul body of th infected world, If they will patiently receive my medicine. Then a soldier, Full of strange oaths, and bearded like the pard, Jealous in honour, sudden and quick in quarrel, Seeking the bubble reputation Even in the cannons mouth."}}],"version":"2.28.0"}',
+        ]);
+
     }
 }

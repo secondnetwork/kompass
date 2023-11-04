@@ -130,6 +130,7 @@ if (! function_exists('nameWithLastInitial')) {
 if (! function_exists('setting')) {
     function setting($key = null, $default = null)
     {
+
         $keydata = explode('.', $key);
         foreach (explode('.', $key) as $segment) {
             $data = $segment;
@@ -139,6 +140,8 @@ if (! function_exists('setting')) {
             $data = Arr::get(config('settings'), $data);
 
             if ($data->group == $keydata[0]) {
+                dump($data->data);
+
                 return $data->data;
             }
             // return Arr::get(config('settings'), $data );
@@ -146,9 +149,14 @@ if (! function_exists('setting')) {
             $data = Arr::get(app('settings'), $data);
 
             if (! empty($data->group) == $keydata[0]) {
+
                 return $data->data;
+
             }
         }
+
+        return $data;
+
     }
 }
 

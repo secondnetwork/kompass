@@ -60,7 +60,7 @@ class Settings extends Component
             '',
             'Name',
             'Value',
-            '',
+            'Code',
             // 'status',
             // 'Updated',
 

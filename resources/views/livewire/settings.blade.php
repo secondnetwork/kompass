@@ -97,10 +97,15 @@
 
                                 @foreach ($data as $key => $value)
                                 
-                                <td class="px-6 py-4 bg-white ">
+                                <td class="p-4">
                                     <div class="flex  items-center text-sm font-medium text-gray-900 ">
+                                        @if ($key == 0)
+                                        {{ $setting->name }}
+                                        @endif
+                                        
+                                        
                                         @if ($key == 1)
-
+                   
                                         @if ($setting->type == 'image')
                                         image
                                         @endif
@@ -136,7 +141,7 @@
                                     </div>
                                 </td>
                                 @endforeach
-                                <td>
+                                <td class="p-4">
                                     <span
                                         class="px-2.5 py-2 inline-flex font-semibold rounded-lg text-xs whitespace-nowrap  bg-green-100 text-green-800">
                                         @php echo '{{' @endphp setting('{{ $setting->group }}.{{ $setting->key }}') @php

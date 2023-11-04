@@ -107,7 +107,9 @@ class Pageview extends Component
 
     public function get_field($type, $blockis = null, $class = null, $size = null)
     {
+
         foreach ($this->fields[$blockis] as $value) {
+
             if ($value->type == $type) {
                 if ($value->type == 'image' && $value->data != null) {
                     $file = file::where('id', $value->data)->first();
