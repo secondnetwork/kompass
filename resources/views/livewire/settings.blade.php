@@ -209,10 +209,9 @@
 
                 <div x-data="{openType: @entangle('type')}">
 
-
                     @switch($type)
                     @case('image')
-                    
+
                     @if (!empty($setting->$value))
                     @php
                     $file = Secondnetwork\Kompass\Models\File::find($setting->$value);

@@ -17,7 +17,7 @@
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
   
-                    <x-kompass::select wire:model="page.status" :selected="$page->status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model="page.status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -33,7 +33,7 @@
                         </button>
                 @endif
 
-                    <x-kompass::select wire:model="page.layout" :selected="$page->layout" label="Seite Template" :options="[
+                    <x-kompass::select wire:model="page.layout" label="Seite Template" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />

@@ -17,7 +17,7 @@
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
 
-                    <x-kompass::select wire:model.live="post.status" :selected="$post->status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model.live="post.status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">

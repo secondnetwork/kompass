@@ -4,7 +4,6 @@
     'value' => '',
     'options' => [],
     'placeholder' => '',
-    'selected' => '',
 ])
 
 @if ($label === '')
@@ -31,16 +30,14 @@
 
 <div class="flex items-center cursor-pointer">
     
-    <div x-data="{open: false,
-        
+    <div 
+    x-data="{open: false,
+        selected: @entangle($attributes->wire('model')),
         init() {
             {{-- this.selected = ''; --}}
             this.query = '';
             this.filteredPeopleCount = this.options.length
         },
-        
-        selected: @js($selected),    
-
         options: @js($options),
 
             toggle() {
@@ -66,7 +63,8 @@
                     .includes(this.query.toLowerCase().replace(/\s+/g, ''))
                 ).length;
             },
-        }" class="w-full mt-4 space-y-4 text-slate-800">
+        }" 
+        class="w-full mt-4 space-y-4 text-slate-800">
 
         <div class="w-full relative">
             {{ $label }}
