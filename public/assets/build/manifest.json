@@ -3,15 +3,15 @@
     "file": "js/vendor.d72ea5f3.js"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.41cc1180.css",
+    "file": "css/kompass.6c3dd23f.css",
     "isEntry": true,
     "src": "resources/css/kompass.css"
   },
   "resources/js/main.js": {
     "css": [
-      "css/kompass.41cc1180.css"
+      "css/kompass.6c3dd23f.css"
     ],
-    "file": "js/main.83995926.js",
+    "file": "js/main.e40206bf.js",
     "imports": [
       "_vendor.d72ea5f3.js"
     ],

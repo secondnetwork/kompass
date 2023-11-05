@@ -22,6 +22,26 @@ class PageSeeder extends Seeder
 
         Setting::create([
 
+            'name' => 'User can register',
+            'key' => 'user-register',
+            'data' => '1',
+            'group' => 'global',
+            'order' => 1,
+
+        ]);
+
+        Setting::create([
+
+            'name' => 'Single-Sign-On (SSO) (IN BETA)',
+            'key' => 'sso',
+            'data' => '',
+            'group' => 'global',
+            'order' => 2,
+
+        ]);
+
+        Setting::create([
+
             'name' => 'Copytext',
             'key' => 'copytext',
             'data' => 'New Brand',

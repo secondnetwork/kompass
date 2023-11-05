@@ -28,60 +28,37 @@
 
 <body class="{{ str_replace('.', '-', Route::currentRouteName()) }}">
 
-<header>
+    <header>
 
-    <div class="relative md:flex md:items-center md:justify-between">
-      <div class="flex items-center justify-between">
-        <a class="flex-none text-xl font-semibold " href="/" aria-label="Brand">
+        <div class="md:flex gap-4 py-8 justify-between">
+            <div>LOGO BRAND</div>
+            <div class="flex gap-4">
+                <livewire:menu name="main">
+                    <div class="pt-3 md:pt-0">
+                        @if (Route::has('login'))
+                            <div class="hidden top-0 right-0  sm:block">
+                                @auth
+                                    <a href="{{ url('/admin/dashboard') }}" class="text-gray-700 flex gap-1"><x-tabler-settings-2/>Admin Dashboard</a>
+                                @else
+                                    <a href="{{ route('login') }}" class="text-gray-700 flex gap-1"><x-tabler-lock/>Login</a>
 
-         @if (!empty(setting('admin.logo')))
-            @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.logo'));
-            @endphp
-
-            @if ($file)
-                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                    <picture>
-                        <source type="image/avif" srcset="{{ asset('storage' . $file->path . '/' .$file->slug)}}.avif ">
-                        <img class="w-60" src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}" alt="{{$file->alt}}" />
-                    </picture>
-                @endif
-            @endif
-        @endif
-           </a>
-      </div>
-
-
-          <div class="flex flex-col gap-x-0 mt-5 divide-y divide-dashed divide-gray-200 md:flex-row md:items-center md:justify-end md:gap-x-7 md:mt-0 md:pl-7 md:divide-y-0 md:divide-solid ">
-
-        <livewire:menu name="main">
-            <div class="pt-3 md:pt-0">
-    @if (Route::has('login'))
-        <div class="hidden top-0 right-0  sm:block">
-            @auth
-                <a href="{{ url('/admin/dashboard') }}" class="text-gray-700 flex gap-1"><x-tabler-settings-2/>Admin Dashboard</a>
-            @else
-                <a href="{{ route('login') }}" class="text-gray-700 flex gap-1"><x-tabler-lock/>Login</a>
-
-                @if (Route::has('register'))
-                    {{-- <a href="{{ route('register') }}" class="text-gray-700">Register</a> --}}
-                @endif
-            @endauth
-        </div>
-    @endif
+                                    @if (Route::has('register'))
+                                        {{-- <a href="{{ route('register') }}" class="text-gray-700">Register</a> --}}
+                                    @endif
+                                @endauth
+                            </div>
+                        @endif
+                    </div>
             </div>
-          </div>
 
-    </div>
-  </nav>
-</header>
+        </div>
+
+    </header>
 
     <main>
-
         @isset($slot)
             {{ $slot }}
         @endisset
-
     </main>
 
     <div class="divider"></div>
@@ -90,7 +67,7 @@
             <div class="copyright">
                 &COPY; {{ date('Y') }} {{ setting('footer.copytext') }}
             </div>
-
+            {{ setting('footer.copytext') }}
             <livewire:menu name="footer">
 
         </div>

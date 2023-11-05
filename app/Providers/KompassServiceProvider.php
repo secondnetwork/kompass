@@ -28,9 +28,15 @@ class KompassServiceProvider extends ServiceProvider
             return view('kompass::admin.auth.login');
         });
 
-        Fortify::registerView(function () {
-            return view('kompass::admin.auth.register');
-        });
+        if (setting('global.user-register')) {
+            Fortify::registerView(function () {
+                return view('kompass::admin.auth.register');
+            });
+        } else {
+            Fortify::registerView(function () {
+                return response('', 404);
+            });
+        }
 
         Fortify::requestPasswordResetLinkView(function () {
             return view('kompass::admin.auth.forgot-password');

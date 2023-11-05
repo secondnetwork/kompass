@@ -3,6 +3,7 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Str;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Setting;
 
@@ -38,8 +39,12 @@ class Settings extends Component
 
     public $value;
 
+    public $valuedata;
+
+    #[Rule('required|min:3')]
     public $key;
 
+    #[Rule('required|min:3')]
     public $group;
 
     public $type;
@@ -60,7 +65,7 @@ class Settings extends Component
             '',
             'Name',
             'Value',
-            'Code',
+            'key',
             // 'status',
             // 'Updated',
 
@@ -101,8 +106,9 @@ class Settings extends Component
             $this->FormAdd = true;
             $this->name = '';
             $this->group = '';
-            $this->value = '';
+            $this->valuedata = '';
             $this->type = '';
+            $this->key = '';
         }
         if ($action == 'addMedia') {
             $this->getId = $itemId;
@@ -113,8 +119,9 @@ class Settings extends Component
             $model = Setting::findOrFail($this->selectedItem);
             $this->name = $model->name;
             $this->group = $model->group;
-            $this->value = $model->data;
+            $this->valuedata = $model->data;
             $this->type = $model->type;
+            $this->key = $model->key;
             $this->FormAdd = true;
 
         }
@@ -135,8 +142,8 @@ class Settings extends Component
     public function addNew()
     {
         $validate = $this->validate();
-        if ($this->value == '0') {
-            $this->value = '';
+        if ($this->valuedata == '0') {
+            $this->valuedata = '';
         }
         $this->dispatch('savedatajs');
 
@@ -145,8 +152,8 @@ class Settings extends Component
         ],
             [
                 'name' => $this->name,
-                'data' => $this->value,
-                'key' => Str::slug($this->name, '-', 'de'),
+                'data' => $this->valuedata,
+                'key' => Str::slug($this->key, '-', 'de'),
                 'group' => strtolower($this->group),
                 'type' => $this->type,
             ]);
@@ -170,12 +177,17 @@ class Settings extends Component
 
         // dd(Setting::query()->orderBy('order', 'asc')->get());
         // return Setting::where('group', $this->pagetap)->orderBy('order', 'asc')->get();
-        return Setting::query()->orderBy('order', 'asc')->get();
+        return Setting::query()->whereNot('group', 'global')->orderBy('order', 'asc')->get();
+    }
+
+    private function resultDateGlobal()
+    {
+        return Setting::query()->where('group', 'global')->orderBy('order', 'asc')->get();
     }
 
     private function resultGroup()
     {
-        return Setting::query()->select('group')
+        return Setting::query()->select('group')->whereNot('group', 'global')
             ->orderBy('group')
             ->groupBy('group')
             ->get();
@@ -184,6 +196,7 @@ class Settings extends Component
     public function render()
     {
         return view('kompass::livewire.settings', [
+            'settingsglobal' => $this->resultDateGlobal(),
             'settings' => $this->resultDate(),
             'settingsGroup' => $this->resultGroup(),
         ])->layout('kompass::admin.layouts.app');

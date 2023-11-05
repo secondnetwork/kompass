@@ -1,17 +1,23 @@
 <div>
-    <grid-side class="grid grid-cols-11 h-full gap-4" x-data="{ activeTab:  'admin' }">
+    <grid-side class="grid grid-cols-11 h-full gap-4" x-data="{ activeTab:  'global' }">
 
         <aside class="col-start-1 lg:col-end-3 border-r border-gray-200 h-full ">
 
             <div class="uppercase text-xs mt-5 border-r-2 border-gray-400 text-gray-500 font-semibold">{{ __('Global Settings') }}</div>
+            <nav class="setting">
+                <ul>
+                    <li>
+                        <a @click="activeTab ='global'" x-data="{ activeTabName:  'global' }" class="cursor-pointer text-blue-600" :class="activeTab == activeTabName ? ' text-blue-600' : 'text-gray-600'">                
+                            <span class="capitalize">{{ __('Settings') }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
             <div class="uppercase text-xs mt-5 border-r-2 border-gray-400 text-gray-500 font-semibold">Theme {{ __('Settings') }}</div>
             <nav class="setting">
 
 
-               
                     <ul>
-
-
                         @foreach ($settingsGroup as $item)
                         <li>
 
@@ -27,29 +33,6 @@
                         </li>
                         @endforeach
 
-                        {{-- Application
-                        API Tokens
-                        Content manager
-                        Webhooks
-                        Single Sign-On
-                        Media Library
-                        Documentation
-                        Internationalization
-                        ADMINISTRATION PANEL
-                        <div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
-
-                        <a class="flex gap-2 my-1" @if(Route::is('admin.account*') ) class="active" @endif
-                            href="/admin/account">
-                            <x-tabler-users class="icon-lg" /><span>{{ __('User account') }}</span>
-                        </a>
-                        <a class="flex gap-2 my-1" @if(Route::is('admin.roles*') ) class="active" @endif
-                            href="/admin/roles">
-                            <x-tabler-lock-access class="icon-lg" /><span>{{ __('Roles') }}</span>
-                        </a> --}}
-
-
-                        {{-- <div class="uppercase text-xs mt-5 text-gray-500 font-semibold">{{ __('Advanced settings')
-                            }}</div> --}}
                     </ul>
             </nav>
 
@@ -69,16 +52,129 @@
 
             <item-setting class="align-middle inline-block min-w-full" >
 
-                {{-- <div class="p-4 my-10 border-l-8 text-md border-blue-900  text-white bg-blue-500 rounded-lg "
-                    role="alert">
-                    <h3 class="text-white text-base">Verwendung:</h3>Sie können den Wert jeder Einstellung überall auf
-                    der Seite erhalten durch den Aufruf von <strong>setting('key')</strong>
-                </div> --}}
+                <div x-show="activeTab === 'global'" >
+                        @if ($settingsglobal->count())
+                        <table  class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                @foreach ($headers as $key => $value)
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    {{ __($value) }}
+                                </th>
+                                @endforeach
+    
+                            <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200">
+    
+    
+                       
+    
+                                @foreach ($settingsglobal as $key => $setting)
+    
+    
+                                <tr wire:sortable.item="{{ $setting->id }}" :class="{ 'active': activeTab === '{{ $setting->group }}' }" x-show.transition.in.opacity.duration.600="activeTab === '{{ $setting->group }}'">
+                                    <td wire:sortable.handle class="px-4 w-4 ">
+                                        <x-tabler-arrow-autofit-height class="cursor-move stroke-current text-gray-600" />
+                                    </td>
+    
+                                    @foreach ($data as $key => $value)
+                                    
+                                    <td class="p-4">
+                                        <div class="flex  items-center text-sm font-medium text-gray-900 ">
+                                            @if ($key == 0)
+                                            {{ $setting->name }}
+                                            @endif
+                                            
+                                            
+                                            @if ($key == 1)
+                       
+                                            @if ($setting->type == 'image')
+                                            image
+                                            @endif
+                                            @if ($setting->type == 'switch')
+                                                @if ($setting->$value)
+                                                    true
+                                                @else
+                                                    false
+                                                @endif
+                                  
+                                            @endif
+                                            @if ($setting->type == 'text')
+                                            {{ $setting->$value }}
+                                            @endif
+                                            @if ($setting->type == 'rich_text_box')
+    
+                                                @php
+                                                $dataJson = json_decode($setting->$value);
+                                                @endphp
+                                                {{-- @if ($setting->$value)
+                                                <div class="flex flex-col">
+                                                    @foreach ($dataJson->blocks as $block)
+    
+                                                    @switch($block->type)
+                                                        @case('header')
+                                                        <div class="font-bold text-lg">{!! $block->data->text !!}</div>
+                                                        @break
+                                                        @case('paragraph')
+                                                        <div>{!! $block->data->text !!}</div>
+                                                        @break
+                                                        @default
+                                                    @endswitch
+    
+                                                    @endforeach
+                                                </div>
+                                                @endif --}}
+    
+                                            {{-- {{ $setting->$value }} --}}
+                                            @endif
+    
+                                            @endif
+                                            {{-- {{ $setting->$value }} --}}
+                                        </div>
+                                    </td>
+                                    @endforeach
+                                    <td class="p-4">
+                                        <span
+                                            class="px-2.5 py-2 inline-flex font-semibold rounded-lg text-xs whitespace-nowrap  bg-green-100 text-green-800">
+                                            @php echo '{{' @endphp setting('{{ $setting->group }}.{{ $setting->key }}') @php
+                                            echo '}}' @endphp
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                        <div class="flex items-center justify-end">
+    
+                                            <span wire:click="selectItem({{ $setting->id }}, 'update')"
+                                                class="flex justify-center">
+                                                <x-tabler-edit class="cursor-pointer stroke-blue-500" />
+                                            </span>
+    
+                                            {{-- <span
+                                                x-clipboard.raw="@php echo '{{' @endphp setting('{{ $setting->key }}') @php echo '}}' @endphp">
+                                                <x-tabler-clipboard class="cursor-pointer stroke-violet-500" />
+                                            </span> --}}
+    
+                                            <span wire:click="selectItem({{ $setting->id }}, 'delete')"
+                                                class="flex justify-center">
+                                                <x-tabler-trash class="cursor-pointer stroke-red-500" />
+                                            </span>
+                                        </div>
+                                    </td>
+                                    @endforeach
+                                </tr>
+    
+    
+                            </tbody>
+                        </table>
+                        @else
+                        <div class="h-36 text-center">{{__('No Data')}}</div>
+    
+                        @endif
+    
 
-                <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                 
+                </div>
+                <div x-show="activeTab !== 'global'" class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
                     @if ($settings->count())
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table  class="min-w-full divide-y divide-gray-200">
                         <thead>
                             @foreach ($headers as $key => $value)
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -87,6 +183,10 @@
                             @endforeach
 
                         <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200">
+
+
+                   
+
                             @foreach ($settings as $key => $setting)
 
 
@@ -109,30 +209,40 @@
                                         @if ($setting->type == 'image')
                                         image
                                         @endif
+                                        @if ($setting->type == 'switch')
+                                            @if ($setting->$value)
+                                                true
+                                            @else
+                                                false
+                                            @endif
+                              
+                                        @endif
                                         @if ($setting->type == 'text')
                                         {{ $setting->$value }}
                                         @endif
                                         @if ($setting->type == 'rich_text_box')
 
-                                        @php
-                                        $dataJson = json_decode($setting->$value);
-                                        @endphp
+                                            @php
+                                            $dataJson = json_decode($setting->$value);
+                                            @endphp
+                                            @if ($setting->$value)
+                                            <div class="flex flex-col">
+                                                @foreach ($dataJson->blocks as $block)
 
-                                        <div class="flex flex-col">
-                                            @foreach ($dataJson->blocks as $block)
+                                                @switch($block->type)
+                                                    @case('header')
+                                                    <div class="font-bold text-lg">{!! $block->data->text !!}</div>
+                                                    @break
+                                                    @case('paragraph')
+                                                    <div>{!! $block->data->text !!}</div>
+                                                    @break
+                                                    @default
+                                                @endswitch
 
-                                            @switch($block->type)
-                                                @case('header')
-                                                <div class="font-bold text-lg">{!! $block->data->text !!}</div>
-                                                @break
-                                                @case('paragraph')
-                                                <div>{!! $block->data->text !!}</div>
-                                                @break
-                                                @default
-                                            @endswitch
+                                                @endforeach
+                                            </div>
+                                            @endif
 
-                                            @endforeach
-                                        </div>
                                         {{-- {{ $setting->$value }} --}}
                                         @endif
 
@@ -198,6 +308,7 @@
                 <x-kompass::form.input type="text" name="name" label="Name" wire:model="name" />
                 <x-kompass::input-error for="name" class="mt-2" />
 
+                <x-kompass::form.input type="text" name="key" label="Key" wire:model="key" />
 
                 <x-kompass::select wire:model.live="type" name="type" :options="[
                             ['name' => __('Text'),  'id' => 'text'],
@@ -207,14 +318,17 @@
                         ]">
                 </x-kompass::select>
 
-                <div x-data="{openType: @entangle('type')}">
 
+                
+
+                <div x-data="{openType: @entangle('type')}">
+                    
                     @switch($type)
                     @case('image')
-
-                    @if (!empty($setting->$value))
+                    
+                    @if (!empty($valuedata))
                     @php
-                    $file = Secondnetwork\Kompass\Models\File::find($setting->$value);
+                    $file = Secondnetwork\Kompass\Models\File::find($valuedata);
                     @endphp
 
                         @if ($file)
@@ -272,7 +386,7 @@
                     @case('switch')
 
                     <div class="flex items-center">
-                        <input value="true" wire:model="value" type="checkbox" id="hs-small-switch"
+                        <input value="true" wire:model="valuedata" type="checkbox" id="hs-small-switch"
                             class="relative shrink-0 w-11 h-6 bg-gray-400 checked:bg-none checked:bg-blue-600 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent focus:border-blue-600 focus:ring-blue-600 ring-offset-white focus:outline-none appearance-none 
                
                                before:inline-block before:w-5 before:h-5 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 ">
@@ -288,7 +402,7 @@
                     </span>
                     @break
                     @default
-                    <x-kompass::form.input type="text" name="value" wire:model="value" />
+                    <x-kompass::form.input type="text" name="value" wire:model="valuedata" />
                     <x-kompass::input-error for="value" class="mt-2" />
                     @endswitch
 

@@ -48,9 +48,9 @@
 <div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
-        @if (!empty(setting('admin.logo')))
+        @if (!empty(setting('global.admin-logo')))
             @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.logo'));
+                $file = Secondnetwork\Kompass\Models\File::find(setting('global.admin-logo'));
             @endphp
 
             @if ($file)
@@ -73,36 +73,45 @@
         </main>
 
     </div>
-  
-        @if (!empty(setting('admin.bgimg')))
+
+    <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full bg-gray-900 bg-opacity-75" >    
+        <div class="relative flex flex-col">
+            <div class="bg-black opacity-30 absolute inset-0 z-10"></div>
+        @if (!empty(setting('global.admin-bg-img')))
             @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.bgimg'));
+                $file = Secondnetwork\Kompass\Models\File::find(setting('global.admin-bg-img'));
             @endphp
 
             @if ($file)
                 @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                    <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full" style="background-image: url('{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}')">
+                 <div class="bg-cover h-full absolute inset-0" style="background-image: url('{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}')"></div>
                 @endif
             @endif
           
         @else
-<div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full " style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')">
+                 <div class="bg-cover h-full absolute inset-0" style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')"></div>
         @endif    
 
-    <footer class="items-end flex justify-between ">
-        <div class="text-xs flex items-center text-gray-300 p-8">
-            <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('admin.copyright') ?? 'secondnetwork'}}
-          </div>
-        <div class="text-gray-300 text-xs p-8">
-        @php $version = Kompass::getVersion(); @endphp
-        @if (!empty($version))
-        <strong>Kompass</strong> {{ $version }}
-        @endif
-        </div>
-    </footer>
-</div>
+        <footer class=" flex justify-between mt-auto w-full z-50">
+            <div class="text-xs flex items-center text-white p-8">
+                <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('global.copyright') ?? 'secondnetwork'}}
+              </div>
+            <div class="text-gray-300 text-xs p-8">
+            @php $version = Kompass::getVersion(); @endphp
+            @if (!empty($version))
+            <strong>Kompass </strong> {{ $version }}
+            @endif
+            </div>
+        </footer>
+    </div>
+
+    </div>
+
 </div>
  
+
+
+
 @kompassJs
 @stack('scripts')
 

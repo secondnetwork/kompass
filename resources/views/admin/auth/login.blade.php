@@ -44,8 +44,8 @@
                     </button>
                 </div>
 
-
-                {{-- <div class="text-center text-sm text-gray-500">{{ __('or sign in with') }}</div>
+                @if (setting('global.sso'))
+                <div class="text-center text-sm text-gray-500">{{ __('or sign in with') }}</div>
                 <div class="flex justify-end">
                     <a href="/saml2/###/login"
                         class="btn flex justify-center items-center w-full h-14 border-1 border-gray-300 hover:border-blue-500 hover:bg-white px-4 py-2 bg-white text-gray-900">
@@ -69,12 +69,17 @@
                         </svg>
                         Google
                     </a>
-                </div> --}}
-                @if (Route::has('register'))
-                <a class="text-center text-sm text-gray-500 hover:text-blue-500" href="{{ route('register') }}">
-                    {{ __('Don`t have an account? Create One') }}
-                </a>
+                </div>
                 @endif
+
+                @if (setting('global.user-register'))
+                    @if (Route::has('register'))
+                    <a class="text-center text-sm text-gray-500 hover:text-blue-500" href="{{ route('register') }}">
+                        {{ __('Don`t have an account? Create One') }}
+                    </a>
+                    @endif
+                @endif
+
 
             </form>
 
