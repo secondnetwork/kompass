@@ -10,7 +10,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="url" content="{{ url('/') }}">
     <meta name="assets-path" content="{{ route('kompass_asset') }}"/>
-    <meta name="theme-color" content="#ffa700"> 
+    <meta name="theme-color" content="#ffa700" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#CF8700" media="(prefers-color-scheme: dark)"> 
     <title>@hasSection('title') @yield('title') | @endif {{ config('app.name') }}</title>
         {{-- Social Share Open Graph Meta Tags --}}
     @if(isset($seo->title) && isset($seo->description) && isset($seo->image))
