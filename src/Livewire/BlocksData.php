@@ -152,9 +152,7 @@ class BlocksData extends Component
 
         // $validate['data']['slug'] = Str::slug($validate['data']['name']);
 
-
         $block->update($validate['data']);
-
 
         foreach ($validate['fields'] as $blockfields) {
             // $blockfields['slug'] = Str::slug($blockfields['name']);

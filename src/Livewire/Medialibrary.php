@@ -368,37 +368,18 @@ class Medialibrary extends Component
 
     public function selectField($media_id, $fieldOrPageName)
     {
-        if ($fieldOrPageName == 'gallery') {
-            if ($this->field_id == '0') {
-                Datafields::updateOrCreate(['id' => $this->field_id], [
-                    'name' => 'Gallery',
-                    'type' => 'gallery',
-                    'block_id' => $this->block_id,
-                    'data' => $media_id,
-                ]);
-            } else {
-                Datafields::updateOrCreate(
-                    ['id' => $this->field_id],
-                    ['data' => $media_id]
-                );
-            }
 
-        }
-        if ($fieldOrPageName == 'image') {
-            Datafields::updateOrCreate(
-                ['id' => $this->field_id],
-                ['data' => $media_id]
-            );
-        }
-        if ($fieldOrPageName == 'thumbnails') {
-            Post::updateOrCreate(
-                ['id' => $this->field_id],
-                ['thumbnails' => $media_id]
-            );
-        }
         if ($fieldOrPageName == 'setting') {
             Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
             $this->dispatch('refreshmedia');
+        }
+        else{
+            Datafields::updateOrCreate(
+                ['id' => $this->field_id], [
+                    'data' => $media_id,
+                    'type' => $fieldOrPageName,
+                    'block_id' => $this->block_id]
+            );
         }
 
         $this->dispatch('refreshmedia');

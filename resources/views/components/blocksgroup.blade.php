@@ -140,7 +140,66 @@
         </nav>
         <div class="grid gap-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @else p-6 @endif" >
 
+
+            @dump($fields)
+            @dump($itemblocks->id)
+
             @switch($itemblocks->type)
+
+            @case('video')
+            <div>
+                Das ist eine Hinweis
+            </div>
+            <div class="@container">
+                <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
+                    @php
+                    $notempty = '0';
+                    @endphp
+                    @foreach ($fields as $key => $itemfields)
+                        @if ($itemblocks->id == $itemfields->block_id && $itemfields->type =='poster')
+                        @php
+                            $notempty = '1';
+                        @endphp
+                        <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
+                            name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
+                            idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                        </x-kompass::blocks>
+                        @else
+                        @php
+                            $notempty = '0';
+                        @endphp
+                        @endif
+
+                    @endforeach
+
+
+                    {{ $notempty }}
+                        @if ($notempty=='0')
+                        <div>
+                            Thumbnails        
+                            <img-block wire:click="selectitem('addMedia',0,'poster',{{ $itemblocks->id }})"
+                                class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
+                                <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                            </img-block>
+                        </div>
+                        @endif
+        
+                    <div>
+                        Video Datei
+                        <img-block wire:click="selectitem('addMedia',0,'video',{{ $itemblocks->id }})"
+                            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
+                            <x-tabler-video-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                        </img-block>
+                    </div>
+                    <div>
+                        <x-tabler-brand-youtube/> YouTube oder <x-tabler-brand-vimeo/>  Vimeo URL
+                    
+                        <x-kompass::form.input  type="text" />
+                    </div>
+
+                </div>
+            </div>
+        @break
                 @case('gallery')
                     <div class="@container">
                         <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
