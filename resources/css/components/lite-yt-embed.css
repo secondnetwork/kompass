@@ -1,0 +1,103 @@
+lite-youtube {
+    background-color: #000;
+    position: relative;
+    display: block;
+    contain: content;
+    background-position: center center;
+    background-size: cover;
+    cursor: pointer;
+    max-width: 720px;
+}
+
+
+
+/* responsive iframe with a 16:9 aspect ratio
+    thanks https://css-tricks.com/responsive-iframes/
+*/
+lite-youtube::after {
+    content: "";
+    display: block;
+    padding-bottom: calc(100% / (16 / 9));
+}
+lite-youtube > iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+}
+
+
+lite-youtube > .lty-playbtn::before {
+    @apply block rounded-full bg-red-700 ;
+    content: "";
+    display: block;    
+    height: 70px;
+    width: 70px;
+    position: absolute;
+    transition: .4s all;
+}
+
+/* play button */
+lite-youtube > .lty-playbtn {
+    
+    @apply rounded-full text-white grid w-full h-full place-items-center;
+    /* Make the button element cover the whole area for a large hover/click target… */
+
+    /* left: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    transform: translateX(-50%); */
+     /* …but visually it's still the same size */
+    background: no-repeat center/24px 24px ;
+    
+    
+    /* YT's actual play button svg */
+    position: absolute;
+    cursor: pointer;
+    z-index: 1;
+    transition: .4s all;
+    
+}
+
+lite-youtube > .lty-playbtn::after {
+
+    content: "";
+    display: block;
+    height: 70px;
+    width: 70px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="currentColor"></path></svg>');
+    background-color: currentColor;
+    transform: scale(1.1);
+}
+lite-youtube:hover > .lty-playbtn::before,lite-youtube .lty-playbtn:focus
+{
+
+    background-color:var(--studio-800);
+
+    transform: scale(1.2);
+
+}
+
+
+/* Post-click styles */
+lite-youtube.lyt-activated {
+    cursor: unset;
+}
+lite-youtube.lyt-activated::before,
+lite-youtube.lyt-activated > .lty-playbtn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lyt-visually-hidden {
+
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }

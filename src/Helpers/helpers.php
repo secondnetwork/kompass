@@ -160,9 +160,9 @@ if (! function_exists('setting')) {
     }
 }
 
-if (! function_exists('parse_video_uri')) {
+if (! function_exists('video_uri')) {
     /* Parse the video uri/url to determine the video type/source and the video id */
-    function parse_video_uri($url)
+    function video_uri($url)
     {
 
         // Parse the url

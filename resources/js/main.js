@@ -6,6 +6,12 @@ import click_to_edit from './alpine/click_to_edit'
 import * as livewiresortable from './livewire.sortable';
 
 import * as editorjs from './editorjs';
+
+if (document.getElementsByClassName('embed-video')) {
+  const { app } = import('./plugins/lite-yt-embed')
+  //const { appvimeo } = import('./plugins/lite-vimeo-embed')
+  // app();
+}
 // const { livewiresortable } = import('./livewire.sortable');
 
 // const { editorjs } = import('./editorjs');

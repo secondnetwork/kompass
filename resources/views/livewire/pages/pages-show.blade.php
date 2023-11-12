@@ -194,9 +194,6 @@
     </div>
 
 
-
-
-
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/4'">
             <x-slot name="body">

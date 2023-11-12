@@ -53,6 +53,8 @@ class PagesData extends Component
 
     public $FormBlocks = false;
 
+    public $FormMediaVideo = false;
+
     public $FormMedia = false;
 
     public $FormDelete = false;
@@ -62,6 +64,8 @@ class PagesData extends Component
     public $FormEdit = false;
 
     public $Editorjs;
+
+    public $oembedUrl;
 
     public $data;
 
@@ -146,6 +150,18 @@ class PagesData extends Component
         }
     }
 
+    public function addoEmbed($blockId)
+    {
+        Datafields::create([
+            'block_id' => $blockId,
+            'type' => 'oembed',
+            'data' => $this->oembedUrl,
+            'order' => '1',
+        ]);
+        $this->resetPageComponent();
+
+    }
+
     public function addBlock($blocktemplatesID, $name, $type, $iconclass = null)
     {
         // Layout *popout or full *** alignment* left or right
@@ -166,7 +182,6 @@ class PagesData extends Component
         if ($type == 'wysiwyg') {
             Datafields::create([
                 'block_id' => $block->id,
-                'name' => 'wysiwyg',
                 'type' => 'wysiwyg',
                 'order' => '1',
             ]);
@@ -178,7 +193,6 @@ class PagesData extends Component
             foreach ($get_blocks as $value) {
                 Datafields::create([
                     'block_id' => $block->id,
-                    'name' => $value->name,
                     'type' => $value->type,
                     'grid' => $value->grid,
                     'order' => $value->order,
@@ -375,12 +389,6 @@ class PagesData extends Component
     }
 
     public function removemedia($id)
-    {
-        Datafields::whereId($id)->update(['data' => null]);
-        $this->resetPageComponent();
-    }
-
-    public function removemediaIngallery($id)
     {
         Datafields::whereId($id)->delete();
         $this->resetPageComponent();
