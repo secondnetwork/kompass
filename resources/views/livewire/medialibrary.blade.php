@@ -34,6 +34,7 @@
             </div>
 
         </file-upload>
+
         {{-- <div class="flex justify-between gap-4 my-4">
 
 
@@ -97,7 +98,7 @@
 
 
             <div class="@container">
-                <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
+                <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4 pb-1 gap-6">
                     @php
                         if ($search) {
                             $filesdata = $filessearch;
@@ -116,7 +117,7 @@
                                     <data-item class="bg-white block shadow rounded">
 
                                         <div
-                                            class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
+                                            class="relative text-sm font-bold rounded-tr rounded-tl w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
 
                                             <video controls class="object-cover h-full"
                                                 src="{{ asset($item->path . '/' . $item->slug . '.' . $item->extension) }}"></video>
@@ -135,7 +136,7 @@
                                                         class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
                                                 </span>
                                                 <span class="selectField"
-                                                    wire:click="selectField({{ $item->id }}, '{{ $page ?? '' }}')">
+                                                    wire:click="selectField({{ $item->id }}, '{{ $fieldOrPage ?? '' }}')">
                                                     <x-tabler-square-plus
                                                         class="cursor-pointer stroke-current text-gray-400 " />
                                                 </span>
@@ -192,7 +193,7 @@
                                                         class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
                                                 </span>
                                                 <span class="selectField"
-                                                    wire:click="selectField({{ $item->id }}, '{{ $page ?? '' }}')">
+                                                    wire:click="selectField({{ $item->id }}, '{{ $fieldOrPage ?? '' }}')">
                                                     <x-tabler-square-plus
                                                         class="cursor-pointer stroke-current text-gray-400 " />
                                                 </span>

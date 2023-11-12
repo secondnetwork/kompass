@@ -162,7 +162,6 @@ class PostsData extends Component
         if ($type == 'wysiwyg') {
             Datafields::create([
                 'block_id' => $block->id,
-                'name' => 'wysiwyg',
                 'type' => 'wysiwyg',
                 'order' => '1',
             ]);
@@ -174,7 +173,6 @@ class PostsData extends Component
             foreach ($get_blocks as $value) {
                 Datafields::create([
                     'block_id' => $block->id,
-                    'name' => $value->name,
                     'type' => $value->type,
                     'grid' => $value->grid,
                     'order' => $value->order,
@@ -378,12 +376,6 @@ class PostsData extends Component
     }
 
     public function removemedia($id)
-    {
-        Datafields::whereId($id)->update(['data' => null]);
-        $this->resetPageComponent();
-    }
-
-    public function removemediaIngallery($id)
     {
         Datafields::whereId($id)->delete();
         $this->resetPageComponent();

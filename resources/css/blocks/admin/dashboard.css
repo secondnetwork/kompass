@@ -3,7 +3,7 @@
     overflow-y: scroll;
     .test{background-color: antiquewhite;}
     main {
-        @apply transition-all ease-in-out duration-300 overflow-hidden;
+        @apply transition-all ease-in-out duration-300 ;
         display: grid;
         grid-template-columns: 15rem 1fr;
         grid-template-rows: 4rem 1fr 4rem;
@@ -39,7 +39,7 @@
 
 
     .sidenav {
-        @apply transition-all ease-in-out duration-500 overflow-hidden;
+        @apply transition-all ease-in-out duration-500 ;
         display: block;
         position: fixed;
         top: 0;

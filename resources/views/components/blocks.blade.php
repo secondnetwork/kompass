@@ -99,8 +99,8 @@
         @if ($file)
             @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
             <div class="relative">
-                {{ $type }}
-                <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
+
+                <img on="pages.pages-show" alt="logo" class="w-full aspect-[16/9] object-cover rounded-xl"
                     src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                     <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
@@ -134,10 +134,13 @@
 
         @if ($file)
             @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-            <div class="relative">
-                {{ $type }}
-                <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
-                    src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
+            <data-item class="bg-white block shadow rounded">
+
+                <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
+
+                <video controls class="object-cover h-full"
+                src="{{ asset($file->path . '/' . $file->slug . '.' . $file->extension) }}"></video>
+
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                     <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                     <div class="flex">
@@ -149,10 +152,8 @@
                         </span>
                     </div>
                 </action-button> 
-
-
-       
-        </div>
+                </div>
+            </data-item>
             @endif
 
         @endif
@@ -177,7 +178,7 @@
                         <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                             <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                             <div class="flex">
-                                <span  wire:click="removemediaIngallery({{ $idField }})">
+                                <span  wire:click="removemedia({{ $idField }})">
                                     <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
                                 </span>
     
@@ -195,8 +196,20 @@
 @endif
 
 @if ($type == 'oembed')
-    <x-kompass::form.input wire:model="fields.{{ $key }}.data" label="{{ $name }}"
-        type="text" />
+
+        @php
+          $video_uri =  video_uri($fields);    
+        @endphp
+        <span @click="box=true,oEmbed = false" wire:click="removemedia({{ $idField }})">
+            <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
+        </span>
+        @if ($video_uri['type'] == 'youtube')
+        <lite-youtube class="aspect-video" videoid="{{ $video_uri['id'] }}">
+        @endif
+        @if ($video_uri['type'] == 'vimeo')
+        <lite-vimeo class="aspect-video" videoid="{{ $video_uri['id'] }}">
+        @endif
+                
 @endif
 
 @if ($type == 'true_false')

@@ -13,19 +13,15 @@
     x-data="{ expanded: false }">
 
     <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4"
-    
-    @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-slate-200 border-slate-600'" @endif
-    >
+        @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-slate-200 border-slate-600'" @endif>
         <span class="flex items-center py-2 w-full ">
             @if ($itemblocks->subgroup)
                 <span wire:sortable-group.handle>
-                <x-tabler-grip-vertical 
-                    class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
+                    <x-tabler-grip-vertical class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
                 </span>
             @else
-            <span wire:sortable.handle>
-                <x-tabler-grip-vertical 
-                    class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
+                <span wire:sortable.handle>
+                    <x-tabler-grip-vertical class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
                 </span>
             @endif
 
@@ -33,20 +29,22 @@
                 class="text-xs inline-flex items-center gap-1.5 py-1 px-1 capitalize rounded font-semibold  text-gray-400 cursor-pointer">
                 @switch($itemblocks->type)
                     @case('group')
-                    <x-tabler-template class="cursor-pointer stroke-current h-6 w-6 text-violet-600" />
-                        @break
+                        <x-tabler-template class="cursor-pointer stroke-current h-6 w-6 text-violet-600" />
+                    @break
+
                     @case('accordiongroup')
-                    <x-tabler-layout-list class="cursor-pointer stroke-current h-6 w-6 text-violet-600" />
-                         @break
+                        <x-tabler-layout-list class="cursor-pointer stroke-current h-6 w-6 text-violet-600" />
+                    @break
+
                     @default
-                    @if ($itemblocks->iconclass)
-                    @svg('tabler-' . $itemblocks->iconclass, 'w-5')
-                    @else
-                        @svg('tabler-section', 'w-5')
-                    @endif    
+                        @if ($itemblocks->iconclass)
+                            @svg('tabler-' . $itemblocks->iconclass, 'w-5')
+                        @else
+                            @svg('tabler-section', 'w-5')
+                        @endif
                 @endswitch
-                    
-        
+
+
 
             </span>
             <span class="inline-block border-r border-gray-400 w-px h-5 ml-1 mr-2"></span>
@@ -65,10 +63,10 @@
 
                 <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', name: '{{ $itemblocks->name }}' }">
 
-                    <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="name" wire:model.lazy="newName"
-                        x-ref="input" x-on:keydown.enter="isEditing = false" x-on:keydown.escape="isEditing = false"
-                        {{-- @keydown.window.escape="disableEditing"  --}} x-on:click.away="isEditing = false"
-                        wire:keydown.enter="savename({{ $itemblocks->id }})">
+                    <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="name"
+                        wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
+                        x-on:keydown.escape="isEditing = false" {{-- @keydown.window.escape="disableEditing"  --}}
+                        x-on:click.away="isEditing = false" wire:keydown.enter="savename({{ $itemblocks->id }})">
                     <span wire:click="savename({{ $itemblocks->id }})" x-on:click="isEditing = false">
                         <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
                     </span>
@@ -84,9 +82,9 @@
 
         <div class="flex items-center gap-1">
             @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
-            <span @click="expanded = ! expanded">
-                <x-tabler-adjustments class="cursor-pointer stroke-current h-6 w-6 text-stone-500"/>
-            </span>
+                <span @click="expanded = ! expanded">
+                    <x-tabler-adjustments class="cursor-pointer stroke-current h-6 w-6 text-stone-500" />
+                </span>
                 <span wire:click="selectitem('addBlock', {{ $itemblocks->id }},'page',{{ $itemblocks->id }})">
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
                 </span>
@@ -102,7 +100,6 @@
                 <span wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" class="flex justify-center">
                     <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                 </span>
-      
             @else
                 @if ($itemblocks->status == 'published')
                     <span wire:click="status({{ $itemblocks->id }}, 'draft')">
@@ -133,73 +130,157 @@
     </div-nav-action>
 
     <div x-show="expanded" x-collapse>
-        <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')  border-b-4 border-purple-700 @endif">
+        <nav
+            class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') border-b-4 border-purple-700 @endif">
 
             <x-kompass::nav-item :itemblocks="$itemblocks" />
-            
+
         </nav>
-        <div class="grid gap-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @else p-6 @endif" >
-
-
-            @dump($fields)
-            @dump($itemblocks->id)
+        <div
+            class="grid gap-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @else p-6 @endif">
 
             @switch($itemblocks->type)
-
-            @case('video')
-            <div>
-                Das ist eine Hinweis
-            </div>
-            <div class="@container">
-                <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
+                @case('video')
+                @php
+                    $cardimg = 'false';
+                    $cardoembed = 'false';
+                    $cardvideo = 'false';
+                    $box = 'true'
+                @endphp
+                @foreach ($fields as $key => $itemfields)
+                    @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'poster')
                     @php
-                    $notempty = '0';
+                        $cardimg = 'true'; $box = 'false';
                     @endphp
-                    @foreach ($fields as $key => $itemfields)
-                        @if ($itemblocks->id == $itemfields->block_id && $itemfields->type =='poster')
+                    @endif
+                    @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'video')
+                    @php
+                        $cardimg = 'true'; $box = 'false';
+                    @endphp
+                    @endif
+                    @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'oembed')
+                    @php
+                        $cardoembed = 'true'; $box = 'false';
+                    @endphp
+                    @endif
+                @endforeach
+
+
+                    <div x-data="{ oEmbed:{{ $cardoembed }}, media:{{ $cardimg }}, box:{{ $box }}}">
+             
+                            <div class="flex justify-end" x-show="!box">
+                                <span @click="box = true, oEmbed = false, media = false" class="cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all">
+                                    <x-tabler-x />
+                                </span>
+                            </div>
+                        
+
+
+                        <div class="grid grid-cols-2 gap-4" x-show="box">
+
+                            <button class="btn justify-center" x-show="!oEmbed" x-on:click="oEmbed = true,box = false">    
+                                <x-tabler-brand-youtube/>
+                                {{ __('embed') }}
+                            </button>
+                            <button class="btn justify-center" x-on:click="media = true,box = false"> 
+                                <x-tabler-photo-video/> 
+                                {{ __('Add file') }}
+                            </button>
+                        </div>
+
+                        <div x-show="media">
+                            <div class="@container">
+                                <div class="grid @sm:grid-cols-1 @lg:grid-cols-3  gap-6">
+        
+                                    @php
+                                        $cardimg = '0';
+                                    @endphp
+        
+                                    @foreach ($fields as $key => $itemfields)
+                                        @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'poster')
+                                            @php
+                                                $cardimg = '1';
+                                            @endphp
+                                            <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
+                                                name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
+                                                idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                            </x-kompass::blocks>
+                                        @endif
+                                    @endforeach
+        
+                                    @if ($cardimg == '0')
+                                        <div>
+                                            <img-block wire:click="selectitem('addMedia',0,'poster',{{ $itemblocks->id }})"
+                                                class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-video ">
+                                                <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                                            </img-block>
+                                        </div>
+                                    @endif
+        
+                                    @php
+                                        $cardvideo = '0';
+                                    @endphp
+                                    @foreach ($fields as $key => $itemfields)
+                                        @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'video')
+                                            @php
+                                                $cardvideo = '1';
+                                            @endphp
+                                            <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
+                                                name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
+                                                idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                            </x-kompass::blocks>
+                                        @endif
+                                    @endforeach
+        
+                                    @if ($cardvideo == '0')
+                                        <div>
+                                            <img-block wire:click="selectitem('addMedia',0,'video',{{ $itemblocks->id }})"
+                                                class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-video ">
+                                                <x-tabler-video-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                                            </img-block>
+                                        </div>
+                                    @endif
+                                    <div>
+        
+                                    </div>
+        
+                                </div>
+                            </div>
+                        </div>
                         @php
-                            $notempty = '1';
+                        $cardoembed = 'false';
                         @endphp
-                        <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
-                            name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
-                            idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
-                        </x-kompass::blocks>
-                        @else
-                        @php
-                            $notempty = '0';
-                        @endphp
-                        @endif
+                        @foreach ($fields as $key => $itemfields)
+                            @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'oembed')
+                            @php
+                            $cardoembed = 'true';
+                            @endphp
+                            <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
+                                name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
+                                idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                            </x-kompass::blocks>
+                            @endif
+                        @endforeach
+                        @if ($cardoembed == 'false')
+                        <div x-show="oEmbed">
 
-                    @endforeach
-
-
-                    {{ $notempty }}
-                        @if ($notempty=='0')
-                        <div>
-                            Thumbnails        
-                            <img-block wire:click="selectitem('addMedia',0,'poster',{{ $itemblocks->id }})"
-                                class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
-                                <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                            </img-block>
+                            <div class="flex">YouTube URL</div>
+                            <form wire:submit="addoEmbed({{ $itemblocks->id }})">
+                                <x-kompass::form.input wire:model.blur="oembedUrl" type="text" wire:dirty.class="border-yellow" />
+                     
+                            </form>
+                            {{-- <button class="btn"
+                            wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
+                                <x-kompass::form.input wire:model.blur="addoEmbed({{ $itemblocks->id }})" type="text" wire:dirty.class="border-yellow" />
+                     
+                                <button wire:click="oembedURL({{ $itemblocks->id }})" class="btn btn-primary">{{ __('Save') }}</button> --}}
                         </div>
                         @endif
-        
-                    <div>
-                        Video Datei
-                        <img-block wire:click="selectitem('addMedia',0,'video',{{ $itemblocks->id }})"
-                            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
-                            <x-tabler-video-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                        </img-block>
-                    </div>
-                    <div>
-                        <x-tabler-brand-youtube/> YouTube oder <x-tabler-brand-vimeo/>  Vimeo URL
-                    
-                        <x-kompass::form.input  type="text" />
+         
                     </div>
 
-                </div>
-            </div>
-        @break
+                @break
+
                 @case('gallery')
                     <div class="@container">
                         <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
@@ -212,7 +293,7 @@
                                     </x-kompass::blocks>
                                 @endif
                             @endforeach
-                         
+
                             <img-block wire:click="selectitem('addMedia',0,'gallery',{{ $itemblocks->id }})"
                                 class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
                                 <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
@@ -269,9 +350,7 @@
         </div>
 
     </div>
-<div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-4 bg-purple-700">
-    <x-kompass::blocksgroupsub :childrensub="$itemblocks['children']->sortBy('order')" :fields="$fields" :page="$page" />
+    <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-4 bg-purple-700">
+        <x-kompass::blocksgroupsub :childrensub="$itemblocks['children']->sortBy('order')" :fields="$fields" :page="$page" />
+    </div>
 </div>
-</div>
-
-

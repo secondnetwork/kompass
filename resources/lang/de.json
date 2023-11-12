@@ -715,6 +715,7 @@
   "doesnt_start_with": ":Attribute darf nicht mit einem der folgenden beginnen: :values.",
   "draft": "Entwurf",
   "email": ":Attribute muss eine gültige E-Mail-Adresse sein.",
+  "embed": "einbetten",
   "ends_with": ":Attribute muss eine der folgenden Endungen aufweisen: :values",
   "enum": "Der ausgewählte Wert ist ungültig.",
   "exists": "Der gewählte Wert für :attribute ist ungültig.",
