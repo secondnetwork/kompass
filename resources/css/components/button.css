@@ -2,7 +2,7 @@
 .button,
 .read_more,
 a.button {
-  @apply py-2 px-3 flex gap-x-2 rounded bg-primary-500 text-white transition ease-in duration-200 font-medium hover:bg-transparent hover:text-primary-500 border-2 border-primary-500;
+  @apply flex justify-center items-center py-2 px-3 gap-x-2 rounded bg-primary-500 text-white transition ease-in duration-200 font-medium hover:bg-transparent hover:text-primary-500 border-2 border-primary-500;
 
   &.bg-primary {
     @apply bg-primary-500 hover:bg-blue-600 hover:bg-transparent hover:text-primary-500 border-2 border-primary-500;
@@ -12,7 +12,7 @@ a.button {
 
 .btn-danger
 {
-  @apply py-2 px-3 rounded text-white hover:bg-transparent hover:text-red-500 border-2 border-red-500;
+  @apply py-2 px-3 rounded bg-red-500 text-white hover:bg-transparent hover:text-red-500 border-2 border-red-500;
 
 }
 
