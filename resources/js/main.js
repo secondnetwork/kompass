@@ -9,7 +9,7 @@ import * as editorjs from './editorjs';
 
 if (document.getElementsByClassName('embed-video')) {
   const { app } = import('./plugins/lite-yt-embed')
-  //const { appvimeo } = import('./plugins/lite-vimeo-embed')
+  const { appvimeo } = import('./plugins/lite-vimeo-embed')
   // app();
 }
 // const { livewiresortable } = import('./livewire.sortable');

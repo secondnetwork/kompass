@@ -161,15 +161,6 @@
     <div class="">
 
         <div class="ordre-1">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
                 wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
@@ -179,12 +170,14 @@
                 <span class="text-gray-600 text-sm block">Block Builder</span>
                 
                 @forelse ($blocks as $itemblocks)
+                
                     <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
                 @empty
                     <div
                         class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
-                        {{ __('Click "Add" to create the layout') }}</div>
+                        {{ __('Click "Add" to create the layout') }}
+                    </div>
                 @endforelse
                 <div class="flex  justify-end my-6">
                     <button class="btn"

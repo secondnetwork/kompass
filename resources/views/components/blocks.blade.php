@@ -74,9 +74,7 @@
                     </div>
                 </action-button> 
 
-
-       
-        </div>
+            </div>
             @endif
 
         @endif
@@ -198,18 +196,22 @@
 @if ($type == 'oembed')
 
         @php
-          $video_uri =  video_uri($fields);    
+          $video_id =  video_id($fields);    
         @endphp
-        <span @click="box=true,oEmbed = false" wire:click="removemedia({{ $idField }})">
-            <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
-        </span>
-        @if ($video_uri['type'] == 'youtube')
-        <lite-youtube class="aspect-video" videoid="{{ $video_uri['id'] }}">
-        @endif
-        @if ($video_uri['type'] == 'vimeo')
-        <lite-vimeo class="aspect-video" videoid="{{ $video_uri['id'] }}">
-        @endif
-                
+
+@if ($video_id)
+
+    @if ($video_id['type'] == 'youtube')
+    <lite-youtube class="aspect-video" videoid="{{ $video_id['id'] }}"></lite-youtube>
+    @endif
+    @if ($video_id['type'] == 'vimeo')
+    <lite-vimeo class="aspect-video" videoid="{{ $video_id['id'] }}"></lite-vimeo>
+    @endif
+    <div class="" @click="box=true,oEmbed = false" wire:click="removemedia({{ $idField }})">
+        <button wire:click="delete" type="button" class="btn btn-danger bg-red-500"><x-tabler-trash class="cursor-pointer stroke-current" />  {{ __('Delete') }}</button>
+    </div>
+@endif
+
 @endif
 
 @if ($type == 'true_false')

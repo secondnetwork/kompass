@@ -4,21 +4,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
-use Secondnetwork\Kompass\KompassFacade;
-
-// if (!function_exists('setting')) {
-//     function setting($key, $default = null)
-//     {
-//         return TCG\kompass\Facades\kompass::setting($key, $default);
-//     }
-// }
-
-// if (!function_exists('menu')) {
-//     function menu($menuName, $type = null, array $options = [])
-//     {
-//         return TCG\kompass\Facades\kompass::model('Menu')->display($menuName, $type, $options);
-//     }
-// }
 
 if (! function_exists('vendor_path')) {
     /**
@@ -62,8 +47,8 @@ function standardize(
     if (is_array($value)) {
         return Collection::make($value)->map(function ($item) {
             return $item instanceof BackedEnum
-               ? $item->value
-               : $item;
+                ? $item->value
+                : $item;
         })->toArray();
     }
 
@@ -151,18 +136,16 @@ if (! function_exists('setting')) {
             if (! empty($data->group) == $keydata[0]) {
 
                 return $data->data;
-
             }
         }
 
         return $data;
-
     }
 }
 
-if (! function_exists('video_uri')) {
+if (! function_exists('video_id')) {
     /* Parse the video uri/url to determine the video type/source and the video id */
-    function video_uri($url)
+    function video_id($url)
     {
 
         // Parse the url
@@ -172,8 +155,7 @@ if (! function_exists('video_uri')) {
         $video_type = '';
         $video_id = '';
 
-        // Url is http://youtu.be/xxxx
-        if ($parse['host'] == 'youtu.be' || $parse['host'] == 'youtube.com' || $parse['host'] == 'www.youtube.com' || $parse['host'] == 'youtube-nocookie.com' || $parse['host'] == 'www.youtube-nocookie.com') {
+        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) {
             $video_type = 'youtube';
 
             // Here is a sample of the URLs this regex matches: (there can be more content after the given URL that will be ignored)
@@ -192,21 +174,20 @@ if (! function_exists('video_uri')) {
             // It also works on the youtube-nocookie.com URL with the same above options.
             // It will also pull the ID from the URL in an embed code (both iframe and object tags)
 
-            preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match);
             $youtube_id = $match[1];
 
             $video_id = $youtube_id;
         }
-        // Url is http://www.vimeo.com
-        if (($parse['host'] == 'vimeo.com') || ($parse['host'] == 'www.vimeo.com')) {
-            $video_type = 'vimeo';
+        //  $vimeo = 'https://vimeo.com/123942643';
 
-            $video_id = ltrim($parse['path'], '/');
+        if (preg_match("/\b(?:vimeo)\.com\b/i", $url)) {
+
+            if (preg_match("/(https?:\/\/)?(www\.)?(player\.)?vimeo\.com\/?(showcase\/)*([0-9))([a-z]*\/)*([0-9]{6,11})[?]?.*/", $url, $output_array)) {
+
+                $video_id = $output_array[6];
+                $video_type = 'vimeo';
+            }
         }
-        $host_names = explode('.', $parse['host']);
-        $rebuild = (! empty($host_names[1]) ? $host_names[1] : '').'.'.(! empty($host_names[2]) ? $host_names[2] : '');
-
-        // If recognised type return video array
         if (! empty($video_type)) {
             $video_array = [
                 'type' => $video_type,
@@ -219,9 +200,3 @@ if (! function_exists('video_uri')) {
         }
     }
 }
-// if (!function_exists('setting')) {
-//     function setting($key, $default = null)
-//     {
-//         return KompassFacade::setting($key, $default);
-//     }
-// }

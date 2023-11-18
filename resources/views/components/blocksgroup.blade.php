@@ -136,70 +136,72 @@
             <x-kompass::nav-item :itemblocks="$itemblocks" />
 
         </nav>
-        <div
-            class="grid gap-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @else p-6 @endif">
+        <div class="grid gap-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') p-0 @else p-6 @endif">
 
             @switch($itemblocks->type)
                 @case('video')
                 @php
                     $cardimg = 'false';
                     $cardoembed = 'false';
-                    $cardvideo = 'false';
-                    $box = 'true'
+                    $box = 'true';
+                    $xShow = 'true';
                 @endphp
                 @foreach ($fields as $key => $itemfields)
                     @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'poster')
                     @php
-                        $cardimg = 'true'; $box = 'false';
+                        $cardimg = 'true';  $xShow = 'false';
                     @endphp
                     @endif
                     @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'video')
                     @php
-                        $cardimg = 'true'; $box = 'false';
+                        $cardimg = 'true'; $xShow = 'false';
                     @endphp
                     @endif
                     @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'oembed')
                     @php
-                        $cardoembed = 'true'; $box = 'false';
+                        $cardoembed = 'true'; $xShow = 'false';
                     @endphp
                     @endif
                 @endforeach
 
 
-                    <div x-data="{ oEmbed:{{ $cardoembed }}, media:{{ $cardimg }}, box:{{ $box }}}">
+                    <div x-data="{ oEmbed:{{ $cardoembed }}, videoInt:{{ $cardimg }}, box:{{ $box }}}">
              
+                        @if ($xShow == 'true')
                             <div class="flex justify-end" x-show="!box">
-                                <span @click="box = true, oEmbed = false, media = false" class="cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all">
+                                <span @click="box = true, oEmbed = false, videoInt = false" class="cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all">
                                     <x-tabler-x />
                                 </span>
                             </div>
                         
 
 
-                        <div class="grid grid-cols-2 gap-4" x-show="box">
+                            <div class="grid grid-cols-2 gap-4" x-show="box">
 
-                            <button class="btn justify-center" x-show="!oEmbed" x-on:click="oEmbed = true,box = false">    
-                                <x-tabler-brand-youtube/>
-                                {{ __('embed') }}
-                            </button>
-                            <button class="btn justify-center" x-on:click="media = true,box = false"> 
-                                <x-tabler-photo-video/> 
-                                {{ __('Add file') }}
-                            </button>
-                        </div>
+                                <button class="btn justify-center" x-show="!oEmbed" x-on:click="oEmbed = true,box = false">    
+                                    <x-tabler-brand-youtube/>
+                                    {{ __('embed') }}
+                                </button>
+                                <button class="btn justify-center" x-on:click="videoInt = true,box = false"> 
+                                    <x-tabler-photo-video/> 
+                                    {{ __('Add file') }}
+                                </button>
+                            </div>
+                            
+                        @endif
 
-                        <div x-show="media">
+                        <div x-show="videoInt">
                             <div class="@container">
                                 <div class="grid @sm:grid-cols-1 @lg:grid-cols-3  gap-6">
         
                                     @php
-                                        $cardimg = '0';
+                                        $cardimg = 'false';
                                     @endphp
         
                                     @foreach ($fields as $key => $itemfields)
                                         @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'poster')
                                             @php
-                                                $cardimg = '1';
+                                                $cardimg = 'true';
                                             @endphp
                                             <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
                                                 name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
@@ -208,7 +210,7 @@
                                         @endif
                                     @endforeach
         
-                                    @if ($cardimg == '0')
+                                    @if ($cardimg == 'false')
                                         <div>
                                             <img-block wire:click="selectitem('addMedia',0,'poster',{{ $itemblocks->id }})"
                                                 class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-video ">
@@ -218,12 +220,12 @@
                                     @endif
         
                                     @php
-                                        $cardvideo = '0';
+                                        $cardvideo = 'false';
                                     @endphp
                                     @foreach ($fields as $key => $itemfields)
                                         @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'video')
                                             @php
-                                                $cardvideo = '1';
+                                                $cardvideo = 'true';
                                             @endphp
                                             <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
                                                 name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
@@ -232,7 +234,7 @@
                                         @endif
                                     @endforeach
         
-                                    @if ($cardvideo == '0')
+                                    @if ($cardvideo == 'false')
                                         <div>
                                             <img-block wire:click="selectitem('addMedia',0,'video',{{ $itemblocks->id }})"
                                                 class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-video ">
@@ -278,7 +280,7 @@
                         @endif
          
                     </div>
-
+        
                 @break
 
                 @case('gallery')

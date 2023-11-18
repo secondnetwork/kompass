@@ -73,11 +73,11 @@ class LiteVimeo extends HTMLElement {
         // thumbnail_large: "https://i.vimeocdn.com/video/819916979_640.jpg"
         const tnLarge = apiResponse.thumbnail_large;
         const imgId = (tnLarge.substr(tnLarge.lastIndexOf("/") + 1)).split("_")[0];
-
+        console.log(tnLarge);
         let thumbnailUrl = `https://i.vimeocdn.com/video/${imgId}`;
         thumbnailUrl += `.${canUseWebP() ? 'webp' : 'jpg'}`;
-        thumbnailUrl += `?mw=${width}&mh=${height}&q=${devicePixelRatio > 1 ? 70 : 85}`;
-
+        // thumbnailUrl += `?mw=${width}&mh=${height}&q=${devicePixelRatio > 1 ? 70 : 85}`;
+console.log(thumbnailUrl);
         return thumbnailUrl
     }
 

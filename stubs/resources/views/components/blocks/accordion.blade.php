@@ -27,7 +27,7 @@
                 @if ($this->get_field('video',$blockid))
 
                 @php
-                $video_array = parse_video_uri($this->get_field('video',$blockid));
+                $video_array = parse_video_id($this->get_field('video',$blockid));
                 @endphp
 
                 @if ($video_array['type'] == 'youtube')
