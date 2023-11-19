@@ -4,6 +4,11 @@ on:
   push:
     branches-ignore:
       - 'dependabot/npm_and_yarn/*'
+
+permissions:
+  contents: write
+  pull-requests: write 
+      
 jobs:
   laravel-pint:
     runs-on: ubuntu-latest
