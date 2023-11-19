@@ -3,6 +3,7 @@
   "description": "Kompass CMS Admin Panel",
   "license": "MIT",
   "version": "0.1.0",
+  "type": "module",
   "authors": [
     {
       "name": "Andreas Farah"
