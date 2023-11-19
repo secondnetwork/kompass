@@ -149,8 +149,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
     protected function installAssets($packagemanager)
     {
         // Tailwind Configuration...
-        copy(__DIR__.'/../../stubs/livewire/tailwind.config.js', base_path('tailwind.config.js'));
-        copy(__DIR__.'/../../stubs/livewire/postcss.config.js', base_path('postcss.config.js'));
+        copy(__DIR__.'/../../stubs/livewire/tailwind.config.js', base_path('tailwind.config.cjs'));
+        copy(__DIR__.'/../../stubs/livewire/postcss.config.js', base_path('postcss.config.cjs'));
         copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
 
         // Directories...

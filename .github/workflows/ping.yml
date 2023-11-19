@@ -1,0 +1,24 @@
+name: PHP Linting (Pint)
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - 'dependabot/npm_and_yarn/*'
+jobs:
+  laravel-pint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer Install
+        run: composer install
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'refactor: Laravel Pint changes'

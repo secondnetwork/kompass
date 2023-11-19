@@ -17,9 +17,9 @@ class User extends Authenticatable implements MustVerifyEmail
     // use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use Notifiable;
     use HasRoles;
     use HasUuids;
+    use Notifiable;
     // use TwoFactorAuthenticatable;
 
     /**
