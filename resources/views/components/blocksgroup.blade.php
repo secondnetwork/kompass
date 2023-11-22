@@ -43,29 +43,22 @@
                             @svg('tabler-section', 'w-5')
                         @endif
                 @endswitch
-
-
-
             </span>
+
             <span class="inline-block border-r border-gray-400 w-px h-5 ml-1 mr-2"></span>
             <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
                     class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
-
+   
                     <span class="text-sm font-semibold">{{ $itemblocks->name }}</span>
-                    {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
+                    {{-- <span x-show="iconEditing"><x-tabler-edit class="cursor-pointer stroke-current h-5 w-5 text-gray-400 hover:text-blue-500" /></span> --}}
                 </a>
-
-                {{-- <input type="text" value="{{ $itemblocks->name }}" x-show="isEditing"
-                    @click.away="toggleEditingState" @keydown.enter="disableEditing"
-                    @keydown.window.escape="disableEditing" x-ref="input"> --}}
-
 
                 <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', name: '{{ $itemblocks->name }}' }">
 
                     <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="name"
                         wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
-                        x-on:keydown.escape="isEditing = false" {{-- @keydown.window.escape="disableEditing"  --}}
+                        x-on:keydown.escape="isEditing = false"
                         x-on:click.away="isEditing = false" wire:keydown.enter="savename({{ $itemblocks->id }})">
                     <span wire:click="savename({{ $itemblocks->id }})" x-on:click="isEditing = false">
                         <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />

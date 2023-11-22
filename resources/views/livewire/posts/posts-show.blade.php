@@ -92,7 +92,7 @@
         <div class="relative flex items-center">
 
             <div class=" flex-auto">
-                <span class="text-gray-600 text-sm">{{ __('Page title') }}</span>
+                <span class="text-gray-600 text-sm">{{ __('Post') }} {{ __('Title') }}</span>
 
 
                 <div x-data="click_to_edit()">
