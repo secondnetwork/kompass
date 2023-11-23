@@ -9,7 +9,6 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
-
 use Secondnetwork\Kompass\Models\Post;
 
 class Blogview extends Component

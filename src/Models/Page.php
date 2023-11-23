@@ -51,6 +51,7 @@ class Page extends Model
     {
         $timezone = config('app.timezone');
         $dateformat = config('kompass.dateformat');
+
         return Carbon::parse($date)->tz($timezone)->format($dateformat);
     }
 
