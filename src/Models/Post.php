@@ -14,8 +14,6 @@ class Post extends Model
 
     protected $casts = [
         'content' => 'array',
-        'begin_at' => 'datetime:Y-m-d H:i:s',
-        'end_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     protected $guarded = [];
@@ -51,14 +49,15 @@ class Post extends Model
     public function getCreatedAtAttribute($date)
     {
         $timezone = config('app.timezone');
-
-        return Carbon::parse($date)->tz($timezone)->format('d.m.Y H:i');
+        $dateformat = config('kompass.dateformat');
+        return Carbon::parse($date)->tz($timezone)->format($dateformat);
     }
 
     public function getUpdatedAtAttribute($date)
     {
         $timezone = config('app.timezone');
+        $dateformat = config('kompass.dateformat');
 
-        return Carbon::parse($date)->tz($timezone)->format('d.m.Y H:i');
+        return Carbon::parse($date)->tz($timezone)->format($dateformat);
     }
 }

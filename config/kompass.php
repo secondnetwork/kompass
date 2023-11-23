@@ -41,6 +41,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Date Format
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default date format for your application, which
+    | will be used by the PHP date and date-time functions. We have gone
+    | ahead and set this to a sensible default for you out of the box.
+    |
+    */
+
+    'dateformat' => 'd.m.Y H:i',
+
+    /*
+    |--------------------------------------------------------------------------
     | Profile Photo Disk
     |--------------------------------------------------------------------------
     |

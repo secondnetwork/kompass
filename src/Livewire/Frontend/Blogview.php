@@ -9,12 +9,12 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
-use Secondnetwork\Kompass\Models\Page;
+
 use Secondnetwork\Kompass\Models\Post;
 
 class Blogview extends Component
 {
-    public $page;
+    public $post;
 
     public $blocks;
 
@@ -30,18 +30,18 @@ class Blogview extends Component
 
     public function mount($slug = null)
     {
-        $this->page = $this->ResolvePath($slug);
+        $this->post = $this->ResolvePath($slug);
 
-        if (! empty($this->page->new_url)) {
-            return redirect($this->page->new_url, $this->page->status_code);
+        if (! empty($this->post->new_url)) {
+            return redirect($this->post->new_url, $this->post->status_code);
         }
         //blockable_type
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return Block::where('blockable_type', 'post')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+            return Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
         });
 
         $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
-            return Block::where('blockable_type', 'post')->where('blockable_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
+            return Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->orderBy('order', 'asc')->pluck('id');
         });
         Arr::collapse($this->blocks_id);
 
@@ -60,13 +60,6 @@ class Blogview extends Component
 
     public function ResolvePath($slug)
     {
-        if ($slug == null) {
-            $is_front = Post::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
-
-            if ($is_front) {
-                return $is_front;
-            }
-        }
 
         $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
 
@@ -89,7 +82,7 @@ class Blogview extends Component
 
                     $dataarray[] = '<picture>
                     <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
-                    <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"  
+                    <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"
                     src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                     </picture>';
                 }
@@ -138,15 +131,15 @@ class Blogview extends Component
     // {
 
     //     return new SEOData(
-    //         // title: $this->page->title,
-    //         description: $this->page->meta_description,
+    //         // title: $this->post->title,
+    //         description: $this->post->meta_description,
     //         // author: $this->author->fullName,
     //     );
     // }
 
     public function render()
     {
-        return view('livewire.pageview', [
+        return view('livewire.pages.blog.single', [
             // 'SEOData' => $this->getDynamicSEOData()
         ])->layout('layouts.main');
     }
