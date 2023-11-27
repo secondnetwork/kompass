@@ -155,7 +155,7 @@ if (! function_exists('video_id')) {
         $video_type = '';
         $video_id = '';
 
-        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) {
+        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=|live/)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) {
             $video_type = 'youtube';
 
             // Here is a sample of the URLs this regex matches: (there can be more content after the given URL that will be ignored)
