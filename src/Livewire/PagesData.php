@@ -6,11 +6,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Intervention\Image\Facades\Image;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
@@ -165,9 +165,8 @@ class PagesData extends Component
         if ($videoEmbed['type'] == 'youtube') {
             $thumbnailName = $videoEmbed['id'].'.jpg';
             $thumbnailUrl = 'https://i.ytimg.com/vi/'.$videoEmbed['id'].'/maxresdefault.jpg';
-    
-            if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) 
-            {
+
+            if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
                     $image = Image::make($thumbnailContents);
@@ -176,7 +175,6 @@ class PagesData extends Component
 
             }
         }
-
 
         $this->resetPageComponent();
     }

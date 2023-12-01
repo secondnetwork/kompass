@@ -129,7 +129,7 @@ if (! function_exists('setting')) {
 
                 return $data->data;
             }
-            // return Arr::get(config('settings'), $data );
+        // return Arr::get(config('settings'), $data );
         } else {
             $data = Arr::get(app('settings'), $data);
 
