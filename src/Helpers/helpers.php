@@ -129,7 +129,7 @@ if (! function_exists('setting')) {
 
                 return $data->data;
             }
-        // return Arr::get(config('settings'), $data );
+            // return Arr::get(config('settings'), $data );
         } else {
             $data = Arr::get(app('settings'), $data);
 
@@ -143,9 +143,9 @@ if (! function_exists('setting')) {
     }
 }
 
-if (! function_exists('video_id')) {
+if (! function_exists('videoEmbed')) {
     /* Parse the video uri/url to determine the video type/source and the video id */
-    function video_id($url)
+    function videoEmbed($url)
     {
 
         // Parse the url

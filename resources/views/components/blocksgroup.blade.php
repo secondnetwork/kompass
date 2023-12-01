@@ -5,14 +5,14 @@
     'class' => '',
 ])
 
-<div class="{{ $class }} @if ($itemblocks->subgroup) group-block  border-purple-600 @endif border-b-2 "
+<div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 @endif border-b-2" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-gray-200 shadow-inner' "
     wire:sortable.item="{{ $itemblocks->id }}"
     @if ($itemblocks->subgroup) wire:sortable-group.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else
     wire:sortable.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}" @endif
     x-data="{ expanded: false }">
 
-    <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4"
+    <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4" 
         @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-slate-200 border-slate-600'" @endif>
         <span class="flex items-center py-2 w-full ">
             @if ($itemblocks->subgroup)

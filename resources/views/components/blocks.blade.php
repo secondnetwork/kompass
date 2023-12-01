@@ -196,16 +196,18 @@
 @if ($type == 'oembed')
 
         @php
-          $video_id =  video_id($fields);    
+          $videoEmbed =  videoEmbed($fields); 
+          $assetExists = Storage::disk('public')->exists('thumbnails-video/'.$videoEmbed['id'].'.jpg');
+          $assetUrl = Storage::disk('public')->url('thumbnails-video/'.$videoEmbed['id'].'.jpg');
         @endphp
 
-@if ($video_id)
+@if ($videoEmbed)
 
-    @if ($video_id['type'] == 'youtube')
-    <lite-youtube class="aspect-video" videoid="{{ $video_id['id'] }}"></lite-youtube>
+    @if ($videoEmbed['type'] == 'youtube')
+    <lite-youtube class="aspect-video" videoid="{{ $videoEmbed['id'] }}" params="rel=0" @if($assetExists) style="background-image: url('{{ $assetUrl }}');" @endif></lite-youtube>
     @endif
-    @if ($video_id['type'] == 'vimeo')
-    <lite-vimeo class="aspect-video" videoid="{{ $video_id['id'] }}"></lite-vimeo>
+    @if ($videoEmbed['type'] == 'vimeo')
+    <lite-vimeo class="aspect-video" videoid="{{ $videoEmbed['id'] }}"></lite-vimeo>
     @endif
     <div class="" @click="box=true,oEmbed = false" wire:click="removemedia({{ $idField }})">
         <button wire:click="delete" type="button" class="btn btn-danger bg-red-500"><x-tabler-trash class="cursor-pointer stroke-current" />  {{ __('Delete') }}</button>
