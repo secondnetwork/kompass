@@ -15,6 +15,8 @@ class MenuTable extends Component
 
     public $data;
 
+    public $selectedItem;
+
     public $timestamps = false;
 
     public $FormDelete = false;
