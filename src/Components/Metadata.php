@@ -9,7 +9,7 @@ class Metadata extends Component
 
     public string $groupname;
 
-    public function __construct(string $pagename, string $groupname = null)
+    public function __construct(string $pagename, ?string $groupname = null)
     {
         $this->pagename = $pagename;
         $this->dismissible = $groupname;
