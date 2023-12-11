@@ -204,12 +204,12 @@
 @if ($videoEmbed)
 
     @if ($videoEmbed['type'] == 'youtube')
-    <lite-youtube class="aspect-video" videoid="{{ $videoEmbed['id'] }}" params="rel=0" @if($assetExists) style="background-image: url('{{ $assetUrl }}');" @endif></lite-youtube>
+    <lite-youtube wire:ignore class="aspect-video" videoid="{{ $videoEmbed['id'] }}" params="rel=0" @if($assetExists) style="background-image: url('{{ $assetUrl }}');" @endif></lite-youtube>
     @endif
     @if ($videoEmbed['type'] == 'vimeo')
-    <lite-vimeo class="aspect-video" videoid="{{ $videoEmbed['id'] }}"></lite-vimeo>
+    <lite-vimeo wire:ignore class="aspect-video" videoid="{{ $videoEmbed['id'] }}"></lite-vimeo>
     @endif
-    <div class="" @click="box=true,oEmbed = false" wire:click="removemedia({{ $idField }})">
+    <div class="" @click="box = true, oEmbed = false" wire:click="removemedia({{ $idField }})">
         <button wire:click="delete" type="button" class="btn btn-danger bg-red-500"><x-tabler-trash class="cursor-pointer stroke-current" />  {{ __('Delete') }}</button>
     </div>
 @endif

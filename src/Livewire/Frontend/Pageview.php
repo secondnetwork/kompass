@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire\Frontend;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Secondnetwork\Kompass\Models\Block;
@@ -111,6 +112,16 @@ class Pageview extends Component
         foreach ($this->fields[$blockis] as $value) {
 
             if ($value->type == $type) {
+                if ($value->type == 'video' && $value->data != null) {
+                    $file = file::where('id', $value->data)->first();
+
+                    return $file->path.'/'.$file->slug.'.'.$file->extension;
+                }
+                if ($value->type == 'poster' && $value->data != null) {
+                    $file = file::where('id', $value->data)->first();
+
+                    return $file->path.'/'.$file->slug.'.'.$file->extension;
+                }
                 if ($value->type == 'image' && $value->data != null) {
                     $file = file::where('id', $value->data)->first();
                     if ($file) {
