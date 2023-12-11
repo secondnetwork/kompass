@@ -23,14 +23,14 @@ trait HandlesValidationErrors
         return '';
     }
 
-    public function hasErrorsAndShow(string $name = null, string $bag = 'default'): bool
+    public function hasErrorsAndShow(?string $name = null, string $bag = 'default'): bool
     {
         return $this->showErrors
             ? $this->hasError($name, $bag)
             : false;
     }
 
-    public function hasError(string $name = null, string $bag = 'default'): bool
+    public function hasError(?string $name = null, string $bag = 'default'): bool
     {
         $errors = View::shared('errors', fn () => request()->session()->get('errors', new ViewErrorBag));
 
