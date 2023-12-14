@@ -13,7 +13,7 @@
 @endphp
 <nav-item class="flex items-center gap-2">
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
-    <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', '')">
+    <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
         @if ($layout == '')
             <x-tabler-columns-3 class="stroke-blue-500" />
         @else
