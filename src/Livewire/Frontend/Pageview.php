@@ -95,46 +95,44 @@ class Pageview extends Component
 
     public function get_gallery($blockis = null)
     {
-       
-        foreach ($this->fields as $value) {
-            if($blockis == $value->block_id) {
-            if ($value->type == 'gallery' && $value->data != null) {
-                $file = file::where('id', $value->data)->first();
-                if ($file) {
-                    // $dataarray[] =   asset('storage' . $file->path . '/' . $file->slug) . '.avif';
 
-                    $dataarray[] = '<picture>
+        foreach ($this->fields as $value) {
+            if ($blockis == $value->block_id) {
+                if ($value->type == 'gallery' && $value->data != null) {
+                    $file = file::where('id', $value->data)->first();
+                    if ($file) {
+                        // $dataarray[] =   asset('storage' . $file->path . '/' . $file->slug) . '.avif';
+
+                        $dataarray[] = '<picture>
                     <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
                     <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"  
                     src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                     </picture>';
+                    }
                 }
-            }
 
-        
+                $str = implode('', $dataarray);
 
-            $str = implode('', $dataarray);
-
-            return $str;
+                return $str;
             }
         }
     }
 
     public function get_field($type, $blockis = null, $class = null, $size = null)
     {
- 
+
         foreach ($this->fields as $value) {
-         
-            if($blockis == $value->block_id) {
+
+            if ($blockis == $value->block_id) {
                 if ($value->type == $type) {
                     if ($value->type == 'video' && $value->data != null) {
                         $file = file::where('id', $value->data)->first();
-    
+
                         return $file->path.'/'.$file->slug.'.'.$file->extension;
                     }
                     if ($value->type == 'poster' && $value->data != null) {
                         $file = file::where('id', $value->data)->first();
-    
+
                         return $file->path.'/'.$file->slug.'.'.$file->extension;
                     }
                     if ($value->type == 'image' && $value->data != null) {
@@ -142,7 +140,7 @@ class Pageview extends Component
                         if ($file) {
                             if ($size) {
                                 $sizes = '_'.$size;
-    
+
                                 return '<picture>
                                 <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
                                 <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
@@ -156,12 +154,13 @@ class Pageview extends Component
                                 ';
                             }
                         }
-    
+
                         return '';
                     }
+
                     return $value->data;
                 }
-                    
+
             }
 
         }
