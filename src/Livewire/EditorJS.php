@@ -108,8 +108,6 @@ class EditorJS extends Component
 
     public function save()
     {
-        // $this->emitUp("editorjssave:{$this->editorId}", $this->data);
-        // dump($this->editorId);
         $this->dispatch('editorjssave', $this->data, $this->editorId);
     }
 
