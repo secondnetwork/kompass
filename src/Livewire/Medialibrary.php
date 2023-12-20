@@ -377,8 +377,8 @@ class Medialibrary extends Component
             case 'setting':
                 Setting::updateOrCreate(['id' => $this->field_id], ['thumbnails' => $media_id]);
                 $this->dispatch('refreshmedia');
-                break;    
-            
+                break;
+
             default:
                 Datafields::updateOrCreate(
                     ['id' => $this->field_id], [

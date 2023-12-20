@@ -2,15 +2,13 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Livewire\Component;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafields;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
-use Secondnetwork\Kompass\Models\Block;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Secondnetwork\Kompass\Models\Datafields;
 
 class Blogview extends Component
 {
@@ -89,7 +87,6 @@ class Blogview extends Component
     public function get_field($type, $blockis = null, $class = null, $size = null)
     {
 
-  
         foreach ($this->fields as $value) {
 
             if ($blockis == $value->block_id) {
@@ -131,8 +128,6 @@ class Blogview extends Component
                 }
 
             }
-
-
 
         }
     }

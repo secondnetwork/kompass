@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Secondnetwork\Kompass\Models\File as Files;
+
 if (! function_exists('vendor_path')) {
     /**
      * Get the path to the litstack package vendor folder.
@@ -21,30 +22,29 @@ if (! function_exists('get_thumbnails')) {
     function get_thumbnails($id_media, $class = null, $size = null)
     {
 
-            $file = Files::where('id', $id_media)->first();
-            if ($file) {
-                if ($size) {
-                    $sizes = '_'.$size;
+        $file = Files::where('id', $id_media)->first();
+        if ($file) {
+            if ($size) {
+                $sizes = '_'.$size;
 
-                    return '<picture>
+                return '<picture>
                     <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
                     <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
                     </picture>
                     ';
-                } else {
-                    return '<picture>
+            } else {
+                return '<picture>
                     <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
                     <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                     </picture>
                     ';
-                }
             }
+        }
 
-            return '';
-        
+        return '';
+
     }
 }
-
 
 if (! function_exists('kompass_asset')) {
     function kompass_asset($path, $secure = null)
