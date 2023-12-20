@@ -2,14 +2,15 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafields;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Cache;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
+use Secondnetwork\Kompass\Models\Block;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use Secondnetwork\Kompass\Models\Datafields;
 
 class Blogview extends Component
 {
@@ -35,25 +36,16 @@ class Blogview extends Component
             return redirect($this->post->new_url, $this->post->status_code);
         }
         //blockable_type
-        $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-        });
+        $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
-        $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
-            return Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->orderBy('order', 'asc')->pluck('id');
-        });
-        Arr::collapse($this->blocks_id);
+        if ($blocks->isNotEmpty()) {
+            $this->blocks = $blocks;
+            $blocks_id = Block::where('blockable_id', $this->post->id)->orderBy('order', 'asc')->pluck('id');
 
-        if (! Cache::has('kompass_field_'.$slug)) {
-            $this->datafields = Datafields::query()->whereIn('block_id', $this->blocks_id)->get()->mapToGroups(function ($item, $key) {
-                return [
-                    $item['block_id'] => $item,
-                ];
-            });
+            Arr::collapse($blocks_id);
+
+            $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
         }
-        $this->fields = Cache::rememberForever('kompass_field_'.$slug, function () {
-            return $this->datafields;
-        });
 
     }
 
@@ -96,33 +88,52 @@ class Blogview extends Component
 
     public function get_field($type, $blockis = null, $class = null, $size = null)
     {
-        foreach ($this->fields[$blockis] as $value) {
-            if ($value->type == $type) {
-                if ($value->type == 'image' && $value->data != null) {
-                    $file = file::where('id', $value->data)->first();
-                    if ($file) {
-                        if ($size) {
-                            $sizes = '_'.$size;
 
-                            return '<picture>
-                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
-                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
-                            </picture>
-                            ';
-                        } else {
-                            return '<picture>
-                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
-                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
-                            </picture>
-                            ';
+  
+        foreach ($this->fields as $value) {
+
+            if ($blockis == $value->block_id) {
+                if ($value->type == $type) {
+                    if ($value->type == 'video' && $value->data != null) {
+                        $file = file::where('id', $value->data)->first();
+
+                        return $file->path.'/'.$file->slug.'.'.$file->extension;
+                    }
+                    if ($value->type == 'poster' && $value->data != null) {
+                        $file = file::where('id', $value->data)->first();
+
+                        return $file->path.'/'.$file->slug.'.'.$file->extension;
+                    }
+                    if ($value->type == 'image' && $value->data != null) {
+                        $file = file::where('id', $value->data)->first();
+                        if ($file) {
+                            if ($size) {
+                                $sizes = '_'.$size;
+
+                                return '<picture>
+                                <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                                <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                                </picture>
+                                ';
+                            } else {
+                                return '<picture>
+                                <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                                <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                                </picture>
+                                ';
+                            }
                         }
+
+                        return '';
                     }
 
-                    return '';
+                    return $value->data;
                 }
 
-                return $value->data;
             }
+
+
+
         }
     }
 
