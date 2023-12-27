@@ -15,8 +15,11 @@ Inspired to develop CMS, like  [Wordpress](https://wordpress.org/), [Voyager](ht
 
 But built with the power of Tailwind, Alpine.js, Laravel and Livewire.
 
-> **Note**
-> Kompass is still in early stages of development
+### Development status to Version 1.0.0
+
+> **Backend to 70%**
+
+> **Frontend to 40%**
 
 ## Requirements
 
