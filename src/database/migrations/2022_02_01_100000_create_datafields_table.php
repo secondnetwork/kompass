@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('datafields', function (Blueprint $table) {
             $table->id();
             $table->foreignId(('block_id'))->constrained()->onDelete('cascade');
-            $table->string('name');
             $table->string('type')->nullable();
             $table->integer('grid')->default('1');
             $table->integer('order')->default('1');
