@@ -46,6 +46,52 @@ if (! function_exists('get_thumbnails')) {
     }
 }
 
+if (! function_exists('get_field')) {
+    function get_field($type, $data, $class = null, $size = null)
+    {
+        foreach ($data as $value) {
+            if ($value->type == $type) {
+
+                if ($value->type == 'video' && $value->data != null) {
+                    $file = Files::where('id', $value->data)->first();
+
+                    return $file->path.'/'.$file->slug.'.'.$file->extension;
+                }
+                if ($value->type == 'poster' && $value->data != null) {
+                    $file = Files::where('id', $value->data)->first();
+
+                    return $file->path.'/'.$file->slug.'.'.$file->extension;
+                }
+                if ($value->type == 'image' && $value->data != null) {
+                    $file = file::where('id', $value->data)->first();
+                    if ($file) {
+                        if ($size) {
+                            $sizes = '_'.$size;
+
+                            return '<picture>
+                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            </picture>
+                            ';
+                        } else {
+                            return '<picture>
+                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            </picture>
+                            ';
+                        }
+                    }
+
+                    return '';
+                }
+
+                return $value->data;
+
+            }
+        }
+    }
+}
+
 if (! function_exists('kompass_asset')) {
     function kompass_asset($path, $secure = null)
     {
@@ -158,7 +204,7 @@ if (! function_exists('setting')) {
 
                 return $data->data;
             }
-        // return Arr::get(config('settings'), $data );
+            // return Arr::get(config('settings'), $data );
         } else {
             $data = Arr::get(app('settings'), $data);
 

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Setting;
 
@@ -24,6 +24,7 @@ class PageSeeder extends Seeder
 
             'name' => 'User can register',
             'key' => 'user-register',
+            'type' => 'switch',
             'data' => '1',
             'group' => 'global',
             'order' => 1,
@@ -34,6 +35,7 @@ class PageSeeder extends Seeder
 
             'name' => 'Single-Sign-On (SSO) (IN BETA)',
             'key' => 'sso',
+            'type' => 'switch',
             'data' => '',
             'group' => 'global',
             'order' => 2,
@@ -42,9 +44,21 @@ class PageSeeder extends Seeder
 
         Setting::create([
 
+            'name' => 'Login Image',
+            'key' => 'admin-bg-img',
+            'type' => 'image',
+            'data' => '',
+            'group' => 'footer',
+            'order' => 1,
+
+        ]);
+
+        Setting::create([
+
             'name' => 'Copytext',
             'key' => 'copytext',
-            'data' => 'New Brand',
+            'type' => 'text',
+            'data' => 'Copytext',
             'group' => 'footer',
             'order' => 1,
 
@@ -77,26 +91,42 @@ class PageSeeder extends Seeder
             1 => [
                 'id' => 2,
                 'menu_id' => 1,
-                'title' => 'About',
-                'url' => '/about',
+                'title' => 'Blog',
+                'url' => '/blog',
                 'target' => '_self',
                 'order' => 2,
             ],
             2 => [
                 'id' => 3,
+                'menu_id' => 1,
+                'title' => 'About',
+                'url' => '/about',
+                'target' => '_self',
+                'order' => 3,
+            ],
+            3 => [
+                'id' => 4,
                 'menu_id' => 2,
                 'title' => 'Home',
                 'url' => '/',
                 'target' => '_self',
                 'order' => 1,
             ],
-            3 => [
-                'id' => 4,
+            4 => [
+                'id' => 5,
+                'menu_id' => 2,
+                'title' => 'Blog',
+                'url' => '/blog',
+                'target' => '_self',
+                'order' => 2,
+            ],
+            5 => [
+                'id' => 6,
                 'menu_id' => 2,
                 'title' => 'About',
                 'url' => '/about',
                 'target' => '_self',
-                'order' => 2,
+                'order' => 3,
             ],
         ]);
 
@@ -121,7 +151,7 @@ class PageSeeder extends Seeder
             'order' => '999',
         ]);
 
-        Datafields::create([
+        Datafield::create([
             'block_id' => $block->id,
             'name' => 'wysiwyg',
             'type' => 'wysiwyg',
@@ -151,7 +181,7 @@ class PageSeeder extends Seeder
             'order' => '999',
         ]);
 
-        Datafields::create([
+        Datafield::create([
             'block_id' => $block->id,
             'name' => 'wysiwyg',
             'type' => 'wysiwyg',

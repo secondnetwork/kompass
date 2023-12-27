@@ -139,7 +139,7 @@
                     $box = 'true';
                     $xShow = 'true';
                 @endphp
-                @foreach ($fields as $key => $itemfields)
+                @foreach ($itemblocks->datafield as $key => $itemfields)
                     @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'poster')
                     @php
                         $cardimg = 'true';  $xShow = 'false';
@@ -191,14 +191,14 @@
                                         $cardimg = 'false';
                                     @endphp
         
-                                    @foreach ($fields as $key => $itemfields)
+                                    @foreach ($itemblocks->datafield as $key => $itemfields)
                                         @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'poster')
                                             @php
                                                 $cardimg = 'true';
                                             @endphp
                                             <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
-                                                name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
-                                                idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                                name="{{ $itemfields->name }}" fields="{!! $itemblocks->datafield[$key]['data'] !!}"
+                                                idField="{{ $itemblocks->datafield[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
                                             </x-kompass::blocks>
                                         @endif
                                     @endforeach
@@ -215,14 +215,14 @@
                                     @php
                                         $cardvideo = 'false';
                                     @endphp
-                                    @foreach ($fields as $key => $itemfields)
+                                    @foreach ($itemblocks->datafield as $key => $itemfields)
                                         @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'video')
                                             @php
                                                 $cardvideo = 'true';
                                             @endphp
                                             <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
-                                                name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
-                                                idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                                name="{{ $itemfields->name }}" fields="{!! $itemblocks->datafield[$key]['data'] !!}"
+                                                idField="{{ $itemblocks->datafield[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
                                             </x-kompass::blocks>
                                         @endif
                                     @endforeach
@@ -245,14 +245,14 @@
                         @php
                         $cardoembed = 'false';
                         @endphp
-                        @foreach ($fields as $key => $itemfields)
+                        @foreach ($itemblocks->datafield as $key => $itemfields)
                             @if ($itemblocks->id == $itemfields->block_id && $itemfields->type == 'oembed')
                             @php
                             $cardoembed = 'true';
                             @endphp
                             <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
-                                name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
-                                idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                name="{{ $itemfields->name }}" fields="{!! $itemblocks->datafield[$key]['data'] !!}"
+                                idField="{{ $itemblocks->datafield[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
                             </x-kompass::blocks>
                             @endif
                         @endforeach
@@ -280,11 +280,11 @@
                     <div class="@container">
                         <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
 
-                            @foreach ($fields as $key => $itemfields)
+                            @foreach ($itemblocks->datafield as $key => $itemfields)
                                 @if ($itemblocks->id == $itemfields->block_id)
                                     <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
-                                        name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
-                                        idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                        name="{{ $itemfields->name }}" fields="{!! $itemblocks->datafield[$key]['data'] !!}"
+                                        idField="{{ $itemblocks->datafield[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
                                     </x-kompass::blocks>
                                 @endif
                             @endforeach
@@ -298,19 +298,19 @@
                 @break
 
                 @case('wysiwyg')
-                    @foreach ($fields as $key => $itemfields)
+                    @foreach ($itemblocks->datafield as $key => $itemfields)
                         @if ($itemblocks->id == $itemfields->block_id)
                             <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
 
                                 @php
-                                    $jsfield = json_decode($fields[$key]['data'], true);
-                                    $gridtables = $fields[$key]['grid'];
+                                    $jsfield = json_decode($itemblocks->datafield[$key]['data'], true);
+                                    $gridtables = $itemblocks->datafield[$key]['grid'];
                                 @endphp
 
                                 @livewire(
                                     'editorjs',
                                     [
-                                        'editorId' => $fields[$key]['id'],
+                                        'editorId' => $itemblocks->datafield[$key]['id'],
                                         'value' => $jsfield,
                                         'uploadDisk' => 'publish',
                                         'downloadDisk' => 'publish',
@@ -319,7 +319,7 @@
                                         // 'readOnly' => true,
                                         'placeholder' => __('write something...'),
                                     ],
-                                    key($fields[$key]['id'])
+                                    key($itemblocks->datafield[$key]['id'])
                                 )
                             </div>
                         @endif
@@ -327,13 +327,13 @@
                 @break
 
                 @default
-                    @foreach ($fields as $key => $itemfields)
+                    @foreach ($itemblocks->datafield as $key => $itemfields)
                         @if ($itemblocks->id == $itemfields->block_id)
                             <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
 
                                 <x-kompass::blocks key="{{ $key }}" type="{{ $itemfields->type }}"
-                                    name="{{ $itemfields->name }}" fields="{!! $fields[$key]['data'] !!}"
-                                    idField="{{ $fields[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
+                                    name="{{ $itemfields->name }}" fields="{!! $itemblocks->datafield[$key]['data'] !!}"
+                                    idField="{{ $itemblocks->datafield[$key]['id'] }}" blockId="{{ $itemblocks->id }}">
                                 </x-kompass::blocks>
 
                             </div>
@@ -346,6 +346,6 @@
 
     </div>
     <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-4 bg-purple-700">
-        <x-kompass::blocksgroupsub :childrensub="$itemblocks['children']->sortBy('order')" :fields="$fields" :page="$page" />
+        <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
     </div>
 </div>

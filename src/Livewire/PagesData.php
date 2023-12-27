@@ -2,7 +2,6 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -14,7 +13,7 @@ use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
-use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 
 #[Layout('kompass::admin.layouts.app')]
@@ -100,7 +99,7 @@ class PagesData extends Component
 
         if (! empty($editorJsonData)) {
 
-            Datafields::whereId($id)->update(['data' => $editorJsonData]);
+            Datafield::whereId($id)->update(['data' => $editorJsonData]);
             // foreach($itemg['items'] as $item){
             //     block::whereId($item['value'])->update(['order' => $item['order']]);
             // }
@@ -115,20 +114,9 @@ class PagesData extends Component
     {
         $this->page = Page::findOrFail($id);
 
-        $blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-
-        if ($blocks->isNotEmpty()) {
-            $this->blocks = $blocks;
-            $blocks_id = Block::where('blockable_id', $id)->orderBy('order', 'asc')->pluck('id');
-
-            Arr::collapse($blocks_id);
-
-            $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
-        }
+        $this->blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
-        // $this->blockschildren = $this->tree($this->blocks);
-        // $this->blockfields = Blockfields::where('blocktemplate_id',$id)->orderBy('order')->get();
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
@@ -153,7 +141,7 @@ class PagesData extends Component
 
     public function addoEmbed($blockId)
     {
-        Datafields::create([
+        Datafield::create([
             'block_id' => $blockId,
             'type' => 'oembed',
             'data' => $this->oembedUrl,
@@ -196,7 +184,7 @@ class PagesData extends Component
             'order' => '999',
         ]);
         if ($type == 'wysiwyg') {
-            Datafields::create([
+            Datafield::create([
                 'block_id' => $block->id,
                 'type' => 'wysiwyg',
                 'order' => '1',
@@ -207,7 +195,7 @@ class PagesData extends Component
             $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
 
             foreach ($get_blocks as $value) {
-                Datafields::create([
+                Datafield::create([
                     'block_id' => $block->id,
                     'type' => $value->type,
                     'grid' => $value->grid,
@@ -244,7 +232,7 @@ class PagesData extends Component
 
         $newblock->push();
 
-        $fields = Datafields::where('block_id', $id)->get();
+        $fields = Datafield::where('block_id', $id)->get();
 
         $fields->each(function ($item, $key) use ($newblock) {
             $copyitem = $item->replicate();
@@ -257,7 +245,7 @@ class PagesData extends Component
 
     public function selected($id)
     {
-        $data = Datafields::findOrFail($id);
+        $data = Datafield::findOrFail($id);
 
         if ($data->data == 0) {
             $data->update([
@@ -393,7 +381,7 @@ class PagesData extends Component
         if (! empty($validateData['fields'])) {
 
             foreach ($validateData['fields'] as $itemg) {
-                Datafields::whereId($itemg['id'])->update($itemg);
+                Datafield::whereId($itemg['id'])->update($itemg);
                 // foreach($itemg['items'] as $item){
                 //     block::whereId($item['value'])->update(['order' => $item['order']]);
                 // }
@@ -406,13 +394,13 @@ class PagesData extends Component
 
     public function removemedia($id)
     {
-        Datafields::whereId($id)->delete();
+        Datafield::whereId($id)->delete();
         $this->resetPageComponent();
     }
 
     public function delete() //delete block
     {
-        Datafields::where('block_id', $this->getId)->delete();
+        Datafield::where('block_id', $this->getId)->delete();
         block::destroy($this->getId);
         $this->FormDelete = false;
         $this->resetPageComponent();

@@ -8,7 +8,7 @@ use Intervention\Image\Facades\Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
@@ -380,7 +380,7 @@ class Medialibrary extends Component
                 break;
 
             default:
-                Datafields::updateOrCreate(
+                Datafield::updateOrCreate(
                     ['id' => $this->field_id], [
                         'data' => $media_id,
                         'type' => $fieldOrPageName,

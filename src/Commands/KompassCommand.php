@@ -107,9 +107,10 @@ class KompassCommand extends Command implements PromptsForMissingInput
                 ]
             );
             $this->installAssets($packagemanager);
+            $this->publishAssets();
+            $this->call('volt:install');
         }
 
-        $this->publishAssets();
         warning('Warning: Have you made a backup of you database?');
         $database = select(
             label: 'Drop all tables from the database? For a new installation of Kompass!',
@@ -141,6 +142,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         if (! file_exists($linkPath)) {
             $this->call('storage:link');
         }
+
         $this->sendSuccessMessage();
 
         return static::SUCCESS;
@@ -149,8 +151,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
     protected function installAssets($packagemanager)
     {
         // Tailwind Configuration...
-        copy(__DIR__.'/../../stubs/livewire/tailwind.config.js', base_path('tailwind.config.cjs'));
-        copy(__DIR__.'/../../stubs/livewire/postcss.config.js', base_path('postcss.config.cjs'));
+        copy(__DIR__.'/../../stubs/livewire/tailwind.config.cjs', base_path('tailwind.config.cjs'));
+        copy(__DIR__.'/../../stubs/livewire/postcss.config.cjs', base_path('postcss.config.cjs'));
         copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
 
         // Directories...

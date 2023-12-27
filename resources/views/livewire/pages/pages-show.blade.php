@@ -171,7 +171,7 @@
                 
                 @forelse ($blocks as $itemblocks)
                 
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :page="$page" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
                 @empty
                     <div

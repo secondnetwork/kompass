@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 use Livewire\Component;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
 
@@ -42,7 +42,7 @@ class Blogview extends Component
 
             Arr::collapse($blocks_id);
 
-            $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
+            $this->fields = Datafield::whereIn('block_id', $blocks_id)->get();
         }
 
     }

@@ -2,7 +2,7 @@
 
 
     <div x-data="{ open: @entangle('FormAdjustments') }">
-        <x-kompass::offcanvas :w="'w-2/4'" class="p-8 grid gap-4">
+        <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
                 <button class="flex btn gap-x-2 justify-end items-center text-md"
                     wire:click="update('{{ $post->id }}')">
@@ -20,10 +20,10 @@
 
 
                 <div>
-                    <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
+                    <strong class="text-gray-600">{{ __('Post Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
-
-                    <x-kompass::select wire:model.live="post.status" label="Status" placeholder="Select one status" :options="[
+  
+                    <x-kompass::select wire:model="post.status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -39,47 +39,13 @@
                         </button>
                 @endif
 
+                    <x-kompass::select wire:model="post.layout" label="Seite Template" :options="[
+                        ['name' => __('Post'), 'id' => 'post'],
+                        ['name' => __('Front Post'), 'id' => 'is_front_post'],
+                    ]"  />
 
                 <strong class="text-gray-600">SEO:</strong>
                 <x-kompass::form.textarea wire:model="post.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
-                Thumbnails
-                {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
-                @if (!empty($post->thumbnails))
-                @php
-                $file = Secondnetwork\Kompass\Models\File::find($post->thumbnails);
-                @endphp
-
-                    @if ($file)
-                        @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
-                        $file->extension))
-                        <div class="relative">
-
-                            <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
-                                src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
-                            <action-button
-                                class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
-                                <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
-                                <div class="flex">
-                                    <span wire:click="removemediaThumbnails({{ $post->id }})">
-                                        <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
-                                    </span>
-                                    <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
-                                        <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
-                                    </span>
-                                </div>
-                            </action-button>
-
-                        </div>
-                        @endif
-                    @endif
-                @else
-                <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
-                    <img-block
-                        class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
-                        <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                    </img-block>
-                </span>
-                @endif
             </x-slot>
         </x-kompass::offcanvas>
     </div>
@@ -92,7 +58,7 @@
         <div class="relative flex items-center">
 
             <div class=" flex-auto">
-                <span class="text-gray-600 text-sm">{{ __('Post') }} {{ __('Title') }}</span>
+                <span class="text-gray-600 text-sm">{{ __('Post title') }}</span>
 
 
                 <div x-data="click_to_edit()">
@@ -118,8 +84,8 @@
                         target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
                 @else
                     <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('blog/' . $post->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/blog/' . $post->slug) }}</a>
+                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $post->slug) }}"
+                        target="_blank" rel="noopener noreferrer">{{ url('/' . $post->slug) }}</a>
                 @endif
             </div>
 
@@ -195,15 +161,6 @@
     <div class="">
 
         <div class="ordre-1">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
                 wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
@@ -213,16 +170,18 @@
                 <span class="text-gray-600 text-sm block">Block Builder</span>
                 
                 @forelse ($blocks as $itemblocks)
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$fields" :post="$post" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :post="$post" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
                 @empty
                     <div
                         class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
-                        {{ __('Click "Add" to create the layout') }}</div>
+                        {{ __('Click "Add" to create the layout') }}
+                    </div>
                 @endforelse
                 <div class="flex  justify-end my-6">
                     <button class="btn"
-                        wire:click="selectitem('addBlock', {{ $post->id }})">{{ __('Add') }}</button>
+                        wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
                 </div>
 
 
@@ -231,7 +190,6 @@
         </div>
     </div>
 
-
     <div x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
         <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
             <x-slot name="body">
@@ -239,10 +197,6 @@
             </x-slot>
         </x-kompass::offcanvas>
     </div>
- 
-    
-
-
 
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">

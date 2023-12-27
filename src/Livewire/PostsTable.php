@@ -9,7 +9,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Post;
 
 class PostsTable extends Component
@@ -227,7 +227,7 @@ class PostsTable extends Component
                 }
             }
 
-            $fields = Datafields::where('block_id', $altID)->get();
+            $fields = Datafield::where('block_id', $altID)->get();
             $fields->each(function ($item, $key) use ($copy) {
                 $copyitem = $item->replicate();
                 $copyitem->block_id = $copy->id;
@@ -241,13 +241,13 @@ class PostsTable extends Component
 
         Post::find($this->selectedItem)->delete();
 
-        $blocks_id = Block::where('post_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');
+        // $blocks_id = Block::where('post_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');
 
-        Arr::collapse($blocks_id);
+        // Arr::collapse($blocks_id);
 
-        Block::where('post_id', $this->selectedItem)->delete();
+        // Block::where('post_id', $this->selectedItem)->delete();
 
-        $this->fields = Datafields::whereIn('block_id', $blocks_id)->delete();
+        // $this->fields = Datafield::whereIn('block_id', $blocks_id)->delete();
 
         $this->FormDelete = false;
     }

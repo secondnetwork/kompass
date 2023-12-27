@@ -33,6 +33,11 @@ class Block extends Model
         return $this->morphTo();
     }
 
+    public function datafield()
+    {
+        return $this->hasMany(Datafield::class);
+    }
+
     public function children()
     {
         return $this->hasMany(Block::class, 'subgroup')->with('children');

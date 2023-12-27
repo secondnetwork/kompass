@@ -5,11 +5,11 @@ namespace Secondnetwork\Kompass\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Datafields extends Model
+class Datafield extends Model
 {
     use HasFactory;
 
-    // protected $table = 'Datafields';
+    // protected $table = 'Datafield';
     // protected $casts = [
     //     'data' => 'array',
     // ];

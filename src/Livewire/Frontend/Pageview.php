@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafields;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Redirect;
@@ -20,8 +20,6 @@ class Pageview extends Component
     public $blocks;
 
     public $blocks_id;
-
-    public $datafields;
 
     public $fields;
 
@@ -37,16 +35,9 @@ class Pageview extends Component
             return redirect($this->page->new_url, $this->page->status_code);
         }
 
-        $blocks = Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        $tb = Block::all();
 
-        if ($blocks->isNotEmpty()) {
-            $this->blocks = $blocks;
-            $blocks_id = Block::where('blockable_id', $this->page->id)->orderBy('order', 'asc')->pluck('id');
-
-            Arr::collapse($blocks_id);
-
-            $this->fields = Datafields::whereIn('block_id', $blocks_id)->get();
-        }
+        $this->blocks = Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
 
         // //blockable_type
         // $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
@@ -59,7 +50,7 @@ class Pageview extends Component
         // Arr::collapse($this->blocks_id);
 
         // if (! Cache::has('kompass_field_'.$slug)) {
-        //     $this->datafields = Datafields::query()->whereIn('block_id', $this->blocks_id)->get()->mapToGroups(function ($item, $key) {
+        //     $this->datafields = Datafield::query()->whereIn('block_id', $this->blocks_id)->get()->mapToGroups(function ($item, $key) {
         //         return [
         //             $item['block_id'] => $item,
         //         ];
