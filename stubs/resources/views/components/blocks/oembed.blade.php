@@ -1,28 +1,31 @@
-
 @props([
-    'set' => '',
-    'layout' => '',
-    'blockid' => '',
+    'item' => '',
 ])
-@if ('video' == $layout)
-<section class="{{$set->layout ?? ''}} prose m-0 max-w-none prose-p:m-0 {{$set->alignment ?? ''}}">
+@if ('video' == $item->type)
+    <div {{ $attributes }}>
 
+        @if (get_field('video',$item->datafield))
+        <x-blocks.videoplayer :videourl="get_field('video', $item->datafield)" :poster="get_field('poster', $item->datafield)" />
+        @endif
 
-    @if ($this->get_field('video',$blockid))
+        @php
+        $videoEmbed = videoEmbed(get_field('oembed', $item->datafield));
+        @endphp
 
-    @php
-    $video_array = parse_video_id($this->get_field('video',$blockid));
-    @endphp
+            @if ($videoEmbed)
+            @php
 
-    @if ($video_array['type'] == 'youtube')
-        <lite-youtube videoid="{{ $video_array['id'] }}" playlabel=""></lite-youtube>
-    @endif
+            $assetExists = Storage::disk('public')->exists('thumbnails-video/'.$videoEmbed['id'].'.jpg');
+            $assetUrl = Storage::disk('public')->url('thumbnails-video/'.$videoEmbed['id'].'.jpg');
+            @endphp
+                @if ($videoEmbed['type'] == 'youtube')
+                <lite-youtube class="aspect-video" videoid="{{ $videoEmbed['id'] }}" params="rel=0" @if($assetExists) style="background-image: url('{{ $assetUrl }}');" @endif>
+                </lite-youtube>
+                @endif
+                @if ($videoEmbed['type'] == 'vimeo')
+                <lite-vimeo class="aspect-video" videoid="{{ $videoEmbed['id'] }}"></lite-vimeo>
+                @endif
+            @endif
 
-    @if ($video_array['type'] == 'vimeo')
-        <lite-vimeo videoid="{{ $video_array['id'] }}"></lite-vimeo>
-    @endif
-    @endif
-
-
-</section>
+    </div>
 @endif

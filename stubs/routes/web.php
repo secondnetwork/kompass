@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 use Secondnetwork\Kompass\Livewire\Frontend\Blogview;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
@@ -14,6 +15,8 @@ use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Volt::route('/blog', 'pages.blog.index');
 
 Route::group(['middleware' => ['web']], function () {
     Route::get('/', Pageview::class)->name('is_front_page');

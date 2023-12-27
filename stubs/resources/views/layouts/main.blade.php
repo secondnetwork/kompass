@@ -55,6 +55,7 @@
 
     </header>
 
+
     <main>
         @isset($slot)
             {{ $slot }}
@@ -67,23 +68,22 @@
             <div class="copyright">
                 &COPY; {{ date('Y') }} {{ setting('footer.copytext') }}
             </div>
-            {{ setting('footer.copytext') }}
             <livewire:menu name="footer">
 
         </div>
     </footer>
 
-    <div x-data="{ gotop: false }" class="bg-gray-900/50 p-2 h-10 w-10 rounded shadow fixed cursor-pointer right-8 transition-all"
+    <div @click="window.scrollTo({top: 0, behavior: 'smooth'})" x-data="{ gotop: false }" class="bg-gray-900/50 p-2 h-10 w-10 rounded shadow fixed cursor-pointer right-8 transition-all"
     :class="!gotop ? '-bottom-10 opacity-0' : 'transition duration-300 bottom-8 opacity-100'">
         <button
         @scroll.window="gotop = (window.pageYOffset > 40) ? true : false"
-        @click.window="window.scrollTo({top: 0, behavior: 'smooth'})"
+
         class=""><x-tabler-arrow-big-up-lines class="text-white"/></button>
     </div>
 
     @livewireScripts
     {{ Vite::useBuildDirectory('content')->withEntryPoints(['resources/js/main.js']) }}
-
+    @stack('scripts')
 </body>
 
 </html>

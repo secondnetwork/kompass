@@ -8,26 +8,17 @@
 @section('seo')
 {{-- {!! seo($SEOData) !!} --}}
 @endsection
-{{-- @dump($this->blocks->toArray()) --}}
 
 <div>
 
 @foreach ($this->blocks as $key => $item)
 
-    <x-blocks.header layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.longtext layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.anmeldemaske layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.unsergaste layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.ueberschrift layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.accordion layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.gallery layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.oembed layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-    <x-blocks.tables layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set"/>
-
-
-    <x-blocks.group layout="{{$item->type}}" blockid="{{$item->id}}" :set="$item->set" :children="$item['children']->where('status', 'published')->sortBy('order')" />
-
+    <x-blocks.longtext :item="$item" class="prose m-0 max-w-none  {{ $item->set->layout ?? '' }}"/>
+    <x-blocks.oembed :item="$item" class="{{ $item->set->layout ?? '' }}"/>
+        
 @endforeach
-
-<section></section>
+<section>
+</section>
 </div>
+
+
