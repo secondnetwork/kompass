@@ -3,7 +3,6 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -232,20 +231,11 @@ class PagesTable extends Component
 
         Page::find($this->selectedItem)->delete();
 
-        $blocks_id = Block::where('page_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');
-
-        Arr::collapse($blocks_id);
-
-        Block::where('page_id', $this->selectedItem)->delete();
-
-        $this->fields = Datafield::whereIn('block_id', $blocks_id)->delete();
-
         $this->FormDelete = false;
     }
 
     public function addate()
     {
-        // dd($this->form->getState()); page::create
         page::create($this->form->getState());
         Page::where('deleted_at');
     }

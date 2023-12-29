@@ -3,7 +3,6 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -240,21 +239,12 @@ class PostsTable extends Component
     {
 
         Post::find($this->selectedItem)->delete();
-
-        // $blocks_id = Block::where('post_id', $this->selectedItem)->orderBy('order', 'asc')->pluck('id');
-
-        // Arr::collapse($blocks_id);
-
-        // Block::where('post_id', $this->selectedItem)->delete();
-
-        // $this->fields = Datafield::whereIn('block_id', $blocks_id)->delete();
-
         $this->FormDelete = false;
+
     }
 
     public function addate()
     {
-        // dd($this->form->getState()); post::create
         post::create($this->form->getState());
         Post::where('deleted_at');
     }

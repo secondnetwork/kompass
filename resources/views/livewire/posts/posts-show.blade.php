@@ -46,6 +46,44 @@
 
                 <strong class="text-gray-600">SEO:</strong>
                 <x-kompass::form.textarea wire:model="post.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                Thumbnails
+                {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
+                @if (!empty($post->thumbnails))
+                @php
+                $file = Secondnetwork\Kompass\Models\File::find($post->thumbnails);
+                @endphp
+
+                    @if ($file)
+                        @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
+                        $file->extension))
+                        <div class="relative">
+
+                            <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
+                                src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
+                            <action-button
+                                class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
+                                <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
+                                <div class="flex">
+                                    <span wire:click="removemediaThumbnails({{ $post->id }})">
+                                        <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
+                                    </span>
+                                    <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
+                                        <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
+                                    </span>
+                                </div>
+                            </action-button>
+
+                        </div>
+                        @endif
+                    @endif
+                @else
+                <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
+                    <img-block
+                        class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
+                        <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                    </img-block>
+                </span>
+                @endif
             </x-slot>
         </x-kompass::offcanvas>
     </div>
