@@ -175,19 +175,18 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
-                '@tailwindcss/forms' => '^0.5.2',
-                '@tailwindcss/typography' => '^0.5.0',
+                '@tailwindcss/forms' => '^0.5.7',
+                '@tailwindcss/typography' => '^0.5.10',
                 '@lehoczky/postcss-fluid' => '^1.0.3',
-                'autoprefixer' => '^10.4.7',
-                'postcss' => '^8.4.23',
+                'autoprefixer' => '^10.4.16',
+                'postcss' => '^8.4.32',
                 'postcss-fluid' => '^1.4.2',
-                'postcss-import' => '^15.1.0',
+                'postcss-import' => '^16.0.0',
                 'postcss-import-ext-glob' => '^2.1.1',
                 'postcss-mixins' => '^9.0.4',
-                'postcss-nesting' => '^11.2.1',
-                'postcss-preset-env' => '^8.0.1',
-                'tailwindcss' => '^3.1.0',
-                'plyr' => '^3.7.8',
+                'postcss-nesting' => '^12.0.2',
+                'postcss-preset-env' => '^9.3.0',
+                'tailwindcss' => '^3.4.0',
             ] + $packages;
         });
         switch ($packagemanager) {
