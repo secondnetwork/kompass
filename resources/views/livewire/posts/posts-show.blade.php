@@ -116,15 +116,11 @@
                 <div class="col-span-6">
 
                 </div>
-                @if ($post->layout == 'is_front_post' || $post->layout == 'is_front_post')
+
                     <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/') }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
-                @else
-                    <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $post->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/' . $post->slug) }}</a>
-                @endif
+                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/blog/' . $post->slug) }}"
+                        target="_blank" rel="noopener noreferrer">{{ url('/blog/' . $post->slug) }}</a>
+
             </div>
 
 

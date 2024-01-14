@@ -63,7 +63,37 @@
 
                                         @foreach ($data as $key => $value)
                                             <td wire:sortable.handle class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
-                                                    {{ $menu->$value }}
+                                                    {{-- {{ $menu->$value }} --}}
+                                                    <div x-data="click_to_edit()" class="w-11/12 flex items-center">
+                                                    <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
+                          
+                                                        <span class="text-sm font-semibold">{{  $menu->$value }}</span>
+                                                        
+                                                        
+                                                        {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
+                                                    </a>  
+                                                    <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->$value }}'}">
+                                
+                                                        <input
+                                                            type="text"
+                                                            class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
+                                                            x-model="name"
+                                                            wire:model.lazy="newName" x-ref="input"
+                                                            x-on:keydown.enter="isEditing = false"
+                                                            x-on:keydown.escape="isEditing = false"
+                                                            {{-- @keydown.window.escape="disableEditing"  --}}
+                                                            x-on:click.away="isEditing = false"
+                                                            wire:keydown.enter="savename({{$menu->id }})"
+                                                        >
+                                                        <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
+                                                            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+                                                        </span>
+                                                        <span x-on:click="isEditing = false">
+                                                            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+                                                        </span>
+                                             
+                                                </div>
+                                                    </div>
                                             </td>
                                         @endforeach
 
