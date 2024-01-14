@@ -372,8 +372,7 @@ class PostsData extends Component
 
     public function delete() //delete block
     {
-        Datafield::where('block_id', $this->selectedItem)->delete();
-        block::destroy($this->selectedItem);
+        block::destroy($this->getId);
         $this->FormDelete = false;
         // $this->mount($this->selectedItem);
         $this->resetPageComponent();

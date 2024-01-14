@@ -15,6 +15,8 @@ class MenuTable extends Component
 
     public $data;
 
+    public $newName;
+
     public $selectedItem;
 
     public $timestamps = false;
@@ -91,6 +93,15 @@ class MenuTable extends Component
     private function resultDate()
     {
         return Menu::orderBy('order', 'ASC')->get();
+    }
+
+    public function rename($id)
+    {
+        if ($this->newName != null) {
+            $block = Menu::findOrFail($id);
+            $block->update(['name' => $this->newName]);
+        }
+        // $this->reset();
     }
 
     public function render()
