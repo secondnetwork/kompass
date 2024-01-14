@@ -44,14 +44,14 @@ class BlocksData extends Component
 
     protected $rules = [
         'data.name' => 'required|string|min:3',
-        'data.slug' => '',
+        // 'data.slug' => '',
         'data.grid' => '',
         'data.iconclass' => '',
         'data.icon_img_path' => '',
         'fields.*.id' => '',
         'fields.*.name' => '',
         'fields.*.grid' => '',
-        'fields.*.slug' => '',
+        // 'fields.*.slug' => '',
         'fields.*.type' => '',
         // 'filestoredata.*' => 'required|file|mimes:' . File::getAllExtensions() . '|max:' . File::getMaxSize(),
         // 'filestoredata' => 'image|max:1024', // 1MB Max
@@ -64,7 +64,7 @@ class BlocksData extends Component
 
         $this->fields = $fields;
         $this->name = $this->data->name;
-        $this->slug = $this->data->slug;
+        // $this->slug = $this->data->slug;
         $this->blocktemplatesId = $id;
         // $this->fields->slug = $mfields->slug;
     }

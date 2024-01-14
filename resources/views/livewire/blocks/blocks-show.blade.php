@@ -54,6 +54,11 @@
                 <x-kompass::input-error for="photo" class="mt-2" />
             </div>
 </div>
+
+<button class="flex btn gap-x-2   justify-center items-center"
+wire:click="saveUpdate('{{ $blocktemplatesId }}')">
+<x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
+</button>
             </x-slot>
         </x-kompass::offcanvas>
     </div>
