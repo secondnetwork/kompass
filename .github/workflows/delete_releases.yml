@@ -1,9 +1,7 @@
 name: Delete Older Releases
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   delete_releases:
@@ -14,5 +12,8 @@ jobs:
         with:
           repo: secondnetwork/kompass # Replace <owner> and <repoName> with your repository details
           keep_latest: 5 # Set to 0 to delete all releases
+          keep_min_download_counts: 1 # Optional parameters
+          delete_expired_data: 10 # Optional parameters
+          delete_tag_pattern: beta # defaults to ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
