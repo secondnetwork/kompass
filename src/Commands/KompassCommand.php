@@ -216,7 +216,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         (new Filesystem)->deleteDirectory('public/vendor/kompass');
         (new Filesystem)->copyDirectory(__DIR__.'/../public/assets/build', 'vendor/kompass/assets');
-      
+
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));

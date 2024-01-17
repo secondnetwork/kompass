@@ -61,8 +61,8 @@ class File extends Model
     /**
      * Get type by extension
      *
-     * @param  string  $ext Specific extension
-     * @return string      Type
+     * @param  string  $ext  Specific extension
+     * @return string Type
      */
     public function getType($ext)
     {
@@ -113,10 +113,10 @@ class File extends Model
     /**
      * Get file name and path to the file
      *
-     * @param  string  $type      File type
-     * @param  string  $name      File name
-     * @param  string  $extension File extension
-     * @return string            File name with the path
+     * @param  string  $type  File type
+     * @param  string  $name  File name
+     * @param  string  $extension  File extension
+     * @return string File name with the path
      */
     public function getName($extension)
     {
@@ -126,11 +126,11 @@ class File extends Model
     /**
      * Upload file to the server
      *
-     * @param  string  $type      File type
-     * @param  object  $file      Uploaded file from request
-     * @param  string  $name      File name
-     * @param  string  $extension File extension
-     * @return bool           True if file successfully uploaded, otherwise - false
+     * @param  string  $type  File type
+     * @param  object  $file  Uploaded file from request
+     * @param  string  $name  File name
+     * @param  string  $extension  File extension
+     * @return bool True if file successfully uploaded, otherwise - false
      */
     public function upload($type, $file, $name, $extension)
     {
