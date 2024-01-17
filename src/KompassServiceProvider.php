@@ -53,6 +53,10 @@ class KompassServiceProvider extends ServiceProvider
             ], 'models');
 
             $this->publishes([
+                __DIR__.'/../public/assets/build' => public_path('vendor/kompass/asset'),
+            ], 'assets');
+
+            $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
                 __DIR__.'/database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
                 __DIR__.'/database/seeders/RoleSeeder.php' => database_path('seeders/RoleSeeder.php'),
