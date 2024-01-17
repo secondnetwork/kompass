@@ -113,7 +113,6 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
             $this->call('volt:install');
         }
-        
 
         warning('Warning: Have you made a backup of you database?');
         $database = select(
@@ -245,7 +244,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     public function updateServiceProviders()
     {
         $appConfig = file_get_contents(config_path('app.php'));
-        
+
         if (
             ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
             &&
