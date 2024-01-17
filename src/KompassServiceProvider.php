@@ -53,7 +53,7 @@ class KompassServiceProvider extends ServiceProvider
             ], 'models');
 
             $this->publishes([
-                __DIR__.'/../public/assets/build' => public_path('vendor/kompass/asset'),
+                __DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets'),
             ], 'assets');
 
             $this->publishes([
