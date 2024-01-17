@@ -11,7 +11,7 @@ class BladeDirectives
         $url = 'http://localhost:5088:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/main.js';
         $url200 = @get_headers($url);
         if (! $url200) {
-            $content = file_get_contents(asset('vendor/kompass/asset/manifest.json'));
+            $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
             $manifest = json_decode($content, true);
 
             $entry = 'resources/js/main.js';
@@ -23,7 +23,7 @@ class BladeDirectives
                 }
             }
 
-            return '<link rel="stylesheet" href="'.asset('vendor/kompass/asset/'.$urls[0]).'"><style>[x-cloak] { display: none !important; }</style>';
+            return '<link rel="stylesheet" href="'.asset('vendor/kompass/assets/'.$urls[0]).'"><style>[x-cloak] { display: none !important; }</style>';
         } else {
             return '';
         }
@@ -34,11 +34,11 @@ class BladeDirectives
         $url = 'http://localhost:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/main.js';
         $url200 = @get_headers($url);
         if (! $url200) {
-            $content = file_get_contents(asset('vendor/kompass/asset/manifest.json'));
+            $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
             $manifest = json_decode($content, true);
             $entry = 'resources/js/main.js';
 
-            return '<script type="module" defer src="'.asset('vendor/kompass/asset/'.$manifest[$entry]['file']).'"></script>';
+            return '<script type="module" defer src="'.asset('vendor/kompass/assets/'.$manifest[$entry]['file']).'"></script>';
         } else {
             return '<script type="module" defer src="'.$url.'"></script>';
         }

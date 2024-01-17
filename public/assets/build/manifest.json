@@ -1,6 +1,6 @@
 {
-  "_vendor.TbOZWfX_.js": {
-    "file": "js/vendor.TbOZWfX_.js"
+  "_vendor.mjkZ1Ukz.js": {
+    "file": "js/vendor.mjkZ1Ukz.js"
   },
   "resources/css/kompass.css": {
     "file": "css/kompass.A9b7Zv9R.css",
@@ -15,9 +15,9 @@
       "resources/js/plugins/lite-yt-embed.js",
       "resources/js/plugins/lite-vimeo-embed.js"
     ],
-    "file": "js/main.JKI9uQ3y.js",
+    "file": "js/main.cmn_RxB-.js",
     "imports": [
-      "_vendor.TbOZWfX_.js"
+      "_vendor.mjkZ1Ukz.js"
     ],
     "isEntry": true,
     "src": "resources/js/main.js"

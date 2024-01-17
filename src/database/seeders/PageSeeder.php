@@ -153,7 +153,6 @@ class PageSeeder extends Seeder
 
         Datafield::create([
             'block_id' => $block->id,
-            'name' => 'wysiwyg',
             'type' => 'wysiwyg',
             'order' => '1',
             'data' => '{"time":1699101859852,"blocks":[{"id":"tDj43ofNgq","type":"header","data":{"text":"The Homepage","level":2}},{"id":"nB8EHgsYpy","type":"paragraph","data":{"text":"The wheel is come full circle. Harp not on that. I will no longer endure it, though yet I know no wise remedy how to avoid it. A fool, a fool! I met a fool i th forest, A motley fool. Invest me in my motley; give me leave To speak my mind, and I will through and through Cleanse the foul body of th infected world, If they will patiently receive my medicine. Then a soldier, Full of strange oaths, and bearded like the pard, Jealous in honour, sudden and quick in quarrel, Seeking the bubble reputation Even in the cannons mouth. "}}],"version":"2.28.0"}',
@@ -183,7 +182,6 @@ class PageSeeder extends Seeder
 
         Datafield::create([
             'block_id' => $block->id,
-            'name' => 'wysiwyg',
             'type' => 'wysiwyg',
             'order' => '1',
             'data' => '{"time":1699101859852,"blocks":[{"id":"tDj43ofNgq","type":"header","data":{"text":"The About","level":2}},{"id":"nB8EHgsYpy","type":"paragraph","data":{"text":"The wheel is come full circle. Harp not on that. I will no longer endure it, though yet I know no wise remedy how to avoid it. A fool, a fool! I met a fool i th forest, A motley fool. Invest me in my motley; give me leave To speak my mind, and I will through and through Cleanse the foul body of th infected world, If they will patiently receive my medicine. Then a soldier, Full of strange oaths, and bearded like the pard, Jealous in honour, sudden and quick in quarrel, Seeking the bubble reputation Even in the cannons mouth."}}],"version":"2.28.0"}',
