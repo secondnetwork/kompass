@@ -44,6 +44,18 @@ With the command we install frontend asset, created new admin user and drop all 
 php artisan kompass:install  
 ```
 
+**Publishing the configuration file**
+
+```bash
+php artisan livewire:publish --config
+```
+
+This will create a new (config/livewire.php) file in the configuration directory of your Laravel application. Then, you need to update the following changes.
+
+```php
+'legacy_model_binding' => true,
+``````
+
 ## Documentation
 
 Documentation is available at https://kompass.secondnetwork.de
