@@ -135,7 +135,7 @@ class PostsData extends Component
 
     public function addBlock($blocktemplatesID, $name, $type, $grid = null, $iconclass = null)
     {
-       
+
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
         $block = $this->post->blocks()->create([
             'name' => $name,
@@ -149,9 +149,9 @@ class PostsData extends Component
 
         $blockmeta = Block::find($block->id);
         $blockmeta->saveMeta([
-            'layout' => 'popout', 
+            'layout' => 'popout',
             'alignment' => 'left',
-            'slider' => ''
+            'slider' => '',
         ]);
 
         if ($type == 'wysiwyg') {
@@ -254,7 +254,7 @@ class PostsData extends Component
 
         if ($set == 'layout') {
             $setblock->saveMeta([
-                'layout' => $status, 
+                'layout' => $status,
             ]);
         }
         if ($set == 'alignment') {
@@ -264,7 +264,7 @@ class PostsData extends Component
         }
         if ($set == 'slider') {
             $setblock->saveMeta([
-                'slider' => $status
+                'slider' => $status,
             ]);
         }
 

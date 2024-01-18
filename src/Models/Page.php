@@ -11,8 +11,8 @@ use Kolossal\Multiplex\HasMeta;
 class Page extends Model
 {
     use HasFactory;
-    use SoftDeletes;
     use HasMeta;
+    use SoftDeletes;
 
     protected $casts = [
         'content' => 'array',

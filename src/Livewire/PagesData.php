@@ -168,7 +168,7 @@ class PagesData extends Component
 
     public function addBlock($blocktemplatesID, $name, $type, $iconclass = null)
     {
-       
+
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
 
         $block = $this->page->blocks()->create([
@@ -183,9 +183,9 @@ class PagesData extends Component
 
         $blockmeta = Block::find($block->id);
         $blockmeta->saveMeta([
-            'layout' => 'popout', 
+            'layout' => 'popout',
             'alignment' => 'left',
-            'slider' => ''
+            'slider' => '',
         ]);
 
         if ($type == 'wysiwyg') {
@@ -288,7 +288,7 @@ class PagesData extends Component
         if ($set == 'layout') {
             $setblock->deleteMeta('layout');
             $setblock->saveMeta([
-                'layout' => $status, 
+                'layout' => $status,
             ]);
         }
         if ($set == 'alignment') {
@@ -300,7 +300,7 @@ class PagesData extends Component
         if ($set == 'slider') {
             $setblock->deleteMeta('slider');
             $setblock->saveMeta([
-                'slider' => $status
+                'slider' => $status,
             ]);
         }
 
