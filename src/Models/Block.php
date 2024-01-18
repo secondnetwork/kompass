@@ -4,14 +4,14 @@ namespace Secondnetwork\Kompass\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kolossal\Multiplex\HasMeta;
 
 class Block extends Model
 {
     use HasFactory;
+    use HasMeta;
 
     protected $guarded = [];
-
-    protected $casts = ['set' => 'object'];
 
     public static function boot()
     {

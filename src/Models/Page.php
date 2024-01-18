@@ -6,11 +6,13 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kolossal\Multiplex\HasMeta;
 
 class Page extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasMeta;
 
     protected $casts = [
         'content' => 'array',

@@ -135,19 +135,25 @@ class PostsData extends Component
 
     public function addBlock($blocktemplatesID, $name, $type, $grid = null, $iconclass = null)
     {
-        // Layout *popout or full *** alignment* left or right
-
-        $blockTypeData = ['layout' => 'popout', 'alignment' => 'left', 'slider' => ''];
+       
         $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
         $block = $this->post->blocks()->create([
             'name' => $name,
             'subgroup' => $this->blockgroupId,
-            'set' => $blockTypeData,
+
             'status' => 'published',
             'iconclass' => $tempBlock->iconclass ?? $iconclass,
             'type' => $type,
             'order' => '999',
         ]);
+
+        $blockmeta = Block::find($block->id);
+        $blockmeta->saveMeta([
+            'layout' => 'popout', 
+            'alignment' => 'left',
+            'slider' => ''
+        ]);
+
         if ($type == 'wysiwyg') {
             Datafield::create([
                 'block_id' => $block->id,
@@ -244,16 +250,22 @@ class PostsData extends Component
     public function saveset($id, $set, $status)
     {
 
-        $setblock = Block::findOrFail($id);
+        $setblock = Block::find($id);
 
         if ($set == 'layout') {
-            $setblock->update(['set->layout' => $status]);
+            $setblock->saveMeta([
+                'layout' => $status, 
+            ]);
         }
         if ($set == 'alignment') {
-            $setblock->update(['set->alignment' => $status]);
+            $setblock->saveMeta([
+                'alignment' => $status,
+            ]);
         }
         if ($set == 'slider') {
-            $setblock->update(['set->slider' => $status]);
+            $setblock->saveMeta([
+                'slider' => $status
+            ]);
         }
 
         $this->resetPageComponent();
