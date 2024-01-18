@@ -40,6 +40,6 @@ class Block extends Model
 
     public function children()
     {
-        return $this->hasMany(Block::class, 'subgroup')->with('children');
+        return $this->hasMany(Block::class, 'subgroup')->with('children')->orderBy('order', 'asc');
     }
 }
