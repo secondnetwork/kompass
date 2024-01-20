@@ -20,7 +20,7 @@
     "require": {
         "php": "^8.2",
         "blade-ui-kit/blade-icons": "^1.5.3",
-        "symfony/http-kernel": "^6.2|^7.0",
+        "symfony/http-kernel": "^6.4.2|^7.0",
         "illuminate/support": "^10.0|^11.0",
         "illuminate/database": "^10.0|^11.0",
         "illuminate/validation": "^10.0|^11.0",
@@ -38,7 +38,7 @@
         "laravel/pint": "^1.13.9",
         "mockery/mockery": "^1.6.7",
         "phpunit/phpunit": "^10.5.8",
-        "laravel/framework": "^10.0|^11.0",
+        "laravel/framework": "^10.41|^11.0",
         "spatie/laravel-ignition": "^2.4.1"
     },
     "autoload": {
