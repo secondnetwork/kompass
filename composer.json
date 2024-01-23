@@ -31,7 +31,7 @@
         "livewire/livewire": "^3.3.5",
         "livewire/volt": "^1.6.1",
         "secondnetwork/blade-tabler-icons": "^2.46",
-        "symfony/mailgun-mailer": "^6.4.0"
+        "symfony/mailgun-mailer": "^6.4.0 || ^7.0.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23.1",
