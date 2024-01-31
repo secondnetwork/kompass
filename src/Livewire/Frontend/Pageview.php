@@ -34,14 +34,21 @@ class Pageview extends Component
         if (! empty($this->page->new_url)) {
             return redirect($this->page->new_url, $this->page->status_code);
         }
-
-        $tb = Block::all();
-
-        $this->blocks = Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
-
+   
+        $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
+            return Block::where('blockable_type', 'page')
+            ->where('blockable_id', $this->page->id)
+            ->where('status', 'published')
+            ->orderBy('order', 'asc')
+            ->where('subgroup', null)
+            ->with(['children' => function ($query) {
+                $query->where('status', 'published');
+            }])
+            ->with(['datafield','meta'])->get();
+        });
         // //blockable_type
         // $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-        //     return Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        //     return Block::where('blockable_type', 'page')->where('blockable_id', $this->page->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->with('meta')->get();
         // });
 
         // $this->blocks_id = Cache::rememberForever('kompass_block_id_'.$slug, function () {
@@ -157,20 +164,9 @@ class Pageview extends Component
         }
     }
 
-    // public function getDynamicSEOData(): SEOData
-    // {
-
-    //     return new SEOData(
-    //         // title: $this->page->title,
-    //         description: $this->page->meta_description,
-    //         // author: $this->author->fullName,
-    //     );
-    // }
-
     public function render()
     {
         return view('livewire.pageview', [
-            // 'SEOData' => $this->getDynamicSEOData()
         ])->layout('layouts.main');
     }
 }

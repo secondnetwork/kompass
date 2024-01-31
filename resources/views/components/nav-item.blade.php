@@ -12,9 +12,10 @@
     $slider = $itemblocks->slider ?? '';
 @endphp
 <nav-item class="flex items-center gap-2">
+
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
     <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
-        @if ($layout == '')
+        @if ($layout == 'content')
             <x-tabler-columns-3 class="stroke-blue-500" />
         @else
             <x-tabler-columns-3 />
@@ -34,6 +35,52 @@
             <x-tabler-arrow-autofit-width />
         @endif
     </span>
+   
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Classname</span>
+    <div x-data="click_to_edit()" class="w-11/12 flex items-center">
+        <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
+            class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
+            <span class="text-sm font-semibold">{{ $itemblocks->getMeta('css-classname') }}</span>
+            <x-tabler-edit class="cursor-pointer " />
+        </a>
+    <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', classname: '{{ $itemblocks->getMeta('css-classname')}}' }">
+
+        <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="classname"
+            wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
+            x-on:keydown.escape="isEditing = false"
+            x-on:click.away="isEditing = false" wire:keydown.enter="classname({{ $itemblocks->id }})">
+        <span wire:click="classname({{ $itemblocks->id }})" x-on:click="isEditing = false">
+            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+        </span>
+        <span x-on:click="isEditing = false">
+            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+        </span>
+    </div>
+    </div>
+
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">ID</span>
+    <div x-data="click_to_edit()" class="w-11/12 flex items-center">
+        <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
+            class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
+            <span class="text-sm font-semibold">{{ $itemblocks->getMeta('id-anchor') }}</span>
+            <x-tabler-edit class="cursor-pointer " />
+        </a>
+    <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', idanchor: '{{ $itemblocks->getMeta('id-anchor')}}' }">
+
+        <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="idanchor"
+            wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
+            x-on:keydown.escape="isEditing = false"
+            x-on:click.away="isEditing = false" wire:keydown.enter="idanchor({{ $itemblocks->id }})">
+        <span wire:click="idanchor({{ $itemblocks->id }})" x-on:click="isEditing = false">
+            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+        </span>
+        <span x-on:click="isEditing = false">
+            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+        </span>
+    </div>
+    </div>
+
+     
 </nav-item> 
 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
     <nav-item class="flex items-center gap-2">
@@ -78,18 +125,25 @@
 @if ($itemblocks->type == 'wysiwyg')
     <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>
-        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', 'left')">
-            @if ($alignment == 'left')
-                <x-tabler-box-align-left class="stroke-blue-500" />
+        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', 'align-left')">
+            @if ($alignment == 'align-left')
+                <x-tabler-align-left class="stroke-blue-500" />
             @else
-                <x-tabler-box-align-left />
+                <x-tabler-align-left />
             @endif
         </span>
-        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', 'right')">
-            @if ($alignment == 'right')
-                <x-tabler-box-align-right class="stroke-blue-500" />
+        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', 'align-center')">
+            @if ($alignment == 'align-center')
+                <x-tabler-align-center class="stroke-blue-500" />
             @else
-                <x-tabler-box-align-right />
+                <x-tabler-align-center />
+            @endif
+        </span>
+        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', 'align-right')">
+            @if ($alignment == 'align-right')
+                <x-tabler-align-right class="stroke-blue-500" />
+            @else
+                <x-tabler-align-right />
             @endif
         </span>
 

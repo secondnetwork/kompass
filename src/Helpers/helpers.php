@@ -49,6 +49,7 @@ if (! function_exists('get_thumbnails')) {
 if (! function_exists('get_field')) {
     function get_field($type, $data, $class = null, $size = null)
     {
+  
         foreach ($data as $value) {
             if ($value->type == $type) {
 
@@ -79,6 +80,30 @@ if (! function_exists('get_field')) {
                             <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                             </picture>
                             ';
+                        }
+                    }
+
+                    return '';
+                }
+
+                if ($value->type == 'gallery' && $value->data != null) {
+              
+                    $file = files::where('id', $value->data)->first();
+                    if ($file) {
+                        if ($size) {
+                            $sizes = '_'.$size;
+
+                            return '<picture>
+                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            </picture>
+                            <span>
+                            '.$file->description.'</span>';
+                        } else {
+                            return '<picture>
+                            <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                            <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
+                            <span>'.$file->description.'</span></picture>';
                         }
                     }
 

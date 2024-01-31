@@ -113,7 +113,7 @@ class PagesData extends Component
     public function mount($id)
     {
         $this->page = Page::findOrFail($id);
-
+        
         $this->blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
@@ -181,19 +181,29 @@ class PagesData extends Component
             'order' => '999',
         ]);
 
-        $blockmeta = Block::find($block->id);
-        $blockmeta->saveMeta([
-            'layout' => 'popout',
-            'alignment' => 'left',
-            'slider' => '',
-        ]);
-
         if ($type == 'wysiwyg') {
             Datafield::create([
                 'block_id' => $block->id,
                 'type' => 'wysiwyg',
                 'order' => '1',
             ]);
+        }
+
+        $blockmeta = Block::find($block->id);
+
+        switch ($type) {
+            case 'wysiwyg':
+                $blockmeta->saveMeta([
+                    'layout' => 'popout',
+                    'alignment' => 'align-left',
+                ]);
+                break;
+            
+            default:
+                $blockmeta->saveMeta([
+                    'layout' => 'popout',
+                ]);
+                break;
         }
 
         if ($blocktemplatesID != null) {
@@ -280,6 +290,31 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function classname($id)
+    {
+        if ($this->newName != null) {
+        $setblock = Block::find($id);
+
+            $setblock->deleteMeta('css-classname');
+            $setblock->saveMeta([
+                'css-classname' => $this->newName,
+            ]);
+        }
+        $this->resetPageComponent();
+    }
+    public function idanchor($id)
+    {
+        if ($this->newName != null) {
+        $setblock = Block::find($id);
+        $setblock->deleteMeta('idanchor');
+            $setblock->deleteMeta('id-anchor');
+            $setblock->saveMeta([
+                'id-anchor' => $this->newName,
+            ]);
+        }
+        $this->resetPageComponent();
+    }
+
     public function saveset($id, $set, $status)
     {
 
@@ -289,6 +324,24 @@ class PagesData extends Component
             $setblock->deleteMeta('layout');
             $setblock->saveMeta([
                 'layout' => $status,
+            ]);
+        }
+        if ($set == 'idanchor') {
+            $setblock->deleteMeta('idanchor');
+            $setblock->saveMeta([
+                'idanchor' => $status,
+            ]);
+        }
+        if ($set == 'css-classname') {
+            $setblock->deleteMeta('css-classname');
+            $setblock->saveMeta([
+                'classname' => $status,
+            ]);
+        }
+        if ($set == 'col-span') {
+            $setblock->deleteMeta('col-span');
+            $setblock->saveMeta([
+                'col-span' => $status,
             ]);
         }
         if ($set == 'alignment') {
