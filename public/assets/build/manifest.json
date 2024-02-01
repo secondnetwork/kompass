@@ -1,34 +1,28 @@
 {
-  "_vendor.mjkZ1Ukz.js": {
-    "file": "js/vendor.mjkZ1Ukz.js"
-  },
   "resources/css/kompass.css": {
-    "file": "css/kompass.A9b7Zv9R.css",
+    "file": "assets/kompass-A9b7Zv9R.css",
     "isEntry": true,
     "src": "resources/css/kompass.css"
   },
   "resources/js/main.js": {
     "css": [
-      "css/kompass.A9b7Zv9R.css"
+      "assets/kompass-A9b7Zv9R.css"
     ],
     "dynamicImports": [
       "resources/js/plugins/lite-yt-embed.js",
       "resources/js/plugins/lite-vimeo-embed.js"
     ],
-    "file": "js/main.cmn_RxB-.js",
-    "imports": [
-      "_vendor.mjkZ1Ukz.js"
-    ],
+    "file": "assets/main-_JbDs_VL.js",
     "isEntry": true,
     "src": "resources/js/main.js"
   },
   "resources/js/plugins/lite-vimeo-embed.js": {
-    "file": "js/lite-vimeo-embed.96Sz8v-u.js",
+    "file": "assets/lite-vimeo-embed-96Sz8v-u.js",
     "isDynamicEntry": true,
     "src": "resources/js/plugins/lite-vimeo-embed.js"
   },
   "resources/js/plugins/lite-yt-embed.js": {
-    "file": "js/lite-yt-embed.XiGO9jRn.js",
+    "file": "assets/lite-yt-embed-XiGO9jRn.js",
     "isDynamicEntry": true,
     "src": "resources/js/plugins/lite-yt-embed.js"
   }

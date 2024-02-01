@@ -42,6 +42,98 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 
 
+@layer base {
+  :root {
+    --primary:var(--teal-blue-950);
+    --secondary:var(--fiery-orange-500);
 
+    --base-font-family: "ingra-condensed-2";
+    --primary-font-family:"Overpass";
+
+    --btn:var(--teal-blue-950);
+    --btnhover:var(--teal-blue-300);
+    --btn-textcolor:var(--teal-blue-950);
+    --btnhover-textcolor:var(--teal-blue-950);
+
+    --btn-secondary:var(--teal-blue-200);
+    --btnhover-secondary:var(--teal-blue-950);
+    --btn-textcolor-secondary:var(--teal-blue-950);
+    --btnhover-textcolor-secondary:#fff;
+
+    --btn-tap:var(--teal-blue-300);
+    --btn-tap-textcolor:var(--teal-blue-950);
+    --btnhover-tap: var(--teal-blue-100);
+    --btnhover-tap-textcolor::var(--teal-blue-950);
+
+    --btnheight: 3rem;
+
+    --border-color-input:var(--teal-blue-900);
+
+    --icon-color:rgb(107 114 128);
+    --icon-color-filter:var(--teal-blue-300);
+
+    --link:var(--teal-blue-950);
+    --linkhover:var(--fiery-orange-800);
+
+    --cardbox-font-size: 2rem;
+    --cardbox-header: #6793c0;
+    --notice: var(--teal-blue-100);
+
+    --message-success-bg: var(--teal-blue-950);
+    --message-warn-bg: var(--fiery-orange-600);
+    --message-error-bg: var(--primary);
+    --message-info-bg: var(--teal-blue-950);
+
+    --indochine-50: #fffeea;
+    --indochine-100: #fffbc4;
+    --indochine-200: #fff784;
+    --indochine-300: #ffeb44;
+    --indochine-400: #ffdc19;
+    --indochine-500: #ffbc00;
+    --indochine-600: #e49000;
+    --indochine-700: #cb6d00;
+    --indochine-800: #994d07;
+    --indochine-900: #7e3f09;
+    --indochine-950: #482100;
+    
+    
+
+    --avatar-header:#fff;
+
+    --teal-blue-50: #effaff;
+    --teal-blue-100: #ddf5ff;
+    --teal-blue-200: #b4ebff;
+    --teal-blue-300: #72ddff;
+    --teal-blue-400: #28cdff;
+    --teal-blue-500: #00b7fb;
+    --teal-blue-600: #0093d8;
+    --teal-blue-700: #0075ae;
+    --teal-blue-800: #006290;
+    --teal-blue-900: #045176;
+    --teal-blue-950: #004b96;
+    --fiery-orange-50: #fef9ec;
+    --fiery-orange-100: #faefcb;
+    --fiery-orange-200: #f5dc92;
+    --fiery-orange-300: #efc45a;
+    --fiery-orange-400: #ebad33;
+    --fiery-orange-500: #e99f3f;
+    --fiery-orange-600: #c96d16;
+    --fiery-orange-700: #b25217;
+    --fiery-orange-800: #833d11;
+    --fiery-orange-900: #703217;
+    --fiery-orange-950: #401808;
+    --tradewind-50: #f3faf8;
+    --tradewind-100: #d7f0e8;
+    --tradewind-200: #b0dfd3;
+    --tradewind-300: #80c8b8;
+    --tradewind-400: #6db7a9;
+    --tradewind-500: #3c9082;
+    --tradewind-600: #2e7369;
+    --tradewind-700: #285d56;
+    --tradewind-800: #244b47;
+    --tradewind-900: #21403c;
+    --tradewind-950: #0e2523;
+  }
+}
 
 
