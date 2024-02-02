@@ -16,6 +16,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
 use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
@@ -70,7 +71,9 @@ class KompassServiceProvider extends ServiceProvider
 
             $this->commands([
                 KompassCommand::class,
+                FaviconGeneratorCommand::class
             ]);
+            
         }
         Gate::define('role', function ($user, ...$roles) {
             return $user->hasRole($roles);
