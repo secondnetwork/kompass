@@ -50,6 +50,10 @@ php artisan kompass:install
 php artisan livewire:publish --config
 ```
 
+```bash
+ php artisan vendor:publish --tag=assets --force && php artisan optimize:clear
+```
+
 This will create a new (config/livewire.php) file in the configuration directory of your Laravel application. Then, you need to update the following changes.
 
 ```php

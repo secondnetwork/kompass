@@ -3,6 +3,7 @@
 namespace Secondnetwork\Kompass;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Storage;
 
 class BladeDirectives
 {
@@ -10,12 +11,22 @@ class BladeDirectives
     {
         $url = 'http://localhost:5088:' . env('VITE_PORT_KOMPASS', '5088') . '/resources/js/main.js';
         $url200 = @get_headers($url);
-        if (!$url200) {
-            try {
+        if (!$url200) {            
+            // $content = (public_path('vendor/kompass/assets/manifest.json'));
+            if(file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
                 $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
-            } catch (\Throwable $th) {
+            }else{
                 $content = '';
             }
+            
+            // $manifest = json_decode($content, true);
+            // if (Storage::exists(asset('vendor/kompass/assets/manifest.json')))
+            //     dump('ja');
+            // else {
+            //     dump('nein');
+            //     // $content = 'sd';
+            //     // dd(asset('vendor/kompass/assets/manifest.json'));
+            // }
             // $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
             $manifest = json_decode($content, true);
 
@@ -38,9 +49,9 @@ class BladeDirectives
         $url = 'http://localhost:' . env('VITE_PORT_KOMPASS', '5088') . '/resources/js/main.js';
         $url200 = @get_headers($url);
         if (!$url200) {
-            try {
+            if(file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
                 $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
-            } catch (\Throwable $th) {
+            }else{
                 $content = '';
             }
             $manifest = json_decode($content, true);
