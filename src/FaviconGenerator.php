@@ -27,7 +27,7 @@ class FaviconGenerator
         // Image::configure(['driver' => 'imagick']);
    
         $image = $manager->read($this->filePath);
-        dump($image);
+
         $image->resize(192, 192)->save($this->distPath . "/android-chrome-192x192.png", 100, 'png');
         $image->resize(512, 512)->save($this->distPath . "/android-chrome-512x512.png", 100, 'png');
         $image->resize(180, 180)->save($this->distPath . "/apple-touch-icon.png", 100, 'png');

@@ -18,7 +18,7 @@ class FaviconGeneratorCommand extends Command
 
         $favicon = new FaviconGenerator(public_path('favicon/favicon.png'));
         $favicon->generateFaviconsFromImagePath();
-        $this->comment('All done');
+        $this->comment('Generate favicons success');
 
         return self::SUCCESS;
     }
