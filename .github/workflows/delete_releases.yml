@@ -10,9 +10,8 @@ jobs:
       - name: Delete Older Releases
         uses: dev-drprasad/delete-older-releases@v0.3.2
         with:
-          repo: secondnetwork/kompass # Replace <owner> and <repoName> with your repository details
-          keep_latest: 5 # Set to 0 to delete all releases
-          keep_min_download_counts: 1 # Optional parameters
-          delete_expired_data: 10 # Optional parameters
+          repo: secondnetwork/kompass
+          keep_latest: 5
+          keep_min_download_counts: 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
