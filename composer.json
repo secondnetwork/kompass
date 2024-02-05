@@ -37,7 +37,7 @@
         "fakerphp/faker": "^1.23.1",
         "laravel/pint": "^1.13.9",
         "mockery/mockery": "^1.6.7",
-        "phpunit/phpunit": "^10.5.8",
+        "phpunit/phpunit": "^10.5.8 || ^11.0.0",
         "laravel/framework": "^10.41|^11.0",
         "spatie/laravel-ignition": "^2.4.1"
     },
