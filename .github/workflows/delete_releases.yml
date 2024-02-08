@@ -7,10 +7,10 @@ jobs:
   delete_releases:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete Older Releases
-        uses: dev-drprasad/delete-older-releases@v0.3.2
-        with:
-          keep_latest: 5
-          keep_min_download_counts: 1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v3
+    - uses: Nats-ji/delete-old-releases@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        keep-count: 5
+        keep-old-minor-releases: true
+        keep-old-minor-releases-count: 1
