@@ -14,3 +14,4 @@ jobs:
         keep-count: 5
         keep-old-minor-releases: true
         keep-old-minor-releases-by: 'major'
+        remove-tags: true
