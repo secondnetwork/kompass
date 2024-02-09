@@ -5,7 +5,7 @@
     'class' => '',
 ])
 
-<div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 @endif border-b-2" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-gray-200 shadow-inner' "
+<div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 border-2 @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-gray-200 shadow-inner'"
     wire:sortable.item="{{ $itemblocks->id }}"
     @if ($itemblocks->subgroup) wire:sortable-group.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else
@@ -345,7 +345,7 @@
         </div>
 
     </div>
-    <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="pl-4 bg-purple-700">
+    <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="bg-purple-700 grid grid-cols-{{ $itemblocks->grid }}" >
         <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
     </div>
 </div>
