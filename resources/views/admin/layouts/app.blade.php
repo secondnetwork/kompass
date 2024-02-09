@@ -84,7 +84,7 @@
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.posts*')) class="active" @endif href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
           <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
-          {{-- <livewire:adminmenu name="admin-sidebar-top"> --}}
+          <livewire:adminmenu name="admin-sidebar-top">
            
 
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo-video class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>

@@ -89,7 +89,7 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
                 </div>
                 <div class="col-span-6 text-md">
-                    {{ $data->slug }}
+                    {{ $data->name }}
                 </div>
         </div>
         <div class="flex justify-end items-center">
@@ -190,7 +190,7 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
                     <div class="p-4 flex flex-col gap-4 bg-blue-100 rounded-b-md" wire:key="field-{{ $item->id }}">
                         <x-kompass::form.input wire:model="fields.{{ $key }}.name" label="Feldbeschriftung" type="text" />
                         <div>
-                            Feldname: <strong>{{ $fields[$key]->slug }}</strong>
+                            Feldname: <strong>{{ $fields[$key]->name }}</strong>
                         </div>
            
 
