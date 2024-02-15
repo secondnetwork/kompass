@@ -111,7 +111,13 @@
                     @forelse ($filesdata as $item)
                         <div id="m{{ $item->id }}"
                             @if (empty($search)) x-show="(dir === '{{ $item->path }}')" @endif>
-
+                            @php
+                                if ($item->path) {
+                                     $dirpath = 'storage/'. $item->path . '/';
+                                }else {
+                                     $dirpath = 'storage/';
+                                }
+                            @endphp
                             @switch($item->type)
                                 @case('video')
                                     <data-item class="bg-white block shadow rounded">
@@ -120,7 +126,7 @@
                                             class="relative text-sm font-bold rounded-tr rounded-tl w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
 
                                             <video controls class="object-cover h-full"
-                                                src="{{ asset($item->path . '/' . $item->slug . '.' . $item->extension) }}"></video>
+                                                src="{{ asset($dirpath . $item->slug . '.' . $item->extension) }}"></video>
 
                                             <div
                                                 class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
@@ -175,7 +181,7 @@
                                     <data-item class="bg-white block shadow rounded">
 
                                         <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
-                                            style="background-image: url('{{ asset($item->path . '/' . $item->slug . '.' . $item->extension) }}')">
+                                            style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
 
 
 
@@ -211,7 +217,7 @@
                                     <data-item class="bg-white block shadow rounded">
 
                                         <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[6/4] bg-cover bg-center bg-gray-300"
-                                            style="background-image: url('{{ asset('storage' . $item->path . '/' . $item->slug . '.' . $item->extension) }}')">
+                                            style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
 
 
 

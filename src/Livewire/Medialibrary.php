@@ -157,8 +157,11 @@ class Medialibrary extends Component
             $this->alt = $model->alt;
             $this->description = $model->description;
             $this->type = $model->type;
-
-            $this->file = $model->path.'/'.$model->slug.'.'.$model->extension;
+            if ($model->path) {
+                $this->file = 'storage/'. $model->path.'/'.$model->slug.'.'.$model->extension;
+           }else {
+                $this->file = 'storage/'.$model->slug.'.'.$model->extension;
+           }
 
             $this->updated_at = $model->updated_at;
             $this->FormEdit = true;
