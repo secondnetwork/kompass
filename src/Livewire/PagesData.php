@@ -113,7 +113,7 @@ class PagesData extends Component
     public function mount($id)
     {
         $this->page = Page::findOrFail($id);
-        
+
         $this->blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
@@ -198,7 +198,7 @@ class PagesData extends Component
                     'alignment' => 'align-left',
                 ]);
                 break;
-            
+
             default:
                 $blockmeta->saveMeta([
                     'layout' => 'popout',
@@ -293,7 +293,7 @@ class PagesData extends Component
     public function classname($id)
     {
         if ($this->newName != null) {
-        $setblock = Block::find($id);
+            $setblock = Block::find($id);
 
             $setblock->deleteMeta('css-classname');
             $setblock->saveMeta([
@@ -302,11 +302,12 @@ class PagesData extends Component
         }
         $this->resetPageComponent();
     }
+
     public function idanchor($id)
     {
         if ($this->newName != null) {
-        $setblock = Block::find($id);
-        $setblock->deleteMeta('idanchor');
+            $setblock = Block::find($id);
+            $setblock->deleteMeta('idanchor');
             $setblock->deleteMeta('id-anchor');
             $setblock->saveMeta([
                 'id-anchor' => $this->newName,

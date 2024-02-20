@@ -5,8 +5,6 @@ namespace Secondnetwork\Kompass\Commands;
 use Illuminate\Console\Command;
 use Secondnetwork\Kompass\FaviconGenerator;
 
-
-
 class FaviconGeneratorCommand extends Command
 {
     public $signature = 'kompass:favicon-generator';

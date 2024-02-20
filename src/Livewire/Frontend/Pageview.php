@@ -6,7 +6,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
@@ -34,17 +33,17 @@ class Pageview extends Component
         if (! empty($this->page->new_url)) {
             return redirect($this->page->new_url, $this->page->status_code);
         }
-   
+
         $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
             return Block::where('blockable_type', 'page')
-            ->where('blockable_id', $this->page->id)
-            ->where('status', 'published')
-            ->orderBy('order', 'asc')
-            ->where('subgroup', null)
-            ->with(['children' => function ($query) {
-                $query->where('status', 'published');
-            }])
-            ->with(['datafield','meta'])->get();
+                ->where('blockable_id', $this->page->id)
+                ->where('status', 'published')
+                ->orderBy('order', 'asc')
+                ->where('subgroup', null)
+                ->with(['children' => function ($query) {
+                    $query->where('status', 'published');
+                }])
+                ->with(['datafield', 'meta'])->get();
         });
         // //blockable_type
         // $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {

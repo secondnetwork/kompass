@@ -2,39 +2,38 @@
 
 namespace Secondnetwork\Kompass;
 
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class FaviconGenerator
 {
-
-    protected String $distPath;
+    protected string $distPath;
 
     public function __construct(
-        protected String $filePath,
-        protected String $publicPath = 'favicon',
-    )
-    {
-        if(!file_exists(public_path($this->publicPath))) {
+        protected string $filePath,
+        protected string $publicPath = 'favicon',
+    ) {
+        if (! file_exists(public_path($this->publicPath))) {
             mkdir(public_path($this->publicPath), 0755, true);
         }
         $this->distPath = public_path($this->publicPath);
     }
 
-    public function generateFaviconsFromImagePath() {
+    public function generateFaviconsFromImagePath()
+    {
         $manager = new ImageManager(new Driver());
         // create an image manager instance with imagick driver
         // Image::configure(['driver' => 'imagick']);
-   
+
         $image = $manager->read($this->filePath);
 
-        $image->resize(192, 192)->save($this->distPath . "/android-chrome-192x192.png", 100, 'png');
-        $image->resize(512, 512)->save($this->distPath . "/android-chrome-512x512.png", 100, 'png');
-        $image->resize(180, 180)->save($this->distPath . "/apple-touch-icon.png", 100, 'png');
-        $image->resize(16, 16)->save($this->distPath . "/favicon-16x16.png", 100, 'png');
-        $image->resize(32, 32)->save($this->distPath . "/favicon-32x32.png", 100, 'png');
-        $image->resize(32, 32)->save($this->distPath . "/favicon.ico", 100, 'ico');
-        $image->resize(150, 150)->save($this->distPath . "/mstile-150x150.png", 100, 'png');
+        $image->resize(192, 192)->save($this->distPath.'/android-chrome-192x192.png', 100, 'png');
+        $image->resize(512, 512)->save($this->distPath.'/android-chrome-512x512.png', 100, 'png');
+        $image->resize(180, 180)->save($this->distPath.'/apple-touch-icon.png', 100, 'png');
+        $image->resize(16, 16)->save($this->distPath.'/favicon-16x16.png', 100, 'png');
+        $image->resize(32, 32)->save($this->distPath.'/favicon-32x32.png', 100, 'png');
+        $image->resize(32, 32)->save($this->distPath.'/favicon.ico', 100, 'ico');
+        $image->resize(150, 150)->save($this->distPath.'/mstile-150x150.png', 100, 'png');
 
         // // favicon.ico
         // $icon = new \Imagick();
@@ -59,8 +58,7 @@ class FaviconGenerator
                     </msapplication>
                 </browserconfig>';
 
-
-        $xmlFile = fopen("{$this->distPath}/browserconfig.xml", "w") or die("Unable to open file!");
+        $xmlFile = fopen("{$this->distPath}/browserconfig.xml", 'w') or exit('Unable to open file!');
         fwrite($xmlFile, $xml);
         fclose($xmlFile);
     }
@@ -72,12 +70,12 @@ class FaviconGenerator
                     "short_name": "",
                     "icons": [
                         {
-                            "src": "/' . $this->publicPath . '/android-chrome-192x192.png",
+                            "src": "/'.$this->publicPath.'/android-chrome-192x192.png",
                             "sizes": "192x192",
                             "type": "image/png"
                         },
                         {
-                            "src": "/' . $this->publicPath . '/android-chrome-512x512.png",
+                            "src": "/'.$this->publicPath.'/android-chrome-512x512.png",
                             "sizes": "512x512",
                             "type": "image/png"
                         }
@@ -87,28 +85,22 @@ class FaviconGenerator
                     "display": "standalone"
                 }';
 
-
-        $jsonFile = fopen("{$this->distPath}/site.webmanifest", "w") or die("Unable to open file!");
+        $jsonFile = fopen("{$this->distPath}/site.webmanifest", 'w') or exit('Unable to open file!');
         fwrite($jsonFile, $json);
         fclose($jsonFile);
     }
 
-    /**
-     * @param String $publicPath
-     * @return string
-     */
-    public static function generateHtmlMetaIcons(String $publicPath = 'favicons'): string
+    public static function generateHtmlMetaIcons(string $publicPath = 'favicons'): string
     {
         $html = '
-            <link rel="apple-touch-icon" sizes="180x180" href=" ' . $publicPath . '/apple-touch-icon.png">
-            <link rel="icon" type="image/png" sizes="32x32" href=" ' . $publicPath . '/favicon-32x32.png">
-            <link rel="icon" type="image/png" sizes="16x16" href=" ' . $publicPath . '/favicon-16x16.png">
-            <link rel="manifest" href=" ' . $publicPath . '/site.webmanifest">
-            <link rel="mask-icon" href=" ' . $publicPath . '/safari-pinned-tab.svg" color="#5bbad5">
+            <link rel="apple-touch-icon" sizes="180x180" href=" '.$publicPath.'/apple-touch-icon.png">
+            <link rel="icon" type="image/png" sizes="32x32" href=" '.$publicPath.'/favicon-32x32.png">
+            <link rel="icon" type="image/png" sizes="16x16" href=" '.$publicPath.'/favicon-16x16.png">
+            <link rel="manifest" href=" '.$publicPath.'/site.webmanifest">
+            <link rel="mask-icon" href=" '.$publicPath.'/safari-pinned-tab.svg" color="#5bbad5">
             <meta name="msapplication-TileColor" content="#da532c">
             <meta name="theme-color" content="#ffffff">';
 
         return $html;
     }
-
 }

@@ -49,7 +49,7 @@ if (! function_exists('get_thumbnails')) {
 if (! function_exists('get_field')) {
     function get_field($type, $data, $class = null, $size = null)
     {
-  
+
         foreach ($data as $value) {
             if ($value->type == $type) {
 
@@ -87,7 +87,7 @@ if (! function_exists('get_field')) {
                 }
 
                 if ($value->type == 'gallery' && $value->data != null) {
-              
+
                     $file = files::where('id', $value->data)->first();
                     if ($file) {
                         if ($size) {
@@ -229,13 +229,15 @@ if (! function_exists('setting')) {
 
                 return $data->data;
             }
-            // return Arr::get(config('settings'), $data );
+        // return Arr::get(config('settings'), $data );
         } else {
-            $data = Arr::get(app('settings'), $data);
+            if (Schema::hasTable('settings')) {
+                $data = Arr::get(app('settings'), $data);
 
-            if (! empty($data->group) == $keydata[0]) {
+                if (! empty($data->group) == $keydata[0]) {
 
-                return $data->data;
+                    return $data->data;
+                }
             }
         }
 

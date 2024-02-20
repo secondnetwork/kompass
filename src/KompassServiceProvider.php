@@ -15,8 +15,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
 use Livewire\Livewire;
-use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
+use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
@@ -71,9 +71,9 @@ class KompassServiceProvider extends ServiceProvider
 
             $this->commands([
                 KompassCommand::class,
-                FaviconGeneratorCommand::class
+                FaviconGeneratorCommand::class,
             ]);
-            
+
         }
         Gate::define('role', function ($user, ...$roles) {
             return $user->hasRole($roles);
@@ -186,12 +186,13 @@ class KompassServiceProvider extends ServiceProvider
         $this->app->singleton('kompassVite', function () {
             return new KompassVite;
         });
-
-        $this->app->singleton('settings', function ($app) {
-            return $app['cache']->remember('settings', 10, function () {
-                return Setting::pluck('data', 'key', 'group')->toArray();
+        if (Schema::hasTable('settings')) {
+            $this->app->singleton('settings', function ($app) {
+                return $app['cache']->remember('settings', 10, function () {
+                    return Setting::pluck('data', 'key', 'group')->toArray();
+                });
             });
-        });
+        }
     }
 
     protected function loadHelpers()
