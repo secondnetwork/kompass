@@ -199,26 +199,27 @@ class PagesTable extends Component
 
         $newpage->push();
 
-        $blocksclone = Block::where('page_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        $blocksclone = Block::where('blockable_id', $id)->where('blockable_type', 'page')->orderBy('order', 'asc')->with('children')->get();
 
-        $blocksclone->each(function ($item, $key) use ($newpage) {
+        $blocksclone->each(function ($item) use ($newpage) {
             $altID = $item->id;
 
             $copy = $item->replicate();
 
-            $copy->page_id = $newpage->id;
+            $copy->blockable_id = $newpage->id;
+
             $copy->save();
             if ($copy->children) {
                 foreach ($copy->children as $subgroup) {
                     $copygroup = $subgroup->replicate();
-                    $copygroup->page_id = $newpage->id;
+                    $copygroup->blockable_id = $newpage->id;
                     $copygroup->subgroup = $copy->id;
                     $copygroup->save();
                 }
             }
 
             $fields = Datafield::where('block_id', $altID)->get();
-            $fields->each(function ($item, $key) use ($copy) {
+            $fields->each(function ($item) use ($copy) {
                 $copyitem = $item->replicate();
                 $copyitem->block_id = $copy->id;
                 $copyitem->save();
