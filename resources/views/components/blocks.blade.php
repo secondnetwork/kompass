@@ -7,6 +7,7 @@
     'key' => '',
     'fields' => '',
     'blockId' => '',
+    'itemfields' => '',
 ])
 
 @if ($label === '')
@@ -23,10 +24,12 @@
 @endif
 
 @if ($type == 'text')
+    {{-- <input wire:model="fields.{{$fields }}.id"> --}}
     <x-kompass::form.input wire:model="fields.{{ $key }}.data" label="{{ $name }}" type="text" />
 @endif
 
 @if ($type == 'wysiwyg')
+
 
     <span class="text-md">{{ $name }}</span>
 
@@ -80,10 +83,10 @@
 
         @endif
     @else
-        <img-block wire:click="selectitem('addMedia',{{ $idField }},'{{ $type }}',{{ $blockId }})"
-            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 aspect-[4/3] ">
-            <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-        </img-block>
+    <img-block wire:click="selectitem('addMedia',{{ $idField }},'{{ $type }}',{{ $blockId }})"
+    class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 aspect-[4/3] ">
+    <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+    </img-block>
     @endif
 
 @endif

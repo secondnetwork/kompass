@@ -2,11 +2,12 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Layout;
+use Livewire\TemporaryUploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Secondnetwork\Kompass\Models\Datafield;
 
 class EditorJS extends Component
 {
@@ -108,7 +109,12 @@ class EditorJS extends Component
 
     public function save()
     {
-        $this->dispatch('editorjssave', $this->data, $this->editorId);
+        if (! empty($this->data)) {
+
+            Datafield::whereId($this->editorId)->update(['data' => $this->data]);
+            
+        }
+        // $this->dispatch('editorjssave', $this->data, $this->editorId);
     }
 
     #[Layout('kompass::admin.layouts.app')]

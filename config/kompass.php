@@ -161,7 +161,7 @@ return [
         'update-profile-photo' => Livewire\updateprofilephoto::class,
         'account' => Livewire\AccountForm::class,
         'roles' => Livewire\Roles::class,
-        'eventdata' => Livewire\Eventdata::class,
+        'datafield-item' => Livewire\DatafieldItem::class,
         'editorjs' => Livewire\EditorJS::class,
         'redirect' => Livewire\Redirection::class,
     ],

@@ -2,9 +2,10 @@
 
 namespace Secondnetwork\Kompass\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Kolossal\Multiplex\HasMeta;
+use Illuminate\Database\Eloquent\Model;
+use Secondnetwork\Kompass\Models\Datafield;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Block extends Model
 {
@@ -40,6 +41,6 @@ class Block extends Model
 
     public function children()
     {
-        return $this->hasMany(Block::class, 'subgroup')->with('children')->orderBy('order', 'asc');
+        return $this->hasMany(Block::class, 'subgroup')->with('children','datafield')->orderBy('order', 'asc');
     }
 }

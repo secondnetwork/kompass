@@ -86,9 +86,9 @@ class Settings extends Component
         $this->data = $this->dataTable();
     }
 
-    protected $listeners = [
-        'editorjssave' => 'saveEditorState',
-    ];
+    // protected $listeners = [
+    //     'editorjssave' => 'saveEditorState',
+    // ];
 
     public function saveEditorState($editorJsonData, $id)
     {

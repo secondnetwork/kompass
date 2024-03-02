@@ -2,19 +2,22 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Livewire\Attributes\On;
+use Livewire\WithPagination;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Intervention\Image\ImageManager;
+use Secondnetwork\Kompass\Models\Page;
+use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Models\Block;
+use Intervention\Image\Drivers\Gd\Driver;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
-use Secondnetwork\Kompass\Models\Datafield;
-use Secondnetwork\Kompass\Models\Page;
 
 #[Layout('kompass::admin.layouts.app')]
 class PagesData extends Component
@@ -42,6 +45,8 @@ class PagesData extends Component
 
     public $fields = [];
 
+    public $datafield = [];
+
     public $newName;
 
     public $blocktemplates;
@@ -64,6 +69,8 @@ class PagesData extends Component
 
     public $FormEdit = false;
 
+    public $FormEditBlock = false;
+
     public $Editorjs;
 
     public $oembedUrl;
@@ -79,42 +86,29 @@ class PagesData extends Component
         'page.slug' => '',
         'page.layout' => '',
         'page.status' => '',
-        'page.password' => '',
-        'page.begin_at' => '',
-        'page.end_at' => '',
-        'blocks.*.id' => '',
-        'blocks.*.name' => '',
-        'fields.*.id' => '',
-        'fields.*.data' => '',
+        // 'page.password' => '',
+        // 'page.begin_at' => '',
+        // 'page.end_at' => '',
+        // 'blocks.*.id' => '',
+        // 'blocks.*.name' => '',
+        // 'datafield.*.id' => '',
+        // 'datafield.*.data' => '',
+        // 'fields.*.id' => '',
+        // 'fields.*.data' => '',
 
     ];
 
-    protected $listeners = [
-        'editorjssave' => 'saveEditorState',
-        'refreshmedia' => 'resetPageComponent',
-    ];
 
-    public function saveEditorState($editorJsonData, $id)
-    {
-
-        if (! empty($editorJsonData)) {
-
-            Datafield::whereId($id)->update(['data' => $editorJsonData]);
-            // foreach($itemg['items'] as $item){
-            //     block::whereId($item['value'])->update(['order' => $item['order']]);
-            // }
-            // dump($itemg);
-
-        }
-
-        $this->resetPageComponent();
-    }
 
     public function mount($id)
     {
         $this->page = Page::findOrFail($id);
 
-        $this->blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
+        $this->blocks = Block::where('blockable_type', 'page')
+        ->where('blockable_id', $id)->with('children')
+        ->where('subgroup',null)
+        ->orderBy('order', 'asc')
+        ->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
     }
@@ -156,8 +150,10 @@ class PagesData extends Component
             if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
-                    $image = Image::make($thumbnailContents);
-                    Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, $image->encode('jpg', 60)->encoded);
+                    $manager = new ImageManager(new Driver());
+                    $image = $manager->read($thumbnailContents);
+           
+                    Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, $image->toJpeg(60));
                 }
 
             }
@@ -189,22 +185,43 @@ class PagesData extends Component
             ]);
         }
 
-        $blockmeta = Block::find($block->id);
-
-        switch ($type) {
-            case 'wysiwyg':
-                $blockmeta->saveMeta([
-                    'layout' => 'popout',
-                    'alignment' => 'align-left',
-                ]);
-                break;
-
-            default:
-                $blockmeta->saveMeta([
-                    'layout' => 'popout',
-                ]);
-                break;
+        if ($type == 'button') {
+            Datafield::create([
+                'block_id' => $block->id,
+                'name' => 'Text',
+                'type' => 'text',
+                'order' => '1',
+            ]);
+            Datafield::create([
+                'block_id' => $block->id,
+                'name' => 'URL',
+                'type' => 'text_url',
+                'order' => '1',
+            ]);
+            Datafield::create([
+                'block_id' => $block->id,
+                'name' => 'iconclass',
+                'type' => 'icon',
+                'order' => '1',
+            ]);
         }
+
+        // $blockmeta = Block::find($block->id);
+
+        // switch ($type) {
+        //     case 'wysiwyg':
+        //         $blockmeta->saveMeta([
+        //             'layout' => 'popout',
+        //             'alignment' => 'align-left',
+        //         ]);
+        //         break;
+
+        //     default:
+        //         // $blockmeta->saveMeta([
+        //         //     'layout' => 'popout',
+        //         // ]);
+        //         break;
+        // }
 
         if ($blocktemplatesID != null) {
             $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
@@ -213,6 +230,7 @@ class PagesData extends Component
                 Datafield::create([
                     'block_id' => $block->id,
                     'type' => $value->type,
+                    'name' => $value->name,
                     'grid' => $value->grid,
                     'order' => $value->order,
                 ]);
@@ -227,7 +245,7 @@ class PagesData extends Component
     {
         $this->dispatch('status');
     }
-
+    #[on('refreshmedia')]
     public function resetPageComponent()
     {
 
@@ -307,7 +325,6 @@ class PagesData extends Component
     {
         if ($this->newName != null) {
             $setblock = Block::find($id);
-            $setblock->deleteMeta('idanchor');
             $setblock->deleteMeta('id-anchor');
             $setblock->saveMeta([
                 'id-anchor' => $this->newName,
@@ -327,10 +344,10 @@ class PagesData extends Component
                 'layout' => $status,
             ]);
         }
-        if ($set == 'idanchor') {
-            $setblock->deleteMeta('idanchor');
+        if ($set == 'id-anchor') {
+            $setblock->deleteMeta('id-anchor');
             $setblock->saveMeta([
-                'idanchor' => $status,
+                'id-anchor' => $status,
             ]);
         }
         if ($set == 'css-classname') {
@@ -386,16 +403,23 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function edit($id){
+        
+        $this->FormEditBlock = true;
+
+        $this->datafield = Block::where('id', $id)->where('blockable_type', 'page')->with('datafield')->get();
+
+    }
+
     public function update($id, $publisheded = null)
     {
 
         $page = Page::findOrFail($id);
-
-        // $this->getDynamicSEOData();
-        // $page->addSEO();
+        
         $this->dispatch('savedatajs');
-
+        $this->dispatch('saveTheDatafield');
         $validateData = $this->validate();
+   
 
         $titlePageDB = Str::slug($page->title, '-', 'de');
         $slugPageDB = $page->slug;
@@ -440,22 +464,23 @@ class PagesData extends Component
             'updated_at' => Carbon::now(),
         ]);
 
-        if (! empty($validateData['blocks'])) {
-            foreach ($validateData['blocks'] as $itemg) {
-                Block::whereId($itemg['id'])->update($itemg);
-            }
-        }
+        // if (! empty($validateData['blocks'])) {
+        //     foreach ($validateData['blocks'] as $itemg) {
+        //         Block::whereId($itemg['id'])->update($itemg);
+        //     }
+        // }
 
-        if (! empty($validateData['fields'])) {
-
-            foreach ($validateData['fields'] as $itemg) {
-                Datafield::whereId($itemg['id'])->update($itemg);
-                // foreach($itemg['items'] as $item){
-                //     block::whereId($item['value'])->update(['order' => $item['order']]);
-                // }
-                // dump($itemg);
-            }
-        }
+        // if (! empty($validateData['fields'])) {
+        
+        //     foreach ($validateData['fields'] as $itemg) {
+           
+        //         Datafield::whereId($itemg['id'])->update($itemg);
+        //         // foreach($itemg['items'] as $item){
+        //         //     block::whereId($item['value'])->update(['order' => $item['order']]);
+        //         // }
+        //         // dump($itemg);
+        //     }
+        // }
 
         $this->resetPageComponent();
     }

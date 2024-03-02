@@ -96,11 +96,7 @@ class Medialibrary extends Component
         'resetCom' => '$refresh',
     ];
 
-    public function getIdField($id_field, $fieldOrPage)
-    {
-        $this->field_id = $id_field;
-        $this->fieldOrPage = $fieldOrPage;
-    }
+
 
     public function getIdBlock($id_field)
     {
@@ -368,17 +364,21 @@ class Medialibrary extends Component
                 ->encode($original_ext, ($quality ?? 90))->encoded);
         }
     }
-
+    public function getIdField($id_field, $fieldOrPage)
+    {
+        $this->field_id = $id_field;
+        $this->fieldOrPage = $fieldOrPage;
+    }
     public function selectField($media_id, $fieldOrPageName)
     {
 
-        switch ($fieldOrPageName) {
+        switch ($this->fieldOrPage) {
             case 'thumbnails':
                 Post::updateOrCreate(['id' => $this->field_id], ['thumbnails' => $media_id]);
                 $this->dispatch('refreshmedia');
                 break;
             case 'setting':
-                Setting::updateOrCreate(['id' => $this->field_id], ['thumbnails' => $media_id]);
+                Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
                 $this->dispatch('refreshmedia');
                 break;
 
@@ -386,7 +386,7 @@ class Medialibrary extends Component
                 Datafield::updateOrCreate(
                     ['id' => $this->field_id], [
                         'data' => $media_id,
-                        'type' => $fieldOrPageName,
+                        'type' => 'image',
                         'block_id' => $this->block_id]
                 );
                 $this->dispatch('refreshmedia');
