@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->string('thumbnails')->nullable();
             $table->longText('meta_description')->nullable();
-            $table->json('content')->nullable();
+            $table->string('land')->nullable();
             $table->string('layout')->nullable();
             $table->integer('group_id')->nullable();
             $table->integer('order')->default('9999');
