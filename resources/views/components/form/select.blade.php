@@ -3,6 +3,7 @@
     'label' => '',
     'value' => '',
     'placeholder' => '',
+    'option' => '',
 ])
 
 @if ($label === '')
@@ -18,9 +19,16 @@
     @endphp
 @endif
 
-<div>T
+<div>
     <label for='{{ $name }}'>{{ $label }}</label>
     <select name='{{ $name }}' id='{{ $name }}' {{ $attributes }}>
+        <option value="">{{ __('Select') }}</option>
+        @if ($option != '')
+        @foreach ($option as $value)
+        <option value="{{ $value->data }}">{{ $value->name }}</option>
+        @endforeach
+
+     @endif 
     @if ($placeholder != '')
        <option value=''>{{ $placeholder }}</option>
     @endif

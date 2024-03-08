@@ -219,13 +219,17 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
                             <option value="">{{__('Select')}}</option>
                             <optgroup label="{{__('Basis')}}">
                                 <option value="text">Text einzeilig</option>
+                                <option value="text_headline">Headline</option>
+                                <option value="text_link">Text Link</option>
+                                <option value="text_url">Url</option>
+                                <option value="icon">Icon</option>
                                 {{-- <option value="textarea">Text mehrzeilig</option> --}}
                                 {{-- <option value="number">Numerisch</option>
-                <option value="range">Numerischer Bereich</option>
-                <option value="email">E-Mail</option>
-                <option value="url">URL</option>
-                <option value="password">Passwort</option> --}}
-                            </optgroup>
+                                <option value="range">Numerischer Bereich</option>
+                                <option value="email">E-Mail</option>
+                                <option value="url">URL</option>
+                                <option value="password">Passwort</option> --}}
+                                            </optgroup>
                             <optgroup label="{{__('Contents')}}">
                                 <option value="image">{{__('Image')}}</option>
                                 {{-- <option value="file">Datei</option> --}}

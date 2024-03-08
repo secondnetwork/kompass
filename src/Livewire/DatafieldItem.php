@@ -3,8 +3,8 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Livewire\Component;
-use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Layout;
 use Secondnetwork\Kompass\Models\Datafield;
 
 class DatafieldItem extends Component
@@ -12,13 +12,36 @@ class DatafieldItem extends Component
 
   public Datafield $datafield;
 
+  public $getId;
+
   public $data;
+ 
+  public $cssClassname;
 
   public function mount()
   {
       $this->fill(
           $this->datafield->only('data')
       );
+    
+  }
+
+  public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
+  {
+      $this->getId = $itemId;
+
+      if ($action == 'addMedia') {
+       
+          $this->dispatch('FormMedia');
+          $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
+          $this->dispatch('getIdBlock', $blockgroupId);
+      }
+
+  }
+
+  public function removemedia($id)
+  {
+      Datafield::whereId($id)->update(['data' => null]);
   }
 
   #[on('saveTheDatafield')]
@@ -27,19 +50,6 @@ class DatafieldItem extends Component
 
     Datafield::whereId($this->datafield->id)->update(['data' => $this->data]);
 
-  }
-
-  #[on('editorjssave')]
-  public function saveEditorState($editorJsonData, $id)
-  {
-dd($editorJsonData);
-      if (! empty($editorJsonData)) {
-
-          Datafield::whereId($id)->update(['data' => $editorJsonData]);
-          
-      }
-
-      $this->resetPageComponent();
   }
 
   #[Layout('kompass::admin.layouts.app')]

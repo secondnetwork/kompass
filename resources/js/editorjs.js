@@ -5,7 +5,7 @@ import Header from '@editorjs/header';
 import Underline from '@editorjs/underline';
 // import Code from '@editorjs/code';
 // import InlineCode from '@editorjs/inline-code';
-// import Quote from '@editorjs/quote';
+import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
 
 
@@ -24,9 +24,7 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
         holder: editorId,
         minHeight: 200,
         readOnly,
-
         placeholder,
-
         logLevel,
 
         tools: {
@@ -88,9 +86,11 @@ window.editorInstance = function (dataProperty, editorId, readOnly, placeholder,
             },
           },
           list: List,
-          
-          // quote: Quote,
+
+          quote: Quote,
           underline: Underline,
+          
+          
           // code: Code
           // 'inline-code': InlineCode,
           

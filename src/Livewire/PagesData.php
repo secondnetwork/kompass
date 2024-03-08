@@ -3,9 +3,9 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Livewire\Component;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
+use Kolossal\Multiplex\Meta;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
@@ -15,6 +15,7 @@ use Secondnetwork\Kompass\Models\Page;
 use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Models\Block;
 use Intervention\Image\Drivers\Gd\Driver;
+use Secondnetwork\Kompass\Models\Setting;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
@@ -79,6 +80,10 @@ class PagesData extends Component
 
     public $selected = [];
 
+    public $setting;
+
+    public $cssClassname;
+
     protected $rules = [
 
         'page.title' => 'required|string|min:3',
@@ -98,7 +103,7 @@ class PagesData extends Component
 
     ];
 
-
+    
 
     public function mount($id)
     {
@@ -109,6 +114,9 @@ class PagesData extends Component
         ->where('subgroup',null)
         ->orderBy('order', 'asc')
         ->get();
+
+        $metadata = Meta::published()->where('key','css-classname')->get();
+        $this->cssClassname = $metadata->unique('value');
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
     }
@@ -131,6 +139,11 @@ class PagesData extends Component
         if ($action == 'deleteblock') {
             $this->FormDelete = true;
         }
+    }
+
+    #[on('FormMedia')]
+    public function FormMedia(){
+        $this->FormMedia = true;
     }
 
     public function addoEmbed($blockId)
@@ -245,12 +258,16 @@ class PagesData extends Component
     {
         $this->dispatch('status');
     }
+
     #[on('refreshmedia')]
     public function resetPageComponent()
     {
 
         $this->mount($this->page->id);
         $this->FormMedia = false;
+        $this->FormEditBlock = false;
+        $this->FormEdit = false;
+        $this->FormBlocks = false;
         $this->dispatch('status');
 
         // return redirect()->to('admin');
@@ -308,15 +325,19 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+
     public function classname($id)
     {
         if ($this->newName != null) {
             $setblock = Block::find($id);
 
             $setblock->deleteMeta('css-classname');
-            $setblock->saveMeta([
-                'css-classname' => $this->newName,
-            ]);
+            if ($this->newName != 0) {
+                $setblock->saveMeta([
+                    'css-classname' => $this->newName,
+                ]);
+            }
+
         }
         $this->resetPageComponent();
     }
@@ -408,16 +429,17 @@ class PagesData extends Component
         $this->FormEditBlock = true;
 
         $this->datafield = Block::where('id', $id)->where('blockable_type', 'page')->with('datafield')->get();
-
+        $this->setting = Setting::query()->where('group', 'classname')->orderBy('order', 'asc')->get();
     }
 
     public function update($id, $publisheded = null)
     {
 
         $page = Page::findOrFail($id);
-        
-        $this->dispatch('savedatajs');
+
         $this->dispatch('saveTheDatafield');
+        $this->dispatch('savedatajs');
+        
         $validateData = $this->validate();
    
 

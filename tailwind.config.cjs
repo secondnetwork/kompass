@@ -7,6 +7,7 @@ module.exports = {
   content: [                  
     './resources/views/**/*.blade.php',
     './resources/**/*.js',
+    './node_modules/preline/dist/*.js',
   ],
 
   safelist: [
@@ -76,5 +77,6 @@ module.exports = {
     // require('@tailwindcss/forms'), 
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
+    require('preline/plugin'),
   ],
 }

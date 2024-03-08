@@ -125,9 +125,9 @@
                                                 <x-tabler-external-link class="cursor-pointer stroke-gray-400" />
                                             </a>
 
-                                            <span wire:click="clone({{ $page->id }})" class="flex justify-center">
+                                            {{-- <span wire:click="clone({{ $page->id }})" class="flex justify-center">
                                                 <x-tabler-copy class="cursor-pointer    stroke-violet-500" />
-                                            </span>
+                                            </span> --}}
 
                                             <span wire:click="selectItem({{ $page->id }}, 'delete')"
                                                 class="flex justify-center">

@@ -16,8 +16,6 @@
                 </button>
             </x-slot>
             <x-slot name="body">
-
-
                 <div>
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
@@ -198,12 +196,12 @@
     </div>
     
     <div class="relative z-40" x-cloak x-data="{ open: @entangle('FormEditBlock')}">
-        <x-kompass::offcanvas :w="'w-3/4'" x-cloak x-data="{ open: @entangle('FormEditBlock')}">
+        <x-kompass::offcanvas :w="'w-3/4'">
             <x-slot name="body">
-      
-                @foreach  ($datafield as $itemblocks)
 
-                <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                @foreach  ($datafield as $itemblocks)
+          
+                <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :cssclassname="$cssClassname" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
                 
                 @endforeach
 
@@ -224,12 +222,12 @@
                 
             </x-slot>
         </x-kompass::offcanvas>
+        
     </div>
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/4'">
             <x-slot name="body">
-
 
                 <div class="grid grid-cols-4">
 
@@ -257,6 +255,11 @@
                         <span class="text-xs block mt-2">Button</span>
                     </div>
 
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click.defer="addBlock('','Download','download','download')">
+                        <img src="{{ kompass_asset('icons-blocks/download.png') }}" alt="">
+                        <span class="text-xs block mt-2">Download</span>
+                    </div>
 
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click.defer="addBlock('','Video','video','video')">
@@ -286,4 +289,5 @@
             </x-slot>
         </x-kompass::offcanvas>
     </div>
+
 </div>

@@ -2,15 +2,20 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafield;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Redirect;
+use Secondnetwork\Kompass\Models\Datafield;
 
 class Pageview extends Component
 {
@@ -26,11 +31,12 @@ class Pageview extends Component
 
     public $blocks_collapse;
 
-    public function mount($slug = null)
+    public function mount(Request $request, $slug = null)
     {
-        $this->page = $this->ResolvePath($slug);
 
-        if (! empty($this->page->new_url)) {
+        $this->page = $this->ResolvePath($request->segment(1),$slug);
+
+        if (!empty($this->page->new_url)) {
             return redirect($this->page->new_url, $this->page->status_code);
         }
 
@@ -68,8 +74,19 @@ class Pageview extends Component
 
     }
 
-    public function ResolvePath($slug)
+    public function ResolvePath($land = null,$slug)
     {
+
+
+        if (in_array($land,config('kompass.available_locales'))) {
+          // Country is in the EU
+
+        } else {
+            // Country is not in the EU
+
+        }
+// dd($land->where(['locale' => '[a-zA-Z]{2}'])); ->where('land',$land)
+
         if ($slug == null) {
             $is_front = Page::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
 
@@ -83,6 +100,7 @@ class Pageview extends Component
         if (! empty($page)) {
             return $page;
         } else {
+
             $redirect = Redirect::where('old_url', '/'.$slug)->firstOrFail();
 
             return $redirect;
@@ -102,7 +120,7 @@ class Pageview extends Component
 
                         $dataarray[] = '<picture>
                     <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
-                    <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"  
+                    <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"
                     src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
                     </picture>';
                     }

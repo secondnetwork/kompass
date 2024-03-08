@@ -3,16 +3,26 @@
     'fields' => '',
     'page' => '',
     'class' => '',
+    'cssclassname' => '',
 ])
 
 <div>
-  <nav
-      class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') border-b-4 border-purple-700 @endif">
+  <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6">
 
+      {{-- <div x-data="{ id: '{{ $itemblocks->id }}', classname: '{{ $itemblocks->getMeta('css-classname')}}' }">
+
+        <select wire:model="newName" x-model="classname" wire:change="classname({{ $itemblocks->id }})"
+        >
+            <option value="">Select a state...</option>
+            @foreach ($cssclassname as $item)
+                <option value="{{ $item->value }}">{{ $item->value }}</option>
+            @endforeach
+        </select>
+        </div> --}}
       <x-kompass::nav-item :itemblocks="$itemblocks" />
 
   </nav>
-  <div class="grid gap-6 py-6 grid-cols-{{ $itemblocks->grid }} @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') @endif">
+  <div class="grid gap-6 py-6">
 
       @switch($itemblocks->type)
           @case('video')
@@ -39,7 +49,7 @@
               @endphp
               @endif
           @endforeach
-
+          
 
               <div x-data="{ oEmbed:{{ $cardoembed }}, videoInt:{{ $cardimg }}, box:{{ $box }}}">
        
@@ -159,6 +169,24 @@
   
           @break
 
+          @case('download')
+              <div class="@container">
+                  <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
+    
+                      @foreach ($itemblocks->datafield as $key => $itemfields)
+             
+                      <x-kompass::block.download :itemfield="$itemfields" />
+
+                      @endforeach
+
+                      <img-block wire:click="selectitem('addMedia',0,'download',{{ $itemblocks->id }})"
+                          class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded w-full text-gray-400 aspect-[4/3] ">
+                          <x-tabler-file-download class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                      </img-block>
+                  </div>
+              </div>
+          @break
+          
           @case('gallery')
               <div class="@container">
                   <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">

@@ -11,12 +11,9 @@
     $alignment = $itemblocks->alignment ?? '';
     $slider = $itemblocks->slider ?? '';
 @endphp
-
-
-
 <nav-item class="flex items-center gap-2">
 
-    {{-- <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
     <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
         @if ($layout == 'content')
             <x-tabler-columns-3 class="stroke-blue-500" />
@@ -37,11 +34,8 @@
         @else
             <x-tabler-arrow-autofit-width />
         @endif
-    </span> --}}
+    </span>
    
-
-
-
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Classname</span>
     <div x-data="click_to_edit()" class="flex items-center">
         <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
@@ -87,8 +81,8 @@
     </div>
 
      
-</nav-item>     
-
+</nav-item> 
+@if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
     <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid</span>
         <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '1')">
@@ -127,7 +121,7 @@
             @endif
         </span>
     </nav-item>
-
+@endif
 @if ($itemblocks->type == 'wysiwyg')
     <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>

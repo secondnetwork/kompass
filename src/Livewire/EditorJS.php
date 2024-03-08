@@ -109,11 +109,14 @@ class EditorJS extends Component
 
     public function save()
     {
-        if (! empty($this->data)) {
 
-            Datafield::whereId($this->editorId)->update(['data' => $this->data]);
+        
+        if (! empty($this->data)) {
             
+            Datafield::find($this->editorId)->update(['data' => $this->data]);
+
         }
+       
         // $this->dispatch('editorjssave', $this->data, $this->editorId);
     }
 

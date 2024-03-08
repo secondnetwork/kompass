@@ -386,7 +386,7 @@ class Medialibrary extends Component
                 Datafield::updateOrCreate(
                     ['id' => $this->field_id], [
                         'data' => $media_id,
-                        'type' => 'image',
+                        'type' => $this->fieldOrPage,
                         'block_id' => $this->block_id]
                 );
                 $this->dispatch('refreshmedia');

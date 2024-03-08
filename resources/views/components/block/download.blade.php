@@ -3,7 +3,8 @@
 ])
 
 
-
+<div class="@container">
+  <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
 
     @if (!empty($itemfield->data))
         @php
@@ -12,10 +13,11 @@
 
         @if ($file)
             @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-            <div class="relative">
+            <img-block class="cursor-pointer grid place-content-center border-2 border-gray-600 rounded w-full  aspect-[4/3] ">
             
-                <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
-                    src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
+
+            <div class="absolute rounded top-2 right-2 text-sm text-gray-600 bg-gray-200 uppercase py-1 px-3 font-semibold">{{ $file->extension }}</div>
+            <x-tabler-file class="h-[4rem] w-[4rem] stroke-[1.5]" />
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                     <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
                     <div class="flex">
@@ -28,9 +30,11 @@
                     </div>
                 </action-button> 
 
-            </div>
+            </img-block>
             @endif
 
         @endif
     @endif
 
+  </div>
+</div>

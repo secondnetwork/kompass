@@ -17,6 +17,7 @@ use Illuminate\View\ComponentAttributeBag;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\Http\Middleware\Language;
 use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
@@ -43,6 +44,7 @@ class KompassServiceProvider extends ServiceProvider
         $kernel = $this->app->make(Kernel::class);
 
         $kernel->appendToMiddlewarePriority(RoleMiddleware::class);
+        $kernel->appendToMiddlewarePriority(Language::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -172,7 +174,9 @@ class KompassServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware(
             'role',
-            RoleMiddleware::class
+            RoleMiddleware::class,
+            Language::class
+
         );
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/fortify.php', 'fortify');
