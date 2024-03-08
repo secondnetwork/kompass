@@ -67,7 +67,7 @@
         </span>
 
         <div class="flex items-center gap-2">
-            <span wire:click="selectItem({{ $item->id }}, 'update')" class="flex  justify-center "><x-tabler-edit class="cursor-pointer stroke-blue-500"/></span>
+            <span wire:click="selectItem({{ $item->id }}, 'update', {{ $item->subgroup }})" class="flex  justify-center "><x-tabler-edit class="cursor-pointer stroke-blue-500"/></span>
         
             <span wire:click="selectItem({{ $item->menu_id }}, 'additem',{{ $item->id }})">
                 <x-tabler-subtask class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
