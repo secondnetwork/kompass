@@ -1,5 +1,5 @@
 import EditorJS from '@editorjs/editorjs';
-// import ImageTool from '@editorjs/image';
+import ImageTool from '@editorjs/image';
 import List from '@editorjs/list';
 import Header from '@editorjs/header';
 import Underline from '@editorjs/underline';

@@ -2,20 +2,16 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Livewire\Component;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Redirect;
-use Secondnetwork\Kompass\Models\Datafield;
 
 class Pageview extends Component
 {
@@ -34,9 +30,9 @@ class Pageview extends Component
     public function mount(Request $request, $slug = null)
     {
 
-        $this->page = $this->ResolvePath($request->segment(1),$slug);
+        $this->page = $this->ResolvePath($request->segment(1), $slug);
 
-        if (!empty($this->page->new_url)) {
+        if (! empty($this->page->new_url)) {
             return redirect($this->page->new_url, $this->page->status_code);
         }
 
@@ -74,18 +70,17 @@ class Pageview extends Component
 
     }
 
-    public function ResolvePath($land = null,$slug)
+    public function ResolvePath($land, $slug)
     {
 
-
-        if (in_array($land,config('kompass.available_locales'))) {
-          // Country is in the EU
+        if (in_array($land, config('kompass.available_locales'))) {
+            // Country is in the EU
 
         } else {
             // Country is not in the EU
 
         }
-// dd($land->where(['locale' => '[a-zA-Z]{2}'])); ->where('land',$land)
+        // dd($land->where(['locale' => '[a-zA-Z]{2}'])); ->where('land',$land)
 
         if ($slug == null) {
             $is_front = Page::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();

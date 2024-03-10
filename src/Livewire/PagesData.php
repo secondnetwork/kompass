@@ -2,23 +2,23 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
-use Illuminate\Support\Str;
-use Livewire\Attributes\On;
-use Kolossal\Multiplex\Meta;
-use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+use Kolossal\Multiplex\Meta;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
-use Intervention\Image\ImageManager;
-use Secondnetwork\Kompass\Models\Page;
-use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Intervention\Image\Drivers\Gd\Driver;
-use Secondnetwork\Kompass\Models\Setting;
-use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
+use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Setting;
 
 #[Layout('kompass::admin.layouts.app')]
 class PagesData extends Component
@@ -103,19 +103,17 @@ class PagesData extends Component
 
     ];
 
-    
-
     public function mount($id)
     {
         $this->page = Page::findOrFail($id);
 
         $this->blocks = Block::where('blockable_type', 'page')
-        ->where('blockable_id', $id)->with('children')
-        ->where('subgroup',null)
-        ->orderBy('order', 'asc')
-        ->get();
+            ->where('blockable_id', $id)->with('children')
+            ->where('subgroup', null)
+            ->orderBy('order', 'asc')
+            ->get();
 
-        $metadata = Meta::published()->where('key','css-classname')->get();
+        $metadata = Meta::published()->where('key', 'css-classname')->get();
         $this->cssClassname = $metadata->unique('value');
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
@@ -142,7 +140,8 @@ class PagesData extends Component
     }
 
     #[on('FormMedia')]
-    public function FormMedia(){
+    public function FormMedia()
+    {
         $this->FormMedia = true;
     }
 
@@ -165,7 +164,7 @@ class PagesData extends Component
                 if ($thumbnailContents) {
                     $manager = new ImageManager(new Driver());
                     $image = $manager->read($thumbnailContents);
-           
+
                     Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, $image->toJpeg(60));
                 }
 
@@ -325,7 +324,6 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-
     public function classname($id)
     {
         if ($this->newName != null) {
@@ -424,8 +422,9 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function edit($id){
-        
+    public function edit($id)
+    {
+
         $this->FormEditBlock = true;
 
         $this->datafield = Block::where('id', $id)->where('blockable_type', 'page')->with('datafield')->get();
@@ -439,9 +438,8 @@ class PagesData extends Component
 
         $this->dispatch('saveTheDatafield');
         $this->dispatch('savedatajs');
-        
+
         $validateData = $this->validate();
-   
 
         $titlePageDB = Str::slug($page->title, '-', 'de');
         $slugPageDB = $page->slug;
@@ -493,9 +491,9 @@ class PagesData extends Component
         // }
 
         // if (! empty($validateData['fields'])) {
-        
+
         //     foreach ($validateData['fields'] as $itemg) {
-           
+
         //         Datafield::whereId($itemg['id'])->update($itemg);
         //         // foreach($itemg['items'] as $item){
         //         //     block::whereId($item['value'])->update(['order' => $item['order']]);

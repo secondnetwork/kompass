@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
-use Livewire\TemporaryUploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\Datafield;
 
 class EditorJS extends Component
@@ -35,6 +35,9 @@ class EditorJS extends Component
 
     public $logLevel;
 
+    /** @var string */
+    private $filesystem;
+
     protected $listeners = [
         'savedatajs' => 'save',
     ];
@@ -50,15 +53,15 @@ class EditorJS extends Component
         $downloadDisk = null
     ) {
         if (is_null($uploadDisk)) {
-            $uploadDisk = config('livewire-editorjs.default_img_upload_disk');
+            $uploadDisk = config('kompass.default_img_upload_disk');
         }
 
         if (is_null($downloadDisk)) {
-            $downloadDisk = config('livewire-editorjs.default_img_download_disk');
+            $downloadDisk = config('kompass.default_img_download_disk');
         }
 
         if (is_null($placeholder)) {
-            $placeholder = config('livewire-editorjs.default_placeholder');
+            $placeholder = config('kompass.default_placeholder');
         }
 
         if (is_string($value)) {
@@ -73,14 +76,17 @@ class EditorJS extends Component
         $this->placeholder = $placeholder;
         $this->uploadDisk = $uploadDisk;
         $this->downloadDisk = $downloadDisk;
-        $this->logLevel = config('livewire-editorjs.editorjs_log_level');
+        // $this->logLevel = config('livewire-editorjs.editorjs_log_level');
     }
 
     public function completedImageUpload(string $uploadedFileName, string $eventName, $fileName = null)
     {
+
+        $this->cleanupOldUploads();
+        $this->filesystem = config('kompass.storage.disk');
         /** @var TemporaryUploadedFile $tmpFile */
         $tmpFile = collect($this->uploads)
-            ->filter(function (TemporaryUploadedFile $item) use ($uploadedFileName) {
+            ->filter(function (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $item) use ($uploadedFileName) {
                 return $item->getFilename() === $uploadedFileName;
             })
             ->first();
@@ -89,11 +95,11 @@ class EditorJS extends Component
         $storedFileName = $tmpFile->storeAs(
             '/'.$this->imagesPath,
             $fileName ?? $tmpFile->hashName(),
-            $this->uploadDisk
+            $this->filesystem,
         );
 
-        $this->dispatchBrowserEvent($eventName, [
-            'url' => Storage::disk($this->uploadDisk)->url($storedFileName),
+        $this->dispatch($eventName, [
+            'url' => Storage::disk($this->filesystem)->url($storedFileName),
         ]);
     }
 
@@ -110,13 +116,11 @@ class EditorJS extends Component
     public function save()
     {
 
-        
         if (! empty($this->data)) {
-            
-            Datafield::find($this->editorId)->update(['data' => $this->data]);
 
+            Datafield::find($this->editorId)->update(['data' => $this->data]);
         }
-       
+
         // $this->dispatch('editorjssave', $this->data, $this->editorId);
     }
 

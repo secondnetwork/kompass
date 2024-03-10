@@ -2,59 +2,58 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
+use Livewire\Component;
 use Secondnetwork\Kompass\Models\Datafield;
 
 class DatafieldItem extends Component
 {
+    public Datafield $datafield;
 
-  public Datafield $datafield;
+    public $getId;
 
-  public $getId;
+    public $data;
 
-  public $data;
- 
-  public $cssClassname;
+    public $cssClassname;
 
-  public function mount()
-  {
-      $this->fill(
-          $this->datafield->only('data')
-      );
-    
-  }
+    public function mount()
+    {
+        $this->fill(
+            $this->datafield->only('data')
+        );
 
-  public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
-  {
-      $this->getId = $itemId;
+    }
 
-      if ($action == 'addMedia') {
-       
-          $this->dispatch('FormMedia');
-          $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
-          $this->dispatch('getIdBlock', $blockgroupId);
-      }
+    public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
+    {
+        $this->getId = $itemId;
 
-  }
+        if ($action == 'addMedia') {
 
-  public function removemedia($id)
-  {
-      Datafield::whereId($id)->update(['data' => null]);
-  }
+            $this->dispatch('FormMedia');
+            $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
+            $this->dispatch('getIdBlock', $blockgroupId);
+        }
 
-  #[on('saveTheDatafield')]
-  public function saveTheDatafield()
-  {
+    }
 
-    Datafield::whereId($this->datafield->id)->update(['data' => $this->data]);
+    public function removemedia($id)
+    {
+        Datafield::whereId($id)->update(['data' => null]);
+    }
 
-  }
+    #[on('saveTheDatafield')]
+    public function saveTheDatafield()
+    {
 
-  #[Layout('kompass::admin.layouts.app')]
-  public function render()
-  {
-      return view('kompass::livewire.datafield-item');
-  }
+        Datafield::whereId($this->datafield->id)->update(['data' => $this->data]);
+
+    }
+
+    #[Layout('kompass::admin.layouts.app')]
+    public function render()
+    {
+        return view('kompass::livewire.datafield-item');
+    }
 }

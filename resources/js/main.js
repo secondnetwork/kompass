@@ -12,6 +12,18 @@ if (document.getElementsByClassName('embed-video')) {
   const { appvimeo } = import('./plugins/lite-vimeo-embed')
   // app();
 }
+
+
+document.addEventListener('livewire:navigated', () => {
+  window.HSStaticMethods.autoInit();
+  window.HSAccordion.autoInit();
+  window.HSDropdown.autoInit();
+  window.HSOverlay.autoInit();
+  window.HSSelect.autoInit();
+  console.log('init');
+})
+
+
 // const { livewiresortable } = import('./livewire.sortable');
 
 // const { editorjs } = import('./editorjs');

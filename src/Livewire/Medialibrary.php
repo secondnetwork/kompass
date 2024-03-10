@@ -5,6 +5,7 @@ namespace Secondnetwork\Kompass\Livewire;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -90,14 +91,7 @@ class Medialibrary extends Component
     /** @var string */
     private $directory = '';
 
-    protected $listeners = [
-        'getIdField_changnd' => 'getIdField',
-        'getIdBlock' => 'getIdBlock',
-        'resetCom' => '$refresh',
-    ];
-
-
-
+    #[on('getIdBlock')]
     public function getIdBlock($id_field)
     {
         $this->block_id = $id_field;
@@ -219,7 +213,7 @@ class Medialibrary extends Component
                 'path' => $new_folder,
                 'user_id' => Auth::id(),
             ]);
-            $this->dispatch('resetCom');
+            $this->dispatch('$refresh');
         } else {
             $error = __('media.error_creating_dir');
         }
@@ -335,7 +329,7 @@ class Medialibrary extends Component
         }
         $this->reset('files');
         $this->mount('mediafiles');
-        $this->dispatch('resetCom');
+        $this->dispatch('$refresh');
     }
 
     public function createThumbnail($type, $path, $width, $height, $position, $quality, $original_ext)
@@ -364,11 +358,14 @@ class Medialibrary extends Component
                 ->encode($original_ext, ($quality ?? 90))->encoded);
         }
     }
+
+    #[on('getIdField_changnd')]
     public function getIdField($id_field, $fieldOrPage)
     {
         $this->field_id = $id_field;
         $this->fieldOrPage = $fieldOrPage;
     }
+
     public function selectField($media_id, $fieldOrPageName)
     {
 
@@ -379,7 +376,7 @@ class Medialibrary extends Component
                 break;
             case 'setting':
                 Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
-                $this->dispatch('refreshmedia');
+                $this->dispatch('refresh-setting');
                 break;
 
             default:
@@ -436,7 +433,7 @@ class Medialibrary extends Component
                 $this->FormEdit = false;
             }
         }
-        $this->dispatch('resetCom');
+        $this->dispatch('$refresh');
     }
 
     private function resultDate()
