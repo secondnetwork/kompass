@@ -44,10 +44,10 @@
                     </button>
                 </div>
 
-                @if (setting('global.sso'))
+                @if (setting('global.sso') && setting('global.sso-url'))
                 <div class="text-center text-sm text-gray-500">{{ __('or sign in with') }}</div>
                 <div class="flex justify-end">
-                    <a href="/saml2/###/login"
+                    <a href="/saml2/{{ setting('global.sso-url') }}/login"
                         class="btn flex justify-center items-center w-full h-14 border-1 border-gray-300 hover:border-blue-500 hover:bg-white px-4 py-2 bg-white text-gray-900">
 
                         <svg class="h-8 w-8 pr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
