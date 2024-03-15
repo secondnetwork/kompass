@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-class language
+class Language
 {
     /**
      * Handle an incoming request.
