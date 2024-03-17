@@ -270,7 +270,13 @@
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click.defer="addBlock('','Gallery','gallery','photo')">
                         <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
-                        <span class="text-xs block mt-2">Gallery</span>
+                        <span class="text-xs block mt-2">Images and Gallery</span>
+                    </div>
+
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click.defer="addBlock('','Anchormenu','anchormenu','anchor')">
+                        <img src="{{ kompass_asset('icons-blocks/anchormenu.png') }}" alt="">
+                        <span class="text-xs block mt-2">Anchor menu</span>
                     </div>
 
 

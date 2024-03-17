@@ -164,14 +164,37 @@
                                 @break
 
                                 @case('document')
-                                    <span wire:click="selectItem({{ $item->id }}, 'edit')">
-                                        <x-tabler-edit class="cursor-pointer stroke-current " />
-                                    </span>
-                                    <span class="selectField" wire:click="selectField({{ $item->id }}, 'page')">
-                                        <x-tabler-square-plus class="cursor-pointer stroke-current " />
-                                    </span>
-                                    <x-tabler-file />
-                                    <div class="text-sm font-semibold py-4 truncate">{{ $item->name }} </div>
+ 
+
+                                <data-item class="bg-white block shadow rounded">
+
+                                    <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
+                                        style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
+
+
+
+                                        <div
+                                            class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
+                                            {{ $item->extension }}</div>
+
+                                    </div>
+
+                                    <info-data class="flex justify-between items-center p-3">
+                                        <div class="text-xs font-semibold  truncate">{{ $item->name }}</div>
+                                        <div class="flex">
+                                            <span wire:click="selectItem({{ $item->id }}, 'edit')">
+                                                <x-tabler-edit
+                                                    class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                                            </span>
+                                            <span class="selectField"
+                                                wire:click="selectField({{ $item->id }}, '{{ $fieldOrPage ?? '' }}')">
+                                                <x-tabler-square-plus
+                                                    class="cursor-pointer stroke-current text-gray-400 " />
+                                            </span>
+                                        </div>
+                                    </info-data>
+
+                                </data-item>
                                 @break
 
                                 @case('folder')
@@ -214,34 +237,35 @@
                 @break --}}
 
                                 @default
-                                    <data-item class="bg-white block shadow rounded">
+                                <data-item class="bg-white block shadow rounded">
 
-                                        <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[6/4] bg-cover bg-center bg-gray-300"
-                                            style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
+                                    <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
+                                        style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
 
 
 
-                                            <div
-                                                class="absolute rounded top-2 right-2 text-sm text-gray-600 bg-gray-200 uppercase py-1 px-3">
-                                                {{ $item->extension }}</div>
+                                        <div
+                                            class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
+                                            {{ $item->extension }}</div>
 
+                                    </div>
+
+                                    <info-data class="flex justify-between items-center p-3">
+                                        <div class="text-xs font-semibold  truncate">{{ $item->name }}</div>
+                                        <div class="flex">
+                                            <span wire:click="selectItem({{ $item->id }}, 'edit')">
+                                                <x-tabler-edit
+                                                    class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                                            </span>
+                                            <span class="selectField"
+                                                wire:click="selectField({{ $item->id }}, '{{ $fieldOrPage ?? '' }}')">
+                                                <x-tabler-square-plus
+                                                    class="cursor-pointer stroke-current text-gray-400 " />
+                                            </span>
                                         </div>
+                                    </info-data>
 
-                                        <info-data class="flex justify-between items-center py-6 pl-4 pr-2">
-                                            <div class="text-sm font-semibold  truncate">{{ $item->name }}</div>
-                                            <div class="flex">
-                                                <span wire:click="selectItem({{ $item->id }}, 'edit')">
-                                                    <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 " />
-                                                </span>
-                                                <span class="selectField"
-                                                    wire:click="selectField({{ $item->id }}, 'page')">
-                                                    <x-tabler-square-plus
-                                                        class="cursor-pointer stroke-current text-gray-400 " />
-                                                </span>
-                                            </div>
-                                        </info-data>
-
-                                    </data-item>
+                                </data-item>
                             @endswitch
                         </div>
 

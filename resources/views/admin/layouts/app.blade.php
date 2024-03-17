@@ -94,13 +94,13 @@
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
 
-          @role('admin')
+          {{-- @role('admin')
           <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Manage Role') }}</span></a></li>
-          @endrole
+          @endrole --}}
 
-          <li class="sidenav__list-item mt-8"><a wire:navigate @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
+          {{-- <li class="sidenav__list-item mt-8"><a wire:navigate @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li> --}}
         </ul>
 
 

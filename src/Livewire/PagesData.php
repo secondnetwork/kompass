@@ -196,6 +196,14 @@ class PagesData extends Component
                 'order' => '1',
             ]);
         }
+        if ($type == 'anchormenu') {
+            Datafield::create([
+                'block_id' => $block->id,
+                'name' => 'Name Anchormenu',
+                'type' => 'text',
+                'order' => '1',
+            ]);
+        }
 
         if ($type == 'button') {
             Datafield::create([
