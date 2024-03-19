@@ -10,7 +10,7 @@
     }
   ],
   "scripts": {
-    "dev": "APP_URL='http://kompass-cms-dev.test' vite",
+    "dev": "APP_URL='http://dm-mgh.test' vite",
     "build": "vite build",
     "preview": "vite preview"
   },

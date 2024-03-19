@@ -59,20 +59,9 @@
       <aside class="sidenav">
         <div class="flex flex-col h-screen">
         <div class="logo">
-                @if (!empty(setting('admin.logo')))
-            @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('admin.logo'));
-            @endphp
-
-            @if ($file)
-                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                    <picture>
-                        <source type="image/avif" srcset="{{ asset('storage' . $file->path . '/' .$file->slug)}}.avif ">
-                        <img class="w-60" src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}" alt="{{$file->alt}}" />
-                    </picture>
-                @endif
-            @endif
-        @else
+          @if (!empty(setting('global.admin-logo')))
+          <img src="{{ setting('global.admin-logo') }}" alt="">
+          @else
         <img class="big-logo" src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         <img class="favicon-logo" src="{{ kompass_asset('favicon/512.png') }}" alt="">
         @endif
