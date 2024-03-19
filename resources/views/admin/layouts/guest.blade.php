@@ -50,18 +50,7 @@
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
         @if (!empty(setting('global.admin-logo')))
-            @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('global.admin-logo'));
-            @endphp
-
-            @if ($file)
-                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                    <picture>
-                        <source type="image/avif" srcset="{{ asset('storage' . $file->path . '/' .$file->slug)}}.avif ">
-                        <img class="w-60" src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}" alt="{{$file->alt}}" />
-                    </picture>
-                @endif
-            @endif
+        <img src="{{ setting('global.admin-logo') }}" alt="">
         @else
         <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         @endif
