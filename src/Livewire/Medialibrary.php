@@ -368,6 +368,7 @@ class Medialibrary extends Component
 
     public function selectField($media_id, $fieldOrPageName)
     {
+        
 
         switch ($this->fieldOrPage) {
             case 'thumbnails':
