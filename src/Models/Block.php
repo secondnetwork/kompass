@@ -35,7 +35,7 @@ class Block extends Model
 
     public function datafield()
     {
-        return $this->hasMany(Datafield::class);
+        return $this->hasMany(Datafield::class)->orderBy('order', 'asc');
     }
 
     public function children()

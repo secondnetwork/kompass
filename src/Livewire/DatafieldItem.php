@@ -25,6 +25,12 @@ class DatafieldItem extends Component
 
     }
 
+    #[on('update-Datafield')]
+    public function resetdat()
+    {
+        dd('gh');
+    }
+
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
         $this->getId = $itemId;

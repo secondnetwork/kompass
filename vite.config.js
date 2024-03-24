@@ -18,6 +18,7 @@ export default defineConfig({
       input: ['resources/js/main.js', 'resources/css/kompass.css'],
       buildDirectory: 'assets/build',
       refresh: true,
+
       // refresh: {
       //   paths: ['resources/**', 'routes/**'],
       //   config: { delay: 300 },
@@ -27,6 +28,9 @@ export default defineConfig({
   ],
   server: {
     port: 5088,
-    strictPort: true
+    // strictPort: true,
+    hmr: {
+      host: 'localhost',
+  },
   },
 });

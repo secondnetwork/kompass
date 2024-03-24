@@ -368,7 +368,6 @@ class Medialibrary extends Component
 
     public function selectField($media_id, $fieldOrPageName)
     {
-        
 
         switch ($this->fieldOrPage) {
             case 'thumbnails':
@@ -385,7 +384,9 @@ class Medialibrary extends Component
                     ['id' => $this->field_id], [
                         'data' => $media_id,
                         'type' => $this->fieldOrPage,
-                        'block_id' => $this->block_id]
+                        'block_id' => $this->block_id,
+                        'order' => '999',
+                    ],
                 );
                 $this->dispatch('refreshmedia');
                 break;

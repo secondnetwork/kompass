@@ -84,6 +84,8 @@ class PagesData extends Component
 
     public $cssClassname;
 
+    protected $listeners = ['component:refresh' => '$refresh'];
+
     protected $rules = [
 
         'page.title' => 'required|string|min:3',
@@ -272,11 +274,11 @@ class PagesData extends Component
 
         $this->mount($this->page->id);
         $this->FormMedia = false;
-        $this->FormEditBlock = false;
+        // $this->FormEditBlock = false;
         $this->FormEdit = false;
         $this->FormBlocks = false;
         $this->dispatch('status');
-
+        $this->dispatch('component:refresh');
         // return redirect()->to('admin');
     }
 
@@ -435,7 +437,7 @@ class PagesData extends Component
 
         $this->FormEditBlock = true;
 
-        $this->datafield = Block::where('id', $id)->where('blockable_type', 'page')->with('datafield')->get();
+        $this->datafield = Block::where('id', $id)->where('blockable_type', 'page')->with('datafield')->orderBy('order', 'asc')->get();
         $this->setting = Setting::query()->where('group', 'classname')->orderBy('order', 'asc')->get();
     }
 
@@ -527,6 +529,19 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function updateOrderImages($list)
+    {
+
+        foreach ($list as $item) {
+
+            Datafield::whereId($item['value'])->update(['order' => $item['order']]);
+
+        }
+
+        $this->resetPageComponent();
+        // $this->dispatch('status');
+    }
+
     public function updateOrder($list)
     {
 
@@ -536,9 +551,7 @@ class PagesData extends Component
                 Block::whereId($item['value'])->update(['order' => $item['order']]);
             }
         }
-
         $this->resetPageComponent();
-        $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 
@@ -568,7 +581,6 @@ class PagesData extends Component
         }
 
         $this->resetPageComponent();
-        $this->dispatch('status');
         // Page::whereId($list['value'])->update(['order' => $list['order']]);
     }
 

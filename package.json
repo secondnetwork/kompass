@@ -10,7 +10,7 @@
     }
   ],
   "scripts": {
-    "dev": "APP_URL='http://dm-mgh.test' vite",
+    "dev": "APP_URL='localhost:5088' vite",
     "build": "vite build",
     "preview": "vite preview"
   },

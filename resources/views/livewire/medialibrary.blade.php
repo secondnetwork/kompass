@@ -4,11 +4,17 @@
     <media-grid class="flex flex-col">
 
         <file-upload x-data="fileUpload()">
-
-            <div x-show="isUploading" class="bg-gray-200 h-1 mt-3">
-                <div class="bg-blue-500 h-[2px]" style="transition: width 1s" :style="`width: ${progress}%;`">
-                </div>
+             
+            <!-- Progress Bar -->
+            <div x-show="isUploading" class="flex items-center gap-x-3 whitespace-nowrap">
+            <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                <div class="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500" :style="`width: ${progress}%;`"></div>
             </div>
+            {{-- <div class="w-6 text-end">
+                <span class="text-sm text-gray-800 dark:text-white" x-text="progress"></span>
+            </div> --}}
+            </div>
+            <!-- End Progress Bar -->
 
             <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
                 <input wire:model.live="search" type="text"
@@ -16,7 +22,7 @@
                     placeholder="{{ __('Search') }}...">
                 <div x-data="{ open: @entangle('FormFolder') }" class="flex justify-end gap-4">
 
-                    <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
+                    <button class="flex btn bg-gray-600 border-gray-600 gap-x-2 justify-center items-center text-md" @click="open = true">
                         <x-tabler-folder-plus stroke-width="1.5" />{{ __('Add new Folder') }}
                     </button>
 

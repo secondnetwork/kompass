@@ -6,7 +6,7 @@
     'cssclassname' => '',
 ])
 
-<div>
+<div  >
   <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6">
 
       {{-- <div x-data="{ id: '{{ $itemblocks->id }}', classname: '{{ $itemblocks->getMeta('css-classname')}}' }">
@@ -189,14 +189,16 @@
           
           @case('gallery')
               <div class="@container">
-                  <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
-    
+                  <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6"
+                  wire:sortable="updateOrderImages" 
+                  wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }">
+
                       @foreach ($itemblocks->datafield as $key => $itemfields)
              
                       <x-kompass::block.image :itemfield="$itemfields" />
 
                       @endforeach
-
+               
                       <img-block wire:click="selectitem('addMedia',0,'gallery',{{ $itemblocks->id }})"
                           class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-[4/3] ">
                           <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
@@ -238,7 +240,7 @@
 
               @foreach ($itemblocks->datafield as $key => $itemfields)
               {{-- @livewire('datafield-item') --}}
-              <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
+              <livewire:datafield-item :$itemfields :key="$itemfields->id" />
                 
 {{-- 
 
