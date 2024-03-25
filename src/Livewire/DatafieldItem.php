@@ -44,6 +44,19 @@ class DatafieldItem extends Component
         Datafield::whereId($id)->update(['data' => null]);
     }
 
+    public function updateOrderImages($list)
+    {
+dump($list);
+        foreach ($list as $item) {
+
+            Datafield::whereId($item['value'])->update(['order' => $item['order']]);
+
+        }
+
+        // $this->resetPageComponent();
+        // $this->dispatch('status');
+    }
+
     #[on('saveTheDatafield')]
     public function saveTheDatafield()
     {

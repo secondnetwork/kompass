@@ -188,6 +188,7 @@
           @break
           
           @case('gallery')
+              blocks-datafilds
               <div class="@container">
                   <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6"
                   wire:sortable="updateOrderImages" 
