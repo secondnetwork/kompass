@@ -38,23 +38,15 @@ class DatafieldItem extends Component
         }
 
     }
-
+    #[on('refreshmedia')]
+    public function reestPage()
+    {
+        // $this->FormMedia = false;
+        $this->mount();
+    }
     public function removemedia($id)
     {
         Datafield::whereId($id)->update(['data' => null]);
-    }
-
-    public function updateOrderImages($list)
-    {
-dump($list);
-        foreach ($list as $item) {
-
-            Datafield::whereId($item['value'])->update(['order' => $item['order']]);
-
-        }
-
-        // $this->resetPageComponent();
-        // $this->dispatch('status');
     }
 
     #[on('saveTheDatafield')]
@@ -62,7 +54,7 @@ dump($list);
     {
 
         Datafield::whereId($this->datafield->id)->update(['data' => $this->data]);
-
+        $this->dispatch('refreshmedia')->self();
     }
 
     #[Layout('kompass::admin.layouts.app')]

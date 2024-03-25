@@ -6,7 +6,6 @@
                 <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6" wire:sortable="updateOrderImages"
                     wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }">
 
-
                     <x-kompass::block.image :itemfield="$datafield" />
 
                     @if ($datafield->data == null)

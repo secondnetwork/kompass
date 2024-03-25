@@ -188,7 +188,6 @@
           @break
           
           @case('gallery')
-              blocks-datafilds
               <div class="@container">
                   <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6"
                   wire:sortable="updateOrderImages" 
@@ -196,7 +195,7 @@
 
                       @foreach ($itemblocks->datafield as $key => $itemfields)
              
-                      <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
+                      <x-kompass::block.image :itemfield="$itemfields" />
 
                       @endforeach
                
@@ -241,7 +240,7 @@
 
               @foreach ($itemblocks->datafield as $key => $itemfields)
               {{-- @livewire('datafield-item') --}}
-              <livewire:datafield-item :$itemfields :key="$itemfields->id" />
+              <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
                 
 {{-- 
 
