@@ -6,7 +6,7 @@
     'cssclassname' => '',
 ])
 
-<div  >
+<div>
   <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6">
 
       {{-- <div x-data="{ id: '{{ $itemblocks->id }}', classname: '{{ $itemblocks->getMeta('css-classname')}}' }">
@@ -195,7 +195,7 @@
 
                       @foreach ($itemblocks->datafield as $key => $itemfields)
              
-                      <x-kompass::block.image :itemfield="$itemfields" />
+                      <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
 
                       @endforeach
                
