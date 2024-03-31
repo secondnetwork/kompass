@@ -16,6 +16,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
+use Secondnetwork\Kompass\Commands\GenerateThumbnails;
 use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\Http\Middleware\Language;
 use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
@@ -74,6 +75,7 @@ class KompassServiceProvider extends ServiceProvider
             $this->commands([
                 KompassCommand::class,
                 FaviconGeneratorCommand::class,
+                GenerateThumbnails::class,
             ]);
 
         }

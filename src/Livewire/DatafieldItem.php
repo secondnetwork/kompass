@@ -25,7 +25,6 @@ class DatafieldItem extends Component
 
     }
 
-
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
         $this->getId = $itemId;
@@ -38,12 +37,14 @@ class DatafieldItem extends Component
         }
 
     }
+
     #[on('refreshmedia')]
     public function reestPage()
     {
         // $this->FormMedia = false;
         $this->mount();
     }
+
     public function removemedia($id)
     {
         Datafield::whereId($id)->update(['data' => null]);

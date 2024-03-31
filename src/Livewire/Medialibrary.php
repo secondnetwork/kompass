@@ -221,34 +221,14 @@ class Medialibrary extends Component
         $this->FormFolder = false;
     }
 
-    public static function convert($src, $des, $quality, $speed)
+    public static function convert($src, $des, $quality, $speed, $thumbnailavif)
     {
-        if (! function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) {
+        if (! function_exists('imageavif')) {
             return;
-        }
-        if (! $src && ! $des && ! $quality && ! $speed) {
-            return false;
         }
 
         $fileType = getimagesize($src)['mime'];
-        // Try Imagick First
-        if (AVIFE_IMAGICK_VER > 0) {
-            $imagick = new \Imagick();
-            $imagick->readImage($src);
-            $imagick->setImageFormat('avif');
-            if ($quality > 0) {
-                $imagick->setCompressionQuality($quality);
-                $imagick->setImageCompressionQuality($quality);
-            } else {
-                $imagick->setCompressionQuality(1);
-                $imagick->setImageCompressionQuality(1);
-            }
 
-            $imagick->writeImage($des);
-
-            return;
-        }
-        //Try GD
         if ($fileType == 'image/jpeg' || $fileType == 'image/jpg') {
             $sourceGDImg = @imagecreatefromjpeg($src);
         }
@@ -261,10 +241,20 @@ class Medialibrary extends Component
         if (gettype($sourceGDImg) == 'boolean') {
             return;
         }
-        @imageavif($sourceGDImg, $des, $quality, $speed);
-
-        // file_put_contents($des, "\0", FILE_APPEND);
-        // Storage::path($des);
+        if ($thumbnailavif) {
+            $width = imagesx($sourceGDImg);
+            $height = imagesy($sourceGDImg);
+            // Create a new blank image with different dimensions
+            $newWidth = 400;
+            $newHeight = ($height / $width) * $newWidth;
+            $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
+            // Resize the image
+            imagecopyresized($thumbnail, $sourceGDImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+            // @imagejpeg($thumbnail,$medium);
+            @imageavif($thumbnail, $thumbnailavif, $quality, $speed);
+        } else {
+            @imageavif($sourceGDImg, $des, $quality, $speed);
+        }
 
         @imagedestroy($sourceGDImg);
     }
@@ -300,18 +290,31 @@ class Medialibrary extends Component
                 'image/webp',
                 'image/gif',
             ];
+
+            $imageMimeTypesAvif = [
+                'image/avif',
+            ];
+
             if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
                 if ($this->dir) {
                     $des = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'.avif');
+                    $thumbnail = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'_thumbnail.avif');
                 } else {
                     $des = Storage::path('public/'.$timefilesSlug.'.avif');
+                    $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
                 }
 
-                self::convert(asset($storelink), $des, 60, 6);
-                // foreach ($details['thumbnails'] as $thumbnail_data) {
-                //     $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
-                //     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 60, $original_ext);
-                // }
+                self::convert(asset($storelink), $des, 60, 6, $thumbnail);
+            }
+
+            if (in_array($filedata->getMimeType(), $imageMimeTypesAvif)) {
+                if ($this->dir) {
+                    $thumbnail = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'_thumbnail.avif');
+                } else {
+                    $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
+                }
+
+                self::convert(asset($storelink), $des, 60, 6, $thumbnail);
             }
 
             if ($storelink) {
@@ -427,6 +430,7 @@ class Medialibrary extends Component
 
             //     // }
             // }
+            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_thumbnail.avif');
             Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.avif');
             Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension);
             if (Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
@@ -435,7 +439,9 @@ class Medialibrary extends Component
                 $this->FormEdit = false;
             }
         }
-        $this->dispatch('$refresh');
+
+        $this->mount('mediafiles');
+
     }
 
     private function resultDate()

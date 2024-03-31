@@ -5,16 +5,6 @@
 
         <file-upload x-data="fileUpload()">
              
-            <!-- Progress Bar -->
-            <div x-show="isUploading" class="flex items-center gap-x-3 whitespace-nowrap">
-            <div class="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                <div class="flex flex-col justify-center rounded-full overflow-hidden bg-blue-600 text-xs text-white text-center whitespace-nowrap transition duration-500" :style="`width: ${progress}%;`"></div>
-            </div>
-            {{-- <div class="w-6 text-end">
-                <span class="text-sm text-gray-800 dark:text-white" x-text="progress"></span>
-            </div> --}}
-            </div>
-            <!-- End Progress Bar -->
 
             <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
                 <input wire:model.live="search" type="text"
@@ -29,7 +19,13 @@
 
                     <label for="file-upload"
                         class="flex btn gap-x-2 cursor-pointer justify-center items-center text-md">
-                        <x-tabler-square-plus stroke-width="1.5" />{{ __('Add file') }}
+                        <div wire:loading>
+                            <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        <x-tabler-square-plus stroke-width="1.5" wire:loading.remove />{{ __('Add file') }}
                     </label>
 
                     <input type="file" id="file-upload" multiple @change="handleFileSelect" class="hidden" />
@@ -119,9 +115,9 @@
                             @if (empty($search)) x-show="(dir === '{{ $item->path }}')" @endif>
                             @php
                                 if ($item->path) {
-                                     $dirpath = 'storage/'. $item->path . '/';
+                                     $dirpath = ''. $item->path . '/';
                                 }else {
-                                     $dirpath = 'storage/';
+                                     $dirpath = '';
                                 }
                             @endphp
                             @switch($item->type)
@@ -132,7 +128,7 @@
                                             class="relative text-sm font-bold rounded-tr rounded-tl w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
 
                                             <video controls class="object-cover h-full"
-                                                src="{{ asset($dirpath . $item->slug . '.' . $item->extension) }}"></video>
+                                                src="{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}"></video>
 
                                             <div
                                                 class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
@@ -175,7 +171,7 @@
                                 <data-item class="bg-white block shadow rounded">
 
                                     <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
-                                        style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
+                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}')">
 
 
 
@@ -209,11 +205,14 @@
                                 @case('image')
                                     <data-item class="bg-white block shadow rounded">
 
-                                        <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
-                                            style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
-
-
-
+                                        <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"                                                                               
+                                        @if (Storage::disk('public')->exists($dirpath . $item->slug . '_thumbnail.avif'))
+                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '_thumbnail.avif') }}')"
+                                        @else
+                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}')"
+                                        @endif
+                                        >
+                            
                                             <div
                                                 class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
                                                 {{ $item->extension }}</div>
@@ -246,7 +245,7 @@
                                 <data-item class="bg-white block shadow rounded">
 
                                     <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
-                                        style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
+                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}')">
 
 
 

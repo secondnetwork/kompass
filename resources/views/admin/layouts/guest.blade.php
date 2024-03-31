@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+<!--
+*   Kompass A Laravel CMS
+*   Development and Design by secondnetwork
+*   https://kompass.secondnetwork.de/
+*
+-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="{{ kompass_asset('favicon/manifest.webmanifest') }} ">
