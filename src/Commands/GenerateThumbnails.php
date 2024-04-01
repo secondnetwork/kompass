@@ -71,21 +71,18 @@ class GenerateThumbnails extends Command
         if (gettype($sourceGDImg) == 'boolean') {
             return;
         }
-        if ($thumbnailavif) {
-            $width = imagesx($sourceGDImg);
-            $height = imagesy($sourceGDImg);
-            // Create a new blank image with different dimensions
-            $newWidth = 400;
-            $newHeight = ($height / $width) * $newWidth;
-            $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
-            // Resize the image
-            imagecopyresized($thumbnail, $sourceGDImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-            // @imagejpeg($thumbnail,$medium);
-            @imageavif($thumbnail, $thumbnailavif, $quality, $speed);
-        } else {
-            @imageavif($sourceGDImg, $des, $quality, $speed);
-        }
 
+        $width = imagesx($sourceGDImg);
+        $height = imagesy($sourceGDImg);
+        // Create a new blank image with different dimensions
+        $newWidth = 400;
+        $newHeight = ($height / $width) * $newWidth;
+        $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
+        // Resize the image
+        imagecopyresized($thumbnail, $sourceGDImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        // @imagejpeg($thumbnail,$medium);
+        @imageavif($thumbnail, $thumbnailavif, $quality, $speed);
+        @imageavif($sourceGDImg, $des, $quality, $speed);
         @imagedestroy($sourceGDImg);
     }
 }
