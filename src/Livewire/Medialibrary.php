@@ -221,9 +221,30 @@ class Medialibrary extends Component
         $this->FormFolder = false;
     }
 
-    public static function convert($src, $des, $quality, $speed, $thumbnailavif)
+    public static function convert($src, $des, $quality, $speed, $thumbnailavif, $avifImagickSupport)
     {
-        if (! function_exists('imageavif')) {
+        if (! function_exists('imageavif') && $avifImagickSupport <= 0) {
+            return;
+        }
+
+        if ($avifImagickSupport > 0) {
+            $imagick = new \Imagick();
+            $imagick->readImage($src);
+            $imagick->setImageFormat('avif');
+            if ($quality > 0) {
+                $imagick->setCompressionQuality($quality);
+                $imagick->setImageCompressionQuality($quality);
+            } else {
+                $imagick->setCompressionQuality(1);
+                $imagick->setImageCompressionQuality(1);
+            }
+
+            $imagick->writeImage($des);
+            $imagick->scaleImage(400, 0);
+            $imagick->writeImage($thumbnailavif);
+
+            $imagick->destroy();
+
             return;
         }
 
@@ -261,6 +282,17 @@ class Medialibrary extends Component
 
     public function _finishUpload($name, $tmpPath, $isMultiple)
     {
+
+        $avifImagickSupport = '0';
+        if (extension_loaded('imagick') && class_exists('Imagick')) {
+            $imagick = new \Imagick();
+            $formats = $imagick->queryFormats();
+            if (in_array('AVIF', $formats)) {
+                $avifImagickSupport = '1';
+            } else {
+                $avifImagickSupport = '0';
+            }
+        }
 
         $this->cleanupOldUploads();
         $this->filesystem = config('kompass.storage.disk');
@@ -304,7 +336,7 @@ class Medialibrary extends Component
                     $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
                 }
 
-                self::convert(asset($storelink), $des, 60, 6, $thumbnail);
+                self::convert(asset($storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
             }
 
             if (in_array($filedata->getMimeType(), $imageMimeTypesAvif)) {
@@ -314,7 +346,7 @@ class Medialibrary extends Component
                     $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
                 }
 
-                self::convert(asset($storelink), $des, 60, 6, $thumbnail);
+                self::convert(asset($storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
             }
 
             if ($storelink) {

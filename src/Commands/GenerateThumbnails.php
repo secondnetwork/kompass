@@ -14,47 +14,84 @@ class GenerateThumbnails extends Command
 
     public function handle(): void
     {
-
-        $filesystem = config('kompass.storage.disk');
-        $files = File::all();
-        // $content = Storage::disk($this->filesystem)->get($path);
-        $imageMimeTypes = [
-            'jpeg',
-            'jpg',
-            'png',
-            'webp',
-            'gif',
-        ];
-        foreach ($files as $file) {
-            if (in_array($file->extension, $imageMimeTypes)) {
-
-                if ($file->path) {
-                    $assetUrl = Storage::url($file->path.'/'.$file->slug.'.'.$file->extension);
-                } else {
-                    $assetUrl = Storage::url($file->slug.'.'.$file->extension);
-                }
-
-                if ($file->path) {
-                    $des = Storage::path('public/'.$file->path.'/'.$file->slug.'.avif');
-                    $thumbnail = Storage::path('public/'.$file->path.'/'.$file->slug.'_thumbnail.avif');
-                } else {
-                    $des = Storage::path('public/'.$file->slug.'.avif');
-                    $thumbnail = Storage::path('public/'.$file->slug.'_thumbnail.avif');
-                }
-
-                self::convert(asset($assetUrl), $des, 60, 6, $thumbnail);
+        $avifImagickSupport = '0';
+        if (extension_loaded('imagick') && class_exists('Imagick')) {
+            $imagick = new \Imagick();
+            $formats = $imagick->queryFormats();
+            if (in_array('AVIF', $formats)) {
+                $avifImagickSupport = '1';
+            } else {
+                $avifImagickSupport = '0';
             }
         }
-        $this->info('Thumbnails generated successfully!');
+
+        if (! function_exists('imageavif') && $avifImagickSupport <= '0') {
+            $this->error('no support for AVIF on the Server');
+        } else {
+
+            $files = File::all();
+            // $content = Storage::disk($this->filesystem)->get($path);
+            $imageMimeTypes = [
+                'jpeg',
+                'jpg',
+                'png',
+                'webp',
+                'gif',
+            ];
+            foreach ($files as $file) {
+                if (in_array($file->extension, $imageMimeTypes)) {
+
+                    if ($file->path) {
+                        $assetUrl = Storage::url($file->path.'/'.$file->slug.'.'.$file->extension);
+                    } else {
+                        $assetUrl = Storage::url($file->slug.'.'.$file->extension);
+                    }
+
+                    if ($file->path) {
+                        $des = Storage::path('public/'.$file->path.'/'.$file->slug.'.avif');
+                        $thumbnail = Storage::path('public/'.$file->path.'/'.$file->slug.'_thumbnail.avif');
+                    } else {
+                        $des = Storage::path('public/'.$file->slug.'.avif');
+                        $thumbnail = Storage::path('public/'.$file->slug.'_thumbnail.avif');
+                    }
+
+                    self::convert(asset($assetUrl), $des, 60, 6, $thumbnail, $avifImagickSupport);
+                }
+            }
+            $this->info('Thumbnails generated successfully!');
+        }
+
     }
 
-    public static function convert($src, $des, $quality, $speed, $thumbnailavif)
+    public static function convert($src, $des, $quality, $speed, $thumbnailavif, $avifImagickSupport)
     {
-        if (! function_exists('imageavif')) {
+        if (! function_exists('imageavif') && $avifImagickSupport <= '0') {
             return;
         }
+
         if (! $src && ! $des && ! $quality && ! $speed) {
             return false;
+        }
+
+        if ($avifImagickSupport > '0') {
+            $imagick = new \Imagick();
+            $imagick->readImage($src);
+            $imagick->setImageFormat('avif');
+            if ($quality > 0) {
+                $imagick->setCompressionQuality($quality);
+                $imagick->setImageCompressionQuality($quality);
+            } else {
+                $imagick->setCompressionQuality(1);
+                $imagick->setImageCompressionQuality(1);
+            }
+
+            $imagick->writeImage($des);
+            $imagick->scaleImage(400, 0);
+            $imagick->writeImage($thumbnailavif);
+
+            $imagick->destroy();
+
+            return;
         }
 
         $fileType = getimagesize($src)['mime'];
