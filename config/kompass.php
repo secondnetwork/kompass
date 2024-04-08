@@ -14,6 +14,20 @@ return [
         'en',
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Storage Config
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify attributes related to your application file system
+    |
+    */
+
+    'storage' => [
+        'disk' => env('FILESYSTEM_DRIVER', 'public'),
+    ],
+
     /*
      |--------------------------------------------------------------------------
      | Kompass Route Middleware
