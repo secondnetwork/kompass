@@ -316,6 +316,19 @@ class Medialibrary extends Component
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
 
+            if ($storelink) {
+                $file::create([
+                    'path' => $this->dir,
+                    'name' => $filename,
+                    'slug' => $timefilesSlug,
+                    'extension' => $original_ext,
+                    'type' => $type,
+                    'alt' => $filename,
+                    'description' => '',
+                    'user_id' => Auth::id(),
+                ]);
+            }
+
             $imageMimeTypes = [
                 'image/jpeg',
                 'image/png',
@@ -349,18 +362,7 @@ class Medialibrary extends Component
                 self::convert(asset($storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
             }
 
-            if ($storelink) {
-                $file::create([
-                    'path' => $this->dir,
-                    'name' => $filename,
-                    'slug' => $timefilesSlug,
-                    'extension' => $original_ext,
-                    'type' => $type,
-                    'alt' => $filename,
-                    'description' => '',
-                    'user_id' => Auth::id(),
-                ]);
-            }
+
         }
         $this->reset('files');
         $this->mount('mediafiles');
