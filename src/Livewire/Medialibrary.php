@@ -349,7 +349,7 @@ class Medialibrary extends Component
                     $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
                 }
 
-                self::convert(asset($storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
+                self::convert(Storage::path('public/'.$storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
             }
 
             if (in_array($filedata->getMimeType(), $imageMimeTypesAvif)) {
@@ -359,7 +359,7 @@ class Medialibrary extends Component
                     $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
                 }
 
-                self::convert(asset($storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
+                self::convert(Storage::path('public/'.$storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
             }
 
 
