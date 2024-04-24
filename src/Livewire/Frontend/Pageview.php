@@ -74,23 +74,21 @@ class Pageview extends Component
     {
 
         if (in_array($land, config('kompass.available_locales'))) {
-            // Country is in the EU
-
+            $landurl = $land;
         } else {
-            // Country is not in the EU
-
+            $landurl = null;
         }
         // dd($land->where(['locale' => '[a-zA-Z]{2}'])); ->where('land',$land)
 
         if ($slug == null) {
-            $is_front = Page::where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
+            $is_front = Page::where('land', $landurl)->where('layout', 'is_front_page')->where('status', 'published')->firstOrFail();
 
             if ($is_front) {
                 return $is_front;
             }
         }
 
-        $page = Page::where('slug', $slug)->whereNot('status', 'draft')->first();
+        $page = Page::where('land', $landurl)->where('slug', $slug)->whereNot('status', 'draft')->first();
 
         if (! empty($page)) {
             return $page;

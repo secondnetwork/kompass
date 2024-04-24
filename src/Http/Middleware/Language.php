@@ -18,16 +18,21 @@ class Language
     public function handle(Request $request, Closure $next)
     {
 
-        if (in_array($request->segment(1), config('kompass.available_locales'))) {
-            if (Session::has('locale')) {
-                App::setLocale(Session::get('locale'));
-            }
+        // if (in_array($request->segment(1), config('kompass.available_locales'))) {
+        //     if (Session::has('locale')) {
+        //         App::setLocale(Session::get('locale'));
+        //     }
 
-            app()->setLocale($request->segment(1));
+        //     app()->setLocale($request->segment(1));
 
-            URL::defaults(['locale' => $request->segment(1)]);
+        //     URL::defaults(['locale' => $request->segment(1)]);
+        // }
+        $lang = $request->segment(1);
+
+        if(strlen($lang) === 2 && in_array($lang, config('languages'))){
+            app()->setLocale($lang);
         }
-
+    
         return $next($request);
     }
 }

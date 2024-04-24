@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
+use Spatie\LaravelIgnition\Recorders\DumpRecorder\Dump;
 
 class PagesTable extends Component
 {
@@ -39,6 +40,8 @@ class PagesTable extends Component
     public $headers;
 
     public $meta_description;
+
+    public $datafield = [];
 
     #[Locked]
     public $selectedItem;
@@ -93,7 +96,7 @@ class PagesTable extends Component
 
     private function resultDate()
     {
-        return Page::where('title', 'like', '%'.$this->search.'%')
+        return Page::where('title', 'like', '%' . $this->search . '%')
             ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
             ->simplePaginate($this->perPage);
     }
@@ -139,10 +142,10 @@ class PagesTable extends Component
         if ($checkSlug) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $slugNameURL.'-'.$numericalPrefix++;
+                $newSlug = $slugNameURL . '-' . $numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
+                if (!$checkSlug) {
                     $newpageslug = $newSlug; //New Slug
                     break;
                 }
@@ -164,16 +167,57 @@ class PagesTable extends Component
         ]);
         $this->FormAdd = false;
 
-        return redirect()->to('/admin/pages/show/'.$page->id);
+        return redirect()->to('/admin/pages/show/' . $page->id);
+    }
+
+
+
+    public function cloneTree($categories, $allCategories, $cloneid, $blockid)
+    {
+        foreach ($categories as $item) {
+
+            $item->children = $allCategories->where('subgroup', $item->id)->values();
+
+
+            if ($item->children->isNotEmpty()) {
+
+                foreach ($item->children as $subgroup) {
+
+
+                    $copygroup = $subgroup->replicate();
+                    $copygroup->blockable_id = $cloneid;
+                    $copygroup->subgroup = $blockid;
+                    $copygroup->push();
+
+                    if ($itemMeta = $subgroup->allMeta) {
+                        $mod = Block::find($copygroup->id);
+        
+                        foreach ($itemMeta as $value) {
+                            $mod->saveMeta([
+                                $value->key => $value->value,
+                            ]);
+                        }
+                    }
+                    
+                    foreach ($subgroup->datafield as $itemdata) {
+                        $copydatablock = $itemdata->replicate();
+                        $copydatablock->block_id = $copygroup->id;
+                        $copydatablock->push();
+                    }
+
+
+                }
+               
+                self::cloneTree($item->children, $allCategories, $cloneid, $copygroup->id);
+            }
+        }
     }
 
     public function clone($id)
     {
-        $page = Page::find($id);
+        $pagemodel = Page::find($id);
 
-        $newpage = $page->replicate();
-
-        $slugNameURL = Str::slug($newpage['title'], '-', 'de'); //Convert Input to Str Slug
+        $slugNameURL = $pagemodel['slug']; //Convert Input to Str Slug
 
         $placeObj = new Page;
 
@@ -182,49 +226,56 @@ class PagesTable extends Component
         if ($checkSlug) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $slugNameURL.'-'.$numericalPrefix++;
+                $newSlug = $slugNameURL . '-' . $numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
-                    $newpage->slug = $newSlug; //New Slug
+                if (!$checkSlug) {
+                    $clonepageslug = $newSlug; //New Slug
                     break;
                 }
             }
         } else {
             //Slug do not exists. Just use the selected Slug.
-            $newpage->slug = $slugNameURL;
+            $clonepageslug = $slugNameURL;
         }
-        $newpage->status = 'draft';
-        $newpage->created_at = Carbon::now();
 
-        $newpage->push();
+        $clone = $pagemodel->replicate()->fill([
+            'slug' => $clonepageslug,
+            'status' => 'draft',
+            'created_at' => Carbon::now(),
+        ]);
 
-        $blocksclone = Block::where('blockable_id', $id)->where('blockable_type', 'page')->orderBy('order', 'asc')->with('children')->get();
+        $clone->push();
 
-        $blocksclone->each(function ($item) use ($newpage) {
-            $altID = $item->id;
+        $relationships = ['datafield', 'meta', 'children'];
 
-            $copy = $item->replicate();
+        $blocksclone = Block::where('blockable_id', $id)->where('blockable_type', 'page')->with($relationships)->get();
 
-            $copy->blockable_id = $newpage->id;
+        $rootblock = $blocksclone->whereNull('subgroup');
 
-            $copy->save();
-            if ($copy->children) {
-                foreach ($copy->children as $subgroup) {
-                    $copygroup = $subgroup->replicate();
-                    $copygroup->blockable_id = $newpage->id;
-                    $copygroup->subgroup = $copy->id;
-                    $copygroup->save();
+        $rootblock->each(function ($item) use ($clone, $rootblock, $blocksclone) {
+
+            $blockcopy = $item->replicate();
+
+            $blockcopy->blockable_id = $clone->id;
+
+            $blockcopy->push();
+
+            if ($itemMeta = $item->allMeta) {
+                $mod = Block::find($blockcopy->id);
+                
+                foreach ($itemMeta as $value) {
+            
+                    $mod->saveMeta([
+                        $value->key => $value->value,
+                    ]);
                 }
             }
 
-            $fields = Datafield::where('block_id', $altID)->get();
-            $fields->each(function ($item) use ($copy) {
-                $copyitem = $item->replicate();
-                $copyitem->block_id = $copy->id;
-                $copyitem->save();
-            }, );
-        }, );
+            self::cloneTree($rootblock, $blocksclone, $clone->id, $blockcopy->id);
+        },);
+
+        $this->resetpage();
     }
 
     public function delete()
