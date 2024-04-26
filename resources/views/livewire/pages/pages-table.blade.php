@@ -96,9 +96,15 @@
                                             {{ __($page->$value) }}
                                             @if ($key == 0)
                                                 </a>
+
+                                                @if ( $page->land == 'en')
+                                                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-100 text-blue-800">EN</span>
+                                                @endif
+                                                
                                             @endif
                                             @if ($key == 2)
                                                 </span>
+                                                                             
                                             @endif
                                         </td>
                                     @endforeach
