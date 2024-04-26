@@ -3,12 +3,12 @@
     "file": "js/vendor.FaN4dpSj.js"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.a32i0xOV.css",
+    "file": "css/kompass.CNXVBng4.css",
     "src": "resources/css/kompass.css",
     "isEntry": true
   },
   "resources/js/main.js": {
-    "file": "js/main.D5TIqArO.js",
+    "file": "js/main.BZpGQU95.js",
     "src": "resources/js/main.js",
     "isEntry": true,
     "imports": [
@@ -19,7 +19,7 @@
       "resources/js/plugins/lite-vimeo-embed.js"
     ],
     "css": [
-      "css/kompass.a32i0xOV.css"
+      "css/kompass.CNXVBng4.css"
     ]
   },
   "resources/js/plugins/lite-vimeo-embed.js": {
