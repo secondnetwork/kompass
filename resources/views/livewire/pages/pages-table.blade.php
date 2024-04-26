@@ -97,7 +97,7 @@
                                             @if ($key == 0)
                                                 </a>
 
-                                                @if ( $page->en == 'en')
+                                                @if ( $page->land == 'en')
                                                 <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-primary-500 text-white">EN</span>
                                                 @endif
                                                 
