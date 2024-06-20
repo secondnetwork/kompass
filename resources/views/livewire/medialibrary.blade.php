@@ -391,7 +391,7 @@
                         <label>Description</label>
                         <input wire:model="description" type="text" class="form-control" />
                         <label>Url:</label>
-                        <input value="{{ asset($file) }}" type="text" class="form-control" />
+                        <input disabled value="{{ asset($file) }}" type="text" class="form-control" />
 
 
                     </div>
