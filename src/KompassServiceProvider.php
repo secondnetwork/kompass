@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
+use Intervention\Image\ImageManager;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
 use Secondnetwork\Kompass\Commands\GenerateThumbnails;
@@ -26,6 +27,9 @@ use Secondnetwork\Kompass\Models\Setting;
 
 class KompassServiceProvider extends ServiceProvider
 {
+
+    protected const BINDING = 'image';
+
     /**
      * Bootstrap the application services.
      */
@@ -199,6 +203,20 @@ class KompassServiceProvider extends ServiceProvider
                 });
             });
         }
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/kompass.php',
+            $this::BINDING
+        );
+
+        $this->app->singleton($this::BINDING, function ($app) {
+            return new ImageManager(
+                driver: config('kompass.driver'),
+                autoOrientation: config('kompass.options.autoOrientation', true),
+                decodeAnimation: config('kompass.options.decodeAnimation', true),
+                blendingColor: config('kompass.options.blendingColor', 'ffffff')
+            );
+        });
     }
 
     protected function loadHelpers()

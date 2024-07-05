@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
@@ -229,7 +230,6 @@ class KompassCommand extends Command implements PromptsForMissingInput
         $this->callSilent('vendor:publish', ['--provider' => 'Laravel\Fortify\FortifyServiceProvider']);
         $this->callSilent('vendor:publish', ['--provider' => 'Secondnetwork\Kompass\KompassServiceProvider']);
         $this->callSilent('vendor:publish', ['--tag' => 'migrations', '--force' => true]);
-        $this->replaceInFile("public const HOME = '/home';", "public const HOME = '/admin/dashboard';", app_path('Providers/RouteServiceProvider.php'));
     }
 
     public function databaserun()
@@ -243,21 +243,36 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
     public function updateServiceProviders()
     {
-        $appConfig = file_get_contents(config_path('app.php'));
 
-        if (
-            ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
-            &&
-            ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
-        ) {
-            File::put(config_path('app.php'), str_replace(
-                "App\Providers\RouteServiceProvider::class,",
-                "App\Providers\RouteServiceProvider::class,".PHP_EOL.
-                    "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
-                    'App\\Providers\\KompassServiceProvider::class,',
-                $appConfig
-            ));
+        if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
+            return;
         }
+
+        ServiceProvider::addProviderToBootstrapFile(\App\Providers\FortifyServiceProvider::class);
+        ServiceProvider::addProviderToBootstrapFile(\App\Providers\KompassServiceProvider::class);
+        // $appConfig = file_get_contents(config_path('app.php'));
+
+        // if (
+        //     ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
+        //     &&
+        //     ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
+        // ) {
+
+        //     $this->callSilent('vendor:publish', [
+        //         '--provider' => FortifyServiceProvider::class,
+        //         '--provider' => KompassServiceProvider::class,
+        //     ]);
+    
+        //     $this->registerFortifyServiceProvider();
+        //     $this->info('Fortify scaffolding installed successfully');
+            // File::put(config_path('app.php'), str_replace(
+            //     "App\Providers\RouteServiceProvider::class,",
+            //     "App\Providers\RouteServiceProvider::class,".PHP_EOL.
+            //         "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
+            //         'App\\Providers\\KompassServiceProvider::class,',
+            //     $appConfig
+            // ));
+        // }
     }
 
     /**

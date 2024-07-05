@@ -221,78 +221,8 @@ class Medialibrary extends Component
         $this->FormFolder = false;
     }
 
-    public static function convert($src, $des, $quality, $speed, $thumbnailavif, $avifImagickSupport)
-    {
-        if (! function_exists('imageavif') && $avifImagickSupport <= 0) {
-            return;
-        }
-
-        if ($avifImagickSupport > 0) {
-            $imagick = new \Imagick();
-            $imagick->readImage($src);
-            $imagick->setImageFormat('avif');
-            if ($quality > 0) {
-                $imagick->setCompressionQuality($quality);
-                $imagick->setImageCompressionQuality($quality);
-            } else {
-                $imagick->setCompressionQuality(1);
-                $imagick->setImageCompressionQuality(1);
-            }
-
-            $imagick->writeImage($des);
-            $imagick->scaleImage(400, 0);
-            $imagick->writeImage($thumbnailavif);
-
-            $imagick->destroy();
-
-            return;
-        }
-
-        $fileType = getimagesize($src)['mime'];
-
-        if ($fileType == 'image/jpeg' || $fileType == 'image/jpg') {
-            $sourceGDImg = @imagecreatefromjpeg($src);
-        }
-        if ($fileType == 'image/png') {
-            $sourceGDImg = @imagecreatefrompng($src);
-        }
-        if ($fileType == 'image/webp') {
-            $sourceGDImg = @imagecreatefromwebp($src);
-        }
-        if (gettype($sourceGDImg) == 'boolean') {
-            return;
-        }
-        if ($thumbnailavif) {
-            $width = imagesx($sourceGDImg);
-            $height = imagesy($sourceGDImg);
-            // Create a new blank image with different dimensions
-            $newWidth = 400;
-            $newHeight = ($height / $width) * $newWidth;
-            $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
-            // Resize the image
-            imagecopyresized($thumbnail, $sourceGDImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-            // @imagejpeg($thumbnail,$medium);
-            @imageavif($thumbnail, $thumbnailavif, $quality, $speed);
-        } else {
-            @imageavif($sourceGDImg, $des, $quality, $speed);
-        }
-
-        @imagedestroy($sourceGDImg);
-    }
-
     public function _finishUpload($name, $tmpPath, $isMultiple)
     {
-
-        $avifImagickSupport = '0';
-        if (extension_loaded('imagick') && class_exists('Imagick')) {
-            $imagick = new \Imagick();
-            $formats = $imagick->queryFormats();
-            if (in_array('AVIF', $formats)) {
-                $avifImagickSupport = '1';
-            } else {
-                $avifImagickSupport = '0';
-            }
-        }
 
         $this->cleanupOldUploads();
         $this->filesystem = config('kompass.storage.disk');
@@ -329,71 +259,10 @@ class Medialibrary extends Component
                 ]);
             }
 
-            $imageMimeTypes = [
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/gif',
-            ];
-
-            $imageMimeTypesAvif = [
-                'image/avif',
-            ];
-
-            if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
-                if ($this->dir) {
-                    $des = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'.avif');
-                    $thumbnail = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'_thumbnail.avif');
-                } else {
-                    $des = Storage::path('public/'.$timefilesSlug.'.avif');
-                    $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
-                }
-
-                self::convert(Storage::path('public/'.$storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
-            }
-
-            if (in_array($filedata->getMimeType(), $imageMimeTypesAvif)) {
-                if ($this->dir) {
-                    $thumbnail = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'_thumbnail.avif');
-                } else {
-                    $thumbnail = Storage::path('public/'.$timefilesSlug.'_thumbnail.avif');
-                }
-
-                self::convert(Storage::path('public/'.$storelink), $des, 60, 6, $thumbnail, $avifImagickSupport);
-            }
-
-
         }
         $this->reset('files');
         $this->mount('mediafiles');
         $this->dispatch('$refresh');
-    }
-
-    public function createThumbnail($type, $path, $width, $height, $position, $quality, $original_ext)
-    {
-        $content = Storage::disk($this->filesystem)->get($path);
-        $image = Image::make($content);
-
-        if ($type == 'fit') {
-            Storage::disk($this->filesystem)->put($path, $image
-                ->fit($width, $height, function ($constraint) {
-                    $constraint->upsize();
-                }, $position)
-                ->encode($original_ext, ($quality ?? 90))->encoded);
-
-            $des = Storage::path('public/'.$path.'.avif');
-            self::convert(asset($path), $des, 50, 6);
-        } elseif ($type == 'crop') {
-            Storage::disk($this->filesystem)->put($path, $image
-                ->crop($width, $height, null, null)
-                ->encode($original_ext, ($quality ?? 90))->encoded);
-        } elseif ($type == 'resize') {
-            Storage::disk($this->filesystem)->put($path, $image
-                ->resize($width, $height, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->encode($original_ext, ($quality ?? 90))->encoded);
-        }
     }
 
     #[on('getIdField_changnd')]
