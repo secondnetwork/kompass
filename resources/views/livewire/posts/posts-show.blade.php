@@ -239,7 +239,7 @@
                 <div class="grid grid-cols-4">
                     @foreach ($blocktemplates as $itemblock)
                         <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                            wire:click.defer="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['grid'] }})">
+                            wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['grid'] }})">
                             @if ($itemblock['icon_img_path'])
                                 <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
                                     src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
@@ -248,31 +248,31 @@
                         </div>
                     @endforeach
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Textblock','wysiwyg','blockquote')">
+                        wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
                         <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
                         <span class="text-xs block mt-2">Textblock</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                    wire:click.defer="addBlock('','Video','video','video')">
+                    wire:click="addBlock('','Video','video','video')">
                     <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
                     <span class="text-xs block mt-2">Video</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Gallery','gallery','photo')">
+                        wire:click="addBlock('','Gallery','gallery','photo')">
                         <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
                         <span class="text-xs block mt-2">Gallery</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Layout Block','group')">
+                        wire:click="addBlock('','Layout Block','group')">
                         <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
                         <span class="text-xs block mt-2">Layout Block</span>
                     </div>
 
                     <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click.defer="addBlock('','Accordion Group','accordiongroup')">
+                        wire:click="addBlock('','Accordion Group','accordiongroup')">
                         <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
                         <span class="text-xs block mt-2">Accordion</span>
                     </div>
