@@ -61,7 +61,7 @@
 
     <div class="p-8 border-t border-gray-200">
         <div class="flex items-center">
-          <x-tabler-3d-cube-sphere  />
+          <x-tabler-cube-3d-sphere  />
          <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">Technology</div>
         </div>
 
