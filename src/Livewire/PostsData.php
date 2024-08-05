@@ -2,17 +2,18 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Illuminate\Support\Carbon;
+use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\WithPagination;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Setting;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
-use Secondnetwork\Kompass\Models\Datafield;
-use Secondnetwork\Kompass\Models\Post;
 
 #[Layout('kompass::admin.layouts.app')]
 class PostsData extends Component
@@ -39,6 +40,8 @@ class PostsData extends Component
 
     public $fields = [];
 
+    public $datafield = [];
+
     public $newName;
 
     public $blocktemplates;
@@ -59,11 +62,17 @@ class PostsData extends Component
 
     public $FormEdit = false;
 
+    public $FormEditBlock = false;
+
     public $Editorjs;
 
     public $data;
 
     public $selected = [];
+
+    public $setting;
+
+    public $cssClassname;
 
     protected $rules = [
 
@@ -294,6 +303,15 @@ class PostsData extends Component
         }
 
         $this->resetPageComponent();
+    }
+
+    public function edit($id)
+    {
+
+        $this->FormEditBlock = true;
+
+        $this->datafield = Block::where('id', $id)->where('blockable_type', 'post')->with('datafield')->orderBy('order', 'asc')->get();
+        $this->setting = Setting::query()->where('group', 'classname')->orderBy('order', 'asc')->get();
     }
 
     public function update($id, $publisheded = null)
