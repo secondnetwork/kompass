@@ -11,12 +11,6 @@
             @if ($errors->any())
                 <div>
                     <div>{{ __('Whoops! Something went wrong.') }}</div>
-
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
                 </div>
             @endif
 
@@ -29,7 +23,7 @@
                     <div class="flex justify-between">
                     <label class="text-base block mb-1">{{ __('Password') }}</label>
                     @if (Route::has('password.request'))
-                        <a class="text-gray-400 hover:text-blue-500 text-base" href="{{ route('password.request') }}">
+                        <a tabindex="-1" class="text-gray-400 hover:text-blue-500 text-base" href="{{ route('password.request') }}">
                             {{ __('Forgot your password?') }}
                         </a>
                     @endif

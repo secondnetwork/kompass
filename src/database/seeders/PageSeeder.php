@@ -165,7 +165,7 @@ class PageSeeder extends Seeder
             'meta_description' => 'The About',
             'order' => '999',
             'slug' => 'about',
-            'layout' => 'is_front_page',
+            'layout' => 'page',
             'status' => 'published',
             // 'slug' => generateSlug($this->title)
 
