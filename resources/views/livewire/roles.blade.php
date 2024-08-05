@@ -16,18 +16,15 @@
       <x-kompass::offcanvas :w="'w-2/6'">
         <x-slot name="body">
           <div class="modal-body">
+
+            <label>Display Name</label>
+            <input wire:model="display_name" type="text" class="form-control"/>
+
             <label>Role Name</label>
             <input wire:model="name" type="text" class="form-control"/>
             @if ($errors->has('name'))
                 <p style="color: red;">{{$errors->first('name')}}</p>
             @endif
-            <label>Role Name</label>
-            <input wire:model="display_name" type="text" class="form-control"/>
-
-            <label>{{ __('Description') }}</label>
-
-            <textarea wire:model="description" id="" cols="30" rows="10"></textarea>
-  
             
           </div>
           <div class="modal-footer mt-auto">
@@ -41,17 +38,15 @@
     <div x-cloak x-data="{ open: @entangle('FormAdd') }">
       <x-kompass::offcanvas :w="'w-2/6'">
         <x-slot name="body">
+          
+          <label>Display Name</label>
+          <input wire:model="display_name" type="text" class="form-control"/>
+
           <label>Role Name</label>
           <input wire:model="name" type="text" class="form-control"/>
           @if ($errors->has('name'))
               <p style="color: red;">{{$errors->first('name')}}</p>
           @endif
-          <label>Role Name</label>
-          <input wire:model="display_name" type="text" class="form-control"/>
-
-          <label>{{ __('Description') }}</label>
-
-          <textarea wire:model="description" id="" cols="30" rows="10"></textarea>
 
           
           <div class="modal-footer mt-auto">
