@@ -24,14 +24,15 @@
         "illuminate/support": "^10.0|^11.0",
         "illuminate/database": "^10.0|^11.0",
         "illuminate/validation": "^10.0|^11.0",
-        "intervention/image": "^2.7.2 || ^3.3.0",
+        "intervention/image": "^3.3.0",
         "kolossal-io/laravel-multiplex": "^1.0.1",
         "laravel/folio": "^1.1.5",
         "laravel/fortify": "^1.20.0",
         "livewire/livewire": "^3.3.5",
         "livewire/volt": "^1.6.1",
         "secondnetwork/blade-tabler-icons": "^3.0.4",
-        "symfony/mailgun-mailer": "^6.4.0 || ^7.0.0"
+        "symfony/mailgun-mailer": "^6.4.0 || ^7.0.0",
+        "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23.1",

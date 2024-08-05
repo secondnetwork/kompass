@@ -250,6 +250,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         ServiceProvider::addProviderToBootstrapFile(\App\Providers\FortifyServiceProvider::class);
         ServiceProvider::addProviderToBootstrapFile(\App\Providers\KompassServiceProvider::class);
+        // ServiceProvider::addProviderToBootstrapFile(Spatie\Permission\PermissionServiceProvider::class);
         // $appConfig = file_get_contents(config_path('app.php'));
 
         // if (

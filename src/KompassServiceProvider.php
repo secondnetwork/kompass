@@ -46,10 +46,15 @@ class KompassServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadHelpers();
 
-        $kernel = $this->app->make(Kernel::class);
+        // $kernel = $this->app->make(Kernel::class);
 
-        $kernel->appendToMiddlewarePriority(RoleMiddleware::class);
-        $kernel->appendToMiddlewarePriority(Language::class);
+        // Register middleware alias
+        $this->app['router']->aliasMiddleware('role' , \Spatie\Permission\Middleware\RoleMiddleware::class);
+        $this->app['router']->aliasMiddleware('permission', \Spatie\Permission\Middleware\PermissionMiddleware::class);
+        $this->app['router']->aliasMiddleware('role_or_permission', \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class);
+
+        // $kernel->appendToMiddlewarePriority(RoleMiddleware::class);
+        // $kernel->appendToMiddlewarePriority(Language::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

@@ -3,35 +3,48 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Secondnetwork\Kompass\Models\Role;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+
+
+    public function run(): void
     {
+
+        Role::create([
+            'name' => 'super_admin',
+            'display_name' => 'Super Administrator', // optional
+            'guard_name' => 'web',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         Role::create([
             'name' => 'admin',
             'display_name' => 'Administrator', // optional
-            'description' => 'User is allowed to manage and edit other users', // optional
-        ]);
-
-        Role::create([
-            'name' => 'user',
-            'display_name' => 'User', // optional
-            'description' => '', // optional
+            'guard_name' => 'web',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         Role::create([
             'name' => 'edtor',
             'display_name' => 'Edtor', // optional
-            'description' => '', // optional
+            'guard_name' => 'web',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
+        Role::create([
+            'name' => 'user',
+            'display_name' => 'User', // optional
+            'guard_name' => 'web',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        
     }
 }
