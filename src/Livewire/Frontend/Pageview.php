@@ -87,9 +87,9 @@ class Pageview extends Component
                 return $is_front;
             }
         }
-
-        $page = Page::where('land', $landurl)->where('slug', $slug)->whereNot('status', 'draft')->first();
-
+        $page = Cache::rememberForever('kompass_page_'.$slug, function () {
+            return Page::where('land', $landurl)->where('slug', $slug)->whereNot('status', 'draft')->first();
+        });
         if (! empty($page)) {
             return $page;
         } else {
