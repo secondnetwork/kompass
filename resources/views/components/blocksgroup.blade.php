@@ -142,7 +142,7 @@
     @endif
 
 
-    <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="bg-purple-700 grid grid-cols-{{ $itemblocks->grid }}" >
+    <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="bg-purple-700 grid grid-cols-{{ $itemblocks->layoutgrid }}" >
         <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
     </div>
 </div>

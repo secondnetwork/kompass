@@ -327,6 +327,13 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function updateLayoutGrid($id, $grid)
+    {
+        $setblock = Block::findOrFail($id);
+        $setblock->update(['layoutgrid' => $grid]);
+        $this->resetPageComponent();
+    }
+
     public function updateGrid($id, $grid)
     {
         $setblock = Block::findOrFail($id);

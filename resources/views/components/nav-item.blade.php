@@ -12,11 +12,50 @@
     $slider = $itemblocks->slider ?? '';
 @endphp
 
-
+@if(!$itemblocks->subgroup == null)
+<nav-item class="flex items-center gap-2">
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout Grid</span>
+    <span class="cursor-pointer" x-data wire:click="updateLayoutGrid({{ $itemblocks->id }}, '1')">
+        @if ($itemblocks->layoutgrid == '1')
+            <x-tabler-square-number-1 class="stroke-blue-500" />
+        @else
+            <x-tabler-square-number-1 />
+        @endif
+    </span>
+    <span class="cursor-pointer" x-data wire:click="updateLayoutGrid({{ $itemblocks->id }}, '2')">
+        @if ($itemblocks->layoutgrid == '2')
+            <x-tabler-square-number-2 class="stroke-blue-500" />
+        @else
+            <x-tabler-square-number-2 />
+        @endif
+    </span>
+    <span class="cursor-pointer" x-data wire:click="updateLayoutGrid({{ $itemblocks->id }}, '3')">
+        @if ($itemblocks->layoutgrid == '3')
+            <x-tabler-square-number-3 class="stroke-blue-500" />
+        @else
+            <x-tabler-square-number-3 />
+        @endif
+    </span>
+    <span class="cursor-pointer" x-data wire:click="updateLayoutGrid({{ $itemblocks->id }}, '4')">
+        @if ($itemblocks->layoutgrid == '4')
+            <x-tabler-square-number-4 class="stroke-blue-500" />
+        @else
+            <x-tabler-square-number-4 />
+        @endif
+    </span>
+    <span class="cursor-pointer" x-data wire:click="updateLayoutGrid({{ $itemblocks->id }}, '5')">
+        @if ($itemblocks->layoutgrid == '5')
+            <x-tabler-square-number-5 class="stroke-blue-500" />
+        @else
+            <x-tabler-square-number-5 />
+        @endif
+    </span>
+</nav-item>
+@endif
 
 <nav-item class="flex items-center gap-2">
-
-    {{-- <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
+    @if($itemblocks->subgroup == null)
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
     <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
         @if ($layout == 'content')
             <x-tabler-columns-3 class="stroke-blue-500" />
@@ -37,9 +76,9 @@
         @else
             <x-tabler-arrow-autofit-width />
         @endif
-    </span> --}}
+    </span>
    
-
+    @endif
 
 
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Classname</span>
@@ -89,44 +128,7 @@
      
 </nav-item>     
 
-    <nav-item class="flex items-center gap-2">
-        <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid</span>
-        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '1')">
-            @if ($itemblocks->grid == '1')
-                <x-tabler-square-number-1 class="stroke-blue-500" />
-            @else
-                <x-tabler-square-number-1 />
-            @endif
-        </span>
-        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '2')">
-            @if ($itemblocks->grid == '2')
-                <x-tabler-square-number-2 class="stroke-blue-500" />
-            @else
-                <x-tabler-square-number-2 />
-            @endif
-        </span>
-        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '3')">
-            @if ($itemblocks->grid == '3')
-                <x-tabler-square-number-3 class="stroke-blue-500" />
-            @else
-                <x-tabler-square-number-3 />
-            @endif
-        </span>
-        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '4')">
-            @if ($itemblocks->grid == '4')
-                <x-tabler-square-number-4 class="stroke-blue-500" />
-            @else
-                <x-tabler-square-number-4 />
-            @endif
-        </span>
-        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '5')">
-            @if ($itemblocks->grid == '5')
-                <x-tabler-square-number-5 class="stroke-blue-500" />
-            @else
-                <x-tabler-square-number-5 />
-            @endif
-        </span>
-    </nav-item>
+
 
 @if ($itemblocks->type == 'wysiwyg')
     <nav-item class="flex items-center gap-2">
@@ -170,6 +172,47 @@
                 <x-tabler-carousel-horizontal class="stroke-blue-500" />
             @else
                 <x-tabler-carousel-horizontal />
+            @endif
+        </span>
+    </nav-item>
+
+
+
+    <nav-item class="flex items-center gap-2">
+        <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid</span>
+        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '1')">
+            @if ($itemblocks->grid == '1')
+                <x-tabler-square-number-1 class="stroke-blue-500" />
+            @else
+                <x-tabler-square-number-1 />
+            @endif
+        </span>
+        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '2')">
+            @if ($itemblocks->grid == '2')
+                <x-tabler-square-number-2 class="stroke-blue-500" />
+            @else
+                <x-tabler-square-number-2 />
+            @endif
+        </span>
+        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '3')">
+            @if ($itemblocks->grid == '3')
+                <x-tabler-square-number-3 class="stroke-blue-500" />
+            @else
+                <x-tabler-square-number-3 />
+            @endif
+        </span>
+        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '4')">
+            @if ($itemblocks->grid == '4')
+                <x-tabler-square-number-4 class="stroke-blue-500" />
+            @else
+                <x-tabler-square-number-4 />
+            @endif
+        </span>
+        <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '5')">
+            @if ($itemblocks->grid == '5')
+                <x-tabler-square-number-5 class="stroke-blue-500" />
+            @else
+                <x-tabler-square-number-5 />
             @endif
         </span>
     </nav-item>

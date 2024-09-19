@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('status')->nullable();
             $table->text('iconclass')->nullable();
+            $table->integer('layoutgrid')->default('0');
             $table->integer('grid')->default('1');
             $table->integer('order')->default('999');
 

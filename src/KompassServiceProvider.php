@@ -2,28 +2,29 @@
 
 namespace Secondnetwork\Kompass;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Foundation\Http\Kernel;
+use Livewire\Livewire;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\ComponentAttributeBag;
-use Intervention\Image\ImageManager;
-use Livewire\Livewire;
-use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
-use Secondnetwork\Kompass\Commands\GenerateThumbnails;
-use Secondnetwork\Kompass\Commands\KompassCommand;
-use Secondnetwork\Kompass\Http\Middleware\Language;
-use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
+use Illuminate\Support\ServiceProvider;
 use Secondnetwork\Kompass\Models\Setting;
+use Illuminate\View\ComponentAttributeBag;
+use Illuminate\View\Compilers\BladeCompiler;
+use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\Http\Middleware\Language;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Secondnetwork\Kompass\Commands\CreateUserCommand;
+use Secondnetwork\Kompass\Commands\GenerateThumbnails;
+use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
+use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
 
 class KompassServiceProvider extends ServiceProvider
 {
@@ -83,6 +84,7 @@ class KompassServiceProvider extends ServiceProvider
 
             $this->commands([
                 KompassCommand::class,
+                CreateUserCommand::class,
                 FaviconGeneratorCommand::class,
                 GenerateThumbnails::class,
             ]);
