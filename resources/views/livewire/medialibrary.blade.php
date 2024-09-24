@@ -206,11 +206,8 @@
                                     <data-item class="bg-white block shadow rounded">
 
                                         <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"                                                                               
-                                        @if (Storage::disk('public')->exists($dirpath . $item->slug . '_thumbnail.avif'))
-                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '_thumbnail.avif') }}')"
-                                        @else
-                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}')"
-                                        @endif
+                                     
+                                        style="background-image: url('{{ imageToWebp(Storage::url($dirpath . $item->slug . '.' . $item->extension),500) }}')"
                                         >
                             
                                             <div

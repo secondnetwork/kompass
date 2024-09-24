@@ -231,6 +231,12 @@
 
                 <div class="grid grid-cols-4">
 
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
+                        <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
+                        <span class="text-xs block mt-2">Textblock</span>
+                    </div>
+
                     <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Layout Block','group')">
                         <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
@@ -243,13 +249,8 @@
                         <span class="text-xs block mt-2">Accordion</span>
                     </div>
 
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
-                        <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
-                        <span class="text-xs block mt-2">Textblock</span>
-                    </div>
 
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                    {{-- <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Button','button','box-model-2')">
                         <img src="{{ kompass_asset('icons-blocks/button.png') }}" alt="">
                         <span class="text-xs block mt-2">Button</span>
@@ -259,7 +260,7 @@
                         wire:click="addBlock('','Download','download','download')">
                         <img src="{{ kompass_asset('icons-blocks/download.png') }}" alt="">
                         <span class="text-xs block mt-2">Download</span>
-                    </div>
+                    </div> --}}
 
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Video','video','video')">
@@ -273,23 +274,25 @@
                         <span class="text-xs block mt-2">Images and Gallery</span>
                     </div>
 
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                    {{-- <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Anchormenu','anchormenu','anchor')">
                         <img src="{{ kompass_asset('icons-blocks/anchormenu.png') }}" alt="">
                         <span class="text-xs block mt-2">Anchor menu</span>
-                    </div>
+                    </div> --}}
 
 
 
                     @foreach ($blocktemplates as $itemblock)
                     <div class="border-gray-400 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['grid'] }})">
+                        wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['iconclass'] }})">
                         @if ($itemblock['icon_img_path'])
                             <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
                                 src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
                         @endif
                         <span class="text-xs block mt-2">{{ $itemblock['name'] }}</span>
                     </div>
+
+     
                 @endforeach
                 </div>
             </x-slot>
