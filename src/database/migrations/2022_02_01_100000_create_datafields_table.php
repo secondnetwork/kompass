@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId(('block_id'))->constrained()->onDelete('cascade');
             $table->string('type')->nullable();
+            $table->string('name')->nullable();
             $table->integer('grid')->default('1');
             $table->integer('order')->default('1');
             $table->longText('data')->nullable();
