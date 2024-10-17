@@ -2,8 +2,9 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Attributes\Rule;
 use Livewire\Component;
+use Livewire\Attributes\Rule;
+use Livewire\Attributes\Validate;
 use Secondnetwork\Kompass\Models\Role;
 
 class Roles extends Component
@@ -25,15 +26,12 @@ class Roles extends Component
 
     protected $queryString = ['search'];
 
-    #[Rule('required|regex:/^[\pL\s\-]+$/u|min:3|max:255')]
+    #[Validate('required|regex:/^[\pL\s\-]+$/u|min:3|max:255')]
     public $name;
 
-    #[Rule('')]
+    #[Validate('')]
     public $display_name;
-
-    #[Rule('')]
-    public $description;
-
+    public $guard_name;
     public $role;
 
     public $Roles;
@@ -69,16 +67,14 @@ class Roles extends Component
 
         if ($action == 'add') {
             // This will show the modal on the frontend
-            $this->reset(['name']);
-            $this->FormAdd = true;
+            $this->reset(['name','display_name']);
+            $this->FormEdit = true;
         }
 
         if ($action == 'update') {
             $model = Role::findOrFail($this->selectedItem);
-
             $this->name = $model->name;
             $this->display_name = $model->display_name;
-            $this->description = $model->description;
             $this->FormEdit = true;
         }
 
@@ -89,31 +85,35 @@ class Roles extends Component
         }
     }
 
-    public function addNew()
+    public function createOrUpdateRole()
     {
-        $validate = $this->validate();
+        $role = Role::find($this->selectedItem);
 
-        Role::create($validate);
-        $this->FormAdd = false;
-    }
+        if ($role) {
+            $validate = $this->validate();
+            $role->update($validate);
 
-    public function update()
-    {
-        $role = Role::findOrFail($this->selectedItem);
+            $this->reset(['name','display_name']);
+            $this->FormEdit = false;
+        }else{
+            $validate = $this->validate();
+            $array2=['guard_name' => 'web'];
+            $result = array_merge($validate, $array2);
+  
+            Role::create($result);
+            $this->FormEdit = false;
+        }
 
-        $validate = $this->validate();
+        $this->mount();
 
-        $role->update($validate);
-        // $user->roles()->sync($validateData['role']);
-        // User::updateOrCreate()
-        $this->FormEdit = false;
-        session()->flash('message', 'Post successfully updated.');
     }
 
     public function delete()
     {
         Role::destroy($this->selectedItem);
         $this->FormDelete = false;
+
+        $this->mount();
     }
 
     public function render()

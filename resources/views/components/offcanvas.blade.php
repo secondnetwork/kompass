@@ -18,7 +18,9 @@ x-transition:leave-end="translate-x-full" x-cloak>
             </span>
               <span @click="open = false" class="cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all"><x-tabler-x /></span>
             </span>
-            {{$body}}
+  
+            <div>{{$body}}</div>
+            
 
         </div>
 
