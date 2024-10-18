@@ -28,6 +28,8 @@
     {{ $slot }}
     </select> --}}
 
+
+    
 <div class="flex items-center cursor-pointer">
     
     <div 
@@ -64,16 +66,17 @@
                 ).length;
             },
         }" 
-        class="w-full mt-4 space-y-4 text-slate-800">
+        class="w-full text-slate-800">
 
         <div class="w-full relative">
-            {{ $label }}
-            <div class="flex items-center cursor-pointer rounded-md border bg-white border-secondary-300 text-base ">
+            <label for="{{ $id ?? '' }}" class="block text-sm font-medium leading-6 text-gray-900">{{ $label }}</label>
+            <div class="flex items-center cursor-pointer rounded-md border-2 bg-white border-gray-300 text-base ">
          
                    <template x-for="item in filteredPeople">
                         <div x-show="selected == item.id" @click="toggle"
                             class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">                            
-                            <span class="block truncate" x-text="item.name"></span>
+                            <span x-show="null != item.display_name" class="block truncate text-sm" x-text="item.display_name"></span>
+                            <span x-show="null == item.display_name" class="block truncate text-sm" x-text="item.name"></span>
                         </div>
                                                 
                     </template>
@@ -99,11 +102,11 @@
                         <li @click="selected = item.id, open = false, query = ''" tabindex="0" x-bind:class="{ 'bg-blue-100': selected == item.id }"
                             class="relative cursor-pointer hover:bg-gray-100 select-none py-1 pl-10 px-5">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        
                                 <svg x-show="selected == item.id" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                             </span>
                             
-                            <span class="block truncate" x-text="item.name"></span>
+                            <span x-show="null != item.display_name" class="block truncate text-sm" x-text="item.display_name"></span>
+                            <span x-show="null == item.display_name" class="block truncate text-sm" x-text="item.name"></span>
                         </li>
                     </template>
 

@@ -13,15 +13,10 @@
 
                     <x-kompass::input wire:model="email" label="{{ __('E-Mail Address') }}" />
 
-                    <label>{{ __('Role') }}</label>
                     <div wire:ignore>
 
-                        <select wire:model="role" class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">
-                                <option>select</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->display_name }}</option>
-                            @endforeach
-                        </select>
+                        <x-kompass::select wire:model="role" label="{{ __('Role') }}" placeholder="{{ __('Select') }}" :options="$roles" />
+
                     </div>
             
                     <div class="modal-footer mt-auto">
