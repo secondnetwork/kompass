@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('key');
             $table->string('name');
+            $table->text('description')->nullable();
             $table->string('type')->nullable();
             $table->integer('grid')->default('1');
             $table->integer('order')->default('1');
