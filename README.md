@@ -3,29 +3,22 @@
 ![Kompass](https://github.com/secondnetwork/kompass/blob/main/public/assets/kompass_md.png?raw=true)
 
 [![Latest Kompass Version](https://img.shields.io/packagist/v/secondnetwork/kompass.svg?style=for-the-badge&label=Kompass&labelColor=FFA700&color=1A2A2C)](https://github.com/secondnetwork/kompass)
-[![Laravel](https://img.shields.io/badge/v11.11-999999?style=for-the-badge&label=Laravel&labelColor=eb4432&color=1A2A2C)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/v11.30-999999?style=for-the-badge&label=Laravel&labelColor=eb4432&color=1A2A2C)](https://laravel.com)
 [![PHP 8.2](https://img.shields.io/badge/v8.2-999999?style=for-the-badge&label=PHP&labelColor=777BB4&color=1A2A2C)](https://php.com)		
 [![License](https://img.shields.io/github/license/secondnetwork/kompass?style=for-the-badge)](https://github.com/secondnetwork/kompass)
 
 ## The development of Kompass
 
-This is an open source of Content Management System developed with [Laravel](http://laravel.com/) framework.
+Kompass is a modern content management system (CMS) built on the [Laravel](http://laravel.com/) framework, utilizing the TALL stack (Tailwind CSS, Alpine.js, Laravel, and Livewire). This powerful combination allows for a seamless and dynamic user experience, making content management easier and more efficient.
 
-Inspired to develop CMS, like  [Wordpress](https://wordpress.org/), [Voyager](https://voyager.devdojo.com/) and Wordpress plugin [Advanced Custom Fields](https://www.advancedcustomfields.com/).
+[Development Roadmap status](https://kompass.secondnetwork.de/roadmap/)
 
-But built with the power of Tailwind, Alpine.js, Laravel and Livewire.
-
-### Development status to Version 1.0.0
-
-> **Backend to 70%**
-
-> **Frontend to 40%**
 
 ## Requirements
 
 Additionally Kompass requires you to use
 - PHP 8.2 or newer 
-- Laravel 11.11 or newer
+- Laravel 11.30 or newer
 - Laravel Fortify 1.21 or newer
 - Livewire 3.5 or newer
 - Tailwindcss 3.4 or newer
