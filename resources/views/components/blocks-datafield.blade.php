@@ -6,24 +6,10 @@
     'cssclassname' => '',
 ])
 
-<div>
-  <nav class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 flex items-center gap-6">
+<div class="grid-3-2">
 
-      {{-- <div x-data="{ id: '{{ $itemblocks->id }}', classname: '{{ $itemblocks->getMeta('css-classname')}}' }">
-
-        <select wire:model="newName" x-model="classname" wire:change="classname({{ $itemblocks->id }})"
-        >
-            <option value="">Select a state...</option>
-            @foreach ($cssclassname as $item)
-                <option value="{{ $item->value }}">{{ $item->value }}</option>
-            @endforeach
-        </select>
-        </div> --}}
-      <x-kompass::nav-item :itemblocks="$itemblocks" />
-
-  </nav>
-  <div class="grid gap-6 py-6">
-
+  <div class="grid gap-6">
+   
       @switch($itemblocks->type)
           @case('video')
           @php
@@ -55,6 +41,7 @@
        
                   @if ($xShow == 'true')
                       <div class="flex justify-end" x-show="!box">
+                     
                           <span @click="box = true, oEmbed = false, videoInt = false" class="cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all">
                               <x-tabler-x />
                           </span>
@@ -188,6 +175,7 @@
           @break
           
           @case('gallery')
+
               <div class="@container">
                   <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6"
                   wire:sortable="updateOrderImages" 
@@ -205,6 +193,7 @@
                       </img-block>
                   </div>
               </div>
+      
           @break
 
           @case('wysiwyg')
@@ -242,32 +231,17 @@
               {{-- @livewire('datafield-item') --}}
               <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
                 
-{{-- 
-
-<div x-data="{ids: '{{ $itemfields->id }}', data: '{{ $itemfields->data }}'}" wire:model.lazy="fil">
-<input type="text" x-model="data"  >
-
-</div> --}}
-{{-- <input type="button" value="" wire:key="itemfields-{{ $itemfields->id }}">{{ $itemfields}}> --}}
-{{-- <x-kompass::form.input  wire:model="fields.{{ $itemfields->data }}.data" label="{{ $itemfields->name }}" type="text" /> --}}
-{{-- 
-                  @if ($itemblocks->id == $itemfields->block_id)
-                      <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
-                        {{ $itemblocks->datafield[$key]['data'] }}
-                          <x-kompass::blocks key="{{ $key }}" 
-                              type="{{ $itemfields->type }}"
-                              name="{{ $itemfields->name }}" 
-                              fields="{!! $itemblocks->datafield[$key]['data'] !!}"
-                              idField="{{ $itemblocks->datafield[$key]['id'] }}" 
-                              blockId="{{ $itemblocks->id }}">
-                          </x-kompass::blocks>
-
-                      </div>
-                  @endif --}}
               @endforeach
       @endswitch
 
 
+  </div>
+  <div>
+    <nav class="">
+
+        <x-kompass::nav-item :itemblocks="$itemblocks" />
+    
+    </nav>
   </div>
 
 </div>

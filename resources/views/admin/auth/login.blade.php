@@ -1,5 +1,5 @@
 @extends('kompass::admin.layouts.guest')
-@section('title') Kompass @endsection
+
 @section('content')
 
             @if (session('status'))
@@ -66,7 +66,7 @@
                 </div>
                 @endif
 
-                @if (setting('global.user-register'))
+                @if (config('kompass.settings.registration_can_user'))
                     @if (Route::has('register'))
                     <a class="text-center text-sm text-gray-500 hover:text-blue-500" href="{{ route('register') }}">
                         {{ __('Don`t have an account? Create One') }}

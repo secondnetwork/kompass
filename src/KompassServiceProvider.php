@@ -2,33 +2,33 @@
 
 namespace Secondnetwork\Kompass;
 
-use Livewire\Livewire;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\View;
-use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\ComponentAttributeBag;
+use Intervention\Image\ImageManager;
+use Livewire\Livewire;
+use Secondnetwork\Kompass\Commands\CreateUserCommand;
+
+use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\DataWriter\FileWriter;
+use Secondnetwork\Kompass\Http\Middleware\Language;
+use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
-use Illuminate\Support\ServiceProvider;
 use Secondnetwork\Kompass\Models\Setting;
-use Illuminate\View\ComponentAttributeBag;
-use Illuminate\View\Compilers\BladeCompiler;
-use Secondnetwork\Kompass\Commands\KompassCommand;
-use Secondnetwork\Kompass\Http\Middleware\Language;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Secondnetwork\Kompass\Commands\CreateUserCommand;
-use Secondnetwork\Kompass\Commands\GenerateThumbnails;
-use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
-use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
 
 class KompassServiceProvider extends ServiceProvider
 {
-
     protected const BINDING = 'image';
 
     /**
@@ -50,16 +50,16 @@ class KompassServiceProvider extends ServiceProvider
         // $kernel = $this->app->make(Kernel::class);
 
         // Register middleware alias
-        $this->app['router']->aliasMiddleware('role' , \Spatie\Permission\Middleware\RoleMiddleware::class);
+        $this->app['router']->aliasMiddleware('role', \Spatie\Permission\Middleware\RoleMiddleware::class);
         $this->app['router']->aliasMiddleware('permission', \Spatie\Permission\Middleware\PermissionMiddleware::class);
         $this->app['router']->aliasMiddleware('role_or_permission', \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class);
 
-        // $kernel->appendToMiddlewarePriority(RoleMiddleware::class);
-        // $kernel->appendToMiddlewarePriority(Language::class);
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/kompass.php' => config_path('kompass.php'),
+                __DIR__.'/../config/kompass/setup.php' => config_path('kompass.setup.php'),
+                __DIR__.'/../config/kompass/settings.php' => config_path('kompass.setup.settings'),
+                __DIR__.'/../config/kompass/appearance.php' => config_path('kompass.setup.appearance'),
+
             ], 'config');
 
             $this->publishes([
@@ -85,10 +85,7 @@ class KompassServiceProvider extends ServiceProvider
             $this->commands([
                 KompassCommand::class,
                 CreateUserCommand::class,
-                FaviconGeneratorCommand::class,
-                GenerateThumbnails::class,
             ]);
-
         }
         Gate::define('role', function ($user, ...$roles) {
             return $user->hasRole($roles);
@@ -122,16 +119,17 @@ class KompassServiceProvider extends ServiceProvider
         //         Config::set('settings.'.$setting->key, $setting);
         //     }
         // }
+
     }
 
     private function bootBladeComponents(): void
     {
         $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
             $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
-                $prefix = config('kompass.prefix', '');
-                $assets = config('kompass.assets', []);
+                $prefix = config('kompass.setup.prefix', '');
+                $assets = config('kompass.setup.assets', []);
 
-                foreach (config('kompass.components', []) as $alias => $component) {
+                foreach (config('kompass.setup.components', []) as $alias => $component) {
                     $componentClass = is_string($component) ? $component : $component['class'];
 
                     $blade->component($componentClass, $alias, $prefix);
@@ -167,11 +165,11 @@ class KompassServiceProvider extends ServiceProvider
             return;
         }
 
-        $prefix = config('kompass.prefix', '');
-        $assets = config('kompass.assets', []);
+        // $prefix = config('kompass.setup.prefix', '');
+        // $assets = config('kompass.setup.assets', []);
 
         /** @var LivewireComponent $component */
-        foreach (config('kompass.livewire', []) as $alias => $component) {
+        foreach (config('kompass.setup.livewire', []) as $alias => $component) {
             // $alias = $prefix ? "$prefix-$alias" : $alias;
 
             Livewire::component($alias, $component);
@@ -183,26 +181,25 @@ class KompassServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $router = $this->app->make(Router::class);
+        // $router = $this->app->make(Router::class);
 
-        $router->aliasMiddleware(
-            'role',
-            RoleMiddleware::class,
-            Language::class
+        // $router->aliasMiddleware(
+        //     'role',
+        //     RoleMiddleware::class,
+        //     Language::class
 
-        );
+        // );
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/fortify.php', 'fortify');
-        $this->mergeConfigFrom(__DIR__.'/../config/kompass.php', 'kompass');
+        $this->mergeConfigFrom(__DIR__.'/../config/kompass/setup.php', 'kompass');
+        $this->mergeConfigFrom(__DIR__.'/../config/kompass/settings.php', 'kompass.setup.settings');
+        $this->mergeConfigFrom(__DIR__.'/../config/kompass/appearance.php', 'kompass.setup.appearance');
 
         // Register the main class to use with the facade
         $this->app->singleton('kompass', function () {
             return new Kompass;
         });
 
-        $this->app->singleton('kompassVite', function () {
-            return new KompassVite;
-        });
         if (Schema::hasTable('settings')) {
             $this->app->singleton('settings', function ($app) {
                 return $app['cache']->remember('settings', 10, function () {
@@ -212,18 +209,47 @@ class KompassServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/kompass.php',
+            __DIR__.'/../config/kompass/setup.php',
             $this::BINDING
         );
 
         $this->app->singleton($this::BINDING, function ($app) {
             return new ImageManager(
-                driver: config('kompass.driver'),
-                autoOrientation: config('kompass.options.autoOrientation', true),
-                decodeAnimation: config('kompass.options.decodeAnimation', true),
-                blendingColor: config('kompass.options.blendingColor', 'ffffff')
+                driver: config('kompass.setup.driver'),
+                autoOrientation: config('kompass.setup.options.autoOrientation', true),
+                decodeAnimation: config('kompass.setup.options.decodeAnimation', true),
+                blendingColor: config('kompass.setup.options.blendingColor', 'ffffff')
             );
         });
+
+        // Bind it only once so we can reuse in IoC
+        $this->app->singleton($this->repository(), function ($app, $items) {
+            $writer = new FileWriter($this->getFiles(), $this->getConfigPath());
+
+            return new Repository($writer, $items);
+        });
+
+        $this->app->extend('config', function ($config, $app) {
+            // Capture the loaded configuration items
+            $config_items = $config->all();
+
+            return $app->make($this->repository(), $config_items);
+        });
+    }
+
+    public function repository()
+    {
+        return Repository::class;
+    }
+
+    protected function getFiles(): Filesystem
+    {
+        return $this->app['files'];
+    }
+
+    protected function getConfigPath(): string
+    {
+        return $this->app['path.config'];
     }
 
     protected function loadHelpers()

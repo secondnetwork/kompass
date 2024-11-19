@@ -15,7 +15,6 @@ use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
-
 class CreateUserCommand extends Command implements PromptsForMissingInput
 {
     public $signature = 'kompass:newuser
@@ -95,6 +94,4 @@ class CreateUserCommand extends Command implements PromptsForMissingInput
 
         return static::SUCCESS;
     }
-
-
 }

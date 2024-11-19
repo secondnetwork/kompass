@@ -3,12 +3,12 @@
 use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Facades\Image;
 
-function imageToAvif($imagePath = '', $width = null, $height = null, $config = array())
+function imageToAvif($imagePath = '', $width = null, $height = null, $config = [])
 {
-    
+
     $avifImagickSupport = '0';
     if (extension_loaded('imagick') && class_exists('Imagick')) {
-        $imagick = new \Imagick();
+        $imagick = new \Imagick;
         $formats = $imagick->queryFormats();
         if (in_array('AVIF', $formats)) {
             $avifImagickSupport = '1';
@@ -23,8 +23,8 @@ function imageToAvif($imagePath = '', $width = null, $height = null, $config = a
 
     // Available configs
     $quality = isset($config['quality']) ? $config['quality'] : 50;
-    $crop = isset($config['crop']) ? !!($config['crop']) : false;
-      
+    $crop = isset($config['crop']) ? (bool) ($config['crop']) : false;
+
     $cacheKey = "imageAvif/$imagePath/$width/$height/$quality/$crop";
 
     $cachedUrl = Cache::get($cacheKey);
@@ -45,18 +45,18 @@ function imageToAvif($imagePath = '', $width = null, $height = null, $config = a
     ];
 
     // Don't continue when original file doesn't exist
-    if (!Storage::disk('public')->exists($diskPathimages)) {
+    if (! Storage::disk('public')->exists($diskPathimages)) {
         return;
     }
-    
+
     $image = Image::read(file_get_contents($hostname.$imagePath));
 
     if (in_array($image->exif('FILE.MimeType'), $imageMimeTypes)) {
-       
-        if (null === $cachedUrl || !Storage::exists($diskPath)) {
+
+        if ($cachedUrl === null || ! Storage::exists($diskPath)) {
 
             // Absolute path to full size image
-            $storagePath = storage_path() . '/app/public/';
+            $storagePath = storage_path().'/app/public/';
 
             // Create the new image path
             $splitAt = strrpos($imagePath, '/storage/');
@@ -67,13 +67,13 @@ function imageToAvif($imagePath = '', $width = null, $height = null, $config = a
             $width = empty($width) ? 1600 : $width;
             $height = empty($height) ? 1600 : $height;
 
-            $resizedImagePath = "media/" . $imageDir . $filename."-$width" . "x$height".".avif";
-            
+            $resizedImagePath = 'media/'.$imageDir.$filename."-$width"."x$height".'.avif';
+
             // No need to continue if image already exists
             if ($storage->exists($resizedImagePath)) {
-                return $urlPrefix . $resizedImagePath;
+                return $urlPrefix.$resizedImagePath;
             }
-               
+
             // Shall we crop or resize?
             if ($crop) {
                 $image->resize($width, $height);
@@ -82,11 +82,11 @@ function imageToAvif($imagePath = '', $width = null, $height = null, $config = a
             }
 
             // Convert image to string format and save to storage
-            $imageData = $image->toAvif($quality); 
-    
+            $imageData = $image->toAvif($quality);
+
             $storage->put($resizedImagePath, $imageData, 'public');
 
-            $cachedUrl = $urlPrefix . $resizedImagePath;
+            $cachedUrl = $urlPrefix.$resizedImagePath;
         }
 
         return $cachedUrl;

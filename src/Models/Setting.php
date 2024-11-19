@@ -11,7 +11,11 @@ class Setting extends Model
 
     protected $guarded = [];
 
-    // public $timestamps = false;
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    // public $timestamps = fal
     // protected static function boot()
     protected static function boot()
     // public static function __callStatic($method, $parameters)

@@ -2,9 +2,8 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
-use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 use Secondnetwork\Kompass\Models\Role;
 
 class Roles extends Component
@@ -31,7 +30,9 @@ class Roles extends Component
 
     #[Validate('')]
     public $display_name;
+
     public $guard_name;
+
     public $role;
 
     public $Roles;
@@ -67,7 +68,7 @@ class Roles extends Component
 
         if ($action == 'add') {
             // This will show the modal on the frontend
-            $this->reset(['name','display_name']);
+            $this->reset(['name', 'display_name']);
             $this->FormEdit = true;
         }
 
@@ -93,13 +94,13 @@ class Roles extends Component
             $validate = $this->validate();
             $role->update($validate);
 
-            $this->reset(['name','display_name']);
+            $this->reset(['name', 'display_name']);
             $this->FormEdit = false;
-        }else{
+        } else {
             $validate = $this->validate();
-            $array2=['guard_name' => 'web'];
+            $array2 = ['guard_name' => 'web'];
             $result = array_merge($validate, $array2);
-  
+
             Role::create($result);
             $this->FormEdit = false;
         }

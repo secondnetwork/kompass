@@ -103,7 +103,6 @@
                 <x-tabler-edit class="cursor-pointer stroke-current text-blue-500" />
             </span>
 
-            
                 @if ($itemblocks->status == 'published')
                     <span wire:click="status({{ $itemblocks->id }}, 'draft')">
                         <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />

@@ -18,7 +18,8 @@
     <meta name="assets-path" content="{{ route('kompass_asset') }}"/>
     <meta name="theme-color" content="#ffa700" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#CF8700" media="(prefers-color-scheme: dark)"> 
-    <title>@hasSection('title') @yield('title') | @endif {{ config('app.name') }}</title>
+
+    <title>{{ config('app.name') }} | Kompass</title>
         {{-- Social Share Open Graph Meta Tags --}}
     @if(isset($seo->title) && isset($seo->description) && isset($seo->image))
         <meta property="og:title" content="{{ $seo->title }}">
@@ -90,7 +91,7 @@
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
           
           @role(['super_admin','admin'])
-          <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('Permissions') }}</div>
+          <div class="uppercase text-xs mt-5 px-6 text-gray-500 font-semibold">{{ __('User management') }}</div>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Manage Role') }}</span></a></li>
           @endrole

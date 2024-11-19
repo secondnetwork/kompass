@@ -24,6 +24,7 @@
  
                 </div>
                 <h2 class=" text-white">{{ auth()->user()->name }}</h2>
+                <div class=" text-gray-400">{{ now()->isoFormat('dddd, D. MMMM YYYY') }}</div>
             </div>
 
         </div>

@@ -14,11 +14,11 @@
     @endif
 
     @if($description ?? false)
-        <p class="text-sm leading-6 text-gray-400">{{ $description ?? '' }}</p>
+        <p class="text-sm leading-6 text-gray-500">{{ $description ?? '' }}</p>
     @endif
 
-    <div data-model="{{ $wireModel }}" class="mt-1.5 max-w-sm rounded-md shadow-sm">
-        <input {{ $attributes->merge(['class' => 'appearance-none flex w-full h-10 px-3 py-2 text-sm bg-white rounded-md border-gray-300 ring-offset-background placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-gray-300 dark:focus:border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200/80 disabled:cursor-not-allowed disabled:opacity-50']) }} {{ $attributes->whereStartsWith('wire:model') }} id="{{ $id ?? '' }}" name="{{ $name ?? '' }}" type="{{ $type ?? '' }}" required autofocus />
+    <div data-model="{{ $wireModel }}" class="mt-1.5 rounded-md">
+        <input {{ $attributes->merge(['class' => 'appearance-none flex w-full h-10 px-3 py-2 text-sm bg-white rounded-md border-gray-300 ring-offset-background placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-blue-600 dark:focus:border-gray-700 focus:outline-none  disabled:cursor-not-allowed disabled:opacity-50']) }} {{ $attributes->whereStartsWith('wire:model') }} id="{{ $id ?? '' }}" name="{{ $name ?? '' }}" type="{{ $type ?? '' }}" required autofocus />
     </div>
 
     @error($wireModel)

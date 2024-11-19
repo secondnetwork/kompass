@@ -164,7 +164,7 @@ class PagesData extends Component
             if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
-                    $manager = new ImageManager(new Driver());
+                    $manager = new ImageManager(new Driver);
                     $image = $manager->read($thumbnailContents);
 
                     Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, $image->toJpeg(60));

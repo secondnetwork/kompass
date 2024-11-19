@@ -4,7 +4,6 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;

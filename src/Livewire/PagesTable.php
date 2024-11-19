@@ -8,9 +8,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
-use Spatie\LaravelIgnition\Recorders\DumpRecorder\Dump;
 
 class PagesTable extends Component
 {
@@ -96,7 +94,7 @@ class PagesTable extends Component
 
     private function resultDate()
     {
-        return Page::where('title', 'like', '%' . $this->search . '%')
+        return Page::where('title', 'like', '%'.$this->search.'%')
             ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
             ->simplePaginate($this->perPage);
     }
@@ -142,10 +140,10 @@ class PagesTable extends Component
         if ($checkSlug) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $slugNameURL . '-' . $numericalPrefix++;
+                $newSlug = $slugNameURL.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (!$checkSlug) {
+                if (! $checkSlug) {
                     $newpageslug = $newSlug; //New Slug
                     break;
                 }
@@ -167,9 +165,8 @@ class PagesTable extends Component
         ]);
         $this->FormAdd = false;
 
-        return redirect()->to('/admin/pages/show/' . $page->id);
+        return redirect()->to('/admin/pages/show/'.$page->id);
     }
-
 
     public function clone($id)
     {
@@ -184,10 +181,10 @@ class PagesTable extends Component
         if ($checkSlug) {
             $numericalPrefix = 1;
             while (1) {
-                $newSlug = $slugNameURL . '-' . $numericalPrefix++;
+                $newSlug = $slugNameURL.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (!$checkSlug) {
+                if (! $checkSlug) {
                     $clonepageslug = $newSlug; //New Slug
                     break;
                 }
@@ -238,7 +235,6 @@ class PagesTable extends Component
                 $copydatablock->push();
             }
 
-
             foreach ($blockcopy->children as $subgroup) {
 
                 $copygroup = $subgroup->replicate();
@@ -271,7 +267,7 @@ class PagesTable extends Component
 
     public function cloneTree($categories, $allCategories, $cloneid, $blockid)
     {
-        foreach ($categories as  $item) {
+        foreach ($categories as $item) {
 
             $item->children = $allCategories->where('subgroup', $item->id);
 
@@ -304,6 +300,7 @@ class PagesTable extends Component
             }
         }
     }
+
     public function delete()
     {
 

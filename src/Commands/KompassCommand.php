@@ -7,11 +7,11 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -71,7 +71,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
         $now = Carbon::now()->toDateTimeString();
         $maildata = Arr::prepend($this->getUserData(), $now, 'email_verified_at');
         $user = User::create($maildata);
-        $user->roles()->sync(1);
+        // $user->roles()->sync(1);
+        $user->syncRoles('admin');
 
         return $user;
     }
@@ -263,16 +264,16 @@ class KompassCommand extends Command implements PromptsForMissingInput
         //         '--provider' => FortifyServiceProvider::class,
         //         '--provider' => KompassServiceProvider::class,
         //     ]);
-    
+
         //     $this->registerFortifyServiceProvider();
         //     $this->info('Fortify scaffolding installed successfully');
-            // File::put(config_path('app.php'), str_replace(
-            //     "App\Providers\RouteServiceProvider::class,",
-            //     "App\Providers\RouteServiceProvider::class,".PHP_EOL.
-            //         "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
-            //         'App\\Providers\\KompassServiceProvider::class,',
-            //     $appConfig
-            // ));
+        // File::put(config_path('app.php'), str_replace(
+        //     "App\Providers\RouteServiceProvider::class,",
+        //     "App\Providers\RouteServiceProvider::class,".PHP_EOL.
+        //         "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
+        //         'App\\Providers\\KompassServiceProvider::class,',
+        //     $appConfig
+        // ));
         // }
     }
 
@@ -393,7 +394,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
      */
     protected function phpBinary()
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        return (new PhpExecutableFinder)->find(false) ?: 'php';
     }
 
     /**

@@ -21,7 +21,7 @@ form > div{
 } */
 
 
-[type=color],
+
 [type=date],
 [type=datetime],
 [type=datetime-local],
@@ -44,7 +44,7 @@ textarea {
     @apply p-2 w-full border-2 bg-slate-50 border-gray-300 text-base;    
 }
 
-[type=color]:active,
+
 [type=date]:active,
 [type=datetime]:active,
 [type=datetime-local]:active,
@@ -64,7 +64,7 @@ textarea:active {
     outline: none !important;
 }
 
-[type=color]:focus,
+
 [type=date]:focus,
 [type=datetime]:focus,
 [type=datetime-local]:focus,
@@ -84,7 +84,7 @@ textarea:focus {
     outline: none !important;
 }
 
-[type=color]:hover,
+
 [type=date]:hover,
 [type=datetime]:hover,
 [type=datetime-local]:hover,

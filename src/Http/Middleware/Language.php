@@ -29,10 +29,10 @@ class Language
         // }
         $lang = $request->segment(1);
 
-        if(strlen($lang) === 2 && in_array($lang, config('languages'))){
+        if (strlen($lang) === 2 && in_array($lang, config('languages'))) {
             app()->setLocale($lang);
         }
-    
+
         return $next($request);
     }
 }

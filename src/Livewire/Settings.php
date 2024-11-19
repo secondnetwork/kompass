@@ -48,6 +48,8 @@ class Settings extends Component
     #[Rule('required|min:3')]
     public $group;
 
+    public $description;
+
     public $type;
 
     protected $rules = [
@@ -133,11 +135,13 @@ class Settings extends Component
     public function loadSetting()
     {
         $model = Setting::findOrFail($this->selectedItem);
+        $this->getId = $model->id;
         $this->name = $model->name;
         $this->group = $model->group;
         $this->valuedata = $model->data;
         $this->type = $model->type;
         $this->key = $model->key;
+        // $this->description = $model->description;
     }
 
     public function addNew()
@@ -160,6 +164,12 @@ class Settings extends Component
             ]);
 
         $this->FormAdd = false;
+    }
+
+    public function update($id, $el)
+    {
+
+        Setting::whereId($id)->update(['data' => $el]);
     }
 
     public function removemedia($id)

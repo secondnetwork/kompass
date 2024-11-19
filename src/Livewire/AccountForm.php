@@ -84,7 +84,7 @@ class AccountForm extends Component
             $this->FormEdit = true;
         }
         if ($action == 'update') {
-  
+
             $this->dispatch('getModelId', $this->selectedItem);
             $model = User::findOrFail($this->selectedItem);
 
@@ -147,30 +147,30 @@ class AccountForm extends Component
             $user->update($validateData);
             $user->roles()->sync($validateData['role']);
             $this->FormEdit = false;
-          
+
         } else {
             $validate = $this->validate();
             $passwordrandom = Str::random(12);
             $passwordHash = Hash::make($passwordrandom);
-    
+
             $now = Carbon::now()->toDateTimeString();
             $array = Arr::prepend($validate, $passwordrandom, 'password');
             $maildata = Arr::prepend($array, $now, 'email_verified_at');
-    
+
             $arrayHash = Arr::prepend($validate, $passwordHash, 'password');
             $maildataBank = Arr::prepend($arrayHash, $now, 'email_verified_at');
-    
+
             $user = User::create($maildataBank);
             $user->roles()->sync($maildataBank['role']);
-    
+
             Mail::to($maildata['email'])->send(new Invitation($maildata));
-    
+
             //->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
             $this->FormEdit = false;
-          
+
             $this->reset(['name', 'email', 'password', 'role']);
         }
-        
+
     }
 
     public function delete()
