@@ -1,81 +1,66 @@
 <?php
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Facades\Image;
 
+
 function imageToWebp($imagePath = '', $width = null, $height = null, $config = [])
 {
-
     // Available configs
-    $quality = isset($config['quality']) ? $config['quality'] : 80;
-    $crop = isset($config['crop']) ? (bool) ($config['crop']) : false;
+    $quality = $config['quality'] ?? 80;
+    $crop = !empty($config['crop']);
 
-    $cacheKey = "imageWebp/$imagePath/$width/$height/$quality/$crop";
-
+    $cacheKey = "imageWebp/" . ($imagePath ?: '') . "/$width/$height/$quality/$crop";
     $cachedUrl = Cache::get($cacheKey);
 
     $storage = Storage::disk(config('kompass.storage.disk'));
-
-    // Setup the image URLs
-    // - You can add ASSET_URL=http://... to your .env to reference images through a CDN
-    $hostname = config('app.url');
     $urlPrefix = '/storage/';
-    $diskPath = str_replace($urlPrefix, '', $cachedUrl);
-    $diskPathimages = str_replace($urlPrefix, '', $imagePath);
+    
+    // Ensure $cachedUrl and $imagePath are not null
+    $diskPath = str_replace($urlPrefix, '', $cachedUrl ?? '');
+    $diskPathImages = str_replace($urlPrefix, '', $imagePath ?? '');
 
-    $imageMimeTypes = [
-        'image/jpeg',
-        'image/png',
-        'image/webp',
-    ];
-
-    // Don't continue when original file doesn't exist
-    if (! Storage::disk('public')->exists($diskPathimages)) {
+    // Check if the original file exists
+    if (!Storage::disk('public')->exists($diskPathImages)) {
         return;
     }
 
-    $image = Image::read(file_get_contents($hostname.$imagePath));
+    // Read the image only if it is not cached
+    if ($cachedUrl === null || !Storage::exists($diskPath)) {
+        $image = Image::read(file_get_contents(config('app.url') . $imagePath));
 
-    if (in_array($image->exif('FILE.MimeType'), $imageMimeTypes)) {
-
-        if ($cachedUrl === null || ! Storage::exists($diskPath)) {
-
-            // Absolute path to full size image
-            $storagePath = storage_path().'/app/public/';
-
-            // Create the new image path
-            $splitAt = strrpos($imagePath, '/storage/');
-            $imageDir = substr($imagePath, 0, $splitAt);
-            $filename = pathinfo($imagePath, PATHINFO_FILENAME);
-
-            // Crop/Resize always needs height AND width
-            $width = empty($width) ? 1600 : $width;
-            $height = empty($height) ? 1600 : $height;
-
-            $resizedImagePath = 'media/'.$imageDir.$filename."-$width"."x$height".'.webp';
-
-            // No need to continue if image already exists
-            if ($storage->exists($resizedImagePath)) {
-                return $urlPrefix.$resizedImagePath;
-            }
-
-            // Shall we crop or resize?
-            if ($crop) {
-                $image->resize($width, $height);
-            } else {
-                $image->scale($width, $height);
-            }
-
-            // Convert image to string format and save to storage
-            $imageData = $image->toWebp($quality);
-
-            $storage->put($resizedImagePath, $imageData, 'public');
-
-            $cachedUrl = $urlPrefix.$resizedImagePath;
+        // Validate image mime type
+        if (!in_array($image->exif('FILE.MimeType'), ['image/jpeg', 'image/png', 'image/webp'])) {
+            return $imagePath;
         }
 
-        return $cachedUrl;
-    } else {
-        return $imagePath;
+        // Set default dimensions if not provided
+        $width = $width ?: 1600;
+        $height = $height ?: 1600;
+
+        // Create the new image path
+        $splitAt = strrpos($imagePath, '/storage/');
+        $imageDir = substr($imagePath, 0, $splitAt);
+        $filename = pathinfo($imagePath, PATHINFO_FILENAME);
+        $resizedImagePath = "media/$imageDir{$filename}-$width" . "x$height.webp";
+
+        // Return cached URL if the resized image already exists
+        if ($storage->exists($resizedImagePath)) {
+            return $urlPrefix . $resizedImagePath;
+        }
+
+        // Resize or crop the image
+        $crop ? $image->resize($width, $height) : $image->scale($width, $height);
+
+        // Convert image to WebP format and save to storage
+        $imageData = $image->toWebp($quality);
+        $storage->put($resizedImagePath, $imageData, 'public');
+
+        // Cache the URL for future requests
+        $cachedUrl = $urlPrefix . $resizedImagePath;
+        Cache::put($cacheKey, $cachedUrl, 3600); // Cache for 1 hour
     }
+
+    return $cachedUrl;
 }
