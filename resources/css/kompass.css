@@ -27,9 +27,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @import "blocks/admin/medialibrary.css";
 @import "blocks/blockitem.css";
 
-
 @import "components/inputs.css";
-@import "components/color.css";
 @import "components/button.css";
 @import "components/lite-yt-embed.css";
 

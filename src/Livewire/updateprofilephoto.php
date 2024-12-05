@@ -8,7 +8,7 @@ use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-class updateprofilephoto extends Component
+class UpdateProfilePhoto extends Component
 {
     use WithFileUploads;
 

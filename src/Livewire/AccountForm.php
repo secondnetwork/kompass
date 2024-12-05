@@ -2,18 +2,19 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Client\Request;
+use App\Models\User;
+use Livewire\Component;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Secondnetwork\Kompass\Mail\Invitation;
 use Secondnetwork\Kompass\Models\Role;
+use Secondnetwork\Kompass\Mail\Invitation;
 
 class AccountForm extends Component
 {
@@ -178,7 +179,8 @@ class AccountForm extends Component
         User::destroy($this->selectedItem);
         $this->FormDelete = false;
     }
-
+    
+    #[Layout('kompass::admin.layouts.app')] 
     public function render()
     {
         return view('kompass::livewire.account', [
@@ -186,6 +188,6 @@ class AccountForm extends Component
                 ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
                 ->simplePaginate($this->perPage),
             'roles' => Role::all(),
-        ])->layout('kompass::admin.layouts.app');
+        ]);
     }
 }

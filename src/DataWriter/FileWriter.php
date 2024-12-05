@@ -20,11 +20,6 @@ class FileWriter
      */
     protected $defaultPath;
 
-    /**
-     * The config rewriter object.
-     *
-     * @var \Devdojo\ConfigWriter\DataWriter\Rewrite
-     */
     protected $rewriter;
 
     /**

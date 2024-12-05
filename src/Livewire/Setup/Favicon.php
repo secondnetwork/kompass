@@ -5,7 +5,7 @@ namespace Secondnetwork\Kompass\Livewire\Setup;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Artisan;
-use Secondnetwork\Kompass\FaviconGenerator;
+use Secondnetwork\Kompass\Features\FaviconGenerator;
 
 class Favicon extends Component
 {
