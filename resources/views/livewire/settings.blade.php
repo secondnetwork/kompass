@@ -103,7 +103,7 @@
 
     <grid-side class="grid grid-cols-11 h-full gap-6" x-data="{}">
 
-        <aside class="col-start-1 col-end-3 border-r border-gray-200 h-full ">
+        <aside class="col-start-1 col-end-3  border-r border-gray-200 h-full ">
 
 
             <nav class="flex flex-col" aria-label="asidenav">
@@ -207,7 +207,10 @@
      
 
                 </div>
+                <div x-show="asidenav === 'activity-log'" x-cloak>
+                    <livewire:settings.activity-log lazy />
 
+                </div>
 
                 <div x-show="asidenav === 'global'" x-cloak>
 

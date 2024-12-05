@@ -204,9 +204,9 @@
 
                                 @case('image')
                                     <data-item class="bg-white block shadow rounded">
-
+                     
                                         <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"                                                                               
-                                     
+                                        
                                         style="background-image: url('{{ imageToWebp(Storage::url($dirpath . $item->slug . '.' . $item->extension),500) }}')"
                                         >
                             
@@ -368,7 +368,7 @@
                         @if ($file)
 
                             @if ($type == 'video')
-                                <video controls src="{{ asset('storage' . $file) }}"></video>
+                                <video controls src="{{ asset( $file) }}"></video>
                             @else
                                 <img wire:model="extension"
                                     class="relative text-sm rounded-lg shadow w-full aspect-[4/3] object-cover bg-cover bg-center bg-gray-300"

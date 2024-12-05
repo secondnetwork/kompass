@@ -28,7 +28,7 @@
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow border-b border-gray-200 sm:rounded-lg">
 
 
 
@@ -111,6 +111,8 @@
 
                                     <td class="px-4 py-3 whitespace-nowrap bg-white">
                                         <div class="flex justify-end items-center gap-1">
+
+
 
                                             <a wire:navigate href="/admin/pages/show/{{ $page->id }}" class="flex justify-center">
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />

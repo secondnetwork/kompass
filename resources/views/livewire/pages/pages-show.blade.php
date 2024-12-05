@@ -47,9 +47,6 @@
         </x-kompass::offcanvas>
     </div>
 
-    <x-kompass::action-message class="" on="status" />
-    <x-kompass::modal data="FormDelete" />
-
     <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
 
         <div class="relative flex items-center">
@@ -69,19 +66,18 @@
                     </a>
 
                     <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model="page.title" x-show="isEditing" @click.away="toggleEditingState"
+                        wire:model.blur="page.title" x-show="isEditing" @click.away="toggleEditingState"
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
                 </div>
                 <div class="col-span-6">
 
                 </div>
+                <strong class="text-gray-400 text-xs">Permalink: </strong>
                 @if ($page->layout == 'is_front_page' || $page->layout == 'is_front_page')
-                    <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/') }}"
+                    <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/') }}"
                         target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
                 @else
-                    <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $page->slug) }}"
+                    <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $page->slug) }}"
                         target="_blank" rel="noopener noreferrer">{{ url('/' . $page->slug) }}</a>
                 @endif
             </div>
@@ -155,38 +151,36 @@
         </div>
 
     </div>
-    <div class="">
 
-        <div class="ordre-1">
+    <div class="ordre-1">
 
-            <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
-                wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                class="py-5  ">
+        <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
+            wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
+            wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
+            class="py-5  ">
 
-                <span class="text-gray-600 text-sm block">Block Builder</span>
+            <span class="text-gray-600 text-sm block">Block Builder</span>
 
-                @forelse ($blocks as $itemblocks)
-                
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+            @forelse ($blocks as $itemblocks)
+            
+                <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
-                @empty
-                    <div
-                        class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
-                        {{ __('Click "Add" to create the layout') }}
-                    </div>
-                @endforelse
-                <div class="flex  justify-end my-6">
-                    <button class="btn"
-                        wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
+            @empty
+                <div
+                    class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
+                    {{ __('Click "Add" to create the layout') }}
                 </div>
-
-
+            @endforelse
+            <div class="flex  justify-end my-6">
+                <button class="btn"
+                    wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
             </div>
 
-        </div>
-    </div>
 
+        </div>
+
+    </div>
+    
     <div class="relative z-50" x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
         <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
             <x-slot name="body">
@@ -194,7 +188,6 @@
             </x-slot>
         </x-kompass::offcanvas>
     </div>
-    
     <div class="relative z-40" x-cloak x-data="{ open: @entangle('FormEditBlock')}">
         <x-kompass::offcanvas :w="'w-3/4'">
             <x-slot name="body">
@@ -224,6 +217,9 @@
         </x-kompass::offcanvas>
         
     </div>
+
+    <x-kompass::action-message class="" on="status" />
+    <x-kompass::modal data="FormDelete" />
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/4'">
@@ -297,6 +293,4 @@
                 </div>
             </x-slot>
         </x-kompass::offcanvas>
-    </div>
-
 </div>
