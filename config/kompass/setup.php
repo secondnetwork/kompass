@@ -155,7 +155,7 @@ return [
         'brokenlink' => Livewire\Brokenlink::class,
         'redirection' => Livewire\Redirection::class,
         'update-password-form' => Livewire\UpdatePasswordForm::class,
-        'update-profile-photo' => Livewire\updateprofilephoto::class,
+        'update-profile-photo' => Livewire\UpdateProfilePhoto::class,
         'account' => Livewire\AccountForm::class,
         'roles' => Livewire\Roles::class,
         'datafield-item' => Livewire\DatafieldItem::class,

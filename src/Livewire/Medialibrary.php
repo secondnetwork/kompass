@@ -196,6 +196,7 @@ class Medialibrary extends Component
     public function newFolder()
     {
         $new_folder = genSlug($this->foldername);
+        
         $success = false;
         $error = '';
 
