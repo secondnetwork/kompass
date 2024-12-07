@@ -58,9 +58,9 @@ class KompassServiceProvider extends ServiceProvider
 
     protected function registerBladeDirectives(): void
     {
-        if (class_exists('BladeDirectives')) {
-            foreach (get_class_methods('BladeDirectives') as $method) {
-                Blade::directive($method, ['BladeDirectives', $method]);
+        if (class_exists(BladeDirectives::class)) {
+            foreach (get_class_methods(BladeDirectives::class) as $method) {
+                Blade::directive($method, [BladeDirectives::class, $method]);
             }
         }
     }
