@@ -17,17 +17,16 @@
   "dependencies": {
     "@lehoczky/postcss-fluid": "^1.0.3",
     "@melloware/coloris": "^0.24.0",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "@tabler/icons": "^2.47.0",
-    "@tailwindcss/container-queries": "^0.1.1",
+    "@rollup/plugin-node-resolve": "^15.3.1",
     "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/postcss": "^0.0.0-development.1",
     "@tailwindcss/typography": "^0.5.15",
-    "caniuse-lite": "^1.0.30001686",
+    "@tailwindcss/vite": "^4.0.0-beta.8",
+    "caniuse-lite": "^1.0.30001690",
     "dotenv": "^16.4.7",
     "install": "^0.13.0",
     "preline": "^2.6.0",
-    "sortablejs": "^1.15.6",
-    "vite-plugin-chunk-split": "^0.5.0"
+    "sortablejs": "^1.15.6"
   },
   "devDependencies": {
     "@editorjs/code": "^2.9.3",
@@ -44,13 +43,7 @@
     "autoprefixer": "^10.4.20",
     "laravel-vite-plugin": "^1.1.1",
     "postcss": "^8.4.49",
-    "postcss-fluid": "^1.4.2",
-    "postcss-import": "^16.1.0",
-    "postcss-import-ext-glob": "^2.1.1",
-    "postcss-mixins": "^9.0.4",
-    "postcss-nesting": "^12.1.5",
-    "postcss-preset-env": "^9.6.0",
-    "tailwindcss": "^3.4.16",
+    "tailwindcss": "^4.0.0-beta.8",
     "vite": "^5.4.11"
   }
 }

@@ -84,7 +84,8 @@ class PagesData extends Component
 
     public $cssClassname;
 
-    protected $listeners = ['component:refresh' => '$refresh'];
+    
+    protected $listeners = ['reload-pages-data' => 'reloadMount', 'component:refresh' => '$refresh'];
 
     protected $rules = [
 
@@ -106,10 +107,15 @@ class PagesData extends Component
 
         $this->cssClassname = Meta::published()
             ->where('key', 'css-classname')
-            ->pluck('value')
-            ->unique();
+            ->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order')->get();
+    }
+
+    public function reloadMount()
+    {
+         $this->mount($this->page->id);
+         $this->resetPageComponent();
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
@@ -272,6 +278,7 @@ class PagesData extends Component
 
     public function updateLayoutGrid($blockId, $grid)
     {
+        dump($grid);
         Block::whereId($blockId)->update(['layoutgrid' => $grid]);
         $this->resetPageComponent();
     }
@@ -283,77 +290,49 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function setnewName($value)
+    {
+        $this->newName = $value;
+    }
+
+    private function updateBlockMeta(int $id, string $metaKey, $metaValue): void
+    {
+        if (!empty($metaValue)) {
+            $block = Block::findOrFail($id); // Use findOrFail to handle missing Blocks
+            $block->deleteMeta($metaKey);
+            $block->saveMeta([$metaKey => $metaValue]);
+        }
+        $this->resetPageComponent();
+    }
+    
     public function classname($id)
     {
-        if ($this->newName != null) {
-            $setblock = Block::find($id);
-
-            $setblock->deleteMeta('css-classname');
-            if ($this->newName != 0) {
-                $setblock->saveMeta([
-                    'css-classname' => $this->newName,
-                ]);
-            }
-
-        }
-        $this->resetPageComponent();
+        $this->updateBlockMeta($id, 'css-classname', $this->newName);
     }
-
+    
     public function idanchor($id)
     {
-        if ($this->newName != null) {
-            $setblock = Block::find($id);
-            $setblock->deleteMeta('id-anchor');
-            $setblock->saveMeta([
-                'id-anchor' => $this->newName,
-            ]);
-        }
-        $this->resetPageComponent();
+        $this->updateBlockMeta($id, 'id-anchor', $this->newName);
     }
 
-    public function saveset($id, $set, $status)
+    public function saveset(int $id, string $set, $status): void
     {
+        $metaKeyMap = [
+            'layout'        => 'layout',
+            'id-anchor'     => 'id-anchor',
+            'css-classname' => 'classname',
+            'col-span'      => 'col-span',
+            'alignment'     => 'alignment',
+            'slider'        => 'slider',
+        ];
 
-        $setblock = Block::find($id);
+        if (isset($metaKeyMap[$set])) {
+            $metaKey = $metaKeyMap[$set];
+             $this->updateBlockMeta($id, $metaKey, $status);
+         } else {
+             $this->resetPageComponent(); // Or you could handle this as error
+         }
 
-        if ($set == 'layout') {
-            $setblock->deleteMeta('layout');
-            $setblock->saveMeta([
-                'layout' => $status,
-            ]);
-        }
-        if ($set == 'id-anchor') {
-            $setblock->deleteMeta('id-anchor');
-            $setblock->saveMeta([
-                'id-anchor' => $status,
-            ]);
-        }
-        if ($set == 'css-classname') {
-            $setblock->deleteMeta('css-classname');
-            $setblock->saveMeta([
-                'classname' => $status,
-            ]);
-        }
-        if ($set == 'col-span') {
-            $setblock->deleteMeta('col-span');
-            $setblock->saveMeta([
-                'col-span' => $status,
-            ]);
-        }
-        if ($set == 'alignment') {
-            $setblock->deleteMeta('alignment');
-            $setblock->saveMeta([
-                'alignment' => $status,
-            ]);
-        }
-        if ($set == 'slider') {
-            $setblock->deleteMeta('slider');
-            $setblock->saveMeta([
-                'slider' => $status,
-            ]);
-        }
-
-        $this->resetPageComponent();
     }
 
     public function status($id, $status)

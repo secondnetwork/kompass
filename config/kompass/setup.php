@@ -159,6 +159,7 @@ return [
         'account' => Livewire\AccountForm::class,
         'roles' => Livewire\Roles::class,
         'datafield-item' => Livewire\DatafieldItem::class,
+        'editable-meta' => Livewire\EditableMeta::class,
         'editorjs' => Livewire\EditorJS::class,
         'redirect' => Livewire\Redirection::class,
     ],

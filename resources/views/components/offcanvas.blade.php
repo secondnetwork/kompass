@@ -10,7 +10,7 @@ x-transition:leave-end="translate-x-full" x-cloak>
 
     <div x-show="open" class="absolute inset-0 flex flex-col ">
 
-        <div class="body-content p-8 grid gap-4">
+        <div class="body-content p-8 pt-4 grid gap-4">
 
             <span class="flex justify-between items-center ">
             <span>

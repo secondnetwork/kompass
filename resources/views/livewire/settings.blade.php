@@ -92,6 +92,10 @@
                 'slug' => 'activity-log',
                 'name' => __('Activity-log'),
             ],
+            [
+                'slug' => 'error-log',
+                'name' => __('Error-log'),
+            ],
 
         ];
 
@@ -209,6 +213,11 @@
                 </div>
                 <div x-show="asidenav === 'activity-log'" x-cloak>
                     <livewire:settings.activity-log lazy />
+
+                </div>
+
+                <div x-show="asidenav === 'error-log'" x-cloak>
+                    <livewire:settings.error-log lazy />
 
                 </div>
 

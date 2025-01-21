@@ -1,27 +1,53 @@
 {
-  "_vendor.J-cMia9o.js": {
-    "file": "js/vendor.J-cMia9o.js",
+  "_alpine-components.Ca6KLc9X.js": {
+    "file": "js/alpine-components.Ca6KLc9X.js",
+    "name": "alpine-components"
+  },
+  "_editorjs.BEchFyFk.js": {
+    "file": "js/editorjs.BEchFyFk.js",
+    "name": "editorjs",
+    "imports": [
+      "_vendor.t0EHaglb.js"
+    ]
+  },
+  "_livewire-sortable.VZ581SqM.js": {
+    "file": "js/livewire-sortable.VZ581SqM.js",
+    "name": "livewire-sortable"
+  },
+  "_preline.D-PtBMJw.js": {
+    "file": "js/preline.D-PtBMJw.js",
+    "name": "preline",
+    "imports": [
+      "_vendor.t0EHaglb.js"
+    ]
+  },
+  "_vendor.t0EHaglb.js": {
+    "file": "js/vendor.t0EHaglb.js",
     "name": "vendor"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.B7W288Lv.css",
+    "file": "css/kompass.CxXZfTN7.css",
     "src": "resources/css/kompass.css",
     "isEntry": true
   },
   "resources/js/main.js": {
-    "file": "js/main.BYyEsb4q.js",
+    "file": "js/main.CC5ORkpm.js",
     "name": "main",
     "src": "resources/js/main.js",
     "isEntry": true,
     "imports": [
-      "_vendor.J-cMia9o.js"
+      "_preline.D-PtBMJw.js",
+      "_alpine-components.Ca6KLc9X.js",
+      "_livewire-sortable.VZ581SqM.js",
+      "_editorjs.BEchFyFk.js",
+      "_vendor.t0EHaglb.js"
     ],
     "dynamicImports": [
       "resources/js/plugins/lite-yt-embed.js",
       "resources/js/plugins/lite-vimeo-embed.js"
     ],
     "css": [
-      "css/kompass.B7W288Lv.css"
+      "css/kompass.CxXZfTN7.css"
     ]
   },
   "resources/js/plugins/lite-vimeo-embed.js": {

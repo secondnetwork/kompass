@@ -5,7 +5,6 @@
     'slider' => '',
 ])
 
-
 @php
     $layout = $itemblocks->layout ?? '';
     $alignment = $itemblocks->alignment ?? '';
@@ -13,7 +12,7 @@
 @endphp
 
 @if(!$itemblocks->subgroup == null)
-<nav-item class="flex items-center gap-2">
+<nav-item class="flex">
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout Grid</span>
     <span class="cursor-pointer" x-data wire:click="updateLayoutGrid({{ $itemblocks->id }}, '1')">
         @if ($itemblocks->layoutgrid == '1')
@@ -53,78 +52,82 @@
 </nav-item>
 @endif
 
-<nav-item class="flex items-center gap-2">
+<nav-item class="flex flex-wrap items-center gap-2">
+    <div class="w-full p-4 bg-white border rounded-md shadow-sm border-gray-300">
+          <div class="grid gap-4">
+            <div class="space-y-2">
+                <h4 class="font-medium leading-none">{{ $itemblocks->name }}</h4>
+                <p class="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+            </div>
+            <div class="grid gap-2">
+    
+                <div class="grid items-center grid-cols-3 gap-4"><label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="width">Classname</label><input class="flex w-full h-8 col-span-2 px-3 py-2 text-sm bg-transparent border rounded-md border-input ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="width" value="100%"></div>
+                <div class="grid items-center grid-cols-3 gap-4"><label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="maxWidth">ID</label><input class="flex w-full h-8 col-span-2 px-3 py-2 text-sm bg-transparent border rounded-md border-input ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="maxWidth" value="300px"></div>
+                <div class="grid items-center grid-cols-3 gap-4"><label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="height">Height</label><input class="flex w-full h-8 col-span-2 px-3 py-2 text-sm bg-transparent border rounded-md border-input ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="height" value="25px"></div>
+                <div class="grid items-center grid-cols-3 gap-4"><label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" for="maxHeight">Max. height</label><input class="flex w-full h-8 col-span-2 px-3 py-2 text-sm bg-transparent border rounded-md border-input ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" id="maxHeight" value="none"></div>
+            </div>
+        </div>
+    </div>
     @if($itemblocks->subgroup == null)
-    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>
-    <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
-        @if ($layout == 'content')
-            <x-tabler-columns-3 class="stroke-blue-500" />
-        @else
-            <x-tabler-columns-3 />
-        @endif
-    </span>
-    <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'popout')">
-        @if ($layout == 'popout')
-            <x-tabler-carousel-vertical class="stroke-blue-500" />
-        @else
-            <x-tabler-carousel-vertical />
-        @endif
-    </span>
-    <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'layout', 'fullpage')">
-        @if ($layout == 'fullpage')
-            <x-tabler-arrow-autofit-width class="stroke-blue-500" />
-        @else
-            <x-tabler-arrow-autofit-width />
-        @endif
-    </span>
-   
+
+
+    <div class="w-full p-4 bg-white border rounded-md shadow-sm border-gray-300">
+        <div class="grid gap-2">
+          <div class="space-y-2">
+              <h4 class="font-medium leading-none">Layout</h4>
+              <p class="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+          </div>
+          <div id="layout" class="flex items-center gap-2">
+    
+            <div  
+            @if ($layout == 'content'):class="'border-blue-600'" @else :class="'border-blue-600/20'" @endif class="border-2 rounded-lg p-1  cursor-pointer"
+            wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
+            <img src="{{ kompass_asset('icons-blocks/content-page.png') }}" alt="">
+            <span class="text-xs block mt-2">1x</span>
+            </div>
+
+            <div
+            @if ($layout == 'popout'):class="'border-blue-600'" @else :class="'border-blue-600/20'" @endif :class="layout === 'popout' ? 'border-blue-600' : 'border-blue-600/20'"  class="border-2 rounded-lg p-1  cursor-pointer"
+            wire:click="saveset({{ $itemblocks->id }},'layout', 'popout')">
+            <img src="{{ kompass_asset('icons-blocks/popout-page.png') }}" alt="">
+            <span class="text-xs block mt-2">2x</span>
+            </div>
+
+            <div
+            @if ($layout == 'fullpage'):class="'border-blue-600'" @else :class="'border-blue-600/20'" @endif :class="layout == 'fullpage' ? 'border-blue-600' : 'border-blue-600/20'"  class=" border-2 rounded-lg p-1  cursor-pointer"
+            wire:click="saveset({{ $itemblocks->id }},'layout', 'fullpage')">
+            <img src="{{ kompass_asset('icons-blocks/full-page.png') }}" alt="">
+            <span class="text-xs block mt-2">Fullpage</span>
+            </div>
+
+      
+            
+         
+        </div>
+      </div>
+  </div>
+
     @endif
 
+    <div>
 
-    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Classname</span>
-    <div x-data="click_to_edit()" class="flex items-center">
-        <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
-            class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
-            <span class="text-sm font-semibold">{{ $itemblocks->getMeta('css-classname') }}</span>
-            <x-tabler-edit class="cursor-pointer " />
-        </a>
-    <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', classname: '{{ $itemblocks->getMeta('css-classname')}}' }">
-
-        <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="classname"
-            wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
-            x-on:keydown.escape="isEditing = false"
-            x-on:click.away="isEditing = false" wire:keydown.enter="classname({{ $itemblocks->id }})">
-        <span wire:click="classname({{ $itemblocks->id }})" x-on:click="isEditing = false">
-            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
-        </span>
-        <span x-on:click="isEditing = false">
-            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
-        </span>
+            <livewire:editable-meta
+                 label="Classname"
+                 meta-key="css-classname"
+                 :itemblocks="$itemblocks"
+                 wire-action="updateMeta"
+                 :key="'css-classname-'.$itemblocks->id"
+            />
+             <livewire:editable-meta
+                 label="ID"
+                 meta-key="id-anchor"
+                 :itemblocks="$itemblocks"
+                 wire-action="updateMeta"
+                 :key="'id-anchor-'.$itemblocks->id"
+            />
+    
+   
     </div>
-    </div>
-
-    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">ID</span>
-    <div x-data="click_to_edit()" class="flex items-center">
-        <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
-            class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
-            <span class="text-sm font-semibold">{{ $itemblocks->getMeta('id-anchor') }}</span>
-            <x-tabler-edit class="cursor-pointer " />
-        </a>
-    <div x-show=isEditing class="flex items-center" x-data="{ id: '{{ $itemblocks->id }}', idanchor: '{{ $itemblocks->getMeta('id-anchor')}}' }">
-
-        <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="idanchor"
-            wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
-            x-on:keydown.escape="isEditing = false"
-            x-on:click.away="isEditing = false" wire:keydown.enter="idanchor({{ $itemblocks->id }})">
-        <span wire:click="idanchor({{ $itemblocks->id }})" x-on:click="isEditing = false">
-            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
-        </span>
-        <span x-on:click="isEditing = false">
-            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
-        </span>
-    </div>
-    </div>
-
      
 </nav-item>     
 

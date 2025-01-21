@@ -36,8 +36,8 @@
         <span>{{ $item->title }}</span>
         @if ($groups)
             <span :class="!expanded ? '' : 'rotate-180'"
-                class="transform transition-transform duration-500 absolute right-4">
-                <x-tabler-chevron-down class="cursor-pointer stroke-current h-8 w-8 text-gray-900  stroke-[1.5]" />
+                class="transform transition-transform duration-500 absolute right-4 ">
+                <x-tabler-chevron-down class="cursor-pointer stroke-current size-6 text-gray-900  stroke-[1.5]" />
             </span>
         @endif
 

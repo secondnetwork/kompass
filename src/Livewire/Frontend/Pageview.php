@@ -2,14 +2,16 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
+use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Livewire\Component;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\Redirect;
+use Secondnetwork\Kompass\Models\Datafield;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Pageview extends Component
 {
@@ -20,41 +22,52 @@ class Pageview extends Component
 
     public function mount(Request $request, $slug = null)
     {
-        // $this->settings = get_config_values([
-        //     'kompass.settings.copyright',
+        // try-catch block is important
+        try {
+            $this->resolvePageAndRedirect($request->segment(1), $slug);
+            if ($this->page instanceof Redirect) {
+                return redirect($this->page->to_url, $this->page->status_code);
+            }
+            if (!empty($this->page->new_url)) {
+                return redirect($this->page->new_url, $this->page->status_code);
+            }
+           
+            $this->loadBlocks($slug);
+            // $this->loadFields($slug);
 
-        // ]);
- 
 
-        $this->page = $this->resolvePath($request->segment(1), $slug);
 
-        if (!empty($this->page->new_url)) {
-            return redirect($this->page->new_url, $this->page->status_code);
+        } catch (NotFoundHttpException $e) {
+            $this->log404Error($request->path(), $e);
+            throw $e;
         }
-       $this->loadBlocks($slug);
-        
-    //   $this->loadFields($slug);
-
     }
 
-    private function resolvePath($land, $slug)
+
+     private function resolvePageAndRedirect($land, $slug): void
     {
-        $landurl = in_array($land, config('kompass.available_locales')) ? $land : null;
-        if ($slug === null) {
-            return Page::where('land', $landurl)
+         $landurl = in_array($land, config('kompass.available_locales')) ? $land : null;
+          if ($slug === null) {
+            $this->page = Page::query()
+              ->where('land', $landurl)
                 ->where('layout', 'is_front_page')
                 ->where('status', 'published')
-                ->firstOrFail();
-        }
+              ->first();
 
-        $page = Page::where('land', $landurl)
+         }else {
+             $this->page = Page::query()
+            ->where('land', $landurl)
             ->where('slug', $slug)
             ->whereNot('status', 'draft')
             ->first();
-        if ($page) {
-            return $page;
+         }
+
+        if (!$this->page){
+            $this->page = Redirect::where('old_url', '/' . $slug)->first();
         }
-        return Redirect::where('old_url', '/' . $slug)->firstOrFail();
+        if (!$this->page) {
+           throw new NotFoundHttpException('Page not found');
+        }
     }
 
     private function loadBlocks($slug)
@@ -139,6 +152,17 @@ class Pageview extends Component
                 </picture>';
         }
         return $file->path . '/' . $file->slug . '.' . $file->extension;
+    }
+
+    protected function log404Error($url, $e)
+    {
+        ErrorLog::create([
+            'url' => $url,
+            'message' => $e->getMessage(),
+            'user_id' => auth()->id(), // Optional, um Benutzer-ID zu loggen
+            'ip_address' => request()->ip(),
+            'status_code' => 404, // Setze den Statuscode auf 404
+        ]);
     }
 
     public function render()

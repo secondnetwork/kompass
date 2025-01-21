@@ -64,4 +64,5 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'adm
     });
 
     Route::view('about', 'kompass::admin.about')->name('about');
+    Route::view('cd', 'kompass::admin.cd')->name('cd');
 });

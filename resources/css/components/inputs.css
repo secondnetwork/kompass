@@ -41,7 +41,7 @@ textarea {
     width: 100%;
 
     border-radius: 0.4rem;
-    @apply p-2 w-full border-2 bg-slate-50 border-gray-300 text-base;    
+    @apply w-full border-2 bg-slate-50 border-gray-300 text-base;    
 }
 
 

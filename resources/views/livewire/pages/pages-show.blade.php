@@ -162,7 +162,7 @@
             <span class="text-gray-600 text-sm block">Block Builder</span>
 
             @forelse ($blocks as $itemblocks)
-            
+
                 <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
 
             @empty
@@ -196,6 +196,11 @@
 
                 <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :cssclassname="$cssClassname" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
                 
+
+                {{-- @foreach ($itemblocks->datafield as $itemfields)
+                <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
+                @endforeach
+                <x-kompass::nav-item :itemblocks="$itemblocks" /> --}}
                 @endforeach
 
         <div>

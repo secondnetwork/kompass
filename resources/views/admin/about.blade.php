@@ -3,11 +3,11 @@
 @section('content')
     <div class="grid grid-cols-3 gap-8 pt-8">
         <div class="rounded-2xl p-12 flex items-center  shadow bg-center col-span-3"
-            style="background-image: url({{ kompass_asset('kompass_bg.png') }})">
+    >
 
 
 
-<div class="logo"><img class="h-[6rem]" src="{{ kompass_asset('kompass_logo_cms.svg')}}" alt=""></div>
+<div class="logo"><img class="h-[6rem]" src="{{ kompass_asset('kompass_logo.svg')}}" alt=""></div>
 
 
     </div>

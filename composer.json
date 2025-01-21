@@ -56,5 +56,9 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "rector/rector": "^2.0",
+        "driftingly/rector-laravel": "^2.0"
+    }
 }

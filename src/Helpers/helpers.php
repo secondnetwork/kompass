@@ -1,11 +1,13 @@
 <?php
 
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Models\File as Files;
 
 if (!function_exists('vendor_path')) {
@@ -34,9 +36,19 @@ if (!function_exists('get_field')) {
     {
         foreach ($data as $value) {
             if ($value->type === $type && $value->data) {
-                if (in_array($value->type, ['video', 'poster', 'image', 'gallery'])) {
+                if (in_array($value->type, ['image', 'gallery'])) {
                     if ($file = Files::find($value->data)) {
                         return generateImageHtml($file, $class, $size, $value->type === 'gallery');
+                    }
+                }
+                if (in_array($value->type, ['video'])) {
+                    if ($file = Files::find($value->data)) {
+                        return Storage::url($file->path.$file->slug.'.'.$file->extension);
+                    }
+                }
+                if (in_array($value->type, ['poster'])) {
+                    if ($file = Files::find($value->data)) {
+                        return Storage::url($file->path.$file->slug.'.'.$file->extension);
                     }
                 }
                 return $value->data;
