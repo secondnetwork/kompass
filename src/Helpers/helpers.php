@@ -173,17 +173,28 @@ if (!function_exists('setting')) {
 
         $data = Arr::get(config('settings'), $segment);
 
-        if ($data && $data->group == $keydata[0]) {
+        if ($data && isset($data->group) && $data->group == $keydata[0]) {
             return $data->data;
         }
 
         if (Schema::hasTable('settings')) {
-            $data = Arr::get(app('settings'), $segment);
-            if ($data && $data->group == $keydata[0]) {
-                return $data->data;
+
+            $data = app('settings');
+
+            if ($data !== null) {
+
+                $keyParts = explode('.', $key);
+                $actualKey = end($keyParts);
+        
+      
+                if (Arr::has($data, $actualKey)) {
+                    $value = Arr::get($data, $actualKey);
+      
+                    return $value;
+                } 
             }
         }
-
+        
         return $default;
     }
 }
