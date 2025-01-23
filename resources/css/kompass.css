@@ -72,6 +72,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 }
 @layer base {
   .dark {
+    --color-gray-100: var(--color-gray-700); 
     --color-brand-500: var(--color-red-500);
 body{
  @apply bg-gray-800 text-white;
