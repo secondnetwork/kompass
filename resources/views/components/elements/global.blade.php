@@ -180,6 +180,8 @@
                 ['name' => 'Main',  'id' => 'main'],
                 ['name' => 'Footer',  'id' => 'footer'],
                 ['name' => 'Admin Panel',  'id' => 'admin'],
+                ['name' => 'Mail',  'id' => 'mail'],
+                ['name' => 'Form',  'id' => 'form'],
             ]">
             </x-kompass::select>
 

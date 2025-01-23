@@ -5,6 +5,10 @@
 
    
 
+  <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-500 text-green-200"> Ok</span>
+  @else
+  <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-500 text-red-200">ab</span>
+
 
 
 <div class="logo"><img class="h-[6rem]" src="{{ kompass_asset('kompass_logo.svg')}}" alt=""></div>
@@ -62,6 +66,64 @@ after:absolute after:end-1.5 after:top-[calc(50%-0.40625rem)] after:w-[.8125rem]
     <input type="text" class="p-2 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Default size">
     <input type="text" class="p-2.5 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Default size">
   
+</div>
+
+<div class="grid grid-cols-3 gap-8 pt-8">
+<a href="/admin/eventdata" class="flex gap-2 items-center bg-gray-100 rounded-2xl shadow col-span-3 md:col-span-1">
+  <x-tabler-checkbox class="w-16 h-16 stroke-[1.5] stroke-green-500 bg-green-100 border-2 border-green-500  rounded-xl p-2"/>
+    <div class=" font-semibold text-5xl text-green-500">32
+        {{-- @php
+            $data = DB::table('contacts')->count();
+        @endphp
+        {{ $data ?? '' }} --}}
+
+    </div><span class="font-semibold">Angemeldet</span>
+</a>
+
+
+
+{{-- @php
+$datawerbung = DB::table('contacts')->whereNotNull('werbung')->count();
+@endphp --}}
+
+
+
+<a href="/admin/eventdata" class="flex gap-2 items-center  bg-gray-100 rounded-2xl shadow col-span-3 md:col-span-1">
+  <x-tabler-ticket-off class="w-16 h-16 stroke-[1.5] stroke-red-500 bg-red-100 border-2 border-red-500 rounded-xl p-2"/>
+    <div class=" font-semibold text-5xl text-red-500">
+        {{-- @php
+            $data = DB::table('contacts')->where('status','abgesagt')->count();
+        @endphp
+        {{ $data ?? '' }} --}}
+2
+    </div><span class="font-semibold">Abgesagt</span>
+</a>
+
+
+{{-- @if ($datawerbung) --}}
+<a href="/admin/eventdata" class="flex gap-2 items-center bg-gray-100 rounded-2xl shadow col-span-3  md:col-span-1">
+  <x-tabler-mail-forward class="w-16 h-16 stroke-[1.5] stroke-cyan-600 bg-cyan-100  border-2 border-cyan-600 rounded-xl p-2"/>
+    <div class=" font-semibold text-5xl text-cyan-600">
+
+        {{-- {{ $datawerbung ?? '' }} --}}
+2
+    </div><span class="font-semibold">Werbung</span>
+</a>
+{{-- @endif --}}
+
+{{-- @php
+$databegleitung = DB::table('contacts')->whereNull('status')->WhereNotNull('begleitung')->count();
+@endphp
+@if ($databegleitung) --}}
+<a href="/admin/eventdata" class="flex gap-2 items-center bg-gray-100 rounded-2xl shadow col-span-3">
+  <x-tabler-user-plus class="w-16 h-16 stroke-[1.5] stroke-purple-600 bg-purple-100  border-2 border-purple-600 rounded-xl p-2"/>
+    <div class=" font-semibold text-5xl text-purple-600">
+
+        {{ $databegleitung ?? '' }}
+8
+    </div><span class="font-semibold">Mit Begleitung</span>
+</a>
+{{-- @endif --}}
 </div>
 <!-- Hire Us -->
 <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
