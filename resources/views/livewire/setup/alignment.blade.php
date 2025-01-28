@@ -1,4 +1,4 @@
-<div
+{{-- <div
     x-data="{
         heading: @entangle('heading').live,
         container: @entangle('container').live
@@ -53,4 +53,4 @@
         </div>
     </div>
 
-</div>
+</div> --}}
