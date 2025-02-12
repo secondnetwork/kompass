@@ -11,7 +11,6 @@
         @endphp
 
         @if ($file)
-            @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
             <div class="relative" wire:sortable.item="{{ $itemfield->id }}">
                 <span class="absolute top-2 left-2 " wire:sortable.handle>
                     <x-tabler-arrow-autofit-width class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-800 bg-gray-200 rounded" />
@@ -31,7 +30,5 @@
                 </action-button> 
 
             </div>
-            @endif
-
         @endif
     @endif
