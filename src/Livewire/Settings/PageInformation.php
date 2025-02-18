@@ -2,9 +2,10 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
-use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 class PageInformation extends Component
 {
@@ -47,8 +48,10 @@ class PageInformation extends Component
 
             $filename = $value->getFileName();
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $newFilename = 'ogimage.' . $extension;
 
-            $value->storeAs('public/imgaes', 'ogimage.'.$extension);
+            Storage::disk('public')->put('images/' . $newFilename, $value->get()); 
+            
             $this->image = '/storage/imgaes/ogimage.'.$extension;
 
             $this->updateConfigKeyValue('image_src', '/storage/imgaes/ogimage.'.$extension);
