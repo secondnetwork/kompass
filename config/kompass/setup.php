@@ -146,7 +146,8 @@ return [
         'settings' => Livewire\Settings::class,
         'settings.page-information' => Livewire\Settings\PageInformation::class,
         'settings.backend' => Livewire\Settings\Backend::class,
-   
+        'settings.activity-log' => Livewire\Settings\ActivityLog::class,
+        'settings.error-log' => Livewire\Settings\ErrorLog::class,
         'setup.logo' => Livewire\Setup\Logo::class,
         'setup.background' => Livewire\Setup\Background::class,
         'setup.color' => Livewire\Setup\Color::class,
@@ -160,6 +161,7 @@ return [
         'roles' => Livewire\Roles::class,
         'datafield-item' => Livewire\DatafieldItem::class,
         'editable-meta' => Livewire\EditableMeta::class,
+        'editable-name' => Livewire\EditableName::class,
         'editorjs' => Livewire\EditorJS::class,
         'redirect' => Livewire\Redirection::class,
     ],

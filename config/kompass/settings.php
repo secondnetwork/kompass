@@ -6,11 +6,11 @@
 return [
     'webtitle' => 'Kompass',
     'description' => '',
-    'supline'  => '',
+    'supline'  => 'Unter',
     'image_src' => '',
-    'footer_textarea' => '',
-    'email_address' => '',
-    'phone' => '',
+    'footer_textarea' => 'adadas',
+    'email_address' => 'www@www.de',
+    'phone' => '0515724658',
     'copyright' => 'Acme Inc.',
 
     'redirect_after_auth' => '/',

@@ -156,14 +156,14 @@ class KompassCommand extends Command implements PromptsForMissingInput
     protected function installAssets($packagemanager)
     {
         // Tailwind Configuration...
-        copy(__DIR__.'/../../stubs/livewire/tailwind.config.cjs', base_path('tailwind.config.cjs'));
+        // copy(__DIR__.'/../../stubs/livewire/tailwind.config.cjs', base_path('tailwind.config.cjs'));
         copy(__DIR__.'/../../stubs/livewire/postcss.config.cjs', base_path('postcss.config.cjs'));
         copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
 
         // Directories...
-        (new Filesystem)->deleteDirectory(resource_path('sass'));
+        // (new Filesystem)->deleteDirectory(resource_path('sass'));
         (new Filesystem)->deleteDirectory('resources');
-        (new Filesystem)->deleteDirectory('database');
+        // (new Filesystem)->deleteDirectory('database');
         (new Filesystem)->deleteDirectory(app_path('Actions/Fortify'));
 
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Fortify'));

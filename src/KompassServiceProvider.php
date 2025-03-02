@@ -2,19 +2,21 @@
 
 namespace Secondnetwork\Kompass;
 
+use Log;
 use Livewire\Livewire;
 use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\{Blade, Cache, Config, Gate, Schema, View};
+use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Http\Kernel;
-use Secondnetwork\Kompass\Models\{Page, Post, Setting, Datafield};
-use Secondnetwork\Kompass\Commands\{KompassCommand, CreateUserCommand};
+use Illuminate\Support\ServiceProvider;
+use Illuminate\View\ComponentAttributeBag;
+use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Secondnetwork\Kompass\DataWriter\{FileWriter, Repository};
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\ComponentAttributeBag;
+use Secondnetwork\Kompass\Models\{Page, Post, Setting, Datafield};
+use Secondnetwork\Kompass\Commands\{KompassCommand, CreateUserCommand};
+use Illuminate\Support\Facades\{Blade, Cache, Config, Gate, Schema, View};
 
 class KompassServiceProvider extends ServiceProvider
 {
@@ -90,6 +92,7 @@ class KompassServiceProvider extends ServiceProvider
         }
     }
 
+
     private function mergeConfigurations(): void
     {
         $configs = [
@@ -100,7 +103,16 @@ class KompassServiceProvider extends ServiceProvider
         ];
 
         foreach ($configs as $path => $key) {
-            $this->mergeConfigFrom(__DIR__ . $path, $key);
+            $fullPath = __DIR__ . '/' . $path;  //Absoluter Pfad zur Konfigurationsdatei im Package
+
+            if (File::exists($fullPath)) {
+                $this->mergeConfigFrom(
+                    $fullPath,
+                    $key
+                );
+            } else {
+                Log::warning("Konfigurationsdatei nicht gefunden: " . $fullPath); // Optional: Logge eine Warnung
+            }
         }
     }
 
@@ -175,10 +187,9 @@ class KompassServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/kompass/setup.php' => config_path('kompass.setup.php'),
-                __DIR__.'/../config/kompass/settings.php' => config_path('kompass.setup.settings'),
-                __DIR__.'/../config/kompass/appearance.php' => config_path('kompass.setup.appearance'),
-            ], 'config');
+                __DIR__ . '/../config/fortify.php' => config_path('fortify.php'),
+                __DIR__ . '/../config/kompass' => config_path('kompass'),
+            ], 'kompass-config');
 
             $this->publishes([__DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets')], 'assets');
 

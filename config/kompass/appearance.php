@@ -12,9 +12,9 @@ return [
         'height' => '4',
     ],
     'background' => [
-        'color' => '#b5d2ec',
+        'color' => '#f9fafb',
         'image' => '',
-        'image_overlay_color' => '#004d40',
+        'image_overlay_color' => '#014d41',
         'image_overlay_opacity' => '0.4',
     ],
     'color' => [
