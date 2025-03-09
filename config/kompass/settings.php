@@ -6,11 +6,11 @@
 return [
     'webtitle' => 'Kompass',
     'description' => '',
-    'supline'  => 'Unter',
+    'supline'  => 'A Laravel CMS',
     'image_src' => '',
-    'footer_textarea' => 'adadas',
-    'email_address' => 'www@www.de',
-    'phone' => '0515724658',
+    'footer_textarea' => '',
+    'email_address' => '',
+    'phone' => '',
     'copyright' => 'Acme Inc.',
 
     'redirect_after_auth' => '/',

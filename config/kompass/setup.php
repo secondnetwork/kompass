@@ -129,6 +129,14 @@ return [
     'default_img_download_disk' => 'public',
 
     'livewire' => [
+
+        'login' => Livewire\Auth\Login::class,
+        'register' => Livewire\Auth\Register::class,
+        'forgot-password' => Livewire\Auth\ForgotPassword::class,
+        'reset-password' => Livewire\Auth\ResetPassword::class,
+        'confirm-password' => Livewire\Auth\ConfirmPassword::class,
+        'verify-email' => Livewire\Auth\VerifyEmail::class,
+
         'menu' => Livewire\Frontend\Menu::class,
         'pageview' => Livewire\Frontend\Pageview::class,
         'blogview' => Livewire\Frontend\Blogview::class,
@@ -144,6 +152,7 @@ return [
         'menus.menus-show' => Livewire\MenuData::class,
         'medialibrary' => Livewire\Medialibrary::class,
         'settings' => Livewire\Settings::class,
+        'settings.profile' => Livewire\Settings\Profile::class,
         'settings.page-information' => Livewire\Settings\PageInformation::class,
         'settings.backend' => Livewire\Settings\Backend::class,
         'settings.activity-log' => Livewire\Settings\ActivityLog::class,
