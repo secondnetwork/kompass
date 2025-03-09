@@ -31,7 +31,7 @@ Additionally Kompass requires you to use
 Kompass is super easy to install. After creating your new Laravel application you can include Kompass.
 
 ```bash
-composer require secondnetwork/kompass:1.0.*@beta
+composer require secondnetwork/kompass:1.0.0@beta
 ```
 
 With the command we install frontend asset, created new admin user and drop all tables from the database.
