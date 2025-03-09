@@ -11,23 +11,14 @@ class BladeDirectives
     {
         $url = 'http://localhost:5088:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/main.js';
         $url200 = @get_headers($url);
+
         if (! $url200) {
-            // $content = (public_path('vendor/kompass/assets/manifest.json'));
             if (file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
                 $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
             } else {
                 $content = '';
             }
 
-            // $manifest = json_decode($content, true);
-            // if (Storage::exists(asset('vendor/kompass/assets/manifest.json')))
-            //     dump('ja');
-            // else {
-            //     dump('nein');
-            //     // $content = 'sd';
-            //     // dd(asset('vendor/kompass/assets/manifest.json'));
-            // }
-            // $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
             $manifest = json_decode($content, true);
 
             $entry = 'resources/js/main.js';
@@ -49,6 +40,7 @@ class BladeDirectives
     {
         $url = 'http://localhost:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/main.js';
         $url200 = @get_headers($url);
+        
         if (! $url200) {
             if (file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
                 $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
@@ -66,13 +58,4 @@ class BladeDirectives
         }
     }
 
-    /**
-     * Get the honeypot field.
-     */
-    public static function formHoneypot(): string
-    {
-        return Blade::compileString("
-            @include(\$this->component->getView('honeypot'))
-        ");
-    }
 }

@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+<!--
+*   Kompass A Laravel CMS
+*   Development and Design by secondnetwork
+*   https://kompass.secondnetwork.de/
+*
+-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="{{ kompass_asset('favicon/manifest.webmanifest') }} ">
@@ -11,8 +17,9 @@
     <meta name="url" content="{{ url('/') }}">
     <meta name="assets-path" content="{{ route('kompass_asset') }}"/>
     <meta name="theme-color" content="#ffa700" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#CF8700" media="(prefers-color-scheme: dark)"> 
-    <title>@hasSection('title') @yield('title') | @endif {{ config('app.name') }}</title>
+    <meta name="theme-color" content="#CF8700" media="(prefers-color-scheme: dark)">
+    
+    <title>{{ config('app.name') }} | Kompass</title>
         {{-- Social Share Open Graph Meta Tags --}}
     @if(isset($seo->title) && isset($seo->description) && isset($seo->image))
         <meta property="og:title" content="{{ $seo->title }}">
@@ -46,22 +53,11 @@
 
 
 
-<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100">
+<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100" style="background-color:{{ config('kompass.appearance.background.color') }};">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
         @if (!empty(setting('global.admin-logo')))
-            @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('global.admin-logo'));
-            @endphp
-
-            @if ($file)
-                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                    <picture>
-                        <source type="image/avif" srcset="{{ asset('storage' . $file->path . '/' .$file->slug)}}.avif ">
-                        <img class="w-60" src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}" alt="{{$file->alt}}" />
-                    </picture>
-                @endif
-            @endif
+        <img src="{{ setting('global.admin-logo') }}" alt="">
         @else
         <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         @endif
@@ -77,21 +73,15 @@
 
     <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full bg-gray-900 bg-opacity-75" >    
         <div class="relative flex flex-col">
-            <div class="bg-black opacity-30 absolute inset-0 z-10"></div>
-        @if (!empty(setting('global.admin-bg-img')))
-            @php
-                $file = Secondnetwork\Kompass\Models\File::find(setting('global.admin-bg-img'));
-            @endphp
-
-            @if ($file)
-                @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
-                 <div class="bg-cover h-full absolute inset-0" style="background-image: url('{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}')"></div>
-                @endif
-            @endif
-          
-        @else
-                 <div class="bg-cover h-full absolute inset-0" style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')"></div>
-        @endif    
+        
+            @if(config('kompass.appearance.background.image'))
+                <img src="{{ config('kompass.appearance.background.image') }}" id="auth-background-image" class="object-cover absolute z-10 w-screen h-screen" />
+                <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ config('kompass.appearance.background.image_overlay_color') }}; opacity:{{ config('kompass.appearance.background.image_overlay_opacity') }};"></div>
+            
+            @else
+                <div class="bg-cover h-full absolute inset-0" style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')"></div>
+                <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ config('kompass.appearance.background.image_overlay_color') }}; opacity:{{ config('kompass.appearance.background.image_overlay_opacity') }};"></div>
+            @endif    
 
         <footer class=" flex justify-between mt-auto w-full z-50">
             <div class="text-xs flex items-center text-white p-8">

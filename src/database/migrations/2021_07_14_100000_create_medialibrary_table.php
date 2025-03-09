@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('medialibrary', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('path')->nullable();
             $table->string('subgroup')->nullable();
             $table->string('name')->nullable();
@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('extension')->nullable();
             $table->string('description')->nullable();
             $table->string('alt')->nullable();
-            $table->foreignUuid(('user_id'))->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

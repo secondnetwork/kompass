@@ -57,9 +57,9 @@ h6 {
 
 
 p {
-    font-size: fluid(14px, 18px, 1440px, 1880px);
+    /* font-size: fluid(14px, 18px, 1440px, 1880px); */
     @apply font-normal;
-    line-height: 2.8;
+    line-height: 140%;
     letter-spacing: 0.2px;
 
     &.small {

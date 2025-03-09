@@ -2,28 +2,26 @@
 
 namespace Secondnetwork\Kompass;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Foundation\Http\Kernel;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
-use Illuminate\View\ComponentAttributeBag;
+use Log;
 use Livewire\Livewire;
-use Secondnetwork\Kompass\Commands\FaviconGeneratorCommand;
-use Secondnetwork\Kompass\Commands\KompassCommand;
-use Secondnetwork\Kompass\Http\Middleware\RoleMiddleware;
-use Secondnetwork\Kompass\Models\Page;
-use Secondnetwork\Kompass\Models\Post;
-use Secondnetwork\Kompass\Models\Setting;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Http\Kernel;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\View\ComponentAttributeBag;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Secondnetwork\Kompass\DataWriter\{FileWriter, Repository};
+use Secondnetwork\Kompass\Models\{Page, Post, Setting, Datafield};
+use Secondnetwork\Kompass\Commands\{KompassCommand, CreateUserCommand};
+use Illuminate\Support\Facades\{Blade, Cache, Config, Gate, Schema, View};
 
 class KompassServiceProvider extends ServiceProvider
 {
+    protected const BINDING = 'image';
+
     /**
      * Bootstrap the application services.
      */
@@ -33,30 +31,167 @@ class KompassServiceProvider extends ServiceProvider
         $this->bootBladeComponents();
         $this->bootMacros();
         $this->registerBladeDirectives();
-        $this->registerBladeIfDirectives();
+
         $this->loadJSONTranslationsFrom(__DIR__.'/../resources/lang', 'kompass');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'kompass');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         $this->loadHelpers();
 
-        $kernel = $this->app->make(Kernel::class);
+        $this->registerMiddleware();
+        $this->publishAssets();
 
-        $kernel->appendToMiddlewarePriority(RoleMiddleware::class);
+        $this->registerGates();
+        $this->registerBladeConditions();
+        $this->registerMorphMaps();
+    }
 
+    private function bootBladeComponents(): void
+    {
+        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
+            $prefix = config('kompass.setup.prefix', '');
+
+            foreach (config('kompass.setup.components', []) as $alias => $component) {
+                $componentClass = is_string($component) ? $component : $component['class'];
+                $blade->component($componentClass, $alias, $prefix);
+            }
+        });
+    }
+
+    protected function registerBladeDirectives(): void
+    {
+        if (class_exists(BladeDirectives::class)) {
+            foreach (get_class_methods(BladeDirectives::class) as $method) {
+                Blade::directive($method, [BladeDirectives::class, $method]);
+            }
+        }
+    }
+
+    private function bootLivewireComponents(): void
+    {
+        if (!class_exists(Livewire::class)) {
+            return;
+        }
+
+        foreach (config('kompass.setup.livewire', []) as $alias => $component) {
+            Livewire::component($alias, $component);
+        }
+    }
+
+    public function register(): void
+    {
+        $this->mergeConfigurations();
+        $this->registerSingletons();
+
+        if (Schema::hasTable('settings')) {
+            $this->app->singleton('settings', function ($app) {
+                return $app['cache']->rememberForever('settings', function () {
+                    return Setting::get(['key', 'data'])->pluck('data', 'key')->toArray();
+                });
+            });
+        }
+    }
+
+
+    private function mergeConfigurations(): void
+    {
+        $configs = [
+            '/../config/kompass/setup.php' => 'kompass',
+            '/../config/kompass/settings.php' => 'kompass.setup.settings',
+            '/../config/kompass/appearance.php' => 'kompass.setup.appearance',
+        ];
+
+        foreach ($configs as $path => $key) {
+            $fullPath = __DIR__ . '/' . $path;  //Absoluter Pfad zur Konfigurationsdatei im Package
+
+            if (File::exists($fullPath)) {
+                $this->mergeConfigFrom(
+                    $fullPath,
+                    $key
+                );
+            } else {
+                Log::warning("Konfigurationsdatei nicht gefunden: " . $fullPath); // Optional: Logge eine Warnung
+            }
+        }
+    }
+
+    private function registerSingletons(): void
+    {
+        $this->app->singleton('kompass', fn() => new Kompass);
+
+        $this->app->singleton($this::BINDING, function ($app) {
+
+            $driverConfig = config('kompass.setup.driver', 'gd'); // Default to 'gd'
+             
+            return new ImageManager(
+                driver: $driverConfig,
+                autoOrientation: config('kompass.setup.options.autoOrientation', true),
+                decodeAnimation: config('kompass.setup.options.decodeAnimation', true),
+                blendingColor: config('kompass.setup.options.blendingColor', 'ffffff')
+            );
+        });
+
+        $this->app->singleton($this->repository(), function ($app, $items) {
+            $writer = new FileWriter($this->getFiles(), $this->getConfigPath());
+            return new Repository($writer, $items);
+        });
+
+        $this->app->extend('config', function ($config, $app) {
+            return $app->make($this->repository(), $config->all());
+        });
+    }
+
+    public function repository()
+    {
+        return Repository::class;
+    }
+
+    protected function getFiles(): Filesystem
+    {
+        return $this->app['files'];
+    }
+
+    protected function getConfigPath(): string
+    {
+        return $this->app['path.config'];
+    }
+
+    protected function loadHelpers(): void
+    {
+        foreach (glob(__DIR__.'/Helpers/*.php') as $filename) {
+            require_once $filename;
+        }
+    }
+
+    private function bootMacros(): void
+    {
+        ComponentAttributeBag::macro('hasStartsWith', fn($key) => (bool)$this->whereStartsWith($key)->first());
+    }
+
+    private function registerMiddleware(): void
+    {
+        $router = $this->app['router'];
+        $middlewareMappings = [
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ];
+
+        foreach ($middlewareMappings as $alias => $middleware) {
+            $router->aliasMiddleware($alias, $middleware);
+        }
+    }
+
+    private function publishAssets(): void
+    {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/kompass.php' => config_path('kompass.php'),
-            ], 'config');
+                __DIR__ . '/../config/kompass' => config_path('kompass'),
+            ], 'kompass-config');
 
-            $this->publishes([
-                __DIR__.'/Models/User.php' => app_path('Models/User.php'),
-            ], 'models');
+            $this->publishes([__DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets')], 'assets');
 
-            $this->publishes([
-                __DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets'),
-            ], 'assets');
-
+            $this->publishes([__DIR__.'/Models/User.php' => app_path('Models/User.php')], 'models');
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
                 __DIR__.'/database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
@@ -71,151 +206,27 @@ class KompassServiceProvider extends ServiceProvider
 
             $this->commands([
                 KompassCommand::class,
-                FaviconGeneratorCommand::class,
+                CreateUserCommand::class,
             ]);
-
-        }
-        Gate::define('role', function ($user, ...$roles) {
-            return $user->hasRole($roles);
-        });
-
-        Blade::if('role', function (...$roles) {
-            if (auth()->check()) {
-                return auth()->user()->hasRole($roles);
-            }
-
-            return false;
-        });
-
-        Relation::morphMap(
-            [
-                'post' => Post::class,
-                'page' => Page::class,
-            ]
-        );
-        // View::composer('*', function ($view) {
-        //     $view_name = str_replace('.', ' ', $view->getName());
-        //     View::share('view_name', $view_name);
-        // });
-
-        // if (Schema::hasTable('settings')) {
-        //     $settings = Cache::rememberForever('settings', function () {
-        //         return Setting::all();
-        //     });
-
-        //     foreach ($settings as $setting) {
-        //         Config::set('settings.'.$setting->key, $setting);
-        //     }
-        // }
-    }
-
-    private function bootBladeComponents(): void
-    {
-        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
-            $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
-                $prefix = config('kompass.prefix', '');
-                $assets = config('kompass.assets', []);
-
-                foreach (config('kompass.components', []) as $alias => $component) {
-                    $componentClass = is_string($component) ? $component : $component['class'];
-
-                    $blade->component($componentClass, $alias, $prefix);
-
-                    // $this->registerAssets($componentClass, $assets);
-                }
-            });
-        });
-    }
-
-    protected function registerBladeDirectives(): self
-    {
-        foreach (get_class_methods(BladeDirectives::class) as $method) {
-            Blade::directive($method, [BladeDirectives::class, $method]);
-        }
-
-        return $this;
-    }
-
-    protected function registerBladeIfDirectives(): self
-    {
-        foreach (get_class_methods(BladeIfDirectives::class) as $method) {
-            Blade::if($method, [BladeIfDirectives::class, $method]);
-        }
-
-        return $this;
-    }
-
-    private function bootLivewireComponents(): void
-    {
-        // Skip if Livewire isn't installed.
-        if (! class_exists(Livewire::class)) {
-            return;
-        }
-
-        $prefix = config('kompass.prefix', '');
-        $assets = config('kompass.assets', []);
-
-        /** @var LivewireComponent $component */
-        foreach (config('kompass.livewire', []) as $alias => $component) {
-            // $alias = $prefix ? "$prefix-$alias" : $alias;
-
-            Livewire::component($alias, $component);
         }
     }
 
-    /**
-     * Register the application services.
-     */
-    public function register(): void
+    private function registerGates(): void
     {
-        $router = $this->app->make(Router::class);
-
-        $router->aliasMiddleware(
-            'role',
-            RoleMiddleware::class
-        );
-        // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/fortify.php', 'fortify');
-        $this->mergeConfigFrom(__DIR__.'/../config/kompass.php', 'kompass');
-
-        // Register the main class to use with the facade
-        $this->app->singleton('kompass', function () {
-            return new Kompass;
-        });
-
-        $this->app->singleton('kompassVite', function () {
-            return new KompassVite;
-        });
-        if (Schema::hasTable('settings')) {
-            $this->app->singleton('settings', function ($app) {
-                return $app['cache']->remember('settings', 10, function () {
-                    return Setting::pluck('data', 'key', 'group')->toArray();
-                });
-            });
-        }
+        Gate::define('role', fn($user, ...$roles) => $user->hasRole($roles));
     }
 
-    protected function loadHelpers()
+    private function registerBladeConditions(): void
     {
-        foreach (glob(__DIR__.'/Helpers/*.php') as $filename) {
-            require_once $filename;
-        }
+        Blade::if('role', fn(...$roles) => auth()->check() && auth()->user()->hasRole($roles));
     }
 
-    private function bootMacros(): void
+    private function registerMorphMaps(): void
     {
-        ComponentAttributeBag::macro('hasStartsWith', function ($key) {
-            return (bool) $this->whereStartsWith($key)->first();
-        });
-    }
-
-    /**
-     * Register the given component.
-     *
-     * @return void
-     */
-    protected function registerComponent(string $component)
-    {
-        Blade::component('kompass::components.'.$component, 'kp-'.$component);
+        Relation::morphMap([
+            'post' => Post::class,
+            'page' => Page::class,
+            'datafield' => Datafield::class,
+        ]);
     }
 }

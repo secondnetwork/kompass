@@ -83,7 +83,7 @@
                                                             x-on:keydown.escape="isEditing = false"
                                                             {{-- @keydown.window.escape="disableEditing"  --}}
                                                             x-on:click.away="isEditing = false"
-                                                            wire:keydown.enter="savename({{$menu->id }})"
+                                                            wire:keydown.enter="rename({{$menu->id }})"
                                                         >
                                                         <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
                                                             <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />

@@ -13,24 +13,78 @@ License: MIT
 License URI: http://opensource.org/licenses/mit-license.php
 
 */
+@import "tailwindcss";
+@source "../../resources/views";
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
+@import "./base/base.css";
+@import "./base/grid_layout.css";
+/* @import "./base/fonts.css"; */
+@import "./base/typography.css";
 
-@import "base/base.css";
-@import "base/grid_layout.css";
-/* @import "base/fonts.css"; */
-@import "base/typography.css";
+@import "./blocks/admin/login.css";
+@import "./blocks/admin/dashboard.css";
+@import "./blocks/admin/medialibrary.css";
+@import "./blocks/blockitem.css";
 
-@import "blocks/admin/login.css";
-@import "blocks/admin/dashboard.css";
-@import "blocks/admin/medialibrary.css";
-@import "blocks/blockitem.css";
+@import "./components/inputs.css";
+@import "./components/button.css";
+@import "./components/lite-yt-embed.css";
+
+@theme {
+  --color-primary: var(--color-blue-500);
+  --color-error: var(--color-red-500);
+
+    --color-primary-50: #E6F0FF; 
+    --color-primary-100: #CCE0FF; 
+    --color-primary-200: #9FC5FE; 
+    --color-primary-300: #6CA6FE; 
+    --color-primary-400: #3F8BFD; 
+    --color-primary-500: #0D6EFD; 
+    --color-primary-600: #0256D4; 
+    --color-primary-700: #013F9D; 
+    --color-primary-800: #012B6A; 
+    --color-primary-900: #001433; 
 
 
-@import "components/inputs.css";
-@import "components/button.css";
-@import "components/lite-yt-embed.css";
+   --color-secondary-50: #ECEDEF;
+   --color-secondary-100: #D8DBDE;
+   --color-secondary-200: #B4BAC0;
+   --color-secondary-300: #8D96A0;
+   --color-secondary-400: #69737D;
+   --color-secondary-500: #495057;
+   --color-secondary-600: #3A4045;
+   --color-secondary-700: #2C3035;
+   --color-secondary-800: #1E2124;
+   --color-secondary-900: #0E0F11;
+
+    --color-brand-50: #FFF6E5;
+    --color-brand-100: #FFEDCC;
+    --color-brand-200: #FFDB99;
+    --color-brand-300: #FFC966;
+    --color-brand-400: #FFB833;
+    --color-brand-500: #FFA700;
+    --color-brand-600: #CC8500;
+    --color-brand-700: #996300;
+    --color-brand-800: #664200;
+    --color-brand-900: #332100;
 
 
-@import "tailwindcss/utilities";
+}
+@layer base {
+  .dark {
+    --color-gray-100: var(--color-gray-700); 
+    --color-brand-500: var(--color-red-500);
+body{
+ @apply bg-gray-800 text-white;
+
+  }
+
+  [class*="kompass-admin-"] {
+    & .main-content, & header, & footer {
+      background-color: var(--color-gray-800) !important;
+    }
+  }
+}
+
+
+}

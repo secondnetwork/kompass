@@ -19,103 +19,73 @@
     @endphp
 @endif
 
-{{-- <div> --}}
-    {{-- <label for='{{ $name }}'>{{ $label }}</label>
-    <select name='{{ $name }}' id='{{ $name }}' {{ $attributes }}>
-    @if ($placeholder != '')
-       <option value=''>{{ $placeholder }}</option>
-    @endif
-    {{ $slot }}
-    </select> --}}
-
-<div class="flex items-center cursor-pointer">
-    
-    <div 
-    x-data="{open: false,
-        selected: @entangle($attributes->wire('model')),
-        init() {
-            {{-- this.selected = ''; --}}
-            this.query = '';
-            this.filteredPeopleCount = this.options.length
-        },
+    <div x-data="{
         options: @js($options),
+        isOpen: false,
+        openedWithKeyboard: false,
+        selectedOption: @entangle($attributes->wire('model')),
 
-            toggle() {
-                this.open = !this.open
-            },
-            getName() {
-
-            },
-            filteredPeople() {
-                return this.options.filter(
-                    item => item.name
-                    .toLowerCase()
-                    .replace(/\s+/g, '')
-                    .includes(this.query.toLowerCase().replace(/\s+/g, ''))
-                );
-            },
-
-            countFilteredPeople() {
-                this.filteredPeopleCount = this.options.filter(
-                    item => item.name
-                    .toLowerCase()
-                    .replace(/\s+/g, '')
-                    .includes(this.query.toLowerCase().replace(/\s+/g, ''))
-                ).length;
-            },
-        }" 
-        class="w-full mt-4 space-y-4 text-slate-800">
-
-        <div class="w-full relative">
-            {{ $label }}
-            <div class="flex items-center cursor-pointer rounded-md border bg-white border-secondary-300 text-base ">
-         
-                   <template x-for="item in filteredPeople">
-                        <div x-show="selected == item.id" @click="toggle"
-                            class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">                            
-                            <span class="block truncate" x-text="item.name"></span>
-                        </div>
-                                                
-                    </template>
-                    <div x-show="!selected"  @click="toggle" class="relative cursor-pointer w-full select-none pl-3 pr-10 py-2 text-base">                            
-                        <span class="block truncate">{{ __('Select') }}</span>
-                    </div>
-
-                <button @click="toggle" class="px-1 h-auto absolute right-0">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.41 8.83984L12 13.4198L16.59 8.83984L18 10.2498L12 16.2498L6 10.2498L7.41 8.83984Z" fill="currentColor"></path></svg>
-                </button>
-                
+        setSelectedOption(option) {
+            this.selectedOption = option
+            this.selected = option.id
+            this.isOpen = false
+            this.openedWithKeyboard = false
+            {{-- this.$refs.hiddenTextField.id = option.id --}}
+        },
+        highlightFirstMatchingOption(pressedKey) {
+            const option = this.options.find((item) =>
+                item.name.toLowerCase().startsWith(pressedKey.toLowerCase()),
+            )
+            if (option) {
+                const index = this.options.indexOf(option)
+                const allOptions = document.querySelectorAll('.combobox-option')
+                if (allOptions[index]) {
+                    allOptions[index].focus()
+                }
+            }
+        },
+    }" class="w-full flex flex-col gap-1" x-on:keydown="highlightFirstMatchingOption($event.key)" x-on:keydown.esc.window="isOpen = false, openedWithKeyboard = false">
+    <label class="w-fit pl-0.5 text-sm text-slate-700 dark:text-slate-300">{{ $label }}</label>
+    <div class="relative">
+    
+        <!-- trigger button  -->
+        <button type="button" role="combobox" :class="{ 'border-blue-600' : isOpen, 'border-gray-300' : !isOpen}" class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap  bg-white h-10 px-4 py-2 text-sm font-medium capitalize tracking-wide text-slate-700 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300 dark:focus-visible:outline-blue-600 rounded-md border-2" aria-haspopup="listbox" aria-controls="industriesList" x-on:click="isOpen = ! isOpen" x-on:keydown.down.prevent="openedWithKeyboard = true" x-on:keydown.enter.prevent="openedWithKeyboard = true" x-on:keydown.space.prevent="openedWithKeyboard = true" x-bind:aria-label="selectedOption ? selectedOption.id : 'Please Select'" x-bind:aria-expanded="isOpen || openedWithKeyboard">
+            
+            <template x-for="item in options">
+            <div x-show="selectedOption == item.id">                            
+                <span x-show="null != item.display_name" class="block truncate text-sm" x-text="item.display_name"></span>
+                <span x-show="null == item.display_name" class="block truncate text-sm" x-text="item.name"></span>
             </div>
+                               
+            </template>
 
-            <div class="absolute z-50 w-full">
-
-                <div x-show="open === true" @click.outside="open = false"
-                    class="flex flex-col justify-start w-full bg-white list-none py-2 rounded-lg shadow-md border border-gray-200">
-                    <template x-if="filteredPeopleCount === 0 && query !== ''">
-                        <div class="py-1 px-5">Nothing found...</div>
-                    </template>
-
-                    <template x-for="item in filteredPeople">
-                        <li @click="selected = item.id, open = false, query = ''" tabindex="0" x-bind:class="{ 'bg-blue-100': selected == item.id }"
-                            class="relative cursor-pointer hover:bg-gray-100 select-none py-1 pl-10 px-5">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        
-                                <svg x-show="selected == item.id" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                            </span>
-                            
-                            <span class="block truncate" x-text="item.name"></span>
-                        </li>
-                    </template>
-
-                    <input x-model="selected" hidden name="selectedinputname">
-
-                </div>
-                
+            <div x-show="!selectedOption"  class="block truncate text-sm">                            
+                <span class="block truncate">{{ __('Select') }}</span>
             </div>
-        </div>
+     
+            <!-- Chevron  -->
+            <x-tabler-selector class="size-5" />
+        </button>
+    
+        <!-- hidden input to grab the selected value  -->
+        <input x-model="selectedOption" hidden type="text"  />
+        
+        <ul x-cloak x-show="isOpen || openedWithKeyboard" id="industriesList" class="absolute z-10 left-0 top-11 flex max-h-44 w-full flex-col overflow-hidden overflow-y-auto border-slate-300 bg-white py-1.5 dark:border-slate-700 dark:bg-slate-800 rounded-md border-2" role="listbox" aria-label="industries list" x-on:click.outside="isOpen = false, openedWithKeyboard = false" x-on:keydown.down.prevent="$focus.wrap().next()" x-on:keydown.up.prevent="$focus.wrap().previous()" x-transition x-trap="openedWithKeyboard">
+            <template x-for="(item, index) in options" x-bind:key="item.id">   
+                <li class="combobox-option inline-flex cursor-pointer justify-between gap-6 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-800/5 hover:text-black focus-visible:bg-slate-800/5 focus-visible:text-black focus-visible:outline-none dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-100/5 dark:hover:text-white dark:focus-visible:bg-slate-100/10 dark:focus-visible:text-white" role="option" x-on:click="setSelectedOption(item.id)" x-on:keydown.enter="setSelectedOption(item.id)" x-bind:id="'option-' + index" tabindex="0" >
+                    <!-- Label  -->
+                    <span x-bind:class="selectedOption == item.id ? 'font-bold' : null" x-text="item.name"></span>
+                    
+                    <!-- Screen reader 'selected' indicator  -->
+                    <span class="sr-only" x-text="selectedOption == item.id ? 'selected' : null"></span>
+                    <!-- Checkmark  -->
+                    <x-tabler-check class="size-5" x-cloak x-show="selectedOption == item.id" />
+ 
+                </li>
+            </template>
+        </ul>
     </div>
-
-</div>
-
+    </div>
+    
 
 

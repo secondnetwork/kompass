@@ -2,18 +2,19 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Client\Request;
+use App\Models\User;
+use Livewire\Component;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Secondnetwork\Kompass\Mail\Invitation;
 use Secondnetwork\Kompass\Models\Role;
+use Secondnetwork\Kompass\Mail\Invitation;
 
 class AccountForm extends Component
 {
@@ -38,7 +39,6 @@ class AccountForm extends Component
     public $orderBy = 'created_at';
 
     public $orderAsc = true;
-    // protected $queryString = ['search'];
 
     public $role;
 
@@ -63,31 +63,16 @@ class AccountForm extends Component
     private function headerConfig()
     {
         return [
-            // 'id' => '#',
             'name' => 'Name',
-            // 'title' => 'Title',
             'status' => 'Status',
             'role' => 'Role',
             'edit' => '',
         ];
     }
 
-    // public function row()
-    // {
-    //     return [
-    //         $user->id,
-    //         UI::avatar(asset('storage/' . $user->avatar)),
-    //         $user->name,
-    //         $user->email,
-    //         $user->active ? UI::icon('check', 'success') : '',
-    //         ucfirst($user->type),
-    //         $user->created_at->diffforHumans()
-    //     ];
-    // }
     public function mount()
     {
         $this->headers = $this->headerConfig();
-        // $this->datarow = $this->row();
     }
 
     public function selectItem($itemId, $action)
@@ -96,17 +81,18 @@ class AccountForm extends Component
 
         if ($action == 'add') {
             // This will show the modal on the frontend
-            // $this->reset(['name', 'email', 'password', 'role']);
-            $this->FormAdd = true;
+            $this->reset(['name', 'email', 'password', 'role']);
+            $this->FormEdit = true;
         }
         if ($action == 'update') {
+
             $this->dispatch('getModelId', $this->selectedItem);
             $model = User::findOrFail($this->selectedItem);
-            // $this->Rolrs = Role::all();
-            $roleid = '3';
+
             foreach ($model->roles as $user_role) {
                 $roleid = $user_role->id;
             }
+
             $this->role = $roleid;
             $this->name = $model->name;
             $this->email = $model->email;
@@ -121,30 +107,6 @@ class AccountForm extends Component
     private function resultDate()
     {
         return User::where('name', 'like', '%'.$this->search.'%')->Paginate(100);
-    }
-
-    public function addNewUser()
-    {
-        $validate = $this->validate();
-
-        $passwordrandom = Str::random(12);
-        $passwordHash = Hash::make($passwordrandom);
-
-        $now = Carbon::now()->toDateTimeString();
-        $array = Arr::prepend($validate, $passwordrandom, 'password');
-        $maildata = Arr::prepend($array, $now, 'email_verified_at');
-
-        $arrayHash = Arr::prepend($validate, $passwordHash, 'password');
-        $maildataBank = Arr::prepend($arrayHash, $now, 'email_verified_at');
-
-        $user = User::create($maildataBank);
-        $user->roles()->sync($maildataBank['role']);
-
-        Mail::to($maildata['email'])->send(new Invitation($maildata));
-
-        //->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
-        $this->FormAdd = false;
-        $this->reset(['name', 'email', 'password', 'role']);
     }
 
     public function create($id)
@@ -177,17 +139,39 @@ class AccountForm extends Component
                 ->orWhere('email', 'like', '%'.$search.'%');
     }
 
-    public function update()
+    public function createOrUpdateUser()
     {
-        $user = User::findOrFail($this->selectedItem);
+        $user = User::find($this->selectedItem);
 
-        $validateData = $this->validate();
+        if ($user) {
+            $validateData = $this->validate();
+            $user->update($validateData);
+            $user->roles()->sync($validateData['role']);
+            $this->FormEdit = false;
 
-        $user->update($validateData);
-        $user->roles()->sync($validateData['role']);
-        // User::updateOrCreate()
-        $this->FormEdit = false;
-        $this->resetPage();
+        } else {
+            $validate = $this->validate();
+            $passwordrandom = Str::random(12);
+            $passwordHash = Hash::make($passwordrandom);
+
+            $now = Carbon::now()->toDateTimeString();
+            $array = Arr::prepend($validate, $passwordrandom, 'password');
+            $maildata = Arr::prepend($array, $now, 'email_verified_at');
+
+            $arrayHash = Arr::prepend($validate, $passwordHash, 'password');
+            $maildataBank = Arr::prepend($arrayHash, $now, 'email_verified_at');
+
+            $user = User::create($maildataBank);
+            $user->roles()->sync($maildataBank['role']);
+
+            Mail::to($maildata['email'])->send(new Invitation($maildata));
+
+            //->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
+            $this->FormEdit = false;
+
+            $this->reset(['name', 'email', 'password', 'role']);
+        }
+
     }
 
     public function delete()
@@ -195,18 +179,15 @@ class AccountForm extends Component
         User::destroy($this->selectedItem);
         $this->FormDelete = false;
     }
-
+    
+    #[Layout('kompass::admin.layouts.app')] 
     public function render()
     {
-        //sleep(2);
-
-        // $query = '%'.  dd(User::search);$this->searchTerm.'%';
         return view('kompass::livewire.account', [
-            // 'users' => $this->resultDate(),
             'users' => User::search($this->search)
                 ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
                 ->simplePaginate($this->perPage),
             'roles' => Role::all(),
-        ])->layout('kompass::admin.layouts.app');
+        ]);
     }
 }

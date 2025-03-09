@@ -4,7 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -90,18 +90,7 @@ class Medialibrary extends Component
     /** @var string */
     private $directory = '';
 
-    protected $listeners = [
-        'getIdField_changnd' => 'getIdField',
-        'getIdBlock' => 'getIdBlock',
-        'resetCom' => '$refresh',
-    ];
-
-    public function getIdField($id_field, $fieldOrPage)
-    {
-        $this->field_id = $id_field;
-        $this->fieldOrPage = $fieldOrPage;
-    }
-
+    #[on('getIdBlock')]
     public function getIdBlock($id_field)
     {
         $this->block_id = $id_field;
@@ -207,6 +196,7 @@ class Medialibrary extends Component
     public function newFolder()
     {
         $new_folder = genSlug($this->foldername);
+        
         $success = false;
         $error = '';
 
@@ -223,60 +213,12 @@ class Medialibrary extends Component
                 'path' => $new_folder,
                 'user_id' => Auth::id(),
             ]);
-            $this->dispatch('resetCom');
+            $this->dispatch('$refresh');
         } else {
             $error = __('media.error_creating_dir');
         }
 
         $this->FormFolder = false;
-    }
-
-    public static function convert($src, $des, $quality, $speed)
-    {
-        if (! function_exists('imageavif') && AVIFE_IMAGICK_VER <= 0) {
-            return;
-        }
-        if (! $src && ! $des && ! $quality && ! $speed) {
-            return false;
-        }
-
-        $fileType = getimagesize($src)['mime'];
-        // Try Imagick First
-        if (AVIFE_IMAGICK_VER > 0) {
-            $imagick = new \Imagick();
-            $imagick->readImage($src);
-            $imagick->setImageFormat('avif');
-            if ($quality > 0) {
-                $imagick->setCompressionQuality($quality);
-                $imagick->setImageCompressionQuality($quality);
-            } else {
-                $imagick->setCompressionQuality(1);
-                $imagick->setImageCompressionQuality(1);
-            }
-
-            $imagick->writeImage($des);
-
-            return;
-        }
-        //Try GD
-        if ($fileType == 'image/jpeg' || $fileType == 'image/jpg') {
-            $sourceGDImg = @imagecreatefromjpeg($src);
-        }
-        if ($fileType == 'image/png') {
-            $sourceGDImg = @imagecreatefrompng($src);
-        }
-        if ($fileType == 'image/webp') {
-            $sourceGDImg = @imagecreatefromwebp($src);
-        }
-        if (gettype($sourceGDImg) == 'boolean') {
-            return;
-        }
-        @imageavif($sourceGDImg, $des, $quality, $speed);
-
-        // file_put_contents($des, "\0", FILE_APPEND);
-        // Storage::path($des);
-
-        @imagedestroy($sourceGDImg);
     }
 
     public function _finishUpload($name, $tmpPath, $isMultiple)
@@ -304,26 +246,6 @@ class Medialibrary extends Component
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
 
-            $imageMimeTypes = [
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/gif',
-            ];
-            if (in_array($filedata->getMimeType(), $imageMimeTypes)) {
-                if ($this->dir) {
-                    $des = Storage::path('public/'.$this->dir.'/'.$timefilesSlug.'.avif');
-                } else {
-                    $des = Storage::path('public/'.$timefilesSlug.'.avif');
-                }
-
-                self::convert(asset($storelink), $des, 60, 6);
-                // foreach ($details['thumbnails'] as $thumbnail_data) {
-                //     $thumbnail = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'_'.$thumbnail_data['name'].'.'.$original_ext, $this->filesystem);
-                //     $this->createThumbnail($thumbnail_data['type'], $thumbnail, $thumbnail_data['width'], $thumbnail_data['height'] ?? null, $thumbnail_data['position'] ?? 'center', $thumbnail_data['quality'] ?? 60, $original_ext);
-                // }
-            }
-
             if ($storelink) {
                 $file::create([
                     'path' => $this->dir,
@@ -336,58 +258,41 @@ class Medialibrary extends Component
                     'user_id' => Auth::id(),
                 ]);
             }
+
         }
         $this->reset('files');
         $this->mount('mediafiles');
-        $this->dispatch('resetCom');
+        $this->dispatch('$refresh');
     }
 
-    public function createThumbnail($type, $path, $width, $height, $position, $quality, $original_ext)
+    #[on('getIdField_changnd')]
+    public function getIdField($id_field, $fieldOrPage)
     {
-        $content = Storage::disk($this->filesystem)->get($path);
-        $image = Image::make($content);
-
-        if ($type == 'fit') {
-            Storage::disk($this->filesystem)->put($path, $image
-                ->fit($width, $height, function ($constraint) {
-                    $constraint->upsize();
-                }, $position)
-                ->encode($original_ext, ($quality ?? 90))->encoded);
-
-            $des = Storage::path('public/'.$path.'.avif');
-            self::convert(asset($path), $des, 50, 6);
-        } elseif ($type == 'crop') {
-            Storage::disk($this->filesystem)->put($path, $image
-                ->crop($width, $height, null, null)
-                ->encode($original_ext, ($quality ?? 90))->encoded);
-        } elseif ($type == 'resize') {
-            Storage::disk($this->filesystem)->put($path, $image
-                ->resize($width, $height, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->encode($original_ext, ($quality ?? 90))->encoded);
-        }
+        $this->field_id = $id_field;
+        $this->fieldOrPage = $fieldOrPage;
     }
 
     public function selectField($media_id, $fieldOrPageName)
     {
 
-        switch ($fieldOrPageName) {
+        switch ($this->fieldOrPage) {
             case 'thumbnails':
                 Post::updateOrCreate(['id' => $this->field_id], ['thumbnails' => $media_id]);
                 $this->dispatch('refreshmedia');
                 break;
             case 'setting':
-                Setting::updateOrCreate(['id' => $this->field_id], ['thumbnails' => $media_id]);
-                $this->dispatch('refreshmedia');
+                Setting::updateOrCreate(['id' => $this->field_id], ['data' => $media_id]);
+                $this->dispatch('refresh-setting');
                 break;
 
             default:
                 Datafield::updateOrCreate(
                     ['id' => $this->field_id], [
                         'data' => $media_id,
-                        'type' => $fieldOrPageName,
-                        'block_id' => $this->block_id]
+                        'type' => $this->fieldOrPage,
+                        'block_id' => $this->block_id,
+                        'order' => '999',
+                    ],
                 );
                 $this->dispatch('refreshmedia');
                 break;
@@ -428,6 +333,7 @@ class Medialibrary extends Component
 
             //     // }
             // }
+            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_thumbnail.avif');
             Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.avif');
             Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension);
             if (Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
@@ -436,7 +342,9 @@ class Medialibrary extends Component
                 $this->FormEdit = false;
             }
         }
-        $this->dispatch('resetCom');
+
+        $this->mount('mediafiles');
+
     }
 
     private function resultDate()

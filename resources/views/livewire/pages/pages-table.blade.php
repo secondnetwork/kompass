@@ -1,5 +1,4 @@
 <div>
-
     <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd') }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
@@ -29,7 +28,7 @@
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow border-b border-gray-200 sm:rounded-lg">
 
 
 
@@ -97,15 +96,23 @@
                                             {{ __($page->$value) }}
                                             @if ($key == 0)
                                                 </a>
+
+                                                @if ( $page->land == 'en')
+                                                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">EN</span>
+                                                @endif
+                                       
                                             @endif
                                             @if ($key == 2)
                                                 </span>
+                                                                             
                                             @endif
                                         </td>
                                     @endforeach
 
                                     <td class="px-4 py-3 whitespace-nowrap bg-white">
                                         <div class="flex justify-end items-center gap-1">
+
+
 
                                             <a wire:navigate href="/admin/pages/show/{{ $page->id }}" class="flex justify-center">
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />

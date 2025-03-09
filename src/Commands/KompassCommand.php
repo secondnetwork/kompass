@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -70,7 +71,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
         $now = Carbon::now()->toDateTimeString();
         $maildata = Arr::prepend($this->getUserData(), $now, 'email_verified_at');
         $user = User::create($maildata);
-        $user->roles()->sync(1);
+        // $user->roles()->sync(1);
+        $user->syncRoles('admin');
 
         return $user;
     }
@@ -154,17 +156,14 @@ class KompassCommand extends Command implements PromptsForMissingInput
     protected function installAssets($packagemanager)
     {
         // Tailwind Configuration...
-        copy(__DIR__.'/../../stubs/livewire/tailwind.config.cjs', base_path('tailwind.config.cjs'));
         copy(__DIR__.'/../../stubs/livewire/postcss.config.cjs', base_path('postcss.config.cjs'));
         copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
 
         // Directories...
-        (new Filesystem)->deleteDirectory(resource_path('sass'));
         (new Filesystem)->deleteDirectory('resources');
-        (new Filesystem)->deleteDirectory('database');
-        (new Filesystem)->deleteDirectory(app_path('Actions/Fortify'));
 
-        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Fortify'));
+        (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
+        copy(__DIR__.'/../../stubs/app/Http/Controllers/Auth/VerifyEmailController.php', base_path('app/Http/Controllers/Auth/VerifyEmailController.php'));
         (new Filesystem)->ensureDirectoryExists(app_path('Models'));
         (new Filesystem)->ensureDirectoryExists(app_path('View/Components'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views'));
@@ -178,18 +177,18 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
-                '@tailwindcss/forms' => '^0.5.7',
-                '@tailwindcss/typography' => '^0.5.10',
-                '@lehoczky/postcss-fluid' => '^1.0.3',
-                'autoprefixer' => '^10.4.16',
-                'postcss' => '^8.4.32',
-                'postcss-fluid' => '^1.4.2',
-                'postcss-import' => '^16.0.0',
-                'postcss-import-ext-glob' => '^2.1.1',
-                'postcss-mixins' => '^9.0.4',
-                'postcss-nesting' => '^12.0.2',
-                'postcss-preset-env' => '^9.3.0',
-                'tailwindcss' => '^3.4.0',
+                "@lehoczky/postcss-fluid" => "^1.0.3",
+                "@tailwindcss/forms" => "^0.5.10",  
+                "@tailwindcss/typography" => "^0.5.16",  
+                "autoprefixer" => "^10.4.20",    
+                "axios" => "^1.7.9",          
+                "concurrently" => "^9.1.2",    
+                "laravel-vite-plugin" => "^1.2.0", 
+                "postcss" => "^8.5.1",         
+                "vite" => "^6.0.11",          
+                "@tailwindcss/postcss" => "^4.0.0",   
+                "@tailwindcss/vite" => "^4.0.0",    
+                "tailwindcss" => "^4.0.0"      
             ] + $packages;
         });
         switch ($packagemanager) {
@@ -223,13 +222,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
 
-        // Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Fortify/UpdateUserProfileInformation.php', app_path('Actions/Fortify/UpdateUserProfileInformation.php'));
-
-        $this->callSilent('vendor:publish', ['--provider' => 'Laravel\Fortify\FortifyServiceProvider']);
         $this->callSilent('vendor:publish', ['--provider' => 'Secondnetwork\Kompass\KompassServiceProvider']);
         $this->callSilent('vendor:publish', ['--tag' => 'migrations', '--force' => true]);
-        $this->replaceInFile("public const HOME = '/home';", "public const HOME = '/admin/dashboard';", app_path('Providers/RouteServiceProvider.php'));
     }
 
     public function databaserun()
@@ -243,21 +237,36 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
     public function updateServiceProviders()
     {
-        $appConfig = file_get_contents(config_path('app.php'));
 
-        if (
-            ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
-            &&
-            ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
-        ) {
-            File::put(config_path('app.php'), str_replace(
-                "App\Providers\RouteServiceProvider::class,",
-                "App\Providers\RouteServiceProvider::class,".PHP_EOL.
-                    "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
-                    'App\\Providers\\KompassServiceProvider::class,',
-                $appConfig
-            ));
+        if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
+            return;
         }
+        
+        ServiceProvider::addProviderToBootstrapFile(\App\Providers\KompassServiceProvider::class);
+        // ServiceProvider::addProviderToBootstrapFile(Spatie\Permission\PermissionServiceProvider::class);
+        // $appConfig = file_get_contents(config_path('app.php'));
+
+        // if (
+        //     ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
+        //     &&
+        //     ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
+        // ) {
+
+        //     $this->callSilent('vendor:publish', [
+        //         '--provider' => FortifyServiceProvider::class,
+        //         '--provider' => KompassServiceProvider::class,
+        //     ]);
+
+        //     $this->registerFortifyServiceProvider();
+        //     $this->info('Fortify scaffolding installed successfully');
+        // File::put(config_path('app.php'), str_replace(
+        //     "App\Providers\RouteServiceProvider::class,",
+        //     "App\Providers\RouteServiceProvider::class,".PHP_EOL.
+        //         "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
+        //         'App\\Providers\\KompassServiceProvider::class,',
+        //     $appConfig
+        // ));
+        // }
     }
 
     /**
@@ -351,6 +360,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         tap(new Filesystem, function ($files) {
             $files->deleteDirectory(base_path('node_modules'));
             $files->delete(base_path('bun.lockb'));
+            $files->delete(base_path('bun.lock'));
             $files->delete(base_path('pnpm-lock.yaml'));
             $files->delete(base_path('yarn.lock'));
             $files->delete(base_path('package-lock.json'));
@@ -377,7 +387,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
      */
     protected function phpBinary()
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        return (new PhpExecutableFinder)->find(false) ?: 'php';
     }
 
     /**

@@ -20,50 +20,6 @@ class PageSeeder extends Seeder
     public function run()
     {
 
-        Setting::create([
-
-            'name' => 'User can register',
-            'key' => 'user-register',
-            'type' => 'switch',
-            'data' => '1',
-            'group' => 'global',
-            'order' => 1,
-
-        ]);
-
-        Setting::create([
-
-            'name' => 'Single-Sign-On (SSO) (IN BETA)',
-            'key' => 'sso',
-            'type' => 'switch',
-            'data' => '',
-            'group' => 'global',
-            'order' => 2,
-
-        ]);
-
-        Setting::create([
-
-            'name' => 'Login Image',
-            'key' => 'admin-bg-img',
-            'type' => 'image',
-            'data' => '',
-            'group' => 'footer',
-            'order' => 1,
-
-        ]);
-
-        Setting::create([
-
-            'name' => 'Copytext',
-            'key' => 'copytext',
-            'type' => 'text',
-            'data' => 'Copytext',
-            'group' => 'footer',
-            'order' => 1,
-
-        ]);
-
         DB::table('menus')->insert([
             0 => [
                 'id' => 1,
@@ -165,7 +121,7 @@ class PageSeeder extends Seeder
             'meta_description' => 'The About',
             'order' => '999',
             'slug' => 'about',
-            'layout' => 'is_front_page',
+            'layout' => 'page',
             'status' => 'published',
             // 'slug' => generateSlug($this->title)
 

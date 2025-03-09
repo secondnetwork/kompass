@@ -22,9 +22,7 @@ width: 100% !important;
 }
 }
 .kompasslogo{
-    height: 68px;
-    max-height: 68px;
-    width: 180px
+    width: 200px
 }
 </style>
 </head>

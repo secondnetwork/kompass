@@ -7,6 +7,7 @@
     'key' => '',
     'fields' => '',
     'blockId' => '',
+    'itemfields' => '',
 ])
 
 @if ($label === '')
@@ -23,10 +24,12 @@
 @endif
 
 @if ($type == 'text')
+    {{-- <input wire:model="fields.{{$fields }}.id"> --}}
     <x-kompass::form.input wire:model="fields.{{ $key }}.data" label="{{ $name }}" type="text" />
 @endif
 
 @if ($type == 'wysiwyg')
+
 
     <span class="text-md">{{ $name }}</span>
 
@@ -80,10 +83,10 @@
 
         @endif
     @else
-        <img-block wire:click="selectitem('addMedia',{{ $idField }},'{{ $type }}',{{ $blockId }})"
-            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 aspect-[4/3] ">
-            <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-        </img-block>
+    <img-block wire:click="selectitem('addMedia',{{ $idField }},'{{ $type }}',{{ $blockId }})"
+    class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 aspect-[4/3] ">
+    <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+    </img-block>
     @endif
 
 @endif
@@ -194,6 +197,38 @@
     @endif
 @endif
 
+@if ($type == 'download')
+
+    @if (!empty($fields))
+        @php
+            $file = Secondnetwork\Kompass\Models\File::find($fields);
+        @endphp
+
+        @if ($file)
+            @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+                <div class="relative">
+            
+                    {{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}
+                        <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
+                            <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
+                            <div class="flex">
+                                <span  wire:click="removemedia({{ $idField }})">
+                                    <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
+                                </span>
+    
+                                <span wire:click="selectitem( 'addMedia', {{ $idField }})">
+                                    <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
+                                </span>
+                            </div>
+                        </action-button> 
+                </div>
+
+                @endif
+        @endif
+
+    @endif
+@endif
+
 @if ($type == 'oembed')
 
         @php
@@ -224,7 +259,7 @@
         <div
             class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
         </div>
-        <span class="ml-3 text-md font-medium">{{ $name }}</span>
+        <span class="ml-3 text-md font-medium">{{ $name ?? '' }}</span>
     </label>
 @endif
 

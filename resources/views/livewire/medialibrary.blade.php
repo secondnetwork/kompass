@@ -4,11 +4,7 @@
     <media-grid class="flex flex-col">
 
         <file-upload x-data="fileUpload()">
-
-            <div x-show="isUploading" class="bg-gray-200 h-1 mt-3">
-                <div class="bg-blue-500 h-[2px]" style="transition: width 1s" :style="`width: ${progress}%;`">
-                </div>
-            </div>
+             
 
             <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
                 <input wire:model.live="search" type="text"
@@ -16,14 +12,20 @@
                     placeholder="{{ __('Search') }}...">
                 <div x-data="{ open: @entangle('FormFolder') }" class="flex justify-end gap-4">
 
-                    <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
+                    <button class="flex btn bg-gray-600 border-gray-600 gap-x-2 justify-center items-center text-md" @click="open = true">
                         <x-tabler-folder-plus stroke-width="1.5" />{{ __('Add new Folder') }}
                     </button>
 
 
                     <label for="file-upload"
                         class="flex btn gap-x-2 cursor-pointer justify-center items-center text-md">
-                        <x-tabler-square-plus stroke-width="1.5" />{{ __('Add file') }}
+                        <div wire:loading>
+                            <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        <x-tabler-square-plus stroke-width="1.5" wire:loading.remove />{{ __('Add file') }}
                     </label>
 
                     <input type="file" id="file-upload" multiple @change="handleFileSelect" class="hidden" />
@@ -113,9 +115,9 @@
                             @if (empty($search)) x-show="(dir === '{{ $item->path }}')" @endif>
                             @php
                                 if ($item->path) {
-                                     $dirpath = 'storage/'. $item->path . '/';
+                                     $dirpath = ''. $item->path . '/';
                                 }else {
-                                     $dirpath = 'storage/';
+                                     $dirpath = '';
                                 }
                             @endphp
                             @switch($item->type)
@@ -126,7 +128,7 @@
                                             class="relative text-sm font-bold rounded-tr rounded-tl w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
 
                                             <video controls class="object-cover h-full"
-                                                src="{{ asset($dirpath . $item->slug . '.' . $item->extension) }}"></video>
+                                                src="{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}"></video>
 
                                             <div
                                                 class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
@@ -164,14 +166,37 @@
                                 @break
 
                                 @case('document')
-                                    <span wire:click="selectItem({{ $item->id }}, 'edit')">
-                                        <x-tabler-edit class="cursor-pointer stroke-current " />
-                                    </span>
-                                    <span class="selectField" wire:click="selectField({{ $item->id }}, 'page')">
-                                        <x-tabler-square-plus class="cursor-pointer stroke-current " />
-                                    </span>
-                                    <x-tabler-file />
-                                    <div class="text-sm font-semibold py-4 truncate">{{ $item->name }} </div>
+ 
+
+                                <data-item class="bg-white block shadow rounded">
+
+                                    <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
+                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}')">
+
+
+
+                                        <div
+                                            class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
+                                            {{ $item->extension }}</div>
+
+                                    </div>
+
+                                    <info-data class="flex justify-between items-center p-3">
+                                        <div class="text-xs font-semibold  truncate">{{ $item->name }}</div>
+                                        <div class="flex">
+                                            <span wire:click="selectItem({{ $item->id }}, 'edit')">
+                                                <x-tabler-edit
+                                                    class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                                            </span>
+                                            <span class="selectField"
+                                                wire:click="selectField({{ $item->id }}, '{{ $fieldOrPage ?? '' }}')">
+                                                <x-tabler-square-plus
+                                                    class="cursor-pointer stroke-current text-gray-400 " />
+                                            </span>
+                                        </div>
+                                    </info-data>
+
+                                </data-item>
                                 @break
 
                                 @case('folder')
@@ -179,12 +204,12 @@
 
                                 @case('image')
                                     <data-item class="bg-white block shadow rounded">
-
-                                        <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
-                                            style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
-
-
-
+                     
+                                        <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"                                                                               
+                                        
+                                        style="background-image: url('{{ imageToWebp(Storage::url($dirpath . $item->slug . '.' . $item->extension),500) }}')"
+                                        >
+                            
                                             <div
                                                 class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
                                                 {{ $item->extension }}</div>
@@ -214,34 +239,35 @@
                 @break --}}
 
                                 @default
-                                    <data-item class="bg-white block shadow rounded">
+                                <data-item class="bg-white block shadow rounded">
 
-                                        <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[6/4] bg-cover bg-center bg-gray-300"
-                                            style="background-image: url('{{ asset($dirpath . $item->slug . '.' . $item->extension) }}')">
+                                    <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-video bg-cover bg-center bg-gray-300"
+                                        style="background-image: url('{{ Storage::url($dirpath . $item->slug . '.' . $item->extension) }}')">
 
 
 
-                                            <div
-                                                class="absolute rounded top-2 right-2 text-sm text-gray-600 bg-gray-200 uppercase py-1 px-3">
-                                                {{ $item->extension }}</div>
+                                        <div
+                                            class="absolute rounded top-2 right-2 text-xs text-gray-600 bg-gray-200 uppercase py-1 px-2">
+                                            {{ $item->extension }}</div>
 
+                                    </div>
+
+                                    <info-data class="flex justify-between items-center p-3">
+                                        <div class="text-xs font-semibold  truncate">{{ $item->name }}</div>
+                                        <div class="flex">
+                                            <span wire:click="selectItem({{ $item->id }}, 'edit')">
+                                                <x-tabler-edit
+                                                    class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                                            </span>
+                                            <span class="selectField"
+                                                wire:click="selectField({{ $item->id }}, '{{ $fieldOrPage ?? '' }}')">
+                                                <x-tabler-square-plus
+                                                    class="cursor-pointer stroke-current text-gray-400 " />
+                                            </span>
                                         </div>
+                                    </info-data>
 
-                                        <info-data class="flex justify-between items-center py-6 pl-4 pr-2">
-                                            <div class="text-sm font-semibold  truncate">{{ $item->name }}</div>
-                                            <div class="flex">
-                                                <span wire:click="selectItem({{ $item->id }}, 'edit')">
-                                                    <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 " />
-                                                </span>
-                                                <span class="selectField"
-                                                    wire:click="selectField({{ $item->id }}, 'page')">
-                                                    <x-tabler-square-plus
-                                                        class="cursor-pointer stroke-current text-gray-400 " />
-                                                </span>
-                                            </div>
-                                        </info-data>
-
-                                    </data-item>
+                                </data-item>
                             @endswitch
                         </div>
 
@@ -342,7 +368,7 @@
                         @if ($file)
 
                             @if ($type == 'video')
-                                <video controls src="{{ asset('storage' . $file) }}"></video>
+                                <video controls src="{{ asset( $file) }}"></video>
                             @else
                                 <img wire:model="extension"
                                     class="relative text-sm rounded-lg shadow w-full aspect-[4/3] object-cover bg-cover bg-center bg-gray-300"
@@ -362,7 +388,7 @@
                         <label>Description</label>
                         <input wire:model="description" type="text" class="form-control" />
                         <label>Url:</label>
-                        <input value="{{ asset($file) }}" type="text" class="form-control" />
+                        <input disabled value="{{ asset($file) }}" type="text" class="form-control" />
 
 
                     </div>

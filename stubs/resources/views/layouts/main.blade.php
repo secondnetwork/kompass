@@ -2,27 +2,32 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }} ">
-    <link rel="apple-touch-icon" href="{{ asset('favicon/apple-touch-icon.png') }} ">
-    <link rel="icon" href="{{ asset('favicon/favicon.ico') }}" sizes="any">
-    {{-- <link rel="icon" href="{{ asset('favicon/safari-pinned-tab.svg') }}" type="image/svg+xml"> --}}
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="url" content="{{ url('/') }}">
-    <meta name="assets-path" content="{{ route('kompass_asset') }}" />
-    <title>@hasSection('title')@yield('title') |@endif {{ config('app.name') }}</title>
-    @hasSection('seo')
-    @yield('seo')
-    @endif
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{ Vite::useBuildDirectory('content')->withEntryPoints(['resources/css/main.css']) }}
+<x-seo::meta />
 
-    @livewireStyles
+<link rel="icon" href="{{ asset('favicon/favicon.ico') }}" sizes="any">
+@if (config('kompass.appearance.favicon.light'))
+<link href="{{ url(config('kompass.appearance.favicon.light')) }}" rel="icon" media="(prefers-color-scheme: light)" />
+<link rel="manifest" href="{{ asset('favicon/site.webmanifest') }} ">
+<link rel="apple-touch-icon" href="{{ asset('favicon/apple-touch-icon.png') }} ">
+@endif
+@if (config('kompass.appearance.favicon.dark'))
+<link href="{{ url(config('kompass.appearance.favicon.dark' ?? '')) }}" rel="icon" media="(prefers-color-scheme: dark)" />
+@endif
+<meta name="theme-color" content="{{ config('kompass.appearance.favicon.color_theme') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="url" content="{{ url('/') }}">
+<meta name="assets-path" content="{{ route('kompass_asset') }}" /> 
 
-    <style>
-        [x-cloak] {display: none !important;}
-    </style>
+{{ Vite::useBuildDirectory('content')->withEntryPoints(['resources/css/main.css']) }}
+
+@livewireStyles
+
+<style>
+    [x-cloak] {display: none !important;}
+</style>
 
 </head>
 
@@ -30,10 +35,22 @@
 
     <header>
 
+
         <div class="md:flex gap-4 py-8 justify-between">
-            <div>LOGO BRAND</div>
+            <div>
+                <x-kompass::elements.logo
+                :height="config('kompass.appearance.logo.height')"
+                :isImage="(config('kompass.appearance.logo.type') == 'image')"
+                :imageSrc="config('kompass.appearance.logo.image_src')"
+                :svgString="config('kompass.appearance.logo.svg_string')"
+                />
+            </div>
             <div class="flex gap-4">
-                <livewire:menu name="main">
+
+                <div  class="animate-fade">
+                    <livewire:menu name="main">
+                </div>
+                
                     <div class="pt-3 md:pt-0">
                         @if (Route::has('login'))
                             <div class="hidden top-0 right-0  sm:block">
@@ -55,7 +72,7 @@
 
     </header>
 
-
+ 
     <main>
         @isset($slot)
             {{ $slot }}
@@ -64,14 +81,37 @@
 
     <div class="divider"></div>
     <footer>
+        <div>
+            <p>
+                {{ config('kompass.settings.footer_textarea' ?? '') }}
+            </p>
+        
+ 
         <div class="md:flex gap-4 py-8">
-            <div class="copyright">
-                &COPY; {{ date('Y') }} {{ setting('footer.copytext') }}
+            <div class="copyright flex gap-4">
+               
+      
+                @if (!empty(config('kompass.settings.copyright')))
+                <span> &COPY; {{ date('Y') }} {{ config('kompass.settings.copyright') }}</span>
+                @endif
+                
+                @if (!empty(config('kompass.settings.phone')))
+                    <span>tel: {{ config('kompass.settings.phone') }}</span>
+                @endif
+                
+                @if (!empty(config('kompass.settings.email_address')))
+                    <span>{{ config('kompass.settings.email_address') }}</span>
+                @endif
+            
+                
             </div>
-            <livewire:menu name="footer">
+
+        <nav><livewire:menu name="footer" ></nav>
 
         </div>
     </footer>
+
+    
 
     <div @click="window.scrollTo({top: 0, behavior: 'smooth'})" x-data="{ gotop: false }" class="bg-gray-900/50 p-2 h-10 w-10 rounded shadow fixed cursor-pointer right-8 transition-all"
     :class="!gotop ? '-bottom-10 opacity-0' : 'transition duration-300 bottom-8 opacity-100'">

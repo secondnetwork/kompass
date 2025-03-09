@@ -146,7 +146,8 @@ class MenuData extends Component
     {
 
         foreach ($list as $itemgroup) {
-            Menuitem::whereId($itemgroup['value'])->update(['order' => $itemgroup['order']]);
+
+            // Menuitem::whereId($itemgroup['value'])->update(['order' => $itemgroup['order']]);
 
             if ($itemgroup['items']) {
                 foreach ($itemgroup['items'] as $item) {

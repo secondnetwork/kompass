@@ -1,143 +1,33 @@
 <div>
-    <div x-cloak x-data="{ open: @entangle('FormDelete') }" x-init="$watch('open', value => {
-        const body = document.body;
-        if (!open) {
-            body.classList.remove('h-screen');
-            return body.classList.remove('overflow-hidden');
-        } else {
-            body.classList.add('h-screen');
-            return body.classList.add('overflow-hidden');
-        }
-    });">
 
-        <div x-show="open"x-cloak
-            class="bg-white mx-auto rounded shadow-lg z-50 text-left p-6 absolute left-2/4 translate-x-[-50%] translate-y-[-20%]"
-            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-0"
-            x-transition:enter-end="opacity-100 scale-100" x-transition:leave="ease-in duration-300"
-            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-0">
-            <div class="bg-white h-2/3">
-                <div class="modal-header py-4">
-                    <div @click.away="open = false" type="button" class="absolute right-4 top-4 m-0 cursor-pointer">
-                        <x-tabler-x class="icon-lg" />
-                    </div>
-                </div>
-                <div class="modal-body py-8">
-                    <h4>Do you wish to continue?</h4>
-                </div>
-                <div class="modal-footer flex justify-end gap-4">
-                    <button @click.away="open = false"type="button" class="btn-secondary"
-                        data-dismiss="modal">Cancel</button>
-                    <button wire:click="delete" type="button" class="btn-danger">Yes</button>
-                </div>
-            </div>
-
-        </div>
-        <div x-show="open" @click.away="open = false"
-            class="absolute bg-gray-500/50 inset-0 z-10 flex items-center justify-center overflow-hidden"></div>
-
-    </div>
+    <x-kompass::modal data="FormDelete" />
 
     <div x-cloak x-data="{ open: @entangle('FormEdit') }">
 
-        <div x-show="open" @click.away="open = false"
-            class="fixed top-0 shadow-lg h-full right-0 w-3/5 bg-white z-10 flex items-center justify-center translate-x-[0]"
-            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 offcanvas-0"
-            x-transition:enter-end="opacity-100 offcanvas-100" x-transition:leave="ease-in duration-300"
-            x-transition:leave-start="opacity-100 offcanvas-100" x-transition:leave-end="opacity-0 offcanvas-0">
 
-            <div x-show="open" @click.away="open = false" class="absolute inset-0 p-16 flex flex-col ">
+        <div x-cloak x-data="{ open: @entangle('FormEdit') }">
+            <x-kompass::offcanvas :w="'w-2/6'">
+              <x-slot name="body">
+                    <div class="grid gap-4">
+                    <x-kompass::input wire:model="name" label="Name" />
 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalFormDeletePost"></h5>
-                    <button @click="open = false" type="button" class="close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <x-kompass::input wire:model="email" label="{{ __('E-Mail Address') }}" />
 
-                <div class="modal-body">
-                    <label>Name</label>
-                    <input wire:model="name" type="text" class="form-control" />
-                    @if ($errors->has('name'))
-                        <p style="color: red;">{{ $errors->first('name') }}</p>
-                    @endif
-                    <label>{{ __('E-Mail Address') }}</label>
-                    <input wire:model="email" type="text" class="form-control" /></input>
-                    @if ($errors->has('email'))
-                        <p style="color: red;">{{ $errors->first('email') }}</p>
-                    @endif
-
-                    <label>{{ __('Role') }}</label>
                     <div wire:ignore>
-                        <select wire:model="role">
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
-                            @endforeach
-                        </select>
+
+                        <x-kompass::select wire:model="role" label="{{ __('Role') }}" placeholder="{{ __('Select') }}" :options="$roles" />
+
                     </div>
-
-                </div>
-                <div class="modal-footer mt-auto">
-                    <button wire:click="update" class="btn btn-primary">Save</button>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-
-
-    <div x-cloak x-data="{ open: @entangle('FormAdd') }">
-
-        <div x-show="open" @click.away="open = false"
-            class="fixed top-0 shadow-lg h-full right-0 w-3/5 bg-white z-10 flex items-center justify-center translate-x-[0]"
-            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 offcanvas-0"
-            x-transition:enter-end="opacity-100 offcanvas-100" x-transition:leave="ease-in duration-300"
-            x-transition:leave-start="opacity-100 offcanvas-100" x-transition:leave-end="opacity-0 offcanvas-0">
-
-            <div x-show="open" @click.away="open = false" class="absolute inset-0 p-16 flex flex-col ">
-
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalFormDeletePost"></h5>
-                    <button @click="open = false" type="button" class="close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h1>ADD</h1>
-                </div>
-
-                <div class="modal-body">
-                    <label>Name</label>
-                    <input wire:model="name" type="text" class="form-control" />
-                    @if ($errors->has('name'))
-                        <p style="color: red;">{{ $errors->first('name') }}</p>
-                    @endif
-                    <label>E-Mail</label>
-                    <input wire:model="email" type="text" class="form-control" /></input>
-                    @if ($errors->has('email'))
-                        <p style="color: red;">{{ $errors->first('email') }}</p>
-                    @endif
-
-                    <label>Role</label>
-                    <div wire:ignore>
-                        <select wire:model="role">
-                            <option value=""> Auswählen</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->display_name }}</option>
-                            @endforeach
-                        </select>
+            
+                    <div class="modal-footer mt-auto">
+                        <button wire:click="createOrUpdateUser" class="btn btn-primary">{{ __('Save') }}</button>
                     </div>
-
                 </div>
-                <div class="modal-footer mt-auto">
-                    <button wire:click="addNewUser" class="btn btn-primary">Save</button>
-                </div>
+                </x-slot>
 
-            </div>
-
-        </div>
+            </x-kompass::offcanvas>
+    
     </div>
-
-
 
 
     <div class="">
@@ -147,27 +37,20 @@
 
             <button class="flex btn gap-x-2 justify-center items-center text-md" wire:click="selectItem(1, 'add')"><x-tabler-user-plus stroke-width="1.5" />{{ __('Create Account') }}</button>
         </div>
-        <div class="flex justify-between gap-4 my-4">
-
-
-
-        </div>
-
-
 
         <div class=" align-middle inline-block min-w-full ">
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-100">
-                    @foreach ($headers as $key => $value)
-                        <th scope="col"
-                            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                            {{ __($value) }}
-                        </th>
-                    @endforeach
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        @foreach ($headers as $key => $value)
+                            <th scope="col"
+                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                {{ __($value) }}
+                            </th>
+                        @endforeach
 
-                </thead>
+                    </thead>
 
                     <tbody class="bg-white divide-y divide-gray-200">
                         @if ($users->count())
@@ -198,11 +81,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    {{-- <td class="px-4 py-2 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">Regional Paradigm Technician</div>
-                  <div class="text-sm text-gray-500">Optimization</div>
-                </td> --}}
-                                    <td class="px-4 py-2 whitespace-nowrap">
+                                     <td class="px-4 py-2 whitespace-nowrap">
                                         @empty($user->email_verified_at)
                                             <span
                                                 class="px-2 inline-flex font-semibold rounded-md text-xs bg-red-300 text-red-800">
@@ -225,10 +104,10 @@
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap text-right">
                                     <div class="flex justify-end items-center gap-1">
-                                        <span wire:click="selectItem({{ $user->id }}, 'update')"
+                                        <span wire:click="selectItem('{{ $user->id }}', 'update')"
                                             class="flex justify-center"><x-tabler-edit
                                                 class="cursor-pointer stroke-blue-500" /></span>
-                                        <span wire:click="selectItem({{ $user->id }}, 'delete')"
+                                        <span wire:click="selectItem('{{ $user->id }}', 'delete')"
                                             class="flex justify-center"><x-tabler-trash
                                                 class="cursor-pointer stroke-red-500" /></span>
                                     </div>
