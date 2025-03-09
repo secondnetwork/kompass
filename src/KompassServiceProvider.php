@@ -96,7 +96,6 @@ class KompassServiceProvider extends ServiceProvider
     private function mergeConfigurations(): void
     {
         $configs = [
-            '/../config/fortify.php' => 'fortify',
             '/../config/kompass/setup.php' => 'kompass',
             '/../config/kompass/settings.php' => 'kompass.setup.settings',
             '/../config/kompass/appearance.php' => 'kompass.setup.appearance',
@@ -187,7 +186,6 @@ class KompassServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/fortify.php' => config_path('fortify.php'),
                 __DIR__ . '/../config/kompass' => config_path('kompass'),
             ], 'kompass-config');
 

@@ -3,11 +3,7 @@
 ])
 
 @if ('wysiwyg' == $item->type)
-    <div {{ $attributes }}
-    {{-- class="{{ $item->set->layout ?? '' }} prose m-0 max-w-none prose-p:m-0 {{ $item->set->alignment ?? '' }}" --}}
-    >
-
-
+    <div  {{ $attributes }}>
 
         @php
             $data = json_decode(get_field('wysiwyg',$item->datafield));
@@ -15,17 +11,27 @@
 
         @if($data)
             @foreach ($data->blocks as $block)
+
                 @switch($block->type)
                     @case('header')
-                    <div class="not-prose">
+
                         <h{{ $block->data->level }} >
                             {!! $block->data->text !!}
                         </h{{ $block->data->level }}>
-                    </div>
+
                         @break
 
                         @case('paragraph')
                             <p>{!! $block->data->text !!}</p>
+                        @break
+
+                        @case('list')
+
+                        <ul class="list-disc pl-4">
+                            @foreach ( $block->data->items as $items)
+                            <li >{{ $items }}</li>
+                            @endforeach
+                        </ul>
                         @break
 
                         @case('table')

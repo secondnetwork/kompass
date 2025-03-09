@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('user-profile-information.update') }}">
+{{-- <form method="POST" action="{{ route('user-profile-information.update') }}">
     @csrf
     @method('PUT')
 
@@ -19,4 +19,4 @@
     </div>
 </form>
 
-<hr>
+<hr> --}}

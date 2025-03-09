@@ -1,9 +1,6 @@
 module.exports = {
     plugins: {
-        '@lehoczky/postcss-fluid': {},
-        'postcss-import': {},
-        'tailwindcss/nesting': {},
-        tailwindcss: {},
-        autoprefixer: {},
+      '@lehoczky/postcss-fluid': {},
+      '@tailwindcss/postcss': {}
     },
-}
+  }

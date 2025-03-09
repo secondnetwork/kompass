@@ -80,14 +80,14 @@
                 'slug' => '',
                 'name' => __('Tools'),
             ],
-            [
-                'slug' => 'redirection',
-                'name' => __('Redirection'),
-            ],
-            [
-                'slug' => 'backup',
-                'name' => __('Backup'),
-            ],
+            // [
+            //     'slug' => 'redirection',
+            //     'name' => __('Redirection'),
+            // ],
+            // [
+            //     'slug' => 'backup',
+            //     'name' => __('Backup'),
+            // ],
             [
                 'slug' => 'activity-log',
                 'name' => __('Activity-log'),
