@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Livewire\Actions\Logout;
+use Illuminate\Support\Facades\Route;
 use Secondnetwork\Kompass\Livewire\Frontend\Blogview;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
@@ -23,3 +24,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/{slug}', Pageview::class)->name('page');
     Route::get('/blog/{slug}', Blogview::class)->name('post');
 });
+Route::post('logout', Logout::class)
+    ->name('logout');

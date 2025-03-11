@@ -7,7 +7,6 @@ use Secondnetwork\Kompass\Livewire\Auth\Login;
 use Secondnetwork\Kompass\Livewire\Auth\Register;
 use Secondnetwork\Kompass\Livewire\Auth\ResetPassword;
 use Secondnetwork\Kompass\Livewire\Auth\VerifyEmail;
-use Secondnetwork\Kompass\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'guest'])->group(function () {
@@ -29,5 +28,3 @@ Route::middleware( ['web', 'auth'])->group(function () {
         ->name('password.confirm');
 });
 
-Route::post('logout', Logout::class)
-    ->name('logout');
