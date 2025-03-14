@@ -121,16 +121,22 @@ class PagesData extends Component
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
         $this->getId = $itemId;
-
+   
         match ($action) {
-            'addBlock' => $this->FormBlocks = true,
-            'addMedia' => $this->setupAddMedia($fieldOrPageName, $blockgroupId),
+            'addBlock' => $this->setAddBlock($blockgroupId), 
+            'addMedia' => $this->setAddMedia($fieldOrPageName, $blockgroupId),
             'deleteblock' => $this->FormDelete = true,
             default => null,
         };
     }
 
-    private function setupAddMedia($fieldOrPageName, $blockgroupId): void
+    private function setAddBlock($blockgroupId): void
+    {
+        $this->FormBlocks = true;
+        $this->blockgroupId = $blockgroupId;
+    }
+
+    private function setAddMedia($fieldOrPageName, $blockgroupId): void
     {
         $this->FormMedia = true;
         $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
