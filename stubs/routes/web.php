@@ -16,6 +16,8 @@ use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 |
 */
 
+require __DIR__.'/auth.php';
+
 Volt::route('/blog', 'pages.blog.index');
 
 Route::group(['middleware' => ['web']], function () {
@@ -24,4 +26,3 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/blog/{slug}', Blogview::class)->name('post');
 });
 
-require __DIR__.'/auth.php';
