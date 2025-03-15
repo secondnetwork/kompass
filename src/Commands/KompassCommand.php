@@ -218,9 +218,6 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         (new Filesystem)->deleteDirectory('public/vendor/kompass');
 
-        // Models...
-        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../stubs/app/Livewire/Actions/Logout.php', app_path('Livewire/Actions/Logout.php'));
         copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
         copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
 

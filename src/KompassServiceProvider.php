@@ -189,9 +189,13 @@ class KompassServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/kompass' => config_path('kompass'),
             ], 'kompass-config');
 
-            $this->publishes([__DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets')], 'assets');
+            $this->publishes([__DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets')], 'kompass.assets');
 
-            $this->publishes([__DIR__.'/Models/User.php' => app_path('Models/User.php')], 'models');
+            $this->publishes([
+                __DIR__.'/../stubs/app/Models/User.php' => app_path('Models/User.php'),
+                __DIR__.'/../stubs/app/Livewire/Actions/Logout.php' => app_path('Livewire/Actions/Logout.php'),
+            ], 'kompass.stubs');
+            
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
                 __DIR__.'/database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
