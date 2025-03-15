@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\alt_VerifyEmailController;
 use Secondnetwork\Kompass\Livewire\Auth\ConfirmPassword;
 use Secondnetwork\Kompass\Livewire\Auth\ForgotPassword;
 use Secondnetwork\Kompass\Livewire\Auth\Login;
 use Secondnetwork\Kompass\Livewire\Auth\Register;
 use Secondnetwork\Kompass\Livewire\Auth\ResetPassword;
 use Secondnetwork\Kompass\Livewire\Auth\VerifyEmail;
+use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'guest'])->group(function () {
@@ -20,7 +21,7 @@ Route::middleware( ['web', 'auth'])->group(function () {
     Route::get('verify-email', VerifyEmail::class)
         ->name('verification.notice');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('verify-email/{id}/{hash}', alt_VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
@@ -28,3 +29,5 @@ Route::middleware( ['web', 'auth'])->group(function () {
         ->name('password.confirm');
 });
 
+Route::post('logout', Logout::class)
+    ->name('logout');

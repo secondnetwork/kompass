@@ -70,6 +70,3 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'adm
 
     Route::get('settings/profile', Profile::class)->name('profile');
 });
-
-
-require __DIR__.'/auth.php';
