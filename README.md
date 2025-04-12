@@ -46,18 +46,6 @@ php artisan kompass:install
 php artisan vendor:publish --tag=assets --force && php artisan optimize:clear
 ```
 
-```bash
-php artisan livewire:publish --config
-```
-
-This will create a new (config/livewire.php) file in the configuration directory of your Laravel application. Then, you need to update the following changes.
-
-```php
-'legacy_model_binding' => true,
-``````
-
-
-
 ## Documentation
 
 Documentation is available at https://kompass.secondnetwork.de
