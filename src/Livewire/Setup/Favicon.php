@@ -2,9 +2,9 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Artisan;
 use Secondnetwork\Kompass\Features\FaviconGenerator;
 
 class Favicon extends Component
@@ -55,8 +55,6 @@ class Favicon extends Component
             $this->updateConfigKeyValue('favicon.color_theme', $value);
         }
     }
-
-
 
     private function updateConfigKeyValue($key, $value)
     {

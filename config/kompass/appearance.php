@@ -31,6 +31,6 @@ return [
     'favicon' => [
         'light' => '',
         'dark' => '',
-        'color_theme' => '#2f68eb'
+        'color_theme' => '#2f68eb',
     ],
 ];

@@ -2,9 +2,6 @@
 
 namespace Secondnetwork\Kompass;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Storage;
-
 class BladeDirectives
 {
     public static function kompassCss()
@@ -40,7 +37,7 @@ class BladeDirectives
     {
         $url = 'http://localhost:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/main.js';
         $url200 = @get_headers($url);
-        
+
         if (! $url200) {
             if (file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
                 $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
@@ -57,5 +54,4 @@ class BladeDirectives
             return '<script type="module" defer src="'.$url.'"></script>';
         }
     }
-
 }

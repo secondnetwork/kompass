@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Livewire\Actions\Logout;
+use Illuminate\Support\Facades\Route;
 use Secondnetwork\Kompass\Livewire\Auth\ConfirmPassword;
 use Secondnetwork\Kompass\Livewire\Auth\ForgotPassword;
 use Secondnetwork\Kompass\Livewire\Auth\Login;
 use Secondnetwork\Kompass\Livewire\Auth\Register;
 use Secondnetwork\Kompass\Livewire\Auth\ResetPassword;
 use Secondnetwork\Kompass\Livewire\Auth\VerifyEmail;
-use App\Livewire\Actions\Logout;
-use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'guest'])->group(function () {
     Route::get('login', Login::class)->name('login');
@@ -17,7 +17,7 @@ Route::middleware(['web', 'guest'])->group(function () {
     Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
-Route::middleware( ['web', 'auth'])->group(function () {
+Route::middleware(['web', 'auth'])->group(function () {
     Route::get('verify-email', VerifyEmail::class)
         ->name('verification.notice');
 

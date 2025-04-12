@@ -9,11 +9,9 @@ use Illuminate\Validation\Rule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('kompass::admin.layouts.app')] 
+#[Layout('kompass::admin.layouts.app')]
 class Profile extends Component
 {
-    
-    
     public string $name = '';
 
     public string $email = '';

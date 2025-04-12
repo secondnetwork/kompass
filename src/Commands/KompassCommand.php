@@ -97,7 +97,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
             options: [
                 true => 'Yes',
                 false => 'no',
-            ]
+            ],
         );
 
         if ($publishAssets) {
@@ -177,18 +177,18 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // NPM Packages...
         $this->updateNodePackages(function ($packages) {
             return [
-                "@lehoczky/postcss-fluid" => "^1.0.3",
-                "@tailwindcss/forms" => "^0.5.10",  
-                "@tailwindcss/typography" => "^0.5.16",  
-                "autoprefixer" => "^10.4.20",    
-                "axios" => "^1.7.9",          
-                "concurrently" => "^9.1.2",    
-                "laravel-vite-plugin" => "^1.2.0", 
-                "postcss" => "^8.5.1",         
-                "vite" => "^6.0.11",          
-                "@tailwindcss/postcss" => "^4.0.0",   
-                "@tailwindcss/vite" => "^4.0.0",    
-                "tailwindcss" => "^4.0.0"      
+                '@lehoczky/postcss-fluid' => '^1.0.3',
+                '@tailwindcss/forms' => '^0.5.10',
+                '@tailwindcss/typography' => '^0.5.16',
+                'autoprefixer' => '^10.4.20',
+                'axios' => '^1.7.9',
+                'concurrently' => '^9.1.2',
+                'laravel-vite-plugin' => '^1.2.0',
+                'postcss' => '^8.5.1',
+                'vite' => '^6.0.11',
+                '@tailwindcss/postcss' => '^4.0.0',
+                '@tailwindcss/vite' => '^4.0.0',
+                'tailwindcss' => '^4.0.0',
             ] + $packages;
         });
         switch ($packagemanager) {
@@ -217,7 +217,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
 
         (new Filesystem)->deleteDirectory('public/vendor/kompass');
-
+        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
         copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
 
@@ -229,7 +229,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         // Database seeders...
         (new Filesystem)->copyDirectory(__DIR__.'/../database/seeders', 'database/seeders');
-        $this->call('migrate:fresh');
+        $this->call('migrate');
         $this->call('db:seed');
         $this->info('migrate Database and seed data ...');
     }
@@ -240,7 +240,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
             return;
         }
-        
+
         ServiceProvider::addProviderToBootstrapFile(\App\Providers\KompassServiceProvider::class);
         // ServiceProvider::addProviderToBootstrapFile(Spatie\Permission\PermissionServiceProvider::class);
         // $appConfig = file_get_contents(config_path('app.php'));

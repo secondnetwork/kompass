@@ -2,23 +2,22 @@
 
 namespace Secondnetwork\Kompass;
 
-use Livewire\Volt\Volt;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
-use Secondnetwork\Kompass\Livewire\Roles;
-use Secondnetwork\Kompass\Livewire\MenuData;
-use Secondnetwork\Kompass\Livewire\Settings;
-use Secondnetwork\Kompass\Livewire\MenuTable;
-use Secondnetwork\Kompass\Livewire\PagesData;
-use Secondnetwork\Kompass\Livewire\PostsData;
-use Secondnetwork\Kompass\Livewire\BlocksData;
-use Secondnetwork\Kompass\Livewire\PagesTable;
-use Secondnetwork\Kompass\Livewire\PostsTable;
+use Illuminate\Support\Facades\View;
+use Secondnetwork\Kompass\Http\Controllers\KompassController;
 use Secondnetwork\Kompass\Livewire\AccountForm;
+use Secondnetwork\Kompass\Livewire\BlocksData;
 use Secondnetwork\Kompass\Livewire\BlocksTable;
 use Secondnetwork\Kompass\Livewire\Medialibrary;
+use Secondnetwork\Kompass\Livewire\MenuData;
+use Secondnetwork\Kompass\Livewire\MenuTable;
+use Secondnetwork\Kompass\Livewire\PagesData;
+use Secondnetwork\Kompass\Livewire\PagesTable;
+use Secondnetwork\Kompass\Livewire\PostsData;
+use Secondnetwork\Kompass\Livewire\PostsTable;
+use Secondnetwork\Kompass\Livewire\Roles;
+use Secondnetwork\Kompass\Livewire\Settings;
 use Secondnetwork\Kompass\Livewire\Settings\Profile;
-use Secondnetwork\Kompass\Http\Controllers\KompassController;
 
 //Asset Routes
 Route::get('assets', [KompassController::class, 'assets'])->name('kompass_asset');

@@ -1,26 +1,24 @@
 <?php
 
-
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Models\File as Files;
 
-if (!function_exists('vendor_path')) {
+if (! function_exists('vendor_path')) {
     /**
      * Get the path to the litstack package vendor folder.
      */
     function vendor_path(string $path = ''): string
     {
-        return realpath(__DIR__ . '/../../') . $path;
+        return realpath(__DIR__.'/../../').$path;
     }
 }
 
-if (!function_exists('get_thumbnails')) {
+if (! function_exists('get_thumbnails')) {
     function get_thumbnails($id_media, $class = null, $size = null): string
     {
         if ($file = Files::find($id_media)) {
@@ -31,7 +29,7 @@ if (!function_exists('get_thumbnails')) {
     }
 }
 
-if (!function_exists('get_field')) {
+if (! function_exists('get_field')) {
     function get_field($type, $data, $class = null, $size = null)
     {
         foreach ($data as $value) {
@@ -51,6 +49,7 @@ if (!function_exists('get_field')) {
                         return Storage::url($file->path.$file->slug.'.'.$file->extension);
                     }
                 }
+
                 return $value->data;
             }
         }
@@ -71,14 +70,14 @@ function generateImageHtml($file, $class = null, $size = null, $includeDescripti
             </picture>";
 }
 
-if (!function_exists('kompass_asset')) {
+if (! function_exists('kompass_asset')) {
     function kompass_asset($path, $secure = null): string
     {
-        return route('kompass_asset') . '?path=' . urlencode($path);
+        return route('kompass_asset').'?path='.urlencode($path);
     }
 }
 
-if (!defined('AVIFE_IMAGICK_VER')) {
+if (! defined('AVIFE_IMAGICK_VER')) {
     define('AVIFE_IMAGICK_VER', checkImagickVersion());
 }
 
@@ -87,8 +86,10 @@ function checkImagickVersion(): string
     if (class_exists('Imagick')) {
         $v = Imagick::getVersion();
         preg_match('/ImageMagick ([0-9]+\.[0-9]+\.[0-9]+)/', $v['versionString'], $v);
+
         return version_compare($v[1], '7.0.25') >= 0 ? $v[1] : '0';
     }
+
     return '0';
 }
 
@@ -99,10 +100,10 @@ function standardize(string|array|BackedEnum $value, bool $toArray = false): str
     }
 
     if (is_array($value)) {
-        return Collection::make($value)->map(fn($item) => $item instanceof BackedEnum ? $item->value : $item)->toArray();
+        return Collection::make($value)->map(fn ($item) => $item instanceof BackedEnum ? $item->value : $item)->toArray();
     }
 
-    return strpos($value, '|') === false && !$toArray ? $value : explode('|', $value);
+    return strpos($value, '|') === false && ! $toArray ? $value : explode('|', $value);
 }
 
 function sendFile(string $path)
@@ -116,20 +117,22 @@ function bytesToHuman($bytes): string
     for ($i = 0; $bytes > 1024; $i++) {
         $bytes /= 1024;
     }
-    return round($bytes, 2) . ' ' . $units[$i];
+
+    return round($bytes, 2).' '.$units[$i];
 }
 
-if (!function_exists('get_file_name')) {
+if (! function_exists('get_file_name')) {
     function get_file_name($name): string
     {
         preg_match('/(_)([0-9])+$/', $name, $matches);
+
         return count($matches) === 3
-            ? Illuminate\Support\Str::replaceLast($matches[0], '', $name) . '_' . (intval($matches[2]) + 1)
-            : $name . '_1';
+            ? Illuminate\Support\Str::replaceLast($matches[0], '', $name).'_'.(intval($matches[2]) + 1)
+            : $name.'_1';
     }
 }
 
-if (!function_exists('genSlug')) {
+if (! function_exists('genSlug')) {
     function genSlug($title, $currentSlug = '', $model = null): string
     {
         $locale = config('app.locale');
@@ -139,7 +142,7 @@ if (!function_exists('genSlug')) {
             $numericalPrefix = 1;
             $originalSlug = $slugCandidate;
             while ($model::whereSlug($slugCandidate)->exists()) {
-                $slugCandidate = $originalSlug . '-' . $numericalPrefix++;
+                $slugCandidate = $originalSlug.'-'.$numericalPrefix++;
             }
         }
 
@@ -147,21 +150,21 @@ if (!function_exists('genSlug')) {
     }
 }
 
-if (!function_exists('nameWithLastInitial')) {
+if (! function_exists('nameWithLastInitial')) {
     function nameWithLastInitial($name): string
     {
         $usernames = explode(' ', $name);
         $last_name = array_pop($usernames);
         $first_name = array_pop($usernames);
 
-        $first_initial = !empty($first_name) ? $first_name[0] : '';
-        $last_initial = !empty($last_name) ? $last_name[0] : '';
+        $first_initial = ! empty($first_name) ? $first_name[0] : '';
+        $last_initial = ! empty($last_name) ? $last_name[0] : '';
 
-        return $first_initial . $last_initial;
+        return $first_initial.$last_initial;
     }
 }
 
-if (!function_exists('setting')) {
+if (! function_exists('setting')) {
     function setting($key = null, $default = null)
     {
         if (is_null($key)) {
@@ -185,25 +188,24 @@ if (!function_exists('setting')) {
 
                 $keyParts = explode('.', $key);
                 $actualKey = end($keyParts);
-        
-      
+
                 if (Arr::has($data, $actualKey)) {
                     $value = Arr::get($data, $actualKey);
-      
+
                     return $value;
-                } 
+                }
             }
         }
-        
+
         return $default;
     }
 }
 
-if (!function_exists('videoEmbed')) {
+if (! function_exists('videoEmbed')) {
     /**
      * Parse the video URI/URL to determine the video type/source and the video ID.
      *
-     * @param string $url
+     * @param  string  $url
      * @return array|false
      */
     function videoEmbed($url)
@@ -231,7 +233,7 @@ if (!function_exists('videoEmbed')) {
             $video_type = 'facebook';
             $video_id = $match[1];
         }
-        
+
         // Dailymotion
         if (preg_match("/dailymotion\.com\/video\/([a-zA-Z0-9]+)/", $url, $match)) {
             $video_type = 'dailymotion';
@@ -244,7 +246,7 @@ if (!function_exists('videoEmbed')) {
             $video_id = $match[1];
         }
 
-        if (!empty($video_type)) {
+        if (! empty($video_type)) {
             return [
                 'type' => $video_type,
                 'id' => $video_id,

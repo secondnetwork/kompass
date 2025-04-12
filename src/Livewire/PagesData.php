@@ -4,7 +4,6 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Kolossal\Multiplex\Meta;
@@ -14,7 +13,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
@@ -84,7 +82,6 @@ class PagesData extends Component
 
     public $cssClassname;
 
-    
     protected $listeners = ['reload-pages-data' => 'reloadMount', 'component:refresh' => '$refresh'];
 
     protected $rules = [
@@ -114,16 +111,16 @@ class PagesData extends Component
 
     public function reloadMount()
     {
-         $this->mount($this->page->id);
-         $this->resetPageComponent();
+        $this->mount($this->page->id);
+        $this->resetPageComponent();
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
         $this->getId = $itemId;
-   
+
         match ($action) {
-            'addBlock' => $this->setAddBlock($blockgroupId), 
+            'addBlock' => $this->setAddBlock($blockgroupId),
             'addMedia' => $this->setAddMedia($fieldOrPageName, $blockgroupId),
             'deleteblock' => $this->FormDelete = true,
             default => null,
@@ -303,19 +300,19 @@ class PagesData extends Component
 
     private function updateBlockMeta(int $id, string $metaKey, $metaValue): void
     {
-        if (!empty($metaValue)) {
+        if (! empty($metaValue)) {
             $block = Block::findOrFail($id); // Use findOrFail to handle missing Blocks
             $block->deleteMeta($metaKey);
             $block->saveMeta([$metaKey => $metaValue]);
         }
         $this->resetPageComponent();
     }
-    
+
     public function classname($id)
     {
         $this->updateBlockMeta($id, 'css-classname', $this->newName);
     }
-    
+
     public function idanchor($id)
     {
         $this->updateBlockMeta($id, 'id-anchor', $this->newName);
@@ -324,20 +321,20 @@ class PagesData extends Component
     public function saveset(int $id, string $set, $status): void
     {
         $metaKeyMap = [
-            'layout'        => 'layout',
-            'id-anchor'     => 'id-anchor',
+            'layout' => 'layout',
+            'id-anchor' => 'id-anchor',
             'css-classname' => 'classname',
-            'col-span'      => 'col-span',
-            'alignment'     => 'alignment',
-            'slider'        => 'slider',
+            'col-span' => 'col-span',
+            'alignment' => 'alignment',
+            'slider' => 'slider',
         ];
 
         if (isset($metaKeyMap[$set])) {
             $metaKey = $metaKeyMap[$set];
-             $this->updateBlockMeta($id, $metaKey, $status);
-         } else {
-             $this->resetPageComponent(); // Or you could handle this as error
-         }
+            $this->updateBlockMeta($id, $metaKey, $status);
+        } else {
+            $this->resetPageComponent(); // Or you could handle this as error
+        }
 
     }
 
@@ -374,7 +371,6 @@ class PagesData extends Component
         $this->datafield = Block::where('id', $id)->where('blockable_type', 'page')->with('datafield')->orderBy('order', 'asc')->get();
         $this->setting = Setting::query()->where('group', 'classname')->orderBy('order', 'asc')->get();
     }
-
 
     // public function updating($property, $value)
     // {

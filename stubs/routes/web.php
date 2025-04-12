@@ -1,7 +1,7 @@
 <?php
 
-use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 use Secondnetwork\Kompass\Livewire\Frontend\Blogview;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
@@ -25,4 +25,3 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/{slug}', Pageview::class)->name('page');
     Route::get('/blog/{slug}', Blogview::class)->name('post');
 });
-

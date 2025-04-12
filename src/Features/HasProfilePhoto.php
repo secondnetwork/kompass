@@ -3,8 +3,8 @@
 namespace Secondnetwork\Kompass\Features;
 
 use Illuminate\Http\UploadedFile;
-use Secondnetwork\Kompass\Features;
 use Illuminate\Support\Facades\Storage;
+use Secondnetwork\Kompass\Features;
 
 trait HasProfilePhoto
 {

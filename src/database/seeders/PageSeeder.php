@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
-use Secondnetwork\Kompass\Models\Setting;
 
 class PageSeeder extends Seeder
 {

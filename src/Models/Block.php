@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Kolossal\Multiplex\HasMeta;
 use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Block extends Model
 {
@@ -45,10 +45,11 @@ class Block extends Model
     {
         return $this->hasMany(Block::class, 'subgroup')->with('children', 'datafield', 'meta')->orderBy('order', 'asc');
     }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['name','data']);
+            ->logOnly(['name', 'data']);
         // Chain fluent methods for configuration options
     }
 }

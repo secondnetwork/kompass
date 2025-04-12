@@ -2,21 +2,26 @@
 
 namespace Secondnetwork\Kompass;
 
-use Log;
-use Livewire\Livewire;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\ImageManager;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Foundation\Http\Kernel;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\View\ComponentAttributeBag;
-use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Secondnetwork\Kompass\DataWriter\{FileWriter, Repository};
-use Secondnetwork\Kompass\Models\{Page, Post, Setting, Datafield};
-use Secondnetwork\Kompass\Commands\{KompassCommand, CreateUserCommand};
-use Illuminate\Support\Facades\{Blade, Cache, Config, Gate, Schema, View};
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\ComponentAttributeBag;
+use Intervention\Image\ImageManager;
+use Livewire\Livewire;
+use Log;
+use Secondnetwork\Kompass\Commands\CreateUserCommand;
+use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\DataWriter\FileWriter;
+use Secondnetwork\Kompass\DataWriter\Repository;
+use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\Page;
+use Secondnetwork\Kompass\Models\Post;
+use Secondnetwork\Kompass\Models\Setting;
 
 class KompassServiceProvider extends ServiceProvider
 {
@@ -69,7 +74,7 @@ class KompassServiceProvider extends ServiceProvider
 
     private function bootLivewireComponents(): void
     {
-        if (!class_exists(Livewire::class)) {
+        if (! class_exists(Livewire::class)) {
             return;
         }
 
@@ -92,7 +97,6 @@ class KompassServiceProvider extends ServiceProvider
         }
     }
 
-
     private function mergeConfigurations(): void
     {
         $configs = [
@@ -102,7 +106,7 @@ class KompassServiceProvider extends ServiceProvider
         ];
 
         foreach ($configs as $path => $key) {
-            $fullPath = __DIR__ . '/' . $path;  //Absoluter Pfad zur Konfigurationsdatei im Package
+            $fullPath = __DIR__.'/'.$path;  //Absoluter Pfad zur Konfigurationsdatei im Package
 
             if (File::exists($fullPath)) {
                 $this->mergeConfigFrom(
@@ -110,19 +114,19 @@ class KompassServiceProvider extends ServiceProvider
                     $key
                 );
             } else {
-                Log::warning("Konfigurationsdatei nicht gefunden: " . $fullPath); // Optional: Logge eine Warnung
+                Log::warning('Konfigurationsdatei nicht gefunden: '.$fullPath); // Optional: Logge eine Warnung
             }
         }
     }
 
     private function registerSingletons(): void
     {
-        $this->app->singleton('kompass', fn() => new Kompass);
+        $this->app->singleton('kompass', fn () => new Kompass);
 
         $this->app->singleton($this::BINDING, function ($app) {
 
             $driverConfig = config('kompass.setup.driver', 'gd'); // Default to 'gd'
-             
+
             return new ImageManager(
                 driver: $driverConfig,
                 autoOrientation: config('kompass.setup.options.autoOrientation', true),
@@ -133,6 +137,7 @@ class KompassServiceProvider extends ServiceProvider
 
         $this->app->singleton($this->repository(), function ($app, $items) {
             $writer = new FileWriter($this->getFiles(), $this->getConfigPath());
+
             return new Repository($writer, $items);
         });
 
@@ -165,7 +170,7 @@ class KompassServiceProvider extends ServiceProvider
 
     private function bootMacros(): void
     {
-        ComponentAttributeBag::macro('hasStartsWith', fn($key) => (bool)$this->whereStartsWith($key)->first());
+        ComponentAttributeBag::macro('hasStartsWith', fn ($key) => (bool) $this->whereStartsWith($key)->first());
     }
 
     private function registerMiddleware(): void
@@ -186,7 +191,7 @@ class KompassServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/kompass' => config_path('kompass'),
+                __DIR__.'/../config/kompass' => config_path('kompass'),
             ], 'kompass-config');
 
             $this->publishes([__DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets')], 'kompass.assets');
@@ -195,7 +200,7 @@ class KompassServiceProvider extends ServiceProvider
                 __DIR__.'/../stubs/app/Models/User.php' => app_path('Models/User.php'),
                 __DIR__.'/../stubs/app/Livewire/Actions/Logout.php' => app_path('Livewire/Actions/Logout.php'),
             ], 'kompass.stubs');
-            
+
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
                 __DIR__.'/database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
@@ -217,12 +222,12 @@ class KompassServiceProvider extends ServiceProvider
 
     private function registerGates(): void
     {
-        Gate::define('role', fn($user, ...$roles) => $user->hasRole($roles));
+        Gate::define('role', fn ($user, ...$roles) => $user->hasRole($roles));
     }
 
     private function registerBladeConditions(): void
     {
-        Blade::if('role', fn(...$roles) => auth()->check() && auth()->user()->hasRole($roles));
+        Blade::if('role', fn (...$roles) => auth()->check() && auth()->user()->hasRole($roles));
     }
 
     private function registerMorphMaps(): void

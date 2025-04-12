@@ -2,22 +2,25 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\Redirect;
-use Secondnetwork\Kompass\Models\Datafield;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Pageview extends Component
 {
     public $page;
+
     public $blocks;
+
     public $fields;
+
     public $settings;
 
     public function mount(Request $request, $slug = null)
@@ -28,14 +31,12 @@ class Pageview extends Component
             if ($this->page instanceof Redirect) {
                 return redirect($this->page->to_url, $this->page->status_code);
             }
-            if (!empty($this->page->new_url)) {
+            if (! empty($this->page->new_url)) {
                 return redirect($this->page->new_url, $this->page->status_code);
             }
-           
+
             $this->loadBlocks($slug);
             // $this->loadFields($slug);
-
-
 
         } catch (NotFoundHttpException $e) {
             $this->log404Error($request->path(), $e);
@@ -43,36 +44,35 @@ class Pageview extends Component
         }
     }
 
-
-     private function resolvePageAndRedirect($land, $slug): void
+    private function resolvePageAndRedirect($land, $slug): void
     {
-         $landurl = in_array($land, config('kompass.available_locales')) ? $land : null;
-          if ($slug === null) {
+        $landurl = in_array($land, config('kompass.available_locales')) ? $land : null;
+        if ($slug === null) {
             $this->page = Page::query()
-              ->where('land', $landurl)
+                ->where('land', $landurl)
                 ->where('layout', 'is_front_page')
                 ->where('status', 'published')
-              ->first();
+                ->first();
 
-         }else {
-             $this->page = Page::query()
-            ->where('land', $landurl)
-            ->where('slug', $slug)
-            ->whereNot('status', 'draft')
-            ->first();
-         }
-
-        if (!$this->page){
-            $this->page = Redirect::where('old_url', '/' . $slug)->first();
+        } else {
+            $this->page = Page::query()
+                ->where('land', $landurl)
+                ->where('slug', $slug)
+                ->whereNot('status', 'draft')
+                ->first();
         }
-        if (!$this->page) {
-           throw new NotFoundHttpException('Page not found');
+
+        if (! $this->page) {
+            $this->page = Redirect::where('old_url', '/'.$slug)->first();
+        }
+        if (! $this->page) {
+            throw new NotFoundHttpException('Page not found');
         }
     }
 
     private function loadBlocks($slug)
     {
-        $this->blocks = Cache::rememberForever('kompass_block_' . $slug, function () {
+        $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
             return Block::where('blockable_type', 'page')
                 ->where('blockable_id', $this->page->id)
                 ->where('status', 'published')
@@ -89,16 +89,16 @@ class Pageview extends Component
     {
         $blockIds = $this->blocks->pluck('id');
 
-        $this->fields = Cache::rememberForever('kompass_field_' . $slug, function () use ($blockIds) {
+        $this->fields = Cache::rememberForever('kompass_field_'.$slug, function () use ($blockIds) {
             return Datafield::whereIn('block_id', $blockIds)->get()->groupBy('block_id');
         });
     }
 
     public function getGallery($blockId = null)
     {
-        if (!isset($this->fields[$blockId])) {
-                        return '';
-                    }
+        if (! isset($this->fields[$blockId])) {
+            return '';
+        }
 
         $dataarray = [];
 
@@ -107,9 +107,9 @@ class Pageview extends Component
                 $file = File::find($value->data);
                 if ($file) {
                     $dataarray[] = $this->generateImageTag($file);
+                }
             }
         }
-    }
 
         return implode('', $dataarray);
     }
@@ -117,15 +117,15 @@ class Pageview extends Component
     private function generateImageTag($file)
     {
         return '<picture>
-            <source type="image/avif" srcset="' . asset('storage' . $file->path . '/' . $file->slug) . '.avif">
+            <source type="image/avif" srcset="'.asset('storage'.$file->path.'/'.$file->slug).'.avif">
             <img class="aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md"
-            src="' . asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) . '" alt="' . $file->alt . '" />
+            src="'.asset('storage'.$file->path.'/'.$file->slug.'.'.$file->extension).'" alt="'.$file->alt.'" />
             </picture>';
-}
+    }
 
     public function getField($type, $blockId = null, $class = null, $size = null)
     {
-        if (!isset($this->fields[$blockId])) {
+        if (! isset($this->fields[$blockId])) {
             return '';
         }
 
@@ -135,6 +135,7 @@ class Pageview extends Component
                 if ($file && in_array($value->type, ['video', 'poster', 'image'])) {
                     return $this->generateMediaTag($file, $value->type, $class, $size);
                 }
+
                 return $value->data;
             }
         }
@@ -144,14 +145,15 @@ class Pageview extends Component
 
     private function generateMediaTag($file, $type, $class, $size)
     {
-        $sizes = $size ? '_' . $size : '';
+        $sizes = $size ? '_'.$size : '';
         if ($type === 'image') {
             return '<picture>
-                <source type="image/avif" srcset="' . asset('storage/' . $file->path . '/' . $file->slug) . '.avif">
-                <img class="' . $class . '" src="' . asset('storage' . $file->path . '/' . $file->slug . $sizes . '.' . $file->extension) . '" alt="' . $file->alt . '" />
+                <source type="image/avif" srcset="'.asset('storage/'.$file->path.'/'.$file->slug).'.avif">
+                <img class="'.$class.'" src="'.asset('storage'.$file->path.'/'.$file->slug.$sizes.'.'.$file->extension).'" alt="'.$file->alt.'" />
                 </picture>';
         }
-        return $file->path . '/' . $file->slug . '.' . $file->extension;
+
+        return $file->path.'/'.$file->slug.'.'.$file->extension;
     }
 
     protected function log404Error($url, $e)

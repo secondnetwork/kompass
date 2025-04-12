@@ -6,7 +6,7 @@
 return [
     'webtitle' => 'Kompass',
     'description' => '',
-    'supline'  => 'A Laravel CMS',
+    'supline' => 'A Laravel CMS',
     'image_src' => '',
     'footer_textarea' => '',
     'email_address' => '',
@@ -16,7 +16,7 @@ return [
     'redirect_after_auth' => '/',
     'registration_can_user' => false,
     'registration_show_password_same_screen' => true,
-    
+
     'registration_include_password_confirmation_field' => false,
     'registration_require_email_verification' => false,
     'enable_branding' => true,
