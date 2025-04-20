@@ -38,14 +38,14 @@
    
   
     <livewire:editable-meta
-        label="Classname"
+        label="Classname: "
         meta-key="css-classname"
         :itemblocks="$itemblocks"
         wire-action="updateMeta"
         :key="'css-classname-'.$itemblocks->id"
     />
     <livewire:editable-meta
-        label="ID"
+        label="ID: "
         meta-key="id-anchor"
         :itemblocks="$itemblocks"
         wire-action="updateMeta"

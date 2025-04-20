@@ -5,8 +5,8 @@ namespace Secondnetwork\Kompass\Livewire\Setup;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Features\FaviconGenerator;
-
 class Favicon extends Component
 {
     use WithFileUploads;
@@ -17,6 +17,8 @@ class Favicon extends Component
 
     public $color_theme;
 
+    public $filePath;
+
     public function mount()
     {
         $this->favicon_light = config('kompass.appearance.favicon.light');
@@ -26,31 +28,37 @@ class Favicon extends Component
 
     public function updated($property, $value)
     {
+        $storage = Storage::disk('public');
+
         if ($property == 'favicon_light') {
             $filename = $value->getFileName();
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $newFilename = 'favicon.'.$extension;
 
-            $value->storeAs('public/favicon', 'favicon.'.$extension);
-            $this->favicon_light = '/storage/favicon.'.$extension;
+            $this->favicon_light = '/storage/favicon/favicon.'.$extension;
+            $this->updateConfigKeyValue('favicon.light', '/storage/favicon/favicon.'.$extension);
 
-            $this->updateConfigKeyValue('favicon.light', '/storage/favicon.'.$extension);
+            $storage->put('favicon/'.$newFilename, $value->get());
 
             $value = null;
-            $favicon = new FaviconGenerator(public_path('/storage/favicon.'.$extension));
+
+            $favicon = new FaviconGenerator(public_path('/storage/favicon/favicon.'.$extension));
             $favicon->generateFaviconsFromImagePath();
         }
 
         if ($property == 'favicon_dark') {
             $filename = $value->getFileName();
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $newFilename = 'favicon-dark.'.$extension;
 
-            $value->storeAs('public/favicon', 'favicon-dark.'.$extension);
-            $this->favicon_dark = '/storage/favicon-dark.'.$extension;
+            $this->favicon_dark = '/storage/favicon/'.$newFilename;
+            $this->updateConfigKeyValue('favicon.dark', '/storage/favicon/'.$newFilename);
 
-            $this->updateConfigKeyValue('favicon.dark', '/storage/favicon-dark.'.$extension);
+            $storage->put('favicon/'.$newFilename, $value->get());
 
             $value = null;
         }
+
         if ($property == 'color_theme') {
             $this->updateConfigKeyValue('favicon.color_theme', $value);
         }

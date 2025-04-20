@@ -281,7 +281,6 @@ class PagesData extends Component
 
     public function updateLayoutGrid($blockId, $grid)
     {
-        dump($grid);
         Block::whereId($blockId)->update(['layoutgrid' => $grid]);
         $this->resetPageComponent();
     }

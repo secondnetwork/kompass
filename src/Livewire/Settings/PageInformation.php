@@ -52,9 +52,9 @@ class PageInformation extends Component
 
             Storage::disk('public')->put('images/'.$newFilename, $value->get());
 
-            $this->image = '/storage/imgaes/ogimage.'.$extension;
+            $this->image = '/images/ogimage.'.$extension;
 
-            $this->updateConfigKeyValue('image_src', '/storage/imgaes/ogimage.'.$extension);
+            $this->updateConfigKeyValue('image_src', '/storage/images/'.$newFilename);
 
             $value = null;
 
