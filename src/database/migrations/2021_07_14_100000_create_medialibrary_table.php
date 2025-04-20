@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('extension')->nullable();
             $table->string('description')->nullable();
             $table->string('alt')->nullable();
+            $table->string('user_id')->nullable();
             $table->timestamps();
         });
     }
