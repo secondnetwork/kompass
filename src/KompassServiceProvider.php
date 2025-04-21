@@ -53,7 +53,7 @@ class KompassServiceProvider extends ServiceProvider
 
     private function bootBladeComponents(): void
     {
-        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
+        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade): void {
             $prefix = config('kompass.setup.prefix', '');
 
             foreach (config('kompass.setup.components', []) as $alias => $component) {

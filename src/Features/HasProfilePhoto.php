@@ -15,7 +15,7 @@ trait HasProfilePhoto
      */
     public function updateProfilePhoto(UploadedFile $photo)
     {
-        tap($this->profile_photo_path, function ($previous) use ($photo) {
+        tap($this->profile_photo_path, function ($previous) use ($photo): void {
             $this->forceFill([
                 'profile_photo_path' => $photo->storePublicly(
                     'profile-photos', ['disk' => $this->profilePhotoDisk()]

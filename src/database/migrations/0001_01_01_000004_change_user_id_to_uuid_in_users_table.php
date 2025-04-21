@@ -16,7 +16,7 @@ return new class extends Migration
     public function up()
     {
         // First, modify the existing table to add the UUID column
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->uuid('new_id')->after('id')->index(); // Add new UUID column + index
         });
 
@@ -27,13 +27,13 @@ return new class extends Migration
         }
 
         // Delete the old ID column
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->dropColumn('id'); // Delete old ID column
             $table->renameColumn('new_id', 'id'); // Rename new UUID column
             $table->primary('id'); // Set the UUID column as the Primary Key
         });
 
-        Schema::table('sessions', function (Blueprint $table) {
+        Schema::table('sessions', function (Blueprint $table): void {
             // Check if the user_id column exists before attempting to delete the foreign key
             if (Schema::hasColumn('sessions', 'user_id')) {
                 // Check if the foreign key exists before attempting to delete it
@@ -62,13 +62,13 @@ return new class extends Migration
 
         // **Example** (incomplete) reversal (use with caution!):
 
-        Schema::table('sessions', function (Blueprint $table) {
+        Schema::table('sessions', function (Blueprint $table): void {
             $table->dropColumn('user_id'); // Remove UUID user_id
             $table->integer('user_id')->nullable()->unsigned(); // Restore integer user_id (adjust as needed)
             // You would need to restore the foreign key here, if possible.
         });
 
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->dropColumn('id'); // Remove UUID id
             $table->increments('id'); // Restore integer id
 

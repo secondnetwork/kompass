@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blocktemplates', function (Blueprint $table) {
+        Schema::create('blocktemplates', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->nullable();
             $table->string('type')->nullable();

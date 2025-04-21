@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('activity_log', function (Blueprint $table) {
+        Schema::table('activity_log', function (Blueprint $table): void {
             // Change the causer_id column to CHAR(36)
             $table->char('causer_id', 36)->nullable()->change();
         });
@@ -16,7 +16,7 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::table('activity_log', function (Blueprint $table) {
+        Schema::table('activity_log', function (Blueprint $table): void {
             // Revert back to the original type, if necessary
             $table->unsignedBigInteger('causer_id')->nullable()->change();
         });

@@ -241,7 +241,7 @@ class Medialibrary extends Component
             $original_ext = $filedata->getClientOriginalExtension();
             $type = $file->getType($original_ext);
             $time = date('Y_m_B');
-            $details = config('kompass.media') ?? '{}';
+            $details = config('kompass.media', '{}');
             $timefilesSlug = $time.'_'.$filesSlug;
 
             $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
@@ -322,7 +322,7 @@ class Medialibrary extends Component
         $file = File::findOrFail($this->iditem);
 
         if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
-            $details = config('kompass.media') ?? '{}';
+            $details = config('kompass.media', '{}');
             // foreach ($details['thumbnails'] as $thumbnail_data) {
 
             //     dump($thumbnail_data);

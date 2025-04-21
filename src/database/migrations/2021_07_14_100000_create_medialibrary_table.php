@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('medialibrary', function (Blueprint $table) {
+        Schema::create('medialibrary', function (Blueprint $table): void {
             $table->id();
             $table->string('path')->nullable();
             $table->string('subgroup')->nullable();

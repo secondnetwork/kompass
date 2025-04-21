@@ -215,7 +215,7 @@ class PostsData extends Component
 
         $fields = Datafield::where('block_id', $id)->get();
 
-        $fields->each(function ($item, $key) use ($newblock) {
+        $fields->each(function ($item, $key) use ($newblock): void {
             $copyitem = $item->replicate();
             $copyitem->block_id = $newblock->id;
             $copyitem->save();

@@ -30,14 +30,14 @@ Route::get('assets', [KompassController::class, 'assets'])->name('kompass_asset'
 //     ->middleware(['signed'])
 //     ->name('password.store');
 
-View::composer('*', function ($view) {
+View::composer('*', function ($view): void {
     $vi = str_replace('.', '_', $view->getName());
     $vn = str_replace('::', '-', $vi);
     View::share('viewName', $vn);
     // dump($view->getName());
 });
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {
     Route::view('/', 'kompass::admin.dashboard')->name('dashboard-root');
     Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
     Route::view('profile', 'kompass::admin.profile')->name('profile');
@@ -53,13 +53,13 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'adm
     Route::get('menus', MenuTable::class)->name('menus');
     Route::get('menus/{action}/{id}', MenuData::class)->name('menus.show');
 
-    Route::group(['middleware' => ['role:manager|admin']], function () {
+    Route::group(['middleware' => ['role:manager|admin']], function (): void {
         Route::get('blocks', BlocksTable::class)->name('blocks');
         Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
         Route::get('settings', Settings::class)->name('settings');
     });
 
-    Route::group(['middleware' => ['role:admin']], function () {
+    Route::group(['middleware' => ['role:admin']], function (): void {
         Route::get('account', AccountForm::class)->name('account');
         Route::get('roles', Roles::class)->name('roles');
     });

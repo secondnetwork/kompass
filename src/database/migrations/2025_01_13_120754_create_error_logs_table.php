@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('error_logs', function (Blueprint $table) {
+        Schema::create('error_logs', function (Blueprint $table): void {
             $table->id();
             $table->string('url');
             $table->string('message');

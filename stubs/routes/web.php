@@ -20,7 +20,7 @@ require __DIR__.'/auth.php';
 
 Volt::route('/blog', 'pages.blog.index');
 
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web']], function (): void {
     Route::get('/', Pageview::class)->name('is_front_page');
     Route::get('/{slug}', Pageview::class)->name('page');
     Route::get('/blog/{slug}', Blogview::class)->name('post');

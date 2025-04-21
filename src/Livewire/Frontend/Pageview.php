@@ -78,7 +78,7 @@ class Pageview extends Component
                 ->where('status', 'published')
                 ->orderBy('order', 'asc')
                 ->where('subgroup', null)
-                ->with(['children' => function ($query) {
+                ->with(['children' => function ($query): void {
                     $query->where('status', 'published');
                 }, 'datafield', 'meta'])
                 ->get();

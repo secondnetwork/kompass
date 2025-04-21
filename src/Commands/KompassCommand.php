@@ -289,7 +289,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
-            ->run(function ($type, $output) {
+            ->run(function ($type, $output): void {
                 $this->output->write($output);
             });
     }
@@ -315,7 +315,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
-            ->run(function ($type, $output) {
+            ->run(function ($type, $output): void {
                 $this->output->write($output);
             });
     }
@@ -356,7 +356,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
      */
     protected static function flushNodeModules()
     {
-        tap(new Filesystem, function ($files) {
+        tap(new Filesystem, function ($files): void {
             $files->deleteDirectory(base_path('node_modules'));
             $files->delete(base_path('bun.lockb'));
             $files->delete(base_path('bun.lock'));
@@ -407,7 +407,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
             }
         }
 
-        $process->run(function ($type, $line) {
+        $process->run(function ($type, $line): void {
             $this->output->write('    '.$line);
         });
     }

@@ -21,23 +21,23 @@ class Menu extends Model
     {
         parent::boot();
 
-        static::creating(function () {
+        static::creating(function (): void {
             cache()->flush();
         });
-        static::updating(function () {
+        static::updating(function (): void {
             cache()->flush();
         });
-        static::deleting(function () {
+        static::deleting(function (): void {
             cache()->flush();
         });
 
-        static::created(function ($menu) {
+        static::created(function ($menu): void {
             $menu->slug = $menu->createSlug($menu->name);
 
             $menu->save();
         });
 
-        static::updating(function ($menu) {
+        static::updating(function ($menu): void {
             $menu->slug = $menu->createSlug($menu->name);
         });
     }

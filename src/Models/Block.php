@@ -20,13 +20,13 @@ class Block extends Model
     {
         parent::boot();
 
-        static::creating(function () {
+        static::creating(function (): void {
             cache()->flush();
         });
-        static::updating(function () {
+        static::updating(function (): void {
             cache()->flush();
         });
-        static::deleting(function () {
+        static::deleting(function (): void {
             cache()->flush();
         });
     }

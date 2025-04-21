@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('datafields', function (Blueprint $table) {
+        Schema::create('datafields', function (Blueprint $table): void {
             $table->id();
             $table->foreignId(('block_id'))->constrained()->onDelete('cascade');
             $table->string('type')->nullable();

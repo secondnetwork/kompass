@@ -21,13 +21,13 @@ class Setting extends Model
     // public static function __callStatic($method, $parameters)
     {
         parent::boot();
-        static::creating(function () {
+        static::creating(function (): void {
             Cache::forget('settings');
         });
-        static::updating(function () {
+        static::updating(function (): void {
             Cache::forget('settings');
         });
-        static::deleting(function () {
+        static::deleting(function (): void {
             Cache::forget('settings');
         });
 
