@@ -53,6 +53,11 @@
         @endenv
 <page-main>
 <main class="transition delay-150 duration-300 ease-in-out"  x-data :class="$store.showside.on && 'sideclose'">
+      <header class="header">
+
+
+
+      </header>
 
       <aside class="sidenav">
         <div class="flex flex-col h-screen">
@@ -103,6 +108,7 @@
       
 
       <section class="main-content" wire:transition x-transition>
+
         @isset($slot)
           {{ $slot }}
         @else
