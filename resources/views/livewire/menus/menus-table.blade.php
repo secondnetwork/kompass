@@ -43,7 +43,7 @@
                         <thead class="bg-gray-100">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                                     {{ __($value) }}
                                 </th>
                             @endforeach

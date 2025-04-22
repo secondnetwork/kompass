@@ -40,7 +40,7 @@ View::composer('*', function ($view): void {
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {
     Route::view('/', 'kompass::admin.dashboard')->name('dashboard-root');
     Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
-    Route::view('profile', 'kompass::admin.profile')->name('profile');
+    Route::get('profile', Profile::class)->name('profile');
 
     Route::get('posts', PostsTable::class)->name('posts');
     Route::get('posts/{action}/{id}', PostsData::class)->name('posts.show');

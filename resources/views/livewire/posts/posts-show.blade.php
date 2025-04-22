@@ -23,7 +23,7 @@
                     <strong class="text-gray-600">{{ __('Post Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
   
-                    <x-kompass::select wire:model="post.status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model="status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -40,7 +40,7 @@
                 @endif
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="post.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
                 Thumbnails
                 {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
                 @if (!empty($post->thumbnails))
@@ -91,8 +91,6 @@
         <div class="relative flex items-center">
 
             <div class=" flex-auto">
-                <span class="text-gray-600 text-sm">{{ __('Post title') }}</span>
-
 
                 <div x-data="click_to_edit()">
                     <a 
@@ -105,7 +103,7 @@
                     </a>
 
                     <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model="post.title" x-show="isEditing" @click.away="toggleEditingState"
+                        wire:model="title" x-show="isEditing" @click.away="toggleEditingState"
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
                 </div>
                 <div class="col-span-6">
@@ -220,7 +218,7 @@
     </div>
 
     <div x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
-        <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
+        <x-kompass::offcanvas class="text-base-content/70 p-4 m-4">
             <x-slot name="body">
                 @livewire('medialibrary', ['fieldId' => $getId])
             </x-slot>

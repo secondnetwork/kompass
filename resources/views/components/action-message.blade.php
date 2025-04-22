@@ -18,7 +18,7 @@
     x-transition:leave-end="translate-y-full opacity-0"
     x-show="show"
 
-    class="z-50 fixed bottom-16 right-6 w-full sm:w-11/12 md:max-w-md alert text-white bg-gray-800 flex flex-row items-center rounded-lg shadow-lg overflow-hidden "
+    class="z-50 fixed bottom-16 right-6 w-full  md:max-w-sm alert text-white bg-gray-800 flex flex-row items-center rounded-lg shadow-lg overflow-hidden "
     {{ $attributes->merge(['class' => 'text-gray-600']) }}
     >
 
@@ -28,7 +28,7 @@
     </div>
     <div class="mx-4 flex-row w-full">
       <div class="flex flex-row items-center justify-between">
-        <h1 class="text-base sm:text-lg font-bold text-gray-200">{{ __('Saved.') }}</h1>
+        <p class="text-base sm:text-lg font-bold text-gray-200">{{ __('Saved.') }}</p>
       </div>
       <p class="text-xs sm:text-sm font-medium pr-2 sm:pr-0 text-gray-300">{{ __('successfully updated') }}</p>
     </div>

@@ -1,6 +1,6 @@
-<div x-data="{dropdownOpen: false}" class="relative">
+<div x-data="{dropdownOpen: false}" class="relative border-neutral-200 border p-1 rounded-md">
 
-    <button @click="dropdownOpen=true" class="inline-flex items-center justify-center text-sm font-medium">
+    <button @click="dropdownOpen=true" class="inline-flex items-center justify-between text-sm font-medium w-full ">
                         
         <span class="flex flex-col items-start flex-shrink-0 h-full mx-2 leading-none translate-y-px">
             <span>{{ auth()->user()->name }}</span>
@@ -22,12 +22,12 @@
         x-transition:leave="ease-in duration-100" 
         x-transition:leave-start="-translate-y-0" 
         x-transition:leave-end="-translate-y-2"
-        class="absolute top-0 z-50 w-56 mt-12 right-0"
+        class="absolute bottom-14 z-50 w-full mt-12 left-0"
         x-cloak>
         <div class="p-1  bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
             {{-- <div class="px-2 py-1.5 text-sm font-semibold">{{ __('Account Settings') }}</div> --}}
             {{-- <div class="h-px my-1 -mx-1 bg-neutral-200"></div> --}}
-            <a href="/admin/profile" class="relative flex gap-x-2 cursor-default select-none hover:bg-neutral-100 items-center rounded px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            <a href="/admin/profile" class="relative flex gap-x-2 cursor-default select-none hover:bg-neutral-100 items-center rounded !px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
               <x-tabler-user class="icon-lg"/> 
               <span>{{ __('Account Settings') }}</span>
             </a>

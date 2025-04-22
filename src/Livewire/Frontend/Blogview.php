@@ -50,7 +50,34 @@ class Blogview extends Component
     public function ResolvePath($slug)
     {
 
-        $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
+        $user = auth()->user();
+
+   
+        if ($user->hasRole('admin')) {
+            $post = Post::where('slug', $slug)->first();
+        }
+        if ($user->hasRole('manager')) {
+            $post = Post::where('slug', $slug)->first();
+        }
+        if ($user->hasRole('editor')) {
+            $post = Post::where('slug', $slug)->first();
+        }
+        if ($user->hasRole('author')) {
+            $post = Post::where('slug', $slug)->first();
+        }
+        if ($user->hasRole('contributor')) {
+            $post = Post::where('slug', $slug)->first();
+        }
+        if ($user->hasRole('subscriber')) {
+            $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
+        }
+        if ($user->hasRole('writer')) {
+            $post = Post::where('slug', $slug)->first();
+        }
+        else{
+            $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
+        }
+        
 
         if (! empty($post)) {
             return $post;

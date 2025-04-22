@@ -35,9 +35,9 @@
                             <label for="logo_image" class="relative w-full h-auto">
                                 <div x-show="!logo_image" class="flex flex-col justify-center items-center w-full h-auto rounded-lg cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                     <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                                        <x-tabler-cloud-upload class="mb-4 w-8 h-8 text-gray-500 dark:text-gray-400" />
-                                        <p class="mb-1 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('Click to upload') }}</span></p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('PNG, JPG or GIF') }}</p>
+                                        <x-tabler-cloud-upload class="mb-4 w-8 h-8 text-base-content/70 dark:text-gray-400" />
+                                        <p class="mb-1 text-sm text-base-content/70 dark:text-gray-400"><span class="font-semibold">{{ __('Click to upload') }}</span></p>
+                                        <p class="text-xs text-base-content/70 dark:text-gray-400">{{ __('PNG, JPG or GIF') }}</p>
                                     </div>
                                 </div>
                                 <div x-show="logo_image" class="flex justify-center items-center pb-2 w-full">
@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div x-show="logo_type == 'svg'" x-data="{ example: false }" class="p-3 rounded-lg border border-gray-200 bg-zinc-50">
-                    <small class="block text-xs text-gray-500">{{ __('Enter the SVG code for your logo') }} (<span x-on:click="example=!example" class="text-blue-500 underline cursor-pointer select-none">{{ __('view example') }}</span>)</small>
+                    <small class="block text-xs text-base-content/70">{{ __('Enter the SVG code for your logo') }} (<span x-on:click="example=!example" class="text-blue-500 underline cursor-pointer select-none">{{ __('view example') }}</span>)</small>
                     <pre wire:ignore x-show="example" class="p-2.5 mt-2.5 font-mono text-xs bg-gray-100 rounded-md" x-collapse><code class="whitespace-pre-line bg-transparent language-html">&lt;svg viewBox=&quot;0 0 24 24&quot; fill=&quot;black&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;&lt;rect width=&quot;24&quot; height=&quot;24&quot; /&gt;&lt;/svg&gt;</code></pre>
                     <textarea id="svgTextarea" wire:blur="updateSvg($el.value)" x-model="logo_svg_string" class="mt-3 w-full h-20 font-mono text-xs text-gray-700 bg-white rounded border shadow-sm outline-none border-gray-200/60 focus:border-gray-900 focus:ring-2 focus:ring-gray-900 focus:ring-opacity-25 focus:outline-none"></textarea>
                 </div>

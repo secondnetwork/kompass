@@ -113,17 +113,17 @@
             <nav class="flex flex-col" aria-label="asidenav">
                 @foreach ($collection as $tab)
                     @if ($tab->slug == '')
-                        <div class="uppercase text-xs mt-5 mb-1 text-gray-500 font-semibold">
+                        <div class="uppercase text-xs mt-5 mb-1 text-base-content/70 font-semibold">
                             {{ $tab->name }}</div>
                     @else
                         <a href="#_" @click.prevent="asidenav = '{{ $tab->slug }}'"
                             :class="{ 'border-indigo-500 text-indigo-600': asidenav ==
-                                '{{ $tab->slug }}', 'text-gray-500 hover:border-gray-300 hover:text-gray-700': asidenav !=
+                                '{{ $tab->slug }}', 'text-base-content/70 hover:border-gray-300 hover:text-gray-700': asidenav !=
                                     '{{ $tab->slug }}' }"
                             class="py-1 text-sm font-medium">{{ $tab->name }}</a>
                     @endif
                 @endforeach
-                <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+                <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700" -->
             </nav>
 
 
@@ -156,11 +156,11 @@
                             @foreach ($tabs as $slug => $tab)
                                 <a href="#_" @click.prevent="tab = '{{ $slug }}'"
                                     :class="{ 'border-indigo-500 text-indigo-600': tab ==
-                                        '{{ $slug }}', 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700': tab !=
+                                        '{{ $slug }}', 'border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700': tab !=
                                             '{{ $slug }}' }"
                                     class="px-1 py-4 text-sm font-medium whitespace-nowrap border-b-2">{{ $tab }}</a>
                             @endforeach
-                            <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+                            <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700" -->
                         </nav>
                     </div>
 

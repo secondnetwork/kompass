@@ -45,9 +45,9 @@
             <div class="flex items-center w-full">
                 <label for="image" class="flex flex-col justify-center items-center aspect-[1.91/1] w-full bg-gray-50 rounded-t-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                     <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                        <x-tabler-cloud-upload class="mb-4 w-8 h-8 text-gray-500 dark:text-gray-400" />
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ __('Click to upload') }}</span></p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('PNG, JPG or GIF') }}</p>
+                        <x-tabler-cloud-upload class="mb-4 w-8 h-8 text-base-content/70 dark:text-gray-400" />
+                        <p class="mb-2 text-sm text-base-content/70 dark:text-gray-400"><span class="font-semibold">{{ __('Click to upload') }}</span></p>
+                        <p class="text-xs text-base-content/70 dark:text-gray-400">{{ __('PNG, JPG or GIF') }}</p>
                     </div>
                     <input id="image" type="file" wire:model="image" class="hidden" />
                 </label>
@@ -87,9 +87,9 @@
             <div class="relative mb-6 max-w-xs">
                 <input type="range" value="100" min="0" max="100" x-model="image_overlay_opacity" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
                 <span class="flex justify-between items-center w-full">
-                    <span class="-bottom-6 text-sm text-gray-500">0%</span>
-                    <span class="-bottom-6 text-sm text-gray-500">50%</span>
-                    <span class="-bottom-6 text-sm text-gray-500">100%</span>
+                    <span class="-bottom-6 text-sm text-base-content/70">0%</span>
+                    <span class="-bottom-6 text-sm text-base-content/70">50%</span>
+                    <span class="-bottom-6 text-sm text-base-content/70">100%</span>
                 </span>
             </div>
         </div>

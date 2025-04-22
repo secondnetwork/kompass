@@ -34,6 +34,12 @@ class PostsData extends Component
 
     public $title;
 
+    public $status;
+
+    public $description;
+
+    public $layout;
+
     public $blocks = [];
 
     public $blockgroupId;
@@ -119,6 +125,11 @@ class PostsData extends Component
         $this->blocks = Block::where('blockable_type', 'post')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
+
+        $this->title = $this->post->title;
+        $this->description = $this->post->meta_description;
+        $this->layout = $this->post->layout;
+        $this->status = $this->post->status;
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
@@ -354,13 +365,12 @@ class PostsData extends Component
         }
 
         $post->update([
-            'title' => $validateData['post']['title'],
-            'meta_description' => $validateData['post']['meta_description'],
-            // 'layout' => $validateData['post']['layout'],
-            // 'status' => $validateData['post']['status'],
-            // 'password' => $validateData['post']['password'],
-            // 'begin_at' => $validateData['post']['begin_at'],
-            // 'end_at' => $validateData['post']['end_at'],
+            'title' => $this->title,
+            'meta_description' => $this->description,
+            // 'layout' => $this->layout,
+            'status' => $this->status,
+            'slug' => $slugNameURL,
+            'updated_at' => Carbon::now(),
         ]);
 
         $post->update([

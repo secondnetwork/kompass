@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -15,6 +17,12 @@ class Profile extends Component
     public string $name = '';
 
     public string $email = '';
+
+    public string $current_password = '';
+
+    public string $password = '';
+
+    public string $password_confirmation = '';
 
     /**
      * Mount the component.
@@ -26,10 +34,36 @@ class Profile extends Component
     }
 
     /**
+     * Update the password for the currently authenticated user.
+     */
+    public function updatePassword(): void
+    {
+        try {
+            $validated = $this->validate([
+                'current_password' => ['required', 'string', 'current_password'],
+                'password' => ['required', 'string', PasswordRule::defaults(), 'confirmed'],
+            ]);
+        } catch (ValidationException $e) {
+            $this->reset('current_password', 'password', 'password_confirmation');
+
+            throw $e;
+        }
+
+        Auth::user()->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $this->reset('current_password', 'password', 'password_confirmation');
+
+        $this->dispatch('password-updated');
+    }
+
+    /**
      * Update the profile information for the currently authenticated user.
      */
     public function updateProfileInformation(): void
     {
+
         $user = Auth::user();
 
         $validated = $this->validate([

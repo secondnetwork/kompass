@@ -21,7 +21,7 @@
         </div>
 
         <div class="ml-10">
-            <div class="mt-2 text-sm text-gray-500">
+            <div class="mt-2 text-sm text-base-content/70">
                 In this documentation we'll walk you through all information and tips.
             </div>
 
@@ -44,7 +44,7 @@
         </div>
 
         <div class="ml-10">
-            <div class="mt-2 text-sm text-gray-500">
+            <div class="mt-2 text-sm text-base-content/70">
                Video tutorials for Kompass
             </div>
 
@@ -66,7 +66,7 @@
         </div>
 
         <div class="ml-10">
-            <div class="mt-2 text-sm text-gray-500">
+            <div class="mt-2 text-sm text-base-content/70">
                 Kompass is built with the power of Tailwind, Alpine.js, Laravel and Livewire.
             </div>
         </div>
@@ -80,7 +80,7 @@
         </div>
 
         <div class="ml-10">
-            <div class="mt-2 text-sm text-gray-500">
+            <div class="mt-2 text-sm text-base-content/70">
                 Authentication and registration views are included with Laravel Fortify, as well as support for user email verification and resetting forgotten passwords. So, you're free to get started what matters most: building your application.
             </div>
         </div> --}}

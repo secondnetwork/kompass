@@ -23,7 +23,7 @@
         </div>
 
         @if (Route::has('password.request'))
-            <a class="text-center text-sm text-gray-500" href="{{ route('password.request') }}">
+            <a class="text-center text-sm text-base-content/70" href="{{ route('password.request') }}">
                 {{ __('Forgot Your Password?') }}
             </a>
         @endif

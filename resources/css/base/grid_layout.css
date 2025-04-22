@@ -59,6 +59,15 @@ main {
         grid-template-columns: 10fr 4fr;
         grid-column: 2/3;
 
-}
+
+    }
+    .grid-2-3 {
+        display: grid;
+        row-gap: 2rem;
+    
+            grid-template-columns: 6fr 8fr;
+            grid-column: 2/3;
+    
+    }
 
 

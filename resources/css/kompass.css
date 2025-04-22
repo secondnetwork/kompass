@@ -14,6 +14,9 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 */
 @import "tailwindcss";
+@plugin "daisyui" {
+    themes: light --default, dark --kpdark;
+}
 @source "../../resources/views";
 
 @import "./base/base.css";
@@ -70,49 +73,30 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 
 }
-/* @layer base {
-  .dark {
-    --color-gray-100: var(--color-gray-700); 
-    --color-brand-500: var(--color-red-500);
-body{
- @apply bg-gray-800 text-white;
-
-  }
-
-  [class*="kompass-admin-"] {
-    & .main-content, & header, & footer {
-      background-color: var(--color-gray-800) !important;
-    }
-  }
-}
-
-
-} */
-
 
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(98% 0.002 247.839);
-  --color-base-200: oklch(100% 0 0);
-  --color-base-300: oklch(96% 0.007 247.896);
-  --color-base-content: oklch(27% 0.041 260.031);
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(98% 0.002 247.839);
+  --color-base-300: oklch(87% 0.01 258.338);
+  --color-base-content: oklch(37% 0.034 259.733);
   --color-primary: oklch(54% 0.245 262.881);
   --color-primary-content: oklch(98% 0.001 106.423);
-  --color-secondary: oklch(86% 0.127 207.078);
-  --color-secondary-content: oklch(26% 0.065 152.934);
-  --color-accent: oklch(75% 0.183 55.934);
-  --color-accent-content: oklch(26% 0.079 36.259);
+  --color-secondary: #FFA700;
+  --color-secondary-content: oklch(37% 0.034 259.733);
+  --color-accent: oklch(49% 0.27 292.581);
+  --color-accent-content: oklch(100% 0 0);
   --color-neutral: oklch(55% 0.016 285.938);
   --color-neutral-content: oklch(98% 0.003 247.858);
   --color-info: oklch(58% 0.158 241.966);
   --color-info-content: oklch(97% 0.013 236.62);
-  --color-success: oklch(64% 0.2 131.684);
-  --color-success-content: oklch(98% 0.031 120.757);
-  --color-warning: oklch(70% 0.213 47.604);
-  --color-warning-content: oklch(98% 0.016 73.684);
+  --color-success: oklch(76% 0.233 130.85);
+  --color-success-content: oklch(27% 0.033 256.848);
+  --color-warning: oklch(75% 0.183 55.934);
+  --color-warning-content: oklch(27% 0.033 256.848);
   --color-error: oklch(64% 0.246 16.439);
   --color-error-content: oklch(96% 0.015 12.422);
   --radius-selector: 0.5rem;
@@ -122,39 +106,42 @@ body{
   --size-field: 0.25rem;
   --border: 1px;
   --depth: 0;
-  --noise: 0;
+  --noise: 1;
 }
-  /* @plugin "daisyui/theme" {
-    name: "dark";
+
+
+
+@plugin "daisyui/theme" {
+    name: "kpdark";
     default: false;
-    prefersdark: true;
+    prefersdark: false;
     color-scheme: "dark";
-    --color-base-100: oklch(98% 0.002 247.839);
-    --color-base-200: oklch(100% 0 0);
-    --color-base-300: oklch(96% 0.007 247.896);
-    --color-base-content: oklch(27% 0.041 260.031);
-    --color-primary: oklch(54% 0.245 262.881);
-    --color-primary-content: oklch(98% 0.001 106.423);
-    --color-secondary: oklch(86% 0.127 207.078);
-    --color-secondary-content: oklch(26% 0.065 152.934);
-    --color-accent: oklch(75% 0.183 55.934);
-    --color-accent-content: oklch(26% 0.079 36.259);
-    --color-neutral: oklch(55% 0.016 285.938);
-    --color-neutral-content: oklch(98% 0.003 247.858);
-    --color-info: oklch(58% 0.158 241.966);
-    --color-info-content: oklch(97% 0.013 236.62);
-    --color-success: oklch(64% 0.2 131.684);
-    --color-success-content: oklch(98% 0.031 120.757);
-    --color-warning: oklch(70% 0.213 47.604);
-    --color-warning-content: oklch(98% 0.016 73.684);
-    --color-error: oklch(64% 0.246 16.439);
-    --color-error-content: oklch(96% 0.015 12.422);
-    --radius-selector: 0.5rem;
+    --color-base-100: oklch(27% 0.006 286.033);
+    --color-base-200: oklch(14% 0.005 285.823);
+    --color-base-300: oklch(0% 0 0);
+    --color-base-content: oklch(84.955% 0 0);
+    --color-primary: oklch(77.48% 0.204 60.62);
+    --color-primary-content: oklch(19.693% 0.004 196.779);
+    --color-secondary: oklch(45.98% 0.248 305.03);
+    --color-secondary-content: oklch(89.196% 0.049 305.03);
+    --color-accent: oklch(64.8% 0.223 136.073);
+    --color-accent-content: oklch(0% 0 0);
+    --color-neutral: oklch(24.371% 0.046 65.681);
+    --color-neutral-content: oklch(84.874% 0.009 65.681);
+    --color-info: oklch(54.615% 0.215 262.88);
+    --color-info-content: oklch(90.923% 0.043 262.88);
+    --color-success: oklch(62.705% 0.169 149.213);
+    --color-success-content: oklch(12.541% 0.033 149.213);
+    --color-warning: oklch(66.584% 0.157 58.318);
+    --color-warning-content: oklch(13.316% 0.031 58.318);
+    --color-error: oklch(65.72% 0.199 27.33);
+    --color-error-content: oklch(13.144% 0.039 27.33);
+    --radius-selector: 0.25rem;
     --radius-field: 0.25rem;
     --radius-box: 0.5rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
     --border: 1px;
-    --depth: 0;
+    --depth: 1;
     --noise: 0;
-  } */
+}

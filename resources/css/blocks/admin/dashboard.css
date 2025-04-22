@@ -6,7 +6,7 @@
   main {
     @apply grid transition-all ease-in-out duration-300;
     grid-template-columns: 15rem 1fr;
-    grid-template-rows: 4rem 1fr 4rem;
+    grid-template-rows: 0rem 1fr 4rem;
     grid-template-areas: "sidenav header" "sidenav main-content" "sidenav footer";
   }
 

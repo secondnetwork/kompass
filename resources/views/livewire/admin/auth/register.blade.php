@@ -26,7 +26,7 @@
       <x-kompass::form.input wire:model="password_confirmation" label="{{ __('Confirm Password') }}" type="password" value="{{ old('Name') }}" name="password_confirmation" required autocomplete="new-password" />
 
       
-      <a class="text-center text-sm text-gray-500" href="{{ route('login') }}">
+      <a class="text-center text-sm text-base-content/70" href="{{ route('login') }}">
           {{ __('Already registered?') }}
       </a>
 

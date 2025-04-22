@@ -38,6 +38,12 @@ class PagesData extends Component
 
     public $title;
 
+    public $status;
+
+    public $description;
+
+    public $layout;
+
     public $blocks = [];
 
     public $blockgroupId;
@@ -86,7 +92,7 @@ class PagesData extends Component
 
     protected $rules = [
 
-        'page.title' => 'required|string|min:3',
+        'title' => 'required|string|min:3',
         'page.meta_description' => 'nullable|string',
         'page.slug' => 'nullable|string',
         'page.layout' => 'nullable|string',
@@ -101,6 +107,10 @@ class PagesData extends Component
             ->where('blockable_type', 'page')
             ->where('subgroup', null)
             ->sortBy('order');
+        $this->title = $this->page->title;
+        $this->description = $this->page->meta_description;
+        $this->layout = $this->page->layout;
+        $this->status = $this->page->status;
 
         $this->cssClassname = Meta::published()
             ->where('key', 'css-classname')
@@ -393,10 +403,10 @@ class PagesData extends Component
         $slugNameURL = genSlug($page->title, $page->slug, Page::class);
 
         $page->update([
-            'title' => $this->page->title,
-            'meta_description' => $this->page->meta_description,
-            'layout' => $this->page->layout,
-            'status' => $this->page->status,
+            'title' => $this->title,
+            'meta_description' => $this->description,
+            'layout' => $this->layout,
+            'status' => $this->status,
             'slug' => $slugNameURL,
             'updated_at' => Carbon::now(),
         ]);
