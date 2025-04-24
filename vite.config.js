@@ -65,6 +65,7 @@ export default defineConfig({
   server: {
     port: 5088,
     // strictPort: true,
+    cors: true, // oder spezifische Optionen
     hmr: {
       host: 'localhost',
   },
