@@ -35,7 +35,7 @@
         <div class="border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
           <input wire:model.live="search" type="text" class="block p-2 w-full border-2 border-gray-300 text-base rounded-md" placeholder="{{ __('User') }} {{ __('Search') }}...">
 
-            <button class="flex btn gap-x-2 justify-center items-center text-md" wire:click="selectItem(1, 'add')"><x-tabler-user-plus stroke-width="1.5" />{{ __('Create Account') }}</button>
+            <button class="btn btn-primary" wire:click="selectItem(1, 'add')"><x-tabler-user-plus stroke-width="1.5" />{{ __('Create Account') }}</button>
         </div>
 
         <div class=" align-middle inline-block min-w-full ">

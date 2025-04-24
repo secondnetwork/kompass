@@ -12,13 +12,13 @@
                     placeholder="{{ __('Search') }}...">
                 <div x-data="{ open: @entangle('FormFolder') }" class="flex justify-end gap-4">
 
-                    <button class="flex btn bg-gray-600 border-gray-600 gap-x-2 justify-center items-center text-md" @click="open = true">
+                    <button class="btn btn-primary" @click="open = true">
                         <x-tabler-folder-plus stroke-width="1.5" />{{ __('Add new Folder') }}
                     </button>
 
 
                     <label for="file-upload"
-                        class="flex btn gap-x-2 cursor-pointer justify-center items-center text-md">
+                        class="btn btn-primary">
                         <div wire:loading>
                             <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

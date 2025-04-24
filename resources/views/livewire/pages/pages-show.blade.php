@@ -3,7 +3,7 @@
     <div x-data="{ open: @entangle('FormAdjustments') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $page->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@
                 </div>
 
                 @if ($status == 'draft')
-                        <button class="flex btn gap-x-2 items-center text-md"
+                        <button class="btn btn-primary"
                             wire:click="update('{{ $page->id }}','true')">
                             <x-tabler-send class="icon-lg" />
                             {{ __('published') }}
@@ -125,7 +125,7 @@
                 @endswitch
 
 
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $page->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@
 
 
                 <button x-data="{ open: @entangle('FormAdjustments') }"
-                    class="flex btn gap-x-2 justify-end items-center text-md bg-violet-600 border-violet-600"
+                    class="btn btn-primary"
                     @click="open = true">
                     <x-tabler-adjustments class="icon-lg" />
 
@@ -169,7 +169,7 @@
                 </div>
             @endforelse
             <div class="flex  justify-end my-6">
-                <button class="btn"
+                <button class="btn btn-primary"
                     wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
             </div>
 
@@ -201,7 +201,7 @@
                 @endforeach
 
         <div>
-            <button class="flex btn gap-x-2 justify-end items-center text-md"
+            <button class="btn btn-primary"
             wire:click="update('{{ $page->id }}')">
             <div wire:loading>
                 <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

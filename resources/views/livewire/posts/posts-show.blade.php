@@ -4,7 +4,7 @@
     <div x-data="{ open: @entangle('FormAdjustments') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $post->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -160,7 +160,7 @@
                 @endswitch
 
 
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $post->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -174,7 +174,7 @@
 
 
                 <button x-data="{ open: @entangle('FormAdjustments') }"
-                    class="flex btn gap-x-2 justify-end items-center text-md bg-violet-600 border-violet-600"
+                    class="btn btn-primary bg-violet-600 border-violet-600"
                     @click="open = true">
                     <x-tabler-adjustments class="icon-lg" />
 
@@ -236,7 +236,7 @@
                 @endforeach
 
         <div>
-            <button class="flex btn gap-x-2 justify-end items-center text-md"
+            <button class="btn btn-primary"
             wire:click="update('{{ $post->id }}')">
             <div wire:loading>
                 <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -17,7 +17,7 @@
  
                 <div class="grow">
                     <div class="flex items-center gap-x-2">
-                      <div class="flex btn gap-x-2 justify-center items-center text-md" >
+                      <div class="btn btn-primary" >
                         <x-tabler-upload />
                         {{ __('Upload') }}
                       </div>
@@ -44,7 +44,7 @@
             <label for="favicon_dark" class="flex overflow-hidden justify-start items-center mt-3 w-auto h-auto text-sm cursor-pointer">
                 <div class="grow">
                     <div class="flex items-center gap-x-2">
-                      <div class="flex btn gap-x-2 justify-center items-center text-md" >
+                      <div class="btn btn-primary" >
                         <x-tabler-upload />
                         {{ __('Upload') }}
                       </div>

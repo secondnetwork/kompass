@@ -20,11 +20,8 @@
         {{$item->title}}</a>
         @if ($item['children']->count())
             <x-tabler-chevron-down/>
+            <x-menus.menu-chlidren :childrensub="$item['children']->sortBy('order')"/>
         @endif
-
-
-
-        <x-menus.menu-chlidren :childrensub="$item['children']->sortBy('order')"/>
 
 </li>
 

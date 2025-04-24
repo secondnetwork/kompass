@@ -228,7 +228,7 @@
                         <h3 class="font-bold text-left">{{ __('Global Settings') }}</h3>
                
          
-                    <button wire:click="selectItem('', 'add')" class="flex btn gap-x-2 justify-center items-center text-md"
+                    <button wire:click="selectItem('', 'add')" class="btn btn-primary"
                         @click="open = true">
                         <x-tabler-settings-plus stroke-width="1.5" />{{ __('New Setting') }}
                     </button>
