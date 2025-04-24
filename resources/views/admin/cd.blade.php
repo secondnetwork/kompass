@@ -5,10 +5,26 @@
 
    
 
-  <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-500 text-green-200"> Ok</span>
-  @else
-  <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-500 text-red-200">ab</span>
+<h1 class="text-5xl">Heading 1</h1>
+<h2 class="text-4xl">Heading 2</h2>
+<h3 class="text-3xl">Heading 3</h3>
+<h4 class="text-2xl">Heading 4</h4>
+<h5 class="text-xl">Heading 5</h5>
+<h6 class="text-lg">Heading 6</h6>
+<p class="">This is a paragraph</p>
 
+<h2 class="text-gray-900 text-4xl font-extrabold md:text-5xl lg:text-6xl">
+  This is <span class="text-indigo-600">heading</span>
+  </h2>
+  <h2 class="text-gray-900 text-4xl font-extrabold md:text-5xl lg:text-6xl">
+  This is <span class="px-2 text-white bg-indigo-600 rounded">heading</span>
+  </h2>
+  <h2 class="text-gray-900 text-4xl font-extrabold md:text-5xl lg:text-6xl">
+  This is text <span class="text-transparent bg-clip-text bg-gradient-to-r to-indigo-600 from-violet-400">gradient</span>
+  </h2>
+  <h2 class="text-gray-900 text-4xl font-extrabold md:text-5xl lg:text-6xl">
+  This is text <span class="underline underline-offset-3 decoration-8 decoration-indigo-600 ">underline</span>
+  </h2>
 
 
 <div class="logo"><img class="h-[6rem]" src="{{ kompass_asset('kompass_logo.svg')}}" alt=""></div>
@@ -35,38 +51,7 @@
       </svg>
     </span>
   </button>
-
-  <input data-hs-theme-switch="" class="relative w-[3.25rem] h-7 bg-gray-100 checked:bg-none checked:bg-blue-600 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 ring-1 ring-transparent focus:border-gray-700 focus:ring-gray-700 focus:outline-none appearance-none
-
-before:inline-block before:size-6 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200
-
-after:absolute after:end-1.5 after:top-[calc(50%-0.40625rem)] after:w-[.8125rem] after:h-[.8125rem] after:bg-no-repeat after:bg-[right_center] after:bg-[length:.8125em_.8125em] after:transform after:transition-all after:ease-in-out after:duration-200 after:opacity-70 checked:after:start-1.5 checked:after:end-auto" type="checkbox" id="darkSwitch">
-<div class="max-w-sm space-y-3">
-<button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-    Solid
-  </button>
-  <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 text-base-content/70 hover:border-blue-600 hover:text-blue-600 focus:outline-none focus:border-blue-600 focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:text-blue-500 dark:focus:border-blue-600">
-    Outline
-  </button>
-  <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400">
-    Ghost
-  </button>
-  <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-400 dark:hover:bg-blue-900 dark:focus:bg-blue-900">
-    Soft
-  </button>
-  <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-    White
-  </button>
-  <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400 dark:focus:text-blue-400">
-    Link
-  </button>
-</div>
-  <div class="max-w-sm space-y-3">
-    <input type="text" class="py-1.5 px-2 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Small size">
-    <input type="text" class="p-2 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Default size">
-    <input type="text" class="p-2.5 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Default size">
-  
-</div>
+  <input data-hs-theme-switch="" type="checkbox" value="synthwave" class="toggle theme-controller" />
 
 <div class="grid grid-cols-3 gap-8 pt-8">
 <a href="/admin/eventdata" class="flex gap-2 items-center bg-gray-100 rounded-2xl shadow col-span-3 md:col-span-1">
@@ -79,7 +64,6 @@ after:absolute after:end-1.5 after:top-[calc(50%-0.40625rem)] after:w-[.8125rem]
 
     </div><span class="font-semibold">Angemeldet</span>
 </a>
-
 
 
 {{-- @php
@@ -125,90 +109,117 @@ $databegleitung = DB::table('contacts')->whereNull('status')->WhereNotNull('begl
 </a>
 {{-- @endif --}}
 </div>
-<!-- Hire Us -->
-<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-    <div class="max-w-xl mx-auto">
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-800 sm:text-4xl">
-          Ready to hire us?
-        </h1>
-        <p class="mt-1 text-gray-600">
-          Tell us your story and we’ll be in touch.
-        </p>
-      </div>
-  
-      <div class="mt-12">
-        <!-- Form -->
-        <form>
-          <div class="grid gap-4 lg:gap-6">
-            <!-- Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-              <div>
-                <label for="hs-firstname-hire-us-2" class="block mb-2 text-sm text-gray-700 font-medium">First Name</label>
-                <input type="text" name="hs-firstname-hire-us-2" id="hs-firstname-hire-us-2" class="p-2 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-              </div>
-  
-              <div>
-                <label for="hs-lastname-hire-us-2" class="block mb-2 text-sm text-gray-700 font-medium">Last Name</label>
-                <input type="text" name="hs-lastname-hire-us-2" id="hs-lastname-hire-us-2" class="p-2 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-              </div>
-            </div>
-            <!-- End Grid -->
-  
-            <div>
-              <label for="hs-work-email-hire-us-2" class="block mb-2 text-sm text-gray-700 font-medium">Work Email</label>
-              <input type="email" name="hs-work-email-hire-us-2" id="hs-work-email-hire-us-2" autocomplete="email" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-            </div>
-  
-            <!-- Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-              <div>
-                <label for="hs-company-hire-us-2" class="block mb-2 text-sm text-gray-700 font-medium">Company</label>
-                <input type="text" name="hs-company-hire-us-2" id="hs-company-hire-us-2" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-              </div>
-  
-              <div>
-                <label for="hs-company-website-hire-us-2" class="block mb-2 text-sm text-gray-700 font-medium">Company Website</label>
-                <input type="text" name="hs-company-website-hire-us-2" id="hs-company-website-hire-us-2" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-              </div>
-            </div>
-            <!-- End Grid -->
-  
-            <div>
-              <label for="hs-about-hire-us-2" class="block mb-2 text-sm text-gray-700 font-medium">Details</label>
-              <textarea id="hs-about-hire-us-2" name="hs-about-hire-us-2" rows="4" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"></textarea>
-            </div>
-          </div>
-          <!-- End Grid -->
-  
-          <!-- Checkbox -->
-          <div class="mt-3 flex">
-            <div class="flex">
-              <input id="remember-me" name="remember-me" type="checkbox" class="shrink-0 mt-1.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500">
-            </div>
-            <div class="ms-3">
-              <label for="remember-me" class="text-sm text-gray-600">By submitting this form I have read and acknowledged the <a class="text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium" href="#">Privact policy</a></label>
-            </div>
-          </div>
-          <!-- End Checkbox -->
-  
-          <div class="mt-6 grid">
-            <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Send inquiry</button>
-          </div>
-  
-          <div class="mt-3 text-center">
-            <p class="text-sm text-base-content/70">
-              We'll get back to you in 1-2 business days.
-            </p>
-          </div>
-        </form>
-        <!-- End Form -->
+
+<x-kompass::daisyui.heading class="mb-2">sdfsfsdfdsf</x-kompass::daisyui.heading>
+<x-kompass::daisyui.heading type="sub">sdffsdfsdfsdf</x-kompass::daisyui.heading>
+<x-kompass::daisyui.separator variant="neutral" />
+
+<div class="stats shadow w-full my-16">
+  <div class="stat">
+    <div class="stat-figure text-primary">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="inline-block h-8 w-8 stroke-current">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+      </svg>
+    </div>
+    <div class="stat-title">Total Likes</div>
+    <div class="stat-value text-primary">25.6K</div>
+    <div class="stat-desc">21% more than last month</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-figure text-secondary">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="inline-block h-8 w-8 stroke-current">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      </svg>
+    </div>
+    <div class="stat-title">Page Views</div>
+    <div class="stat-value text-secondary">2.6M</div>
+    <div class="stat-desc">21% more than last month</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-figure text-secondary">
+      <div class="avatar online">
+        <div class="w-16 rounded-full">
+          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+        </div>
       </div>
     </div>
+    <div class="stat-value">86%</div>
+    <div class="stat-title">Tasks done</div>
+    <div class="stat-desc text-secondary">31 tasks remaining</div>
   </div>
-  <!-- End Hire Us -->
+</div>
+<div class="flex items-center gap-2 py-6">
+  <x-kompass::daisyui.button variant="primary" type="submit" class="btn-outline">{{ __('Email password reset link') }}</x-kompass::daisyui.button>
+
+
+<button class="btn btn-outline">Default</button>
+<button class="btn btn-outline btn-primary">Primary</button>
+<button class="btn btn-outline btn-secondary btn-active">Secondary</button>
+<button class="btn btn-outline btn-accent">Accent</button>
+<button class="btn btn-outline btn-info">Info</button>
+<button class="btn btn-outline btn-success">Success</button>
+<button class="btn btn-outline btn-warning">Warning</button>
+<button class="btn btn-outline btn-error">Error</button>
+</div>
+<div class="flex items-center gap-2 py-6">
+<button class="btn">Default</button>
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-secondary">Secondary</button>
+<button class="btn btn-accent">Accent</button>
+<button class="btn btn-info">Info</button>
+<button class="btn btn-success">Success</button>
+<button class="btn btn-warning">Warning</button>
+<button class="btn btn-error">Error</button>
+
+<button class="btn" disabled="disabled">Disabled using attribute</button>
+<button class="btn btn-disabled" tabindex="-1" role="button" aria-disabled="true">
+  Disabled using class name
+</button>
+</div>
+
+<div class="card bg-neutral text-neutral-content w-96">
+  <div class="card-body items-center text-center">
+    <h2 class="card-title">Cookies!</h2>
+    <p>We are using cookies for no reason.</p>
+    <div class="card-actions justify-end">
+      <button class="btn btn-primary">Accept</button>
+      <button class="btn btn-ghost">Deny</button>
+    </div>
+  </div>
+</div>
 
 
 
+<div class="badge badge-primary">Primary</div>
+<div class="badge badge-secondary">Secondary</div>
+<div class="badge badge-accent">Accent</div>
+<div class="badge badge-neutral">Neutral</div>
+<div class="badge badge-info">Info</div>
+<div class="badge badge-success">Success</div>
+<div class="badge badge-warning">Warning</div>
+<div class="badge badge-error">Error</div>
+
+
+  <div class="card card-border border-base-300 card-sm overflow-hidden"><div class="card-body gap-4"><div class="border-b-base-300 grid grid-cols-7 border-b border-dashed pb-3"><div class="rounded-field flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">12</span> <span class="text-[10px] font-semibold opacity-50">M</span></div> <div class="rounded-field flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">13</span> <span class="text-[10px] font-semibold opacity-50">T</span></div> <div class="rounded-field bg-primary text-primary-content flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">14</span> <span class="text-[10px] font-semibold opacity-50">W</span></div> <div class="rounded-field flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">15</span> <span class="text-[10px] font-semibold opacity-50">T</span></div> <div class="rounded-field flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">16</span> <span class="text-[10px] font-semibold opacity-50">F</span></div> <div class="rounded-field flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">17</span> <span class="text-[10px] font-semibold opacity-50">S</span></div> <div class="rounded-field flex flex-col items-center px-2 py-1"><span class="text-sm font-semibold">18</span> <span class="text-[10px] font-semibold opacity-50">S</span></div></div> <div><label class="input input-sm input-border flex w-auto items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd"></path></svg> <input type="text" placeholder="Search for events"></label></div> <div class="flex flex-col gap-2"><label class="flex cursor-pointer items-center gap-2"><input type="checkbox" class="toggle toggle-sm toggle-primary" checked=""> <span class="text-xs">Show all day events</span></label></div></div> <div class="bg-base-300"><div class="flex items-center gap-2 p-4"><div class="grow"><div class="text-sm font-medium">Team Sync Meeting</div> <div class="text-xs opacity-60">Weekly product review with design and development teams</div></div> <div class="shrink-0"><span class="badge badge-sm badge-neutral">1h</span></div></div></div></div>
+
+<div class="lg:border-base-content/5 mb-16 rounded-2xl lg:border lg:p-4"><div class="border-base-content/10 overflow-hidden rounded-lg border-[0.5px]"><div class="grid grid-cols-1"><div class="bg-primary text-primary-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Primary</div> <div class="font-mono text-[0.625rem] tracking-widest tabular-nums">oklch(54% 0.245 262.881)</div></div><div class="bg-secondary text-secondary-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Secondary</div> <div class="font-mono text-[0.625rem] tracking-widest tabular-nums">oklch(86% 0.127 207.078)</div></div><div class="bg-accent text-accent-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Accent</div> <div class="font-mono text-[0.625rem] tracking-widest tabular-nums">oklch(75% 0.183 55.934)</div></div><div class="bg-neutral text-neutral-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Neutral</div> <div class="font-mono text-[0.625rem] tracking-widest tabular-nums">oklch(55% 0.016 285.938)</div></div></div></div> <div class="border-base-content/10 mt-4 overflow-hidden rounded-lg border-[0.5px]"><div class="grid xl:grid-cols-3"><div class="bg-base-100 text-base-content group border-base-content/10 grid h-36 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Base 100</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(98% 0.002 247.839)</div></div><div class="bg-base-200 text-base-content group border-base-content/10 grid h-36 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Base 200</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(100% 0 0)</div></div><div class="bg-base-300 text-base-content group border-base-content/10 grid h-36 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Base 300</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(96% 0.007 247.896)</div></div></div></div> <div class="border-base-content/10 mt-4 overflow-hidden rounded-lg border-[0.5px]"><div class="grid xl:grid-cols-4"><div class="bg-info text-info-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Info</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(58% 0.158 241.966)</div></div><div class="bg-success text-success-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Success</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(64% 0.2 131.684)</div></div><div class="bg-warning text-warning-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Warning</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(64% 0.2 131.684)</div></div><div class="bg-error text-error-content group border-base-content/10 grid h-24 place-content-end gap-1 p-6 text-end"><div class="font-title translate-y-1 text-sm font-semibold tracking-widest opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">Error</div> <div class="truncate font-mono text-[0.625rem] tabular-nums">oklch(64% 0.2 131.684)</div></div></div></div></div>
 
 @endsection

@@ -33,7 +33,7 @@
   .main-content,
   header,
   footer {
-    @apply bg-gray-50;
+    @apply bg-base-200;
   }
 
   .sidenav {

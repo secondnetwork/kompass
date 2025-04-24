@@ -74,6 +74,31 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 }
 
+@layer utilities {
+  
+  .btn {
+    @apply border-2;
+    @media (hover: hover) {
+      &:hover {
+        --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #ffffff 0%);
+      }
+    }
+  }
+
+  .btn-primary{
+    &:not(.btn-outline) {
+      @media (hover: hover) {
+        &:hover {
+          --btn-bg: #0000;
+          --btn-fg: var(--btn-color);
+          --btn-border: var(--btn-color);
+        }
+      }
+    } 
+  }
+
+}
+
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
@@ -106,7 +131,7 @@ License URI: http://opensource.org/licenses/mit-license.php
   --size-field: 0.25rem;
   --border: 1px;
   --depth: 0;
-  --noise: 1;
+  --noise: 0;
 }
 
 
