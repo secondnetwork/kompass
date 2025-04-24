@@ -230,8 +230,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // Database seeders...
         (new Filesystem)->copyDirectory(__DIR__.'/../database/seeders', 'database/seeders');
         $this->call('migrate');
-        $this->call('db:seed');
-        $this->info('migrate Database and seed data ...');
+        $this->info('migrate Database...');
     }
 
     public function updateServiceProviders()

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -49,6 +50,15 @@ return new class extends Migration
                 $table->unique(['name', 'guard_name']);
             }
         });
+
+        // Insert initial data into the roles table
+        DB::table('roles')->insert([
+            ['name' => 'admin', 'display_name' => 'Administrator', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'manager', 'display_name' => 'Manager', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'editor', 'display_name' => 'Editor', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'user', 'display_name' => 'User', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+    
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams): void {
             $table->unsignedBigInteger($pivotPermission);
