@@ -14,12 +14,21 @@
     @php
     seo()
         ->description($page->meta_description ?? config('kompass.settings.description' ?? ''))
-        ->locale('de_DE')
+        ->locale(str_replace('_', '-', app()->getLocale()) )
         ->twitter()
         ->tag('og:image', asset(config('kompass.settings.image_src')))->twitter();
     @endphp
 
+@if ($page_frontNotFound)
 
+<section class="py-16 text-center">
+    <h1>404</h1>
+    <h2>{{ __('Front page not Found') }}</h2>
+    <p class="font-bold">{{ __('Please create the Front page in the backend.') }}</p>
+
+</div>
+
+@else
 
     @foreach ($this->blocks as $key => $item)
 
@@ -28,5 +37,5 @@
     </section>
 
     @endforeach
-
+@endif
 </div>

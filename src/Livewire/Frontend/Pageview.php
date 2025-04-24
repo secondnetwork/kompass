@@ -17,6 +17,8 @@ class Pageview extends Component
 {
     public $page;
 
+    public $page_frontNotFound = false;
+
     public $blocks;
 
     public $fields;
@@ -34,8 +36,9 @@ class Pageview extends Component
             if (! empty($this->page->new_url)) {
                 return redirect($this->page->new_url, $this->page->status_code);
             }
-
-            $this->loadBlocks($slug);
+            if ($this->page && !$this->page_frontNotFound) {
+                $this->loadBlocks($slug);
+            }
             // $this->loadFields($slug);
 
         } catch (NotFoundHttpException $e) {
@@ -53,7 +56,12 @@ class Pageview extends Component
                 ->where('layout', 'is_front_page')
                 ->where('status', 'published')
                 ->first();
-
+            if (!$this->page) {
+                // Startseite nicht gefunden - Flag setzen
+                $this->page_frontNotFound = true;
+                // KEINE Exception werfen, mount() und render() regeln das
+                return; // Wichtig: Hier beenden, um weitere Checks zu vermeiden
+            }
         } else {
             $this->page = Page::query()
                 ->where('land', $landurl)
@@ -65,7 +73,7 @@ class Pageview extends Component
         if (! $this->page) {
             $this->page = Redirect::where('old_url', '/'.$slug)->first();
         }
-        if (! $this->page) {
+        if (! $this->page && ! $this->page_frontNotFound) {
             throw new NotFoundHttpException('Page not found');
         }
     }
