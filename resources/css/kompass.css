@@ -17,7 +17,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @plugin "daisyui" {
     themes: light --default, dark --kpdark;
 }
-@source "../../resources/views";
+@source "../../resources/views/**/*.blade.php";
 
 @import "./base/base.css";
 @import "./base/grid_layout.css";
@@ -85,7 +85,7 @@ License URI: http://opensource.org/licenses/mit-license.php
     }
   }
 
-  .btn-primary{
+  .btn-primary, .btn-error{
     &:not(.btn-outline) {
       @media (hover: hover) {
         &:hover {
@@ -96,8 +96,16 @@ License URI: http://opensource.org/licenses/mit-license.php
       }
     } 
   }
-
+  .divider {
+    height: 1px;
+    &::before, &::after {
+      height: 1px;
+      background-color: var(--color-base-300);
+    }
+  }
 }
+
+
 
 @plugin "daisyui/theme" {
   name: "light";

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
 <!--
 *   Kompass A Laravel CMS
@@ -53,11 +53,6 @@
         @endenv
 <page-main>
 <main class="transition delay-150 duration-300 ease-in-out"  x-data :class="$store.showside.on && 'sideclose'">
-      <header class="header">
-
-
-
-      </header>
 
       <aside class="sidenav">
         <div class="flex flex-col h-screen">

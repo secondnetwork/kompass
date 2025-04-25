@@ -28,7 +28,7 @@
 <x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
-        <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+        <div class=" border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             <div x-data="{ open: @entangle('FormAdd').live  }" class="flex justify-end gap-4">
 
                 <button class="btn btn-primary" @click="open = true">
@@ -36,6 +36,8 @@
                 </button>
           </div>
         </div>
+        
+        <div class="divider"></div>
 
         <div class=" align-middle inline-block min-w-full ">
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">

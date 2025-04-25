@@ -1,13 +1,23 @@
-<section class="w-full">
 
+<section class="w-full">
+    <div class="relative my-4 w-full">
+        <x-kompass::heading  level="3">{{ __('Account Settings') }}</x-kompass::heading>
+        <x-kompass::subheading size="lg" class="mb-6">{{ __('Manage your profile and account settings') }}</x-kompass::subheading>
+    
+        <div class="divider"></div>
+    </div>
         @if (session('status'))
             <div>{{ session('status') }}</div>
         @endif
-<div class="grid-2-3 gap-4">
-    <div class="my-6 w-full space-y-6">
+
+
+    <div class="max-w-lg">
+
+
+    <div class="w-full space-y-6 ">
      
-        <h3>{{ __('Profile Information') }}</h3>
-        {{ __('Update your account\'s profile information and email address.') }}
+        <span class="text-xl font-semibold">{{ __('Profile Information') }}</span>
+        <p class="text-base-content/70"> {{ __('Update your account\'s profile information and email address.') }}</p>
 
     </div>
     <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
@@ -33,19 +43,17 @@
                 @endif 
             </div> --}}
         @endif
+        <div class="flex items-center  w-full">
+        <button variant="primary" type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+        </div>
+    </form>
 
-<button variant="primary" type="submit" class="w-full btn primary">{{ __('Save') }}</button>
-<x-kompass::action-message class="me-3" on="profile-updated">
-    {{ __('Saved.') }}
-</x-kompass::action-message>
-</form>
 
-</div>
 
-<div class="grid-2-3 gap-4">
-    <div class="my-6 w-full space-y-6">
-        <h3>{{ __('Update Password') }}</h3>
-        {{ __('Ensure your account is using a long, random password to stay secure.') }}
+
+    <div class="w-full space-y-6">
+        <span class="text-xl font-semibold">{{ __('Update Password') }}</span>
+        <p class="text-base-content/70">{{ __('Ensure your account is using a long, random password to stay secure.') }}</p>
    
     </div>
 
@@ -75,14 +83,10 @@
 
         <div class="flex items-center gap-4">
             <div class="flex items-center justify-end">
-                <button variant="primary" type="submit" class="w-full btn primary">{{ __('Save') }}</button>
+                <button variant="primary" type="submit" class="w-full btn btn-primary">{{ __('Save') }}</button>
             </div>
 
-            <x-kompass::action-message class="me-3" on="password-updated">
-                {{ __('Saved.') }}
-            </x-kompass::action-message>
         </div>
     </form>
 </div>
-   
 </section>

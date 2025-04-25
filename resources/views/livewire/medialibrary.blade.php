@@ -2,11 +2,10 @@
 
 
     <media-grid class="flex flex-col">
-
+ 
         <file-upload x-data="fileUpload()">
              
-
-            <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+            <div class=" border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-end items-center w-full">
                 <input wire:model.live="search" type="text"
                     class="block p-2 w-full border-2 border-gray-300 text-base rounded-md"
                     placeholder="{{ __('Search') }}...">
@@ -36,7 +35,7 @@
             </div>
 
         </file-upload>
-
+       
         {{-- <div class="flex justify-between gap-4 my-4">
 
 
@@ -78,7 +77,7 @@
 
         <div class=" overflow-x-auto " x-cloak x-data="{ dir: @entangle('dir') }">
 
-            <div class="grid grid-cols-4 gap-5 mb-4 @if (!empty($search)) hidden @endif">
+            <div class="grid grid-cols-4 gap-5 my-4 @if (!empty($search)) hidden @endif">
 
                 @foreach ($dirgroup as $folder)
                     @if (empty($folder->path))
@@ -364,7 +363,7 @@
             <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
                 <x-slot name="body">
 
-                    <div class="modal-body">
+                    <div class="modal-body grid gap-1">
                         @if ($file)
 
                             @if ($type == 'video')
@@ -376,23 +375,23 @@
                             @endif
                         @endif
                         <label>Name</label>
-                        <input wire:model="name" type="text" class="form-control" />
+                        <input wire:model="name" type="text" class="form-control input" />
                         @if ($errors->has('name'))
                             <p style="color: red;">{{ $errors->first('name') }}</p>
                         @endif
 
 
                         <label>Alt</label>
-                        <input wire:model="alt" type="text" class="form-control" />
+                        <input wire:model="alt" type="text" class="form-control input" />
 
                         <label>Description</label>
-                        <input wire:model="description" type="text" class="form-control" />
+                        <input wire:model="description" type="text" class="form-control input" />
                         <label>Url:</label>
-                        <input disabled value="{{ asset($file) }}" type="text" class="form-control" />
+                        <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
 
 
                     </div>
-                    <div class="modal-footer mt-auto flex gap-4">
+                    <div class="modal-footer mt-4 flex gap-4">
                         <button wire:click="update" class="btn btn-primary">
                             <div wire:loading>
                                 <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -405,7 +404,7 @@
                         </button> 
                         <button
                             wire:click="selectItem({{ $iditem }}, 'delete')" “
-                            class="btn-danger flex  justify-center ">{{ __('Delete') }}</button>
+                            class="btn btn-error flex  justify-center "><x-tabler-trash class="cursor-pointer" />{{ __('Delete') }}</button>
                     </div>
                 </x-slot>
             </x-kompass::offcanvas>

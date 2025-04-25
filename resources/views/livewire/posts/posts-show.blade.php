@@ -86,7 +86,7 @@
     <x-kompass::action-message class="" on="status" />
     <x-kompass::modal data="FormDelete" />
 
-    <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
+    <div class="grid-3-2 items-center">
 
         <div class="relative flex items-center">
 
@@ -174,7 +174,7 @@
 
 
                 <button x-data="{ open: @entangle('FormAdjustments') }"
-                    class="btn btn-primary bg-violet-600 border-violet-600"
+                    class="btn btn-primary"
                     @click="open = true">
                     <x-tabler-adjustments class="icon-lg" />
 
@@ -186,15 +186,13 @@
 
     </div>
     <div class="">
-
+        <div class="divider"></div>
         <div class="ordre-1">
 
             <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
                 wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
                 wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                class="py-5  ">
-
-                <span class="text-gray-600 text-sm block">Block Builder</span>
+                class="">
                 
                 @forelse ($blocks as $itemblocks)
                 
@@ -207,7 +205,7 @@
                     </div>
                 @endforelse
                 <div class="flex  justify-end my-6">
-                    <button class="btn"
+                    <button class="btn btn-primary"
                         wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
                 </div>
 

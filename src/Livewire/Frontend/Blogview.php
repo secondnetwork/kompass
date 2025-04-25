@@ -2,13 +2,17 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Illuminate\Support\Arr;
 use Livewire\Component;
-use RalphJSmit\Laravel\SEO\Support\SEOData;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafield;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\ErrorLog;
+use Secondnetwork\Kompass\Models\Redirect;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use Secondnetwork\Kompass\Models\Datafield;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Blogview extends Component
 {
@@ -26,12 +30,12 @@ class Blogview extends Component
 
     public $blocks_collapse;
 
-    public function mount($slug = null)
+    public function mount(Request $request, $slug = null)
     {
+        try {
         $this->post = $this->ResolvePath($slug);
-
-        if (! empty($this->post->new_url)) {
-            return redirect($this->post->new_url, $this->post->status_code);
+        if ($this->post instanceof Redirect) {
+            return redirect($this->post->to_url, $this->post->status_code);
         }
         //blockable_type
         $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
@@ -45,6 +49,11 @@ class Blogview extends Component
             $this->fields = Datafield::whereIn('block_id', $blocks_id)->get();
         }
 
+    } catch (NotFoundHttpException $e) {
+        $this->log404Error($request->path(), $e);
+        throw $e;
+    }
+
     }
 
     public function ResolvePath($slug)
@@ -54,35 +63,36 @@ class Blogview extends Component
 
    
         if ($user->hasRole('admin')) {
-            $post = Post::where('slug', $slug)->first();
+            $this->post = Post::where('slug', $slug)->first();
         }
         if ($user->hasRole('manager')) {
-            $post = Post::where('slug', $slug)->first();
+            $this->post = Post::where('slug', $slug)->first();
         }
         if ($user->hasRole('editor')) {
-            $post = Post::where('slug', $slug)->first();
+            $this->post = Post::where('slug', $slug)->first();
         }
         if ($user->hasRole('author')) {
-            $post = Post::where('slug', $slug)->first();
+            $this->post = Post::where('slug', $slug)->first();
         }
         if ($user->hasRole('contributor')) {
-            $post = Post::where('slug', $slug)->first();
+            $this->post = Post::where('slug', $slug)->first();
         }
         if ($user->hasRole('subscriber')) {
-            $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
+            $this->post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
         }
         if ($user->hasRole('writer')) {
-            $post = Post::where('slug', $slug)->first();
+            $this->post = Post::where('slug', $slug)->first();
         }
         else{
-            $post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
+            $this->post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
         }
         
 
-        if (! empty($post)) {
-            return $post;
-        } else {
-            return '';
+        if (! $this->post) {
+            $this->post = Redirect::where('old_url', '/'.$slug)->first();
+        }
+        if (! $this->post) {
+            throw new NotFoundHttpException('Post not found - '.$slug);
         }
     }
 
@@ -159,15 +169,16 @@ class Blogview extends Component
         }
     }
 
-    // public function getDynamicSEOData(): SEOData
-    // {
-
-    //     return new SEOData(
-    //         // title: $this->post->title,
-    //         description: $this->post->meta_description,
-    //         // author: $this->author->fullName,
-    //     );
-    // }
+    protected function log404Error($url, $e)
+    {
+        ErrorLog::create([
+            'url' => $url,
+            'message' => $e->getMessage(),
+            'user_id' => auth()->id(), // Optional, um Benutzer-ID zu loggen
+            'ip_address' => request()->ip(),
+            'status_code' => 404, // Setze den Statuscode auf 404
+        ]);
+    }
 
     public function render()
     {

@@ -6,28 +6,25 @@
   main {
     @apply grid transition-all ease-in-out duration-300;
     grid-template-columns: 15rem 1fr;
-    grid-template-rows: 0rem 1fr 4rem;
-    grid-template-areas: "sidenav header" "sidenav main-content" "sidenav footer";
+    grid-template-rows:  1fr 4rem;
+    grid-template-areas: "sidenav main-content" "sidenav footer";
   }
 
   header {
     grid-area: header;
-    border-bottom: 0.1rem solid #e9ecef;
+    @apply flex items-center w-full border-b border-base-300 px-6 ;
   }
 
   footer {
     grid-area: footer;
     border-top: 0.1rem solid #e9ecef;
+    @apply flex items-center justify-between border-t border-base-300 px-6;
   }
 
   .main-content {
     grid-area: main-content;
-    @apply bg-gray-50 px-6 relative;
-  }
+    @apply py-4 px-6 relative;
 
-  header,
-  footer {
-    @apply flex items-center justify-between px-6 z-30;
   }
 
   .main-content,
@@ -36,14 +33,15 @@
     @apply bg-base-200;
   }
 
+
+
   .sidenav {
-    @apply block transition-all ease-in-out duration-500;
+    @apply block transition-all ease-in-out duration-500 border-r border-base-300;
     position: fixed;
     top: 0;
     bottom: 0;
     width: 15rem;
     height: 100%;
-    border-right: 0.1rem solid #e9ecef;
     overflow-y: auto;
 
     .logo {

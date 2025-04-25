@@ -47,7 +47,7 @@
         </x-kompass::offcanvas>
     </div>
 
-    <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
+    <div class=" grid-3-2 items-center">
 
         <div class="relative flex items-center">
 
@@ -83,6 +83,9 @@
 
 
         </div>
+
+        
+
         <div class="flex gap-4 justify-end items-center">
 
 
@@ -148,15 +151,15 @@
             </span>
 
         </div>
-
+    
     </div>
-
+    <div class="divider"></div>
     <div class="ordre-1">
 
         <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
             wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
             wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-            class="py-5  ">
+            class="">
 
             @forelse ($blocks as $itemblocks)
 
