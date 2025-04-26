@@ -1,6 +1,6 @@
 @props(['on'])
 
-<div  x-data="{ show: false, timeout: null, timeshow: null }"
+<div role="status" x-data="{ show: false, timeout: null, timeshow: null }"
     x-init="@this.on('{{ $on }}', () => 
     {   clearTimeout(timeshow); 
          
@@ -22,20 +22,19 @@
     {{ $attributes->merge(['class' => 'text-gray-600']) }}
     >
 
-    <div class="flex w-2 mx-2 my-4 rounded-full bg-green-500 h-12"></div>
-    <div class="h-full px-1">
+    <div class="flex w-2 rounded-full bg-green-500 h-12"></div>
+    <div class="h-full">
         <x-tabler-circle-check class="stroke-green-500" />
     </div>
-    <div class="mx-4 flex-row w-full">
+    <div class="flex-row w-full">
       <div class="flex flex-row items-center justify-between">
-        <p class="text-base sm:text-lg font-bold text-gray-200">{{ __('Saved.') }}</p>
+        <p class="text-base sm:text-lg font-bold text-gray-200">{{ $slot->isEmpty() ? __('Saved.') : $slot }}</p>
       </div>
-      <p class="text-xs sm:text-sm font-medium pr-2 sm:pr-0 text-gray-300">{{ __('successfully updated') }}</p>
+      {{-- <p class="text-xs sm:text-sm font-medium pr-2 sm:pr-0 text-gray-300">{{ __('successfully updated') }}</p> --}}
     </div>
 
     {{-- {{ $slot->isEmpty() ? 'Saved.' : $slot }} --}}
-
-
+  
 </div>
 {{-- x-transition:enter="transform transition-transform duration-300" 
 x-transition:enter-start="-translate-y-full" 

@@ -347,7 +347,7 @@ class PagesData extends Component
 
     }
 
-    public function status($id, $status)
+    public function updatestatus($id, $status)
     {
         if ($status == 'draft') {
             Block::where('id', $id)->update(['status' => 'draft']);

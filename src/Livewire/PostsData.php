@@ -86,7 +86,7 @@ class PostsData extends Component
         'post.meta_description' => '',
         'post.slug' => '',
         'post.layout' => '',
-        'post.status' => '',
+
         'post.password' => '',
         'post.begin_at' => '',
         'post.end_at' => '',
@@ -291,7 +291,7 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
-    public function status($id, $status)
+    public function updatestatus($id, $status)
     {
         if ($status == 'draft') {
             Block::where('id', $id)->update(['status' => 'draft']);

@@ -28,13 +28,13 @@
 
                 </div>
 
-                @if ($status == 'draft')
+                {{-- @if ($status == 'draft')
                         <button class="btn btn-primary"
                             wire:click="update('{{ $page->id }}','true')">
                             <x-tabler-send class="icon-lg" />
                             {{ __('published') }}
                         </button>
-                @endif
+                @endif --}}
 
                     <x-kompass::select wire:model="layout" label="Seite Template" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
@@ -92,7 +92,7 @@
 
             <span x-data="{ open: false }" class="relative transition-all flex gap-4">
 
-                @switch($status)
+                @switch($page->status)
                     @case('published')
                         <span class="flex gap-x-2 justify-end items-center text-md  text-gray-900">
 
