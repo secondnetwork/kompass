@@ -27,7 +27,7 @@
   </div>
   <div>
     <nav class="">
-      <x-kompass::nav-item :itemblocks="$itemblocks" />
+      <x-kompass::nav-itemgroup :itemblocks="$itemblocks" />
     </nav>
   </div>
 </div>

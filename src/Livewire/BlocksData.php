@@ -69,6 +69,16 @@ class BlocksData extends Component
         // $this->fields->slug = $mfields->slug;
     }
 
+    protected $listeners = ['selectItemForAction']; // Event-Name muss passen
+
+public function selectItemForAction($eventPayload)
+{
+    $itemId = $eventPayload['itemId'];
+    $action = $eventPayload['action'];
+    // Rufe deine bestehende Methode auf oder handle direkt
+    $this->selectItem($itemId, $action);
+}
+
     public function render()
     {
         return view('kompass::livewire.blocks.blocks-show')
@@ -124,47 +134,79 @@ class BlocksData extends Component
         $this->blockfieldsUpdate($id);
     }
 
-    public function saveUpdate($id)
+    public function saveUpdate()
     {
+        $id = $this->blocktemplatesId;
+
+        if (!$id) {
+            session()->flash('error', 'Block Template ID nicht gefunden.');
+            return;
+        }
+
+        // Ensure data is loaded if needed (might be redundant if always loaded in mount)
+        if (empty($this->data)) {
+             $this->data = Blocktemplates::findOrFail($id)->toArray();
+        }
+        if (empty($this->fields)) {
+            $this->fields = Blockfields::where('blocktemplate_id', $id)->orderBy('order')->get()->toArray();
+        }
+
+        $validatedData = $this->validate();
+
         $block = Blocktemplates::findOrFail($id);
-        // $blockfields = Blockfields::whereId('blocktemplate_id',$id)->orderBy('order')->get();
 
-        $validate = $this->validate();
+        $dataToUpdate = $validatedData['data'] ?? [];
 
-        // $file = new File;
-        // if (!empty($this->filestoredata)) {
-        //     foreach ($this->filestoredata as $filedata) {
+        dump($validatedData);
+        dump($dataToUpdate);
+        dump($block);
 
-        //         $fliename = $filedata->getClientOriginalName();
-        //         $slugname = $file->genSlug($filedata->getClientOriginalName());
-        //         $original_ext = $filedata->getClientOriginalExtension();
-        //         $type = $file->getType($original_ext);
-
-        //         $original_strorlink = $filedata->store('block_icons','public');
-        //         $validate['data']['icon_img_path'] = $original_strorlink;
-        //     }
-
-        // }
         if (! empty($this->filestoredata)) {
+            // Consider deleting the old file if it exists
+            if ($block->icon_img_path && Storage::disk('public')->exists($block->icon_img_path)) {
+                Storage::disk('public')->delete($block->icon_img_path);
+            }
             $original_strorlink = $this->filestoredata->store('block_icons', 'public');
-            $validate['data']['icon_img_path'] = $original_strorlink;
+            $dataToUpdate['icon_img_path'] = $original_strorlink;
+            $this->filestoredata = null; // Clear the temporary file upload state
         }
 
-        // $validate['data']['slug'] = Str::slug($validate['data']['name']);
-
-        $block->update($validate['data']);
-
-        foreach ($validate['fields'] as $blockfields) {
-            // $blockfields['slug'] = Str::slug($blockfields['name']);
-            Blockfields::whereId($blockfields['id'])->update($blockfields);
+        if (!empty($dataToUpdate)) {
+            $block->update($dataToUpdate);
         }
+
+
+        if (!empty($validatedData['fields'])) {
+             // Fetch all current field IDs for this template
+             $currentFields = Blockfields::where('blocktemplate_id', $id)->pluck('id')->toArray();
+             $validatedFieldIds = array_column($validatedData['fields'], 'id');
+
+            foreach ($validatedData['fields'] as $key => $blockfieldsData) {
+                if (isset($blockfieldsData['id']) && in_array($blockfieldsData['id'], $currentFields)) {
+                    Blockfields::whereId($blockfieldsData['id'])->update([
+                        'name' => $blockfieldsData['name'] ?? null,
+                        'grid' => $blockfieldsData['grid'] ?? null,
+                        'type' => $blockfieldsData['type'] ?? null,
+                    ]);
+                } else {
+                     Log::error('Blockfield ID missing or invalid in validated data for key: ' . $key . ' with ID: ' . ($blockfieldsData['id'] ?? 'null'));
+                }
+                 // Remove processed IDs from the list to find deleted ones later (optional)
+                // if (($idx = array_search($blockfieldsData['id'], $validatedFieldIds)) !== false) {
+                //     unset($validatedFieldIds[$idx]);
+                // }
+            }
+            // Optional: Handle fields that were present initially but not in the validated data (deleted)
+            // $fieldsToDelete = array_diff($currentFields, array_column($validatedData['fields'], 'id'));
+            // if (!empty($fieldsToDelete)) {
+            //     Blockfields::whereIn('id', $fieldsToDelete)->delete();
+            // }
+        }
+
 
         $this->nofifiction = true;
-        $this->blockfieldsUpdate($id);
-
         $this->resetpage();
-        // return redirect()->to('admin/blocks/show/'.$id);
-        session()->flash('message', 'Post successfully updated.');
+        session()->flash('message', 'Block erfolgreich aktualisiert.');
     }
 
     protected function cleanupOldUploads()

@@ -18,7 +18,7 @@
 
 <div x-cloak x-data="{ open: @entangle('FormEdit') }">
     <x-kompass::offcanvas :w="'w-2/4'">
-        <x-slot name="body" >
+        <x-slot name="body">
 
             <x-kompass::form.input type="text" label="{{__('Title')}}" wire:model="title" />
             <x-kompass::input-error for="title" class="mt-2" />
@@ -58,7 +58,7 @@
 </div>
 
 <div class="flex justify-end my-4">
-    <button class="flex btn gap-x-2 justify-center items-center text-sm" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus stroke-width="1.5" />{{__('Add Menu')}}</button>
+    <button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus stroke-width="1.5" />{{__('Add Menu')}}</button>
 </div>
 
 
