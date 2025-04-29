@@ -1,6 +1,6 @@
 <div
     x-data="{
-        image: @entangle('image').live,
+        imageBG: @entangle('imageBG').live,
         image_overlay_opacity: @entangle('image_overlay_opacity').live
     }"
  class="max-w-2xl">
@@ -33,9 +33,9 @@
             <p class="text-sm leading-6 text-gray-400">{{ __('Choose a nice background image to use as your authentication background.') }}</p>
         </div>
         <div class="w-2/3 h-auto">
-            @if(isset($image) && $image != '')
+        @if(isset($imageBG) && $imageBG != '')
             <div class="relative">
-                <img src="{{ is_string($image ) ? url($image) . '?' . uniqid() : $image->temporaryUrl() }}" class="w-full h-auto rounded-lg object-cover aspect-[16/9]" />
+                <img src="{{ is_string($imageBG ) ? url($imageBG) . '?' . uniqid() : $imageBG->temporaryUrl() }}" class="w-full h-auto rounded-lg object-cover aspect-[16/9]" />
                 <button wire:click="deleteImage()" class="flex absolute top-0 right-0 items-center px-3 py-1.5 mt-2 mr-2 text-xs font-medium text-white rounded-md bg-red-500/70 hover:bg-red-500/90">
                     <x-tabler-trash class="mr-1 w-4 h-4" />
                     <span>{{ __('Remove Image') }}</span>
@@ -43,13 +43,13 @@
             </div>
         @else
             <div class="flex items-center w-full">
-                <label for="image" class="flex flex-col justify-center items-center aspect-[1.91/1] w-full bg-gray-50 rounded-t-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                <label for="imagebg" class="flex flex-col justify-center items-center aspect-[1.91/1] w-full bg-gray-50 rounded-t-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                     <div class="flex flex-col justify-center items-center pt-5 pb-6">
                         <x-tabler-cloud-upload class="mb-4 w-8 h-8 text-base-content/70 dark:text-gray-400" />
                         <p class="mb-2 text-sm text-base-content/70 dark:text-gray-400"><span class="font-semibold">{{ __('Click to upload') }}</span></p>
                         <p class="text-xs text-base-content/70 dark:text-gray-400">{{ __('PNG, JPG or GIF') }}</p>
                     </div>
-                    <input id="image" type="file" wire:model="image" class="hidden" />
+                    <input id="imagebg" type="file" wire:model="imageBG" class="hidden" />
                 </label>
             </div> 
         @endif

@@ -43,7 +43,7 @@ class PageInformation extends Component
 
     public function updating($property, $value)
     {
-
+ 
         if ($property == 'image') {
 
             $filename = $value->getFileName();

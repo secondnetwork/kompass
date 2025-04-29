@@ -2,9 +2,10 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
-use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 class Background extends Component
 {
@@ -12,7 +13,7 @@ class Background extends Component
 
     public $color;
 
-    public $image;
+    public $imageBG;
 
     public $image_overlay_color;
 
@@ -21,7 +22,7 @@ class Background extends Component
     public function mount()
     {
         $this->color = config('kompass.appearance.background.color');
-        $this->image = config('kompass.appearance.background.image');
+        $this->imageBG = config('kompass.appearance.background.image');
         $this->image_overlay_color = (config('kompass.appearance.background.image_overlay_color'));
         $this->image_overlay_opacity = (config('kompass.appearance.background.image_overlay_opacity') * 100);
     }
@@ -43,14 +44,16 @@ class Background extends Component
 
     public function updated($property, $value)
     {
-        if ($property == 'image') {
+
+        if ($property == 'imageBG') {
+
             $filename = $value->getFileName();
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $newFilename = 'admin_background.'.$extension;
 
-            $value->storeAs('public/auth', 'background.'.$extension);
-            $this->image = '/storage/auth/background.'.$extension;
+            Storage::disk('public')->put('images/auth/'.$newFilename, $value->get());
 
-            $this->updateConfigKeyValue('background.image', '/storage/background.'.$extension);
+            $this->updateConfigKeyValue('background.image', '/storage/images/auth/'.$newFilename);
 
             $value = null;
 
@@ -72,7 +75,7 @@ class Background extends Component
             unlink(public_path($imagePath));
         }
         $this->updateConfigKeyValue('background.image', '');
-        $this->image = '';
+        $this->imageBG = '';
     }
 
     public function render()
