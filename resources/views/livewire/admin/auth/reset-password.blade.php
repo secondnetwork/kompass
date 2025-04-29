@@ -22,7 +22,7 @@
         <x-kompass::form.input wire:model="password_confirmation" label="{{ __('Confirm Password') }}" type="password" name="password_confirmation" required autocomplete="new-password" />
 
         <div class="flex">
-            <button class="btn w-full h-16" type="submit">
+            <button class="btn btn-primary w-full h-16" type="submit">
                 {{ __('Reset Password') }}  
             </button>
         </div>

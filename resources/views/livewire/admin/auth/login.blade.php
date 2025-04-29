@@ -30,7 +30,7 @@
   </div>
 
   <div class="flex justify-end">
-      <button class="btn bg-primary w-full h-14" type="submit" variant="primary">
+      <button class="btn btn-primary w-full h-14" type="submit" variant="primary">
           {{ __('Login') }}
       </button>
   </div>

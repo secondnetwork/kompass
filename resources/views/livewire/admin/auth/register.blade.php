@@ -31,7 +31,7 @@
       </a>
 
       <div>
-          <button class="btn w-full h-16" type="submit">
+          <button class="btn btn-primary w-full h-16" type="submit">
               {{ __('Register') }}
           </button>
       </div>
