@@ -1,22 +1,22 @@
 <div>
     @if ('is_front_page' !== str_replace(".","-", Route::currentRouteName()))
         @section('slug',$page->slug )
-        @seo(['title' => $page->title. ' | '. config('kompass.settings.webtitle'),])
+        @seo(['title' => $page->title. ' | '. setting('global.webtitle' ?? 'Kompass'),])
     @else
         @php
         seo()->title(
-            default:  config('kompass.settings.webtitle'). ' | ' . config('kompass.settings.supline'),
-            modify: fn (string $title) => $title . ' | ' .  config('kompass.settings.webtitle'). ' | ' . config('kompass.settings.supline')
+            default:  setting('global.webtitle' ?? 'Kompass'). ' | ' . setting('global.supline' ?? 'A Laravel CMS'),
+            modify: fn (string $title) => $title . ' | ' .  setting('global.webtitle' ?? 'Kompass'). ' | ' . setting('global.supline' ?? 'A Laravel CMS')
         );
         @endphp
     @endif
 
     @php
     seo()
-        ->description($page->meta_description ?? config('kompass.settings.description' ?? ''))
+        ->description($page->meta_description ?? setting('global.description' ?? ''))
         ->locale(str_replace('_', '-', app()->getLocale()) )
         ->twitter()
-        ->tag('og:image', asset(config('kompass.settings.image_src')))->twitter();
+        ->tag('og:image', asset(setting('global.image_src')))->twitter();
     @endphp
 
 @if ($page_frontNotFound)

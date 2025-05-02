@@ -65,12 +65,12 @@
                 'name' => __('Page Appearance'),
             ],
             [
-                'slug' => 'backend',
-                'name' => 'Login '. __('Page') ,
-            ],
-            [
                 'slug' => '',
                 'name' => __('Settings'),
+            ],
+            [
+                'slug' => 'backend',
+                'name' => 'Login '. __('Page') ,
             ],
             [
                 'slug' => 'global',

@@ -54,9 +54,9 @@ class KompassServiceProvider extends ServiceProvider
     private function bootBladeComponents(): void
     {
         $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade): void {
-            $prefix = config('kompass.setup.prefix', '');
+            $prefix = config('kompass.prefix', '');
 
-            foreach (config('kompass.setup.components', []) as $alias => $component) {
+            foreach (config('kompass.components', []) as $alias => $component) {
                 $componentClass = is_string($component) ? $component : $component['class'];
                 $blade->component($componentClass, $alias, $prefix);
             }
@@ -78,7 +78,7 @@ class KompassServiceProvider extends ServiceProvider
             return;
         }
 
-        foreach (config('kompass.setup.livewire', []) as $alias => $component) {
+        foreach (config('kompass.livewire', []) as $alias => $component) {
             Livewire::component($alias, $component);
         }
     }
@@ -107,24 +107,7 @@ class KompassServiceProvider extends ServiceProvider
 
     private function mergeConfigurations(): void
     {
-        $configs = [
-            '/../config/kompass/setup.php' => 'kompass',
-            '/../config/kompass/settings.php' => 'kompass.setup.settings',
-            '/../config/kompass/appearance.php' => 'kompass.setup.appearance',
-        ];
-
-        foreach ($configs as $path => $key) {
-            $fullPath = __DIR__.'/'.$path;  //Absoluter Pfad zur Konfigurationsdatei im Package
-
-            if (File::exists($fullPath)) {
-                $this->mergeConfigFrom(
-                    $fullPath,
-                    $key
-                );
-            } else {
-                Log::warning('Konfigurationsdatei nicht gefunden: '.$fullPath); // Optional: Logge eine Warnung
-            }
-        }
+        $this->mergeConfigFrom(__DIR__.'/../config/kompass.php', 'kompass');
     }
 
     private function registerSingletons(): void
@@ -133,13 +116,13 @@ class KompassServiceProvider extends ServiceProvider
 
         $this->app->singleton($this::BINDING, function ($app) {
 
-            $driverConfig = config('kompass.setup.driver', 'gd'); // Default to 'gd'
+            $driverConfig = config('kompass.driver', 'gd'); // Default to 'gd'
 
             return new ImageManager(
                 driver: $driverConfig,
-                autoOrientation: config('kompass.setup.options.autoOrientation', true),
-                decodeAnimation: config('kompass.setup.options.decodeAnimation', true),
-                blendingColor: config('kompass.setup.options.blendingColor', 'ffffff')
+                autoOrientation: config('kompass.options.autoOrientation', true),
+                decodeAnimation: config('kompass.options.decodeAnimation', true),
+                blendingColor: config('kompass.options.blendingColor', 'ffffff')
             );
         });
 
@@ -199,8 +182,8 @@ class KompassServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/kompass' => config_path('kompass'),
-            ], 'kompass-config');
+                __DIR__.'/../config/kompass.php' => config_path('kompass.php'),
+            ], 'config');
 
             $this->publishes([__DIR__.'/../public/assets/build' => public_path('vendor/kompass/assets')], 'kompass.assets');
 

@@ -5,7 +5,11 @@
     'class' => '',
     'cssclassname' => '',
 ])
-<div class="grid-3-2">
+  <div>
+    <nav class="">
+      <x-kompass::nav-item :itemblocks="$itemblocks" />
+    </nav>
+  </div>
   <div class="grid gap-6">
     @switch($itemblocks->type)
       @case('video')
@@ -25,9 +29,5 @@
 
     @endswitch
   </div>
-  <div>
-    <nav class="">
-      <x-kompass::nav-itemgroup :itemblocks="$itemblocks" />
-    </nav>
-  </div>
-</div>
+
+
