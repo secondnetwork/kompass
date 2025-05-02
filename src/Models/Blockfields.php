@@ -2,10 +2,10 @@
 
 namespace Secondnetwork\Kompass\Models;
 
-use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Blockfields extends Model
 {
@@ -28,10 +28,11 @@ class Blockfields extends Model
         return $this->belongsToMany('Secondnetwork\Kompass\Models\blocktemplates');
         // return $this->hasOne('Rote');
     }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['name']);
+            ->logOnly(['name']);
         // Chain fluent methods for configuration options
     }
 }

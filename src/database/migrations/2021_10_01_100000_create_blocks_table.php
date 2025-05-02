@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blocks', function (Blueprint $table) {
+        Schema::create('blocks', function (Blueprint $table): void {
             $table->id();
             $table->string('blockable_id');
             $table->string('blockable_type');

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blockfields', function (Blueprint $table) {
+        Schema::create('blockfields', function (Blueprint $table): void {
             $table->id();
             $table->foreignId(('blocktemplate_id'))->constrained()->onDelete('cascade');
             $table->string('name');

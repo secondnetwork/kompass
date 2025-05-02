@@ -2,7 +2,7 @@
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
 
-                <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
+                <button class="btn btn-primary" @click="open = true">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('Add') }}
                 </button>
                 {{-- <template x-teleport="#navheader"> </template> --}}
@@ -17,7 +17,7 @@
                         <thead class="bg-gray-100">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                                     {{ __($value) }}
                                 </th>
                             @endforeach

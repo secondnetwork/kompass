@@ -4,7 +4,7 @@
     <div x-data="{ open: @entangle('FormAdjustments') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $post->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -23,7 +23,7 @@
                     <strong class="text-gray-600">{{ __('Post Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
   
-                    <x-kompass::select wire:model="post.status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model="status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -40,7 +40,7 @@
                 @endif
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="post.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
                 Thumbnails
                 {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
                 @if (!empty($post->thumbnails))
@@ -86,13 +86,11 @@
     <x-kompass::action-message class="" on="status" />
     <x-kompass::modal data="FormDelete" />
 
-    <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
+    <div class="grid-3-2 items-center">
 
         <div class="relative flex items-center">
 
             <div class=" flex-auto">
-                <span class="text-gray-600 text-sm">{{ __('Post title') }}</span>
-
 
                 <div x-data="click_to_edit()">
                     <a 
@@ -105,7 +103,7 @@
                     </a>
 
                     <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model="post.title" x-show="isEditing" @click.away="toggleEditingState"
+                        wire:model="title" x-show="isEditing" @click.away="toggleEditingState"
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
                 </div>
                 <div class="col-span-6">
@@ -162,7 +160,7 @@
                 @endswitch
 
 
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $post->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -176,7 +174,7 @@
 
 
                 <button x-data="{ open: @entangle('FormAdjustments') }"
-                    class="flex btn gap-x-2 justify-end items-center text-md bg-violet-600 border-violet-600"
+                    class="btn btn-primary"
                     @click="open = true">
                     <x-tabler-adjustments class="icon-lg" />
 
@@ -188,15 +186,13 @@
 
     </div>
     <div class="">
-
+        <div class="divider"></div>
         <div class="ordre-1">
 
             <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
                 wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
                 wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                class="py-5  ">
-
-                <span class="text-gray-600 text-sm block">Block Builder</span>
+                class="">
                 
                 @forelse ($blocks as $itemblocks)
                 
@@ -209,7 +205,7 @@
                     </div>
                 @endforelse
                 <div class="flex  justify-end my-6">
-                    <button class="btn"
+                    <button class="btn btn-primary"
                         wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
                 </div>
 
@@ -220,7 +216,7 @@
     </div>
 
     <div x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
-        <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
+        <x-kompass::offcanvas class="text-base-content/70 p-4 m-4">
             <x-slot name="body">
                 @livewire('medialibrary', ['fieldId' => $getId])
             </x-slot>
@@ -238,7 +234,7 @@
                 @endforeach
 
         <div>
-            <button class="flex btn gap-x-2 justify-end items-center text-md"
+            <button class="btn btn-primary"
             wire:click="update('{{ $post->id }}')">
             <div wire:loading>
                 <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

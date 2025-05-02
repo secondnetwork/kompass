@@ -7,17 +7,16 @@ use Secondnetwork\Kompass\Livewire\Auth\Login;
 use Secondnetwork\Kompass\Livewire\Auth\Register;
 use Secondnetwork\Kompass\Livewire\Auth\ResetPassword;
 use Secondnetwork\Kompass\Livewire\Auth\VerifyEmail;
-use Secondnetwork\Kompass\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['web', 'guest'])->group(function () {
+Route::middleware(['web', 'guest'])->group(function (): void {
     Route::get('login', Login::class)->name('login');
     Route::get('register', Register::class)->name('register');
     Route::get('forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
-Route::middleware( ['web', 'auth'])->group(function () {
+Route::middleware( ['web', 'auth'])->group(function (): void {
     Route::get('verify-email', VerifyEmail::class)
         ->name('verification.notice');
 
@@ -29,5 +28,3 @@ Route::middleware( ['web', 'auth'])->group(function () {
         ->name('password.confirm');
 });
 
-Route::post('logout', Logout::class)
-    ->name('logout');

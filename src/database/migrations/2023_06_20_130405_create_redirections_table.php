@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('redirections', function (Blueprint $table) {
+        Schema::create('redirections', function (Blueprint $table): void {
             $table->id();
             $table->string('old_url')->unique();
             $table->string('new_url');

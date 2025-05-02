@@ -1,4 +1,6 @@
 <div>
+
+
     <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd') }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
@@ -15,18 +17,24 @@
     </div>
 
     <x-kompass::modal data="FormDelete" />
-<x-kompass::action-message class="" on="status" />
+    <x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
-        <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+   
+        <div class="w-full border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+            
             <div x-data="{ open: @entangle('FormAdd').live  }" class="flex justify-end gap-4">
 
-                <button class="flex btn gap-x-2 justify-center items-center text-md" @click="open = true">
+                <button class="btn btn-primary" @click="open = true">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New page') }}
                 </button>
           </div>
+           
+
         </div>
 
+        <div class="divider"></div>
+      
         <div class=" align-middle inline-block min-w-full ">
             <div class="shadow border-b border-gray-200 sm:rounded-lg">
 
@@ -37,7 +45,7 @@
                         <thead class="bg-gray-100">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
-                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                                     {{ __($value) }}
                                 </th>
                             @endforeach

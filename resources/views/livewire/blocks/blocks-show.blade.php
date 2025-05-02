@@ -173,113 +173,30 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
 
         <block-ltem wire:sortable="updateOrder" class="grid gap-4 my-4 p-2 border rounded-md border-dashed border-cyan-400  grid-cols-{{ $data->grid }}"
             wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }">
-            @foreach ($this->fields as $key => $item)
-                <div wire:sortable.item="{{ $item->id }}" wire:key="task-{{ $item->id }}"
-                    class="col-span-{{ $item->grid }} ">
-                    <div class="flex justify-between bg-slate-300 rounded-t-md p-2">
-                        <div wire:sortable.handle>
-                            <x-tabler-grip-horizontal class="cursor-move stroke-current  text-gray-900" />
-                        </div>
+            
+            {{-- @dump($fields->toArray()) --}}
+            {{-- Loop through fields --}}
+            {{-- Use wire:sortable.item to make the items sortable --}}
+            {{-- Use wire:key to ensure each item has a unique key --}}
 
-
-                        <span wire:click="selectItem({{ $fields[$key]->id }}, 'delete')" class="flex justify-end">
-                            <x-tabler-trash class="cursor-pointer stroke-current  text-red-500" />
-                        </span>
-
-                    </div>
-                    <div class="p-4 flex flex-col gap-4 bg-blue-100 rounded-b-md" wire:key="field-{{ $item->id }}">
-                        <x-kompass::form.input wire:model="fields.{{ $key }}.name" label="Feldbeschriftung" type="text" />
-                        <div>
-                            Feldname: <strong>{{ $fields[$key]->name }}</strong>
-                        </div>
-           
-
-                    <x-kompass::select label="Gird" :options="[
-                        ['name' => '1', 'id' => '1'],
-                        ['name' => '2', 'id' => '2'],
-                        ['name' => '3', 'id' => '3'],
-                        ['name' => '4', 'id' => '4'],
-
-
-                    ]" option-label="name"
-                        option-value="id" wire:model="fields.{{ $key }}.grid" />
-
-
-
-                        {{-- <x-kompass::form.input wire:model="fields.{{ $key }}.slug" label="Feldname" type="text" disabled />
-            {{$fields[$key]->slug}} --}}
-
-
-                        {{-- wire:model="fields.{{ $key }}.slug" --}}
-                        {{-- <x-kompass::form.input wire:model="fields.{{ $key }}.type" label="Feldtyp" type="text" /> --}}
-                        <select class="form-select block w-full pl-3 pr-10 py-2 text-base
-                rounded-md border bg-white focus:ring-1 focus:outline-none
-                border-secondary-300 focus:ring-primary-500 focus:border-primary-500" wire:model="fields.{{ $key }}.type" label="Feldtyp"
-                            data-placeholder="{{__('Select')}}">
-                            <option value="">{{__('Select')}}</option>
-                            <optgroup label="{{__('Basis')}}">
-                                <option value="text">Text einzeilig</option>
-                                <option value="text_headline">Headline</option>
-                                <option value="text_link">Text Link</option>
-                                <option value="text_url">Url</option>
-                                <option value="icon">Icon</option>
-                                {{-- <option value="textarea">Text mehrzeilig</option> --}}
-                                {{-- <option value="number">Numerisch</option>
-                                <option value="range">Numerischer Bereich</option>
-                                <option value="email">E-Mail</option>
-                                <option value="url">URL</option>
-                                <option value="password">Passwort</option> --}}
-                                            </optgroup>
-                            <optgroup label="{{__('Contents')}}">
-                                <option value="image">{{__('Image')}}</option>
-                                {{-- <option value="file">Datei</option> --}}
-                                <option value="wysiwyg">WYSIWYG-Editor</option>
-                                <option value="oembed">oEmbed</option>
-                                {{-- <option value="gallery">Galerie</option> --}}
-                            </optgroup>
-                            <optgroup label="{{__('Selection')}}">
-                                {{-- <option value="select">Auswahl</option>
-                <option value="checkbox">Checkbox</option>
-                <option value="radio">Radio-Button</option> --}}
-                                {{-- <option value="button_group">Button-Gruppe</option> --}}
-                                <option value="true_false">{{__('True / False')}}</option>
-                            </optgroup>
-                            {{-- <optgroup label="Relational">
-                <option value="link">Link</option>
-                <option value="post_object">Beitrags-Objekt</option>
-                <option value="page_link">Seiten-Link</option>
-                <option value="relationship">Beziehung</option>
-            </optgroup> --}}
-                            {{-- <optgroup label="jQuery">
-                <option value="google_map">Google Maps</option>
-                <option value="date_picker">Datumsauswahl</option>
-                <option value="date_time_picker">Datums- und Zeitauswahl</option>
-                <option value="time_picker">Zeitauswahl</option>
-                <option value="color_picker">Farbauswahl</option>
-            </optgroup> --}}
-                            {{-- <optgroup label="Layout">
-                <option value="message">Mitteilung</option>
-                <option value="accordion">Akkordeon</option>
-                <option value="tab">Tab</option>
-                <option value="group">Gruppe</option>
-                <option value="repeater">Wiederholung</option>
-                <option value="flexible_content">Flexible Inhalte</option>
-                <option value="clone">Klon</option>
-            </optgroup> --}}
-                        </select>
-                    </div>
-                    {{-- draggable="true"
-           <input type="hidden" wire:model="fields.{{ $key }}.id" value="{{ $key }}">
-           <input type="text" wire:model="fields.{{ $key }}.name" />
-           <input type="text" wire:model="fields.{{ $key }}.slug" /> --}}
-
-                </div>
-            @endforeach
+            @foreach ($fields as $field)
+            <div wire:sortable.item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">
+                 @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-'.$field->id))
+            </div>
+        @endforeach
+ 
         </block-ltem>
         <button class="flex btn gap-x-2   justify-center items-center"
             wire:click="addNewField('{{ $blocktemplatesId }}')">
             <x-tabler-square-plus class="icon-lg" />{{ __('Add') }}
         </button>
+
+{{-- Der globale Speicher-Button bleibt hier und triggert saveUpdate im Parent --}}
+<div class="mt-4 flex justify-end">
+    <button wire:click="saveUpdate" type="button" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+       Alle Änderungen speichern
+   </button>
+</div>
 
         {{-- <x-kompass::form.input wire:model="fields.name" label="Name" type="text" />
         <x-kompass::form.input wire:model="fields.slug" label="Slug" type="text" />

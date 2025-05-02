@@ -34,6 +34,12 @@ class PostsData extends Component
 
     public $title;
 
+    public $status;
+
+    public $description;
+
+    public $layout;
+
     public $blocks = [];
 
     public $blockgroupId;
@@ -80,7 +86,7 @@ class PostsData extends Component
         'post.meta_description' => '',
         'post.slug' => '',
         'post.layout' => '',
-        'post.status' => '',
+
         'post.password' => '',
         'post.begin_at' => '',
         'post.end_at' => '',
@@ -119,6 +125,11 @@ class PostsData extends Component
         $this->blocks = Block::where('blockable_type', 'post')->where('blockable_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->with('datafield')->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
+
+        $this->title = $this->post->title;
+        $this->description = $this->post->meta_description;
+        $this->layout = $this->post->layout;
+        $this->status = $this->post->status;
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
@@ -215,7 +226,7 @@ class PostsData extends Component
 
         $fields = Datafield::where('block_id', $id)->get();
 
-        $fields->each(function ($item, $key) use ($newblock) {
+        $fields->each(function ($item, $key) use ($newblock): void {
             $copyitem = $item->replicate();
             $copyitem->block_id = $newblock->id;
             $copyitem->save();
@@ -280,7 +291,7 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
-    public function status($id, $status)
+    public function updatestatus($id, $status)
     {
         if ($status == 'draft') {
             Block::where('id', $id)->update(['status' => 'draft']);
@@ -354,13 +365,12 @@ class PostsData extends Component
         }
 
         $post->update([
-            'title' => $validateData['post']['title'],
-            'meta_description' => $validateData['post']['meta_description'],
-            // 'layout' => $validateData['post']['layout'],
-            // 'status' => $validateData['post']['status'],
-            // 'password' => $validateData['post']['password'],
-            // 'begin_at' => $validateData['post']['begin_at'],
-            // 'end_at' => $validateData['post']['end_at'],
+            'title' => $this->title,
+            'meta_description' => $this->description,
+            // 'layout' => $this->layout,
+            'status' => $this->status,
+            'slug' => $slugNameURL,
+            'updated_at' => Carbon::now(),
         ]);
 
         $post->update([

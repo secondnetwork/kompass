@@ -31,7 +31,7 @@ Additionally Kompass requires you to use
 Kompass is super easy to install. After creating your new Laravel application you can include Kompass.
 
 ```bash
-composer require secondnetwork/kompass
+composer require secondnetwork/kompass dev-main
 ```
 
 With the command we install frontend asset, created new admin user and drop all tables from the database.
@@ -40,23 +40,24 @@ With the command we install frontend asset, created new admin user and drop all 
 php artisan kompass:install  
 ```
 
-**Publishing the configuration file**
+## Publishing Kompass's frontend assets in future updates
 
 ```bash
-php artisan vendor:publish --tag=assets --force && php artisan optimize:clear
+php artisan vendor:publish --tag=kompass.assets --force && php artisan optimize:clear
 ```
 
-```bash
-php artisan livewire:publish --config
+To keep assets up-to-date and avoid issues in future updates, we strongly recommend that you add the following command to your composer.json file:
+
+```json
+{
+    "scripts": {
+        "post-update-cmd": [
+            // Other scripts
+            "@php artisan vendor:publish --tag=kompass.assets --force"
+        ]
+    }
+}
 ```
-
-This will create a new (config/livewire.php) file in the configuration directory of your Laravel application. Then, you need to update the following changes.
-
-```php
-'legacy_model_binding' => true,
-``````
-
-
 
 ## Documentation
 

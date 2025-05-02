@@ -32,7 +32,7 @@
     <div class="flex flex-col">
 
       <div class="flex justify-end gap-4 py-4">
-        <button class="flex btn gap-x-2 justify-center items-center text-md" wire:click="selectItem('', 'add')"><x-tabler-lock-access stroke-width="1.5" />{{__('Add')}}</button>
+        <button class="btn btn-primary" wire:click="selectItem('', 'add')"><x-tabler-lock-access stroke-width="1.5" />{{__('Add')}}</button>
     </div>
 
   <div class=" align-middle inline-block min-w-full ">
@@ -43,7 +43,7 @@
               <thead class="bg-gray-100">
                   @foreach ($headers as $key => $value)
                       <th scope="col"
-                          class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                           {{ __($value) }}
                       </th>
                   @endforeach

@@ -2,15 +2,16 @@
 
 namespace Secondnetwork\Kompass\Models;
 
-use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Datafield extends Model
 {
     use HasFactory;
     use LogsActivity;
+
     // protected $table = 'Datafield';
     // protected $casts = [
     //     'data' => 'array',
@@ -24,13 +25,13 @@ class Datafield extends Model
     {
         parent::boot();
 
-        static::creating(function () {
+        static::creating(function (): void {
             cache()->flush();
         });
-        static::updating(function () {
+        static::updating(function (): void {
             cache()->flush();
         });
-        static::deleting(function () {
+        static::deleting(function (): void {
             cache()->flush();
         });
     }
@@ -38,7 +39,7 @@ class Datafield extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['id','block_id','type','data']);
+            ->logOnly(['id', 'block_id', 'type', 'data']);
         // Chain fluent methods for configuration options
     }
 }

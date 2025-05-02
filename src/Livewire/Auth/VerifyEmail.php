@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire\Auth;
 
-use Secondnetwork\Kompass\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Secondnetwork\Kompass\Livewire\Actions\Logout;
 
 #[Layout('kompass::admin.layouts.auth')]
 class VerifyEmail extends Component

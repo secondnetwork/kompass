@@ -64,11 +64,11 @@
                     <x-tabler-layout-grid-add class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
                 </span>
                 @if ($itemblocks->status == 'published')
-                    <span wire:click="status({{ $itemblocks->id }}, 'draft')">
+                    <span wire:click="updatestatus({{ $itemblocks->id }}, 'draft')">
                         <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />
                     </span>
                 @else
-                    <span wire:click="status({{ $itemblocks->id }}, 'published')">
+                    <span wire:click="updatestatus({{ $itemblocks->id }}, 'published')">
                         <x-tabler-eye-off class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                     </span>
                 @endif
@@ -82,11 +82,11 @@
             </span>
 
                 @if ($itemblocks->status == 'published')
-                    <span wire:click="status({{ $itemblocks->id }}, 'draft')">
+                    <button wire:click="updatestatus({{ $itemblocks->id }}, 'draft')">
                         <x-tabler-eye class="cursor-pointer stroke-current h-6 w-6 text-gray-400" />
-                    </span>
+                    </button>
                 @else
-                    <span wire:click="status({{ $itemblocks->id }}, 'published')">
+                    <span wire:click="updatestatus({{ $itemblocks->id }}, 'published')">
                         <x-tabler-eye-off class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
                     </span>
                 @endif

@@ -3,7 +3,7 @@
     <div x-data="{ open: @entangle('FormAdjustments') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $page->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -20,7 +20,7 @@
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
   
-                    <x-kompass::select wire:model="page.status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model="status" label="Status" placeholder="Select one status" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -28,31 +28,30 @@
 
                 </div>
 
-                @if ($page->status == 'draft')
-                        <button class="flex btn gap-x-2 items-center text-md"
+                {{-- @if ($status == 'draft')
+                        <button class="btn btn-primary"
                             wire:click="update('{{ $page->id }}','true')">
                             <x-tabler-send class="icon-lg" />
                             {{ __('published') }}
                         </button>
-                @endif
+                @endif --}}
 
-                    <x-kompass::select wire:model="page.layout" label="Seite Template" :options="[
+                    <x-kompass::select wire:model="layout" label="Seite Template" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="page.meta_description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
             </x-slot>
         </x-kompass::offcanvas>
     </div>
 
-    <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
+    <div class=" grid-3-2 items-center">
 
         <div class="relative flex items-center">
 
             <div class=" flex-auto">
-                <span class="text-gray-600 text-sm">{{ __('Page title') }}</span>
 
 
                 <div x-data="click_to_edit()">
@@ -60,20 +59,20 @@
                     @click.prevent @click="toggleEditingState" x-show="!isEditing" 
                     class="flex items-center"
                         class="select-none cursor-pointer">
-                        <h4 class="text-gray-600">{{ $page->title }} </h4><span>
+                        <h4 class="text-gray-600">{{ $title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
                         </span>
                     </a>
 
                     <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model.blur="page.title" x-show="isEditing" @click.away="toggleEditingState"
+                        wire:model.live="title" x-show="isEditing" @click.away="toggleEditingState"
                         @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
                 </div>
                 <div class="col-span-6">
 
                 </div>
                 <strong class="text-gray-400 text-xs">Permalink: </strong>
-                @if ($page->layout == 'is_front_page' || $page->layout == 'is_front_page')
+                @if ($layout == 'is_front_page' || $layout == 'is_front_page')
                     <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/') }}"
                         target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
                 @else
@@ -84,6 +83,9 @@
 
 
         </div>
+
+        
+
         <div class="flex gap-4 justify-end items-center">
 
 
@@ -126,7 +128,7 @@
                 @endswitch
 
 
-                <button class="flex btn gap-x-2 justify-end items-center text-md"
+                <button class="btn btn-primary"
                     wire:click="update('{{ $page->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -140,7 +142,7 @@
 
 
                 <button x-data="{ open: @entangle('FormAdjustments') }"
-                    class="flex btn gap-x-2 justify-end items-center text-md bg-violet-600 border-violet-600"
+                    class="btn btn-primary"
                     @click="open = true">
                     <x-tabler-adjustments class="icon-lg" />
 
@@ -149,17 +151,15 @@
             </span>
 
         </div>
-
+    
     </div>
-
+    <div class="divider"></div>
     <div class="ordre-1">
 
         <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
             wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
             wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-            class="py-5  ">
-
-            <span class="text-gray-600 text-sm block">Block Builder</span>
+            class="">
 
             @forelse ($blocks as $itemblocks)
 
@@ -172,7 +172,7 @@
                 </div>
             @endforelse
             <div class="flex  justify-end my-6">
-                <button class="btn"
+                <button class="btn btn-primary"
                     wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
             </div>
 
@@ -182,7 +182,7 @@
     </div>
     
     <div class="relative z-50" x-cloak x-data="{ open: @entangle('FormMedia') }" id="FormMedia">
-        <x-kompass::offcanvas class="text-gray-500 p-4 m-4">
+        <x-kompass::offcanvas class="text-base-content/70 p-4 m-4">
             <x-slot name="body">
                 @livewire('medialibrary', ['fieldId' => $getId])
             </x-slot>
@@ -204,7 +204,7 @@
                 @endforeach
 
         <div>
-            <button class="flex btn gap-x-2 justify-end items-center text-md"
+            <button class="btn btn-primary"
             wire:click="update('{{ $page->id }}')">
             <div wire:loading>
                 <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

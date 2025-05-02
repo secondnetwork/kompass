@@ -12,7 +12,7 @@
 
         <div class="py-3 text-sm">
           <span class="font-bold">{{ $label }}</span>
-          <span class="block text-sm text-gray-500">{{ $description ?? '' }}</span>
+          <span class="block text-sm text-base-content/70">{{ $description ?? '' }}</span>
         </div>
         
         <input {{ $attributes }} type="checkbox" class="sr-only peer">

@@ -1,12 +1,12 @@
-<div x-init="() => {
+<div class="relative" x-data="{ dropbox: false }" x-init="() => {
         $el.querySelector('input').value = '{{ $itemblocks->getMeta($metaKey) }}';
     }"
 >
-    <span class="text-sm font-bold">
-        {{ $label }}
+    <span class="text-sm flex font-bold gap-1">
+        {{ $label }} <x-tabler-circle-dashed-plus class="cursor-pointer" @click="dropbox = !dropbox" /> <p class="text-blue-700">{{ $itemblocks->getMeta($metaKey) }}</p>
     </span>
 
-    <div @click.outside="listcssClass = false; listcssId = false" class="flex items-center gap-x-2 relative mb-2" x-data="{ listcssClass: false, listcssId: false, value: '{{ $itemblocks->getMeta($metaKey) }}' }">
+    <div x-show="dropbox"  @click.outside="listcssClass = false; listcssId = false, dropbox = false" class="absolute z-10 left-0 top-6 flex items-center gap-x-2 bg-gray-100 shadow w-60 p-2 mb-2" x-data="{ listcssClass: false, listcssId: false, value: '{{ $itemblocks->getMeta($metaKey) }}' }">
 
     
         <input type="text" class="border border-gray-400  text-sm font-normal" x-model="value"
@@ -17,7 +17,6 @@
         <button @click.prevent x-on:click="listcssClass = false; listcssId = false; $wire.updateMeta({{ $itemblocks->id }}, value)" type="button" class="cursor-pointer ">
             <x-tabler-device-floppy class="size-5 text-blue-600" stroke-width="2" />
         </button>
-
 
         @if ($metaKey == 'css-classname')
         <x-tabler-list @click="listcssClass = !listcssClass" 

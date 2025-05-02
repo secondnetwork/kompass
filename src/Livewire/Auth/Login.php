@@ -75,7 +75,6 @@ class Login extends Component
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
     }
 
-
     public function render()
     {
         return view('kompass::livewire.admin.auth.login');

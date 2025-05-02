@@ -36,9 +36,9 @@
                     <div> {{__('Are you sure you want to delete the selected resources?')}}</div>
                 </div>
 
-                <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
-                    <button @click="modalOpen = false" type="button" class="btn-secondary bg-slate-400" data-dismiss="modal">{{ __('Cancel')}}</button>
-                    <button wire:click="delete" type="button" class="btn-danger bg-red-500">{{ __('Delete')}}</button>       
+                <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">  
+                    <button @click="modalOpen = false" type="button" class="btn btn-neutral" data-dismiss="modal">{{ __('Cancel')}}</button>
+                    <button wire:click="delete" type="button" class="btn btn-error">{{ __('Delete')}}</button>       
                 </div>
             </div>
         </div>

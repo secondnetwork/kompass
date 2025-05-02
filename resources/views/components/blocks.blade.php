@@ -246,7 +246,7 @@
     <lite-vimeo wire:ignore class="aspect-video" videoid="{{ $videoEmbed['id'] }}"></lite-vimeo>
     @endif
     <div class="" @click="box = true, oEmbed = false" wire:click="removemedia({{ $idField }})">
-        <button wire:click="delete" type="button" class="btn btn-danger bg-red-500"><x-tabler-trash class="cursor-pointer stroke-current" />  {{ __('Delete') }}</button>
+        <button wire:click="delete" type="button" class="btn btn-error"><x-tabler-trash class="cursor-pointer stroke-current" />  {{ __('Delete') }}</button>
     </div>
 @endif
 

@@ -2,97 +2,113 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
-use Illuminate\Support\Facades\Artisan;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use Secondnetwork\Kompass\Models\Setting;
+use Illuminate\Support\Str;
 
 class Logo extends Component
 {
     use WithFileUploads;
 
     public $logo_type;
-
     public $logo_image_src;
-
     public $logo_svg_string;
-
     public $logo_height;
-
     public $logo_image;
+
+    private $dbKeyLogoType = 'logo_type';
+    private $dbKeyLogoImageSrc = 'logo_image_src';
+    private $dbKeyLogoSvgString = 'logo_svg_string';
+    private $dbKeyLogoHeight = 'logo_height';
 
     public function mount()
     {
+        $globalSettings = Setting::global()->get()->keyBy('key');
 
-        $this->logo_type = config('kompass.appearance.logo.type');
-        $this->logo_image_src = config('kompass.appearance.logo.image_src');
-        $this->logo_svg_string = config('kompass.appearance.logo.svg_string');
-        $this->logo_height = config('kompass.appearance.logo.height');
-
-        if ($this->logo_image_src) {
-            $this->logo_image = true;
-        }
-
-    }
-
-    protected function rules()
-    {
-
-        return [
-            'logo_type' => 'required',
-            'logo_image_src' => 'required',
-            'logo_image_string' => 'required',
-            'logo_height' => 'required',
-        ];
+        $this->logo_type = optional($globalSettings->get($this->dbKeyLogoType))->data ?? 'text';
+        $this->logo_image_src = optional($globalSettings->get($this->dbKeyLogoImageSrc))->data ?? '';
+        $this->logo_svg_string = optional($globalSettings->get($this->dbKeyLogoSvgString))->data ?? '';
+        $this->logo_height = optional($globalSettings->get($this->dbKeyLogoHeight))->data ?? '32';
     }
 
     public function updateSvg($value)
     {
-        $this->updateConfigKeyValue('logo.svg_string', $value);
+        // Speichere den SVG-String in der Datenbank
+        $this->updateSettingInDatabase($this->dbKeyLogoSvgString, $value);
+        // Aktualisiere die Component-Eigenschaft
+        $this->logo_svg_string = $value;
+
+        // Setze den Logotyp auf 'svg' und speichere ihn
+        $this->logo_type = 'svg';
+        $this->updateSettingInDatabase($this->dbKeyLogoType, 'svg');
+
     }
 
+    // Updating Hook für einfache Felder und Dateiupload-Eigenschaft
     public function updating($property, $value)
     {
-        if ($property == 'logo_image') {
+        if ($property === 'logo_image') {
+            if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                $this->deleteLogoImageFile($this->logo_image_src);
 
-            $filename = $value->getFileName();
-            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                $filename = $value->getClientOriginalName();
+                $extension = $value->getClientOriginalExtension();
+                $newFilename = 'logo.' . $extension;
 
-            $value->storeAs('public/auth', 'logo.'.$extension);
-            $this->logo_image_src = '/storage/logo.'.$extension;
+                $path = $value->storeAs('images/logo', $newFilename, 'public');
 
-            $this->updateConfigKeyValue('logo.image_src', '/storage/logo.'.$extension);
+                $publicPath = Storage::disk('public')->url($path);
 
-            $value = null;
+                $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, $publicPath);
+
+                $this->logo_image_src = $publicPath;
+
+                 $this->logo_type = 'image';
+                 $this->updateSettingInDatabase($this->dbKeyLogoType, 'image');
+            }
+            return;
         }
 
-        if ($property == 'logo_type') {
-            $this->updateConfigKeyValue('logo.type', $value);
-        }
+        if ($property === 'logo_type') {
+            $this->updateSettingInDatabase($this->dbKeyLogoType, $value);
 
-        if ($property == 'logo_height') {
-            $this->updateConfigKeyValue('logo.height', $value);
+        } elseif ($property === 'logo_height') {
+            $this->updateSettingInDatabase($this->dbKeyLogoHeight, $value);
         }
     }
 
-    private function updateConfigKeyValue($key, $value)
+    private function updateSettingInDatabase($key, $value)
     {
-
-        \Config::write('kompass.appearance.'.$key, $value);
-        Artisan::call('config:clear');
-
-        // $this->js('savedMessageOpen()');
+        Setting::updateOrCreate(
+            [
+                'key' => $key,
+                'group' => 'global',
+            ],
+            [
+                'data' => $value,
+                'name' => ucwords(str_replace(['_', '.'], ' ', $key)),
+            ]
+        );
     }
 
-    public function logoValue()
+    private function deleteLogoImageFile(?string $publicPath)
     {
+        if ($publicPath && Str::startsWith($publicPath, '/storage/')) {
+             $relativePath = str_replace('/storage/', '', $publicPath);
+             if (Storage::disk('public')->exists($relativePath)) {
+                 Storage::disk('public')->delete($relativePath);
+             }
+        }
+    }
 
-        $logo = match ($this->logo_type) {
-            'image' => $this->logo_image,
-            'svg' => $this->logo_svg_string,
-            'text' => $this->logo_image_src
-        };
-
-        return $logo;
+    public function deleteLogoImage()
+    {
+        $this->deleteLogoImageFile($this->logo_image_src);
+        $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, '');
+        $this->logo_image_src = '';
+        $this->logo_image = null;
     }
 
     public function render()

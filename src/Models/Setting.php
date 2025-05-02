@@ -15,19 +15,24 @@ class Setting extends Model
         'is_active' => 'boolean',
     ];
 
+    public function scopeGlobal($query)
+    {
+        return $query->where('group', 'global');
+    }
+
     // public $timestamps = fal
     // protected static function boot()
     protected static function boot()
     // public static function __callStatic($method, $parameters)
     {
         parent::boot();
-        static::creating(function () {
+        static::creating(function (): void {
             Cache::forget('settings');
         });
-        static::updating(function () {
+        static::updating(function (): void {
             Cache::forget('settings');
         });
-        static::deleting(function () {
+        static::deleting(function (): void {
             Cache::forget('settings');
         });
 

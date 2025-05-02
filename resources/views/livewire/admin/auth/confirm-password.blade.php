@@ -17,13 +17,13 @@
         <x-kompass::form.input wire:model="password" label="{{ __('Password') }}" type="password" name="password" required autocomplete="current-password" />
 
         <div>
-            <button class="btn w-full h-16" type="submit">
+            <button class="btn btn-primary w-full h-16" type="submit">
                 {{ __('Confirm Password') }}
             </button>
         </div>
 
         @if (Route::has('password.request'))
-            <a class="text-center text-sm text-gray-500" href="{{ route('password.request') }}">
+            <a class="text-center text-sm text-base-content/70" href="{{ route('password.request') }}">
                 {{ __('Forgot Your Password?') }}
             </a>
         @endif

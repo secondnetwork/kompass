@@ -1,36 +1,52 @@
 <?php
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
+
 use Livewire\Component;
-use Illuminate\Support\Facades\Artisan;
+use Secondnetwork\Kompass\Models\Setting;
 
 class Backend extends Component
 {
-  public $registration_can_user;
-  public $copyright;
+    public $registration_can_user;
+    public $copyright;
 
-  public function mount(){
-      $this->registration_can_user = config('kompass.settings.registration_can_user');
-      $this->copyright = config('kompass.settings.copyright_backend');
-  }
-  public function updating($property, $value)
-  {
-    if ($property == 'registration_can_user') {
-      $this->updateConfigKeyValue('registration_can_user', $value);
-  }
-  if ($property == 'copyright') {
-    $this->updateConfigKeyValue('copyright_backend', $value);
-}
-}
+    private $dbKeyRegistration = 'registration_can_user';
+    private $dbKeyCopyright = 'copyright_backend';
 
-  public function updateConfigKeyValue($key, $value){
-      \Config::write('kompass.settings.' . $key, $value);
-      Artisan::call('config:clear');
+    public function mount()
+    {
+        $globalSettings = Setting::global()->get()->keyBy('key');
 
-      // $this->js('savedMessageOpen()');
-  }
-  public function render()
-  {
-      return view('kompass::livewire.settings.backend');
-  }
+        $this->registration_can_user = (bool) optional($globalSettings->get($this->dbKeyRegistration))->data ?? false;
+        $this->copyright = optional($globalSettings->get($this->dbKeyCopyright))->data ?? '';
+    }
+
+    public function updating($property, $value)
+    {
+        if ($property === 'registration_can_user') {
+            $this->updateSettingInDatabase($this->dbKeyRegistration, (string) $value);
+        }
+        if ($property === 'copyright') {
+            $this->updateSettingInDatabase($this->dbKeyCopyright, $value);
+        }
+    }
+
+    private function updateSettingInDatabase($key, $value)
+    {
+        Setting::updateOrCreate(
+            [
+                'key' => $key,
+                'group' => 'global',
+            ],
+            [
+                'data' => $value,
+                'name' => ucwords(str_replace(['_', '.'], ' ', $key)),
+            ]
+        );
+    }
+
+    public function render()
+    {
+        return view('kompass::livewire.settings.backend');
+    }
 }

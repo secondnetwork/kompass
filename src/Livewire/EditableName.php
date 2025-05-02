@@ -19,17 +19,17 @@ class EditableName extends Component
         $this->newName = $itemblocks->name;
     }
 
-     public function toggleEditingState()
-     {
-         $this->isEditing = !$this->isEditing;
-          $this->dispatch('focus-input');
-     }
+    public function toggleEditingState()
+    {
+        $this->isEditing = ! $this->isEditing;
+        $this->dispatch('focus-input');
+    }
 
     public function savename()
     {
-          if ($this->newName) {
+        if ($this->newName) {
             Block::whereId($this->itemblocks->id)->update(['name' => $this->newName]);
-          }
+        }
 
         $this->isEditing = false;
         $this->dispatch('reload-pages-data');

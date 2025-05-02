@@ -3,10 +3,10 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject Type</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created At</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Action</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">User</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Subject Type</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Created At</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -39,7 +39,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-4 py-3 text-sm text-center text-gray-500">No Activity Logs Found.</td>
+                        <td colspan="4" class="px-4 py-3 text-sm text-center text-base-content/70">No Activity Logs Found.</td>
                     </tr>
                 @endforelse
             </tbody>

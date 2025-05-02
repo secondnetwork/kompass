@@ -4,12 +4,11 @@ namespace Secondnetwork\Kompass\DataWriter;
 
 use Exception;
 use Illuminate\Config\Repository as RepositoryBase;
-use Secondnetwork\Kompass\DataWriter\FileWriter;
 
 class Repository extends RepositoryBase
 {
-
     protected $writer;
+
     public function __construct(FileWriter $writer, array $items = [])
     {
         parent::__construct($items);

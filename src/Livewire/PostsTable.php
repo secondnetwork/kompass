@@ -210,7 +210,7 @@ class PostsTable extends Component
 
         $blocksclone = Block::where('post_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
-        $blocksclone->each(function ($item, $key) use ($newpost) {
+        $blocksclone->each(function ($item, $key) use ($newpost): void {
             $altID = $item->id;
 
             $copy = $item->replicate();
@@ -227,7 +227,7 @@ class PostsTable extends Component
             }
 
             $fields = Datafield::where('block_id', $altID)->get();
-            $fields->each(function ($item, $key) use ($copy) {
+            $fields->each(function ($item, $key) use ($copy): void {
                 $copyitem = $item->replicate();
                 $copyitem->block_id = $copy->id;
                 $copyitem->save();

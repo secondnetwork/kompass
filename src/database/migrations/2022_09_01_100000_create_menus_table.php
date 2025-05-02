@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('menus', function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('group')->nullable();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('menu_items', function (Blueprint $table) {
+        Schema::create('menu_items', function (Blueprint $table): void {
             $table->increments('id');
             $table->unsignedInteger('menu_id')->nullable();
             $table->string('subgroup')->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->integer('order')->default('999');
         });
 
-        Schema::table('menu_items', function (Blueprint $table) {
+        Schema::table('menu_items', function (Blueprint $table): void {
             $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
         });
     }

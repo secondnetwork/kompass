@@ -13,6 +13,7 @@ class ActivityLog extends Component
     public function render()
     {
         $logsact = Activity::orderBy('updated_at', 'desc')->paginate(20);
-        return view('kompass::livewire.settings.activity-log' ,['logsact' => $logsact]);
+
+        return view('kompass::livewire.settings.activity-log', ['logsact' => $logsact]);
     }
 }

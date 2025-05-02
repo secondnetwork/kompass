@@ -1,12 +1,23 @@
 @extends('kompass::admin.layouts.app')
 
 @section('content')
-    <div class="grid grid-cols-3 gap-8 pt-4">
-        <div class="rounded-xl p-6 flex items-center shadow bg-center col-span-3"
+    <div class=" pt-4">
+
+        <div class="rounded-xl items-center shadow bg-center col-span-3"
             style="background-image: url({{ kompass_asset('kompass_bg.png') }})">
-            <div>
+
+            @env('local') 
+            <div class="flex items-center p-2 px-6 rounded-t-xl font-bold  gap-1 bg-warning text-warning-content  w-full text-center text-xs ">
+           Developer Mode
+           
+           </div> 
+           @endenv
+            <div class="p-6">
+
 
                 <div class=" text-gray-400">
+
+          
        @php
   
         $h = date('G');
@@ -23,7 +34,7 @@
         @endif
  
                 </div>
-                <h2 class=" text-white">{{ auth()->user()->name }}</h2>
+                <h3 class=" text-white">{{ auth()->user()->name }}</h3>
                 <div class=" text-gray-400">{{ now()->isoFormat('dddd, D. MMMM YYYY') }}</div>
             </div>
 

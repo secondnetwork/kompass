@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('medialibrary', function (Blueprint $table) {
+        Schema::create('medialibrary', function (Blueprint $table): void {
             $table->id();
             $table->string('path')->nullable();
             $table->string('subgroup')->nullable();
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('extension')->nullable();
             $table->string('description')->nullable();
             $table->string('alt')->nullable();
+            $table->string('user_id')->nullable();
             $table->timestamps();
         });
     }
