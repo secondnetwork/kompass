@@ -2,103 +2,96 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
-use Illuminate\Support\Facades\Artisan;
+use Secondnetwork\Kompass\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str; // Import Str for startsWith
 
 class PageInformation extends Component
 {
     use WithFileUploads;
 
     public $webtitle;
-
     public $supline;
-
     public $description;
-
     public $image;
-
     public $footer_textarea;
-
     public $email_address;
-
     public $phone;
-
     public $copyright;
+
+    private $imageKey = 'image_src';
 
     protected $listeners = ['component:refresh' => '$refresh'];
 
     public function mount()
     {
-        $this->webtitle = config('kompass.settings.webtitle');
-        $this->supline = config('kompass.settings.supline');
-        $this->description = config('kompass.settings.description');
-        $this->footer_textarea = config('kompass.settings.footer_textarea');
-        $this->email_address = config('kompass.settings.email_address');
-        $this->phone = config('kompass.settings.phone');
-        $this->copyright = config('kompass.settings.copyright');
-        $this->image = config('kompass.settings.image_src');
+        $globalSettings = Setting::global()->get()->keyBy('key');
+
+        $this->webtitle = optional($globalSettings->get('webtitle'))->data ?? '';
+        $this->supline = optional($globalSettings->get('supline'))->data ?? '';
+        $this->description = optional($globalSettings->get('description'))->data ?? '';
+        $this->footer_textarea = optional($globalSettings->get('footer_textarea'))->data ?? '';
+        $this->email_address = optional($globalSettings->get('email_address'))->data ?? '';
+        $this->phone = optional($globalSettings->get('phone'))->data ?? '';
+        $this->copyright = optional($globalSettings->get('copyright'))->data ?? '';
+
+        $this->image = optional($globalSettings->get($this->imageKey))->data ?? '';
     }
 
     public function updating($property, $value)
     {
- 
         if ($property == 'image') {
+            if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                 $filename = $value->getClientOriginalName();
+                 $extension = $value->getClientOriginalExtension();
+                 $newFilename = 'ogimage.' . $extension;
 
-            $filename = $value->getFileName();
-            $extension = pathinfo($filename, PATHINFO_EXTENSION);
-            $newFilename = 'ogimage.'.$extension;
+                 $path = $value->storeAs('images', $newFilename, 'public');
 
-            Storage::disk('public')->put('images/'.$newFilename, $value->get());
+                 $publicPath = Storage::disk('public')->url($path);
 
-            $this->image = '/images/ogimage.'.$extension;
+                 $this->image = $publicPath;
 
-            $this->updateConfigKeyValue('image_src', '/storage/images/'.$newFilename);
+                 $this->updateSettingInDatabase($this->imageKey, $publicPath);
+            }
+            return;
+        }
 
-            $value = null;
-
-        }
-        if ($property == 'webtitle') {
-            $this->updateConfigKeyValue('webtitle', $value);
-        }
-        if ($property == 'supline') {
-            $this->updateConfigKeyValue('supline', $value);
-        }
-        if ($property == 'description') {
-            $this->updateConfigKeyValue('description', $value);
-        }
-        if ($property == 'footer_textarea') {
-            $this->updateConfigKeyValue('footer_textarea', $value);
-        }
-        if ($property == 'email_address') {
-            $this->updateConfigKeyValue('email_address', $value);
-        }
-        if ($property == 'phone') {
-            $this->updateConfigKeyValue('phone', $value);
-        }
-        if ($property == 'copyright') {
-            $this->updateConfigKeyValue('copyright', $value);
-        }
+        $this->updateSettingInDatabase($property, $value);
     }
 
-    private function updateConfigKeyValue($key, $value)
+    private function updateSettingInDatabase($key, $value)
     {
-
-        \Config::write('kompass.settings.'.$key, $value);
-        Artisan::call('config:clear');
-        $this->dispatch('component:refresh');
-        // $this->js('savedMessageOpen()');
+        Setting::updateOrCreate(
+            [
+                'key' => $key,
+                'group' => 'global',
+            ],
+            [
+                'data' => $value,
+                'name' => ucwords(str_replace('_', ' ', $key)),
+            ]
+        );
     }
 
     public function deleteImage()
     {
-        $imagePath = config('kompass.settings.image_src');
-        if ($imagePath && file_exists(public_path($imagePath))) {
-            unlink(public_path($imagePath));
+        $imagePath = $this->image;
+
+        if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
+             $relativePath = str_replace('/storage/', '', $imagePath);
+             if (Storage::disk('public')->exists($relativePath)) {
+                 Storage::disk('public')->delete($relativePath);
+             }
         }
-        $this->updateConfigKeyValue('image_src', '');
+
+        $this->updateSettingInDatabase($this->imageKey, '');
+
         $this->image = '';
+
+        $this->js('savedMessageOpen()');
     }
 
     public function render()

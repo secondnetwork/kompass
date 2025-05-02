@@ -53,7 +53,7 @@
 
 
 
-<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100" style="background-color:{{ config('kompass.appearance.background.color') }};">
+<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100" style="background-color:{{ setting('global.background_color') }};">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
         @if (!empty(setting('admin.logo')))
@@ -74,13 +74,13 @@
     <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full bg-gray-900 bg-opacity-75" >    
         <div class="relative flex flex-col">
         
-            @if(config('kompass.appearance.background.image'))
-                <img src="{{ config('kompass.appearance.background.image') }}" id="auth-background-image" class="object-cover absolute z-10 w-screen h-screen" />
-                <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ config('kompass.appearance.background.image_overlay_color') }}; opacity:{{ config('kompass.appearance.background.image_overlay_opacity') }};"></div>
+            @if(setting('global.background.image'))
+                <img src="{{ setting('global.background_image') }}" id="auth-background-image" class="object-cover absolute z-10 w-screen h-screen" />
+                <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ setting('global.background_image_overlay_color') }}; opacity:{{ setting('global.background_image_overlay_opacity') }};"></div>
             
             @else
                 <div class="bg-cover h-full absolute inset-0" style="background-image: url('{{ kompass_asset('bg_login.jpg') }}')"></div>
-                <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ config('kompass.appearance.background.image_overlay_color') }}; opacity:{{ config('kompass.appearance.background.image_overlay_opacity') }};"></div>
+                <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ setting('global.background_image_overlay_color') }}; opacity:{{ setting('global.background_image_overlay_opacity') }};"></div>
             @endif    
 
         <footer class=" flex justify-between mt-auto w-full z-50">

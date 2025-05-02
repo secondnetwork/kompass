@@ -6,7 +6,7 @@
         logo_type: @entangle('logo_type').live
         {{-- image_uploaded: @entangle('image_uploaded') --}}
     }"
-    class="flex justify-start items-start space-x-7 w-full">
+    class="flex justify-start gap-4 items-start space-x-7 w-full">
 
     <div class="mx-auto w-full max-w-sm">
         <div class="pb-3 w-full">

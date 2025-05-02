@@ -15,6 +15,11 @@ class Setting extends Model
         'is_active' => 'boolean',
     ];
 
+    public function scopeGlobal($query)
+    {
+        return $query->where('group', 'global');
+    }
+
     // public $timestamps = fal
     // protected static function boot()
     protected static function boot()

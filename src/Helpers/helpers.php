@@ -168,33 +168,25 @@ if (! function_exists('setting')) {
     function setting($key = null, $default = null)
     {
         if (is_null($key)) {
-            return config('settings', $default);
+            return app()->bound('settings') ? app('settings') : ($default ?? collect());
         }
 
-        $keydata = explode('.', $key);
-        $segment = array_shift($keydata);
+        $keyParts = explode('.', $key);
 
-        $data = Arr::get(config('settings'), $segment);
-
-        if ($data && isset($data->group) && $data->group == $keydata[0]) {
-            return $data->data;
+        if (count($keyParts) !== 2) {
+            return $default;
         }
 
-        if (Schema::hasTable('settings')) {
+        $group = $keyParts[0];
+        $actualKey = $keyParts[1];
 
-            $data = app('settings');
+        $settings = app()->bound('settings') ? app('settings') : null;
 
-            if ($data !== null) {
+        if ($settings !== null) {
 
-                $keyParts = explode('.', $key);
-                $actualKey = end($keyParts);
+            $value = Arr::get($settings, $group . '.' . $actualKey);
 
-                if (Arr::has($data, $actualKey)) {
-                    $value = Arr::get($data, $actualKey);
-
-                    return $value;
-                }
-            }
+            return $value ?? $default;
         }
 
         return $default;

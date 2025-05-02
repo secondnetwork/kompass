@@ -91,7 +91,15 @@ class KompassServiceProvider extends ServiceProvider
         if (Schema::hasTable('settings')) {
             $this->app->singleton('settings', function ($app) {
                 return $app['cache']->rememberForever('settings', function () {
-                    return Setting::get(['key', 'data'])->pluck('data', 'key')->toArray();
+                    $settings = Setting::all()
+                        ->groupBy('group')
+                        ->map(function ($groupSettings) {
+                            return $groupSettings->keyBy('key')->map(function ($setting) {
+                                return $setting->data;
+                            });
+                        });
+    
+                    return $settings;
                 });
             });
         }

@@ -1,5 +1,5 @@
 <div>
-  @if (config('kompass.settings.registration_can_user'))
+  @if (setting('global.registration_can_user'))
   <h3>{{ __('Register') }}</h3>
 
   @if ($errors->any())

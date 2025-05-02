@@ -63,7 +63,7 @@
   </div>
   @endif
 
-  @if (config('kompass.settings.registration_can_user'))
+  @if (setting('global.registration_can_user'))
       @if (Route::has('register'))
       <a class="text-center text-sm text-base-content/70 hover:text-blue-500" href="{{ route('register') }}">
           {{ __('Don`t have an account? Create One') }}

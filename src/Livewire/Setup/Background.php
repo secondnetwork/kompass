@@ -4,78 +4,148 @@ namespace Secondnetwork\Kompass\Livewire\Setup;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str; // Importiere Str für die Pfadprüfung
+use Secondnetwork\Kompass\Models\Setting;
 
 class Background extends Component
 {
     use WithFileUploads;
 
     public $color;
-
-    public $imageBG;
-
+    public $imageBG; // Wird den Bildpfad speichern
     public $image_overlay_color;
+    public $image_overlay_opacity; // Wird den Wert 0-100 speichern (für die Anzeige/Eingabe)
 
-    public $image_overlay_opacity;
+    // Definiere die Datenbank-Keys für die Einstellungen
+    private $dbKeyColor = 'background_color';
+    private $dbKeyImage = 'background_image';
+    private $dbKeyOverlayColor = 'background_image_overlay_color';
+    private $dbKeyOverlayOpacity = 'background_image_overlay_opacity'; // Datenbank speichert 0-1
+
+    protected $listeners = ['component:refresh' => '$refresh'];
 
     public function mount()
     {
-        $this->color = config('kompass.appearance.background.color');
-        $this->imageBG = config('kompass.appearance.background.image');
-        $this->image_overlay_color = (config('kompass.appearance.background.image_overlay_color'));
-        $this->image_overlay_opacity = (config('kompass.appearance.background.image_overlay_opacity') * 100);
+        // Lese Einstellungen aus der Datenbank, Gruppe 'global'
+        $globalSettings = Setting::global()->get()->keyBy('key');
+
+        // Weise die Werte den Component-Eigenschaften zu
+        // Verwende optional() und ?? '' für sicheren Zugriff
+        $this->color = optional($globalSettings->get($this->dbKeyColor))->data ?? '#ffffff'; // Standardwert, falls nicht vorhanden
+        $this->imageBG = optional($globalSettings->get($this->dbKeyImage))->data ?? '';
+        $this->image_overlay_color = optional($globalSettings->get($this->dbKeyOverlayColor))->data ?? '#000000'; // Standardwert
+        // Lese die Opazität aus der DB (0-1) und multipliziere für die Anzeige (0-100)
+        $dbOpacity = optional($globalSettings->get($this->dbKeyOverlayOpacity))->data ?? '0'; // Standardwert 0
+        $this->image_overlay_opacity = (floatval($dbOpacity) * 100);
     }
+
+    // Updating Hooks werden ausgelöst, BEVOR sich die Eigenschaft ändert (außer bei FileUpload)
+    // Wir speichern hier direkt, da die Eigenschaft beim Aufruf der Methode $value den NEUEN Wert enthält
 
     public function updatingColor($value)
     {
-        $this->updateConfigKeyValue('background.color', $value);
+        $this->updateSettingInDatabase($this->dbKeyColor, $value);
     }
 
     public function updatingImageOverlayOpacity($value)
     {
-        $this->updateConfigKeyValue('background.image_overlay_opacity', (string) floatval($value / 100));
+        // Speichere die Opazität in der Datenbank als Wert zwischen 0 und 1
+        $this->updateSettingInDatabase($this->dbKeyOverlayOpacity, (string) floatval($value / 100));
     }
 
     public function updatingImageOverlayColor($value)
     {
-        $this->updateConfigKeyValue('background.image_overlay_color', $value);
+        $this->updateSettingInDatabase($this->dbKeyOverlayColor, $value);
     }
 
+    // Updated Hooks werden ausgelöst, NACHDEM sich die Eigenschaft geändert hat
+    // Dies ist oft besser für FileUploads, aber die updating-Methode funktioniert auch.
+    // Wir behalten hier updated für imageBG, wie im Originalcode
     public function updated($property, $value)
     {
-
+        // Handle den Dateiupload für imageBG
         if ($property == 'imageBG') {
+            if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                 // Optional: Lösche das alte Bild, bevor du das neue speicherst
+                 $this->deleteImageFile(); // Nur die Datei löschen, nicht den DB-Eintrag
 
-            $filename = $value->getFileName();
-            $extension = pathinfo($filename, PATHINFO_EXTENSION);
-            $newFilename = 'admin_background.'.$extension;
+                 $filename = $value->getClientOriginalName();
+                 $extension = $value->getClientOriginalExtension();
+                 // Standardisierter Dateiname
+                 $newFilename = 'admin_background.' . $extension;
 
-            Storage::disk('public')->put('images/auth/'.$newFilename, $value->get());
+                 // Speichere das Bild im public Disk unter images/auth
+                 $path = $value->storeAs('images/auth', $newFilename, 'public');
 
-            $this->updateConfigKeyValue('background.image', '/storage/images/auth/'.$newFilename);
+                 // Hole den öffentlichen Pfad/URL
+                 $publicPath = Storage::disk('public')->url($path);
 
-            $value = null;
+                 // Speichere den öffentlichen Pfad in der Datenbank
+                 $this->updateSettingInDatabase($this->dbKeyImage, $publicPath);
 
+                 // Setze die Eigenschaft im Component auf den neuen Pfad
+                 $this->imageBG = $publicPath;
+
+                 // Kein value = null mehr nötig, Livewire managed das FileInput Property
+            }
+            // Wenn $value null ist (z.B. Upload abgebrochen), passiert hier nichts.
+            // Das Löschen wird über deleteImage() gehandhabt.
         }
     }
 
-    private function updateConfigKeyValue($key, $value)
+    /**
+     * Speichert oder aktualisiert ein Einstellungs-Schlüssel-Wert-Paar in der Datenbank.
+     */
+    private function updateSettingInDatabase($key, $value)
     {
-        \Config::write('kompass.appearance.'.$key, $value);
-        Artisan::call('config:clear');
+        // Verwende den vollständigen Namespace \App\Models\Setting
+        Setting::updateOrCreate(
+            [
+                'key' => $key,
+                'group' => 'global', // Sicherstellen, dass es in der 'global' Gruppe gespeichert wird
+            ],
+            [
+                'data' => $value, // Speichere den eigentlichen Wert in der 'data' Spalte
+                // Füge einen Namen hinzu, falls der Datensatz neu erstellt wird
+                'name' => ucwords(str_replace(['_', '.'], ' ', $key)), // Z.B. 'background_color' wird zu 'Background Color'
+            ]
+        );
 
-        // $this->js('savedMessageOpen()');
+        // Keine Config::write oder Artisan::call('config:clear') mehr nötig
     }
+
+    /**
+     * Löscht nur die Bilddatei aus dem Speicher.
+     */
+    private function deleteImageFile()
+    {
+        $imagePath = $this->imageBG; // Hole den aktuellen Bildpfad aus der Eigenschaft
+
+        // Entferne die Datei aus dem Speicher, falls sie existiert und ein Speicherpfad ist
+        if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
+             // Entferne den '/storage/' Teil, um den Pfad relativ zum public Disk Root zu erhalten
+             $relativePath = str_replace('/storage/', '', $imagePath);
+             if (Storage::disk('public')->exists($relativePath)) {
+                 Storage::disk('public')->delete($relativePath);
+             }
+        }
+    }
+
 
     public function deleteImage()
     {
-        $imagePath = config('kompass.appearance.background.image');
-        if ($imagePath && file_exists(public_path($imagePath))) {
-            unlink(public_path($imagePath));
-        }
-        $this->updateConfigKeyValue('background.image', '');
+        // Lösche die Datei aus dem Speicher
+        $this->deleteImageFile();
+
+        // Aktualisiere den Datenbankeintrag, um den Bildpfad zu leeren
+        $this->updateSettingInDatabase($this->dbKeyImage, '');
+
+        // Setze die Component-Eigenschaft auf leer, um die Anzeige zu aktualisieren
         $this->imageBG = '';
+
+        // Sende eine Benachrichtigung oder ähnliches
+        $this->js('savedMessageOpen()');
     }
 
     public function render()
