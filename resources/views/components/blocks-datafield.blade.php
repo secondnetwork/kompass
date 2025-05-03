@@ -10,7 +10,7 @@
       <x-kompass::nav-item :itemblocks="$itemblocks" />
     </nav>
   </div>
-  <div class="grid gap-6">
+  <div class="grid grid-cols-{{ $itemblocks->grid }} gap-6">
     @switch($itemblocks->type)
       @case('video')
         <x-kompass::block.video :itemblocks="$itemblocks" />

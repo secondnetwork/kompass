@@ -13,6 +13,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
@@ -203,13 +204,13 @@ class PagesData extends Component
             'order' => '999',
         ]);
 
-        $this->initializeDataFields($block->id, $type);
+        $this->initializeDataFields($block->id, $type ,$blocktemplatesID);
 
         $this->FormBlocks = false;
         $this->resetPageComponent();
     }
 
-    private function initializeDataFields($blockId, string $type): void
+    private function initializeDataFields($blockId, string $type,$blocktemplatesID): void
     {
         $fieldDefinitions = match ($type) {
             'wysiwyg' => [['type' => 'wysiwyg', 'order' => '1']],
@@ -221,6 +222,24 @@ class PagesData extends Component
             ],
             default => [],
         };
+
+        if(empty($fieldDefinitions)){
+            $fielddate = Blockfields::where('blocktemplate_id',$blocktemplatesID)->get();
+            
+            $fieldDefinitions = [];
+
+            // Iteriere durch die abgerufenen Felder
+            foreach ($fielddate as $item) {
+                // Füge die Felddefinitionen zum Array hinzu
+                $fieldDefinitions[] = [
+                    'name' => $item->name,
+                    'type' => $item->type,
+                    'order' => $item->order,
+                    'grid' => $item->grid,
+                ];
+            }
+
+        }
 
         foreach ($fieldDefinitions as $definition) {
             $definition['block_id'] = $blockId;

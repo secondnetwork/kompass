@@ -139,6 +139,7 @@ return [
         'pageview' => Livewire\Frontend\Pageview::class,
         'blogview' => Livewire\Frontend\Blogview::class,
 
+        'field-editor' => Livewire\FieldEditor::class,
         'adminmenu' => Livewire\Menu::class,
         'blocks.blocks-table' => Livewire\BlocksTable::class,
         'blocks.blocks-data' => Livewire\BlocksData::class,

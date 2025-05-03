@@ -1,4 +1,4 @@
-<div>
+<div class="{{ $class }}">
 
     @switch($datafield->type)
         @case('image')

@@ -15,6 +15,8 @@ class DatafieldItem extends Component
 
     public $data;
 
+    public $class;
+
     public $cssClassname;
 
     public function mount()
