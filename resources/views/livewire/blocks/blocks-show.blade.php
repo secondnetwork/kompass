@@ -95,7 +95,7 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
         <div class="flex justify-end items-center">
             <div class="flex justify-end gap-4">
 
-        <button class="flex btn gap-x-2   justify-center items-center"
+        <button class="btn btn-primary"
             wire:click="saveUpdate('{{ $blocktemplatesId }}')">
             <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
         </button>
@@ -186,24 +186,29 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
         @endforeach
  
         </block-ltem>
-        <button class="flex btn gap-x-2   justify-center items-center"
+
+        <div class="mt-4 flex justify-end gap-4">
+        <button class="btn btn-primary"
             wire:click="addNewField('{{ $blocktemplatesId }}')">
             <x-tabler-square-plus class="icon-lg" />{{ __('Add') }}
         </button>
-
+        <button class="btn btn-primary"
+            wire:click="saveUpdate('{{ $blocktemplatesId }}')">
+            <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
+        </button>
+        </div>
 {{-- Der globale Speicher-Button bleibt hier und triggert saveUpdate im Parent --}}
-<div class="mt-4 flex justify-end">
+{{-- <div class="mt-4 flex justify-end">
     <button wire:click="saveUpdate" type="button" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
        Alle Änderungen speichern
    </button>
-</div>
+</div> --}}
 
         {{-- <x-kompass::form.input wire:model="fields.name" label="Name" type="text" />
         <x-kompass::form.input wire:model="fields.slug" label="Slug" type="text" />
         <x-kompass::form.input wire:model="fields.type" label="Type" type="text" /> --}}
 
     </div>
-
 
 
 </div>

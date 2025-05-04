@@ -71,13 +71,13 @@ class BlocksData extends Component
 
     protected $listeners = ['selectItemForAction']; // Event-Name muss passen
 
-public function selectItemForAction($eventPayload)
-{
-    $itemId = $eventPayload['itemId'];
-    $action = $eventPayload['action'];
-    // Rufe deine bestehende Methode auf oder handle direkt
-    $this->selectItem($itemId, $action);
-}
+    public function selectItemForAction($eventPayload)
+    {
+        $itemId = $eventPayload['itemId'];
+        $action = $eventPayload['action'];
+        // Rufe deine bestehende Methode auf oder handle direkt
+        $this->selectItem($itemId, $action);
+    }
 
     public function render()
     {
@@ -156,10 +156,6 @@ public function selectItemForAction($eventPayload)
         $block = Blocktemplates::findOrFail($id);
 
         $dataToUpdate = $validatedData['data'] ?? [];
-
-        dump($validatedData);
-        dump($dataToUpdate);
-        dump($block);
 
         if (! empty($this->filestoredata)) {
             // Consider deleting the old file if it exists
