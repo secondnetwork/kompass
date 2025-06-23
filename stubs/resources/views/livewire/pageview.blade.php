@@ -26,7 +26,7 @@
     <h2>{{ __('Front page not Found') }}</h2>
     <p class="font-bold">{{ __('Please create the Front page in the backend.') }}</p>
 
-</div>
+</section>
 
 @else
 
