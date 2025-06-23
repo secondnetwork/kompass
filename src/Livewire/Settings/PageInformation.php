@@ -21,7 +21,7 @@ class PageInformation extends Component
     public $phone;
     public $copyright;
 
-    private $imageKey = 'image_src';
+    private $imageKey = 'ogimage_src';
 
     protected $listeners = ['component:refresh' => '$refresh'];
 

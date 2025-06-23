@@ -16,7 +16,7 @@
         ->description($page->meta_description ?? setting('global.description' ?? ''))
         ->locale(str_replace('_', '-', app()->getLocale()) )
         ->twitter()
-        ->tag('og:image', asset(setting('global.image_src')))->twitter();
+        ->tag('og:image', asset(setting('global.ogimage_src')))->twitter();
     @endphp
 
 @if ($page_frontNotFound)
