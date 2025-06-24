@@ -54,12 +54,6 @@
         </optgroup>
        </select>
         @error('type') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-
-      {{-- Speicher-Button für DIESES Feld --}}
-      <button wire:click="saveField('{{ $field->id }}')" class="bg-blue-300 p-1">Feld Speichern</button>
-      {{-- Lösch-Button für DIESES Feld --}}
-      <button wire:click="deleteField" class="bg-red-300 p-1">Feld Löschen</button>
-
       
   </div>
 </div>

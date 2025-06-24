@@ -2,14 +2,15 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Livewire\Component;
+use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\WithFileUploads;
+use Secondnetwork\Kompass\Models\File;
+use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
-use Secondnetwork\Kompass\Models\File;
 
 class BlocksData extends Component
 {
@@ -48,11 +49,11 @@ class BlocksData extends Component
         'data.grid' => '',
         'data.iconclass' => '',
         'data.icon_img_path' => '',
-        'fields.*.id' => '',
-        'fields.*.name' => '',
-        'fields.*.grid' => '',
-        // 'fields.*.slug' => '',
-        'fields.*.type' => '',
+        // 'fields.*.id' => '',
+        // 'fields.*.name' => '',
+        // 'fields.*.grid' => '',
+        // // 'fields.*.slug' => '',
+        // 'fields.*.type' => '',
         // 'filestoredata.*' => 'required|file|mimes:' . File::getAllExtensions() . '|max:' . File::getMaxSize(),
         // 'filestoredata' => 'image|max:1024', // 1MB Max
     ];
@@ -86,9 +87,10 @@ class BlocksData extends Component
 
         // ->slot('main');
     }
-
+    #[On('block-resetpage')]
     public function resetpage()
     {
+ 
         $this->reset('filestoredata');
         $this->mount($this->blocktemplatesId);
         $this->dispatch('status');
@@ -136,6 +138,7 @@ class BlocksData extends Component
 
     public function saveUpdate()
     {
+        $this->dispatch('field-update'); 
         $id = $this->blocktemplatesId;
 
         if (!$id) {
@@ -170,36 +173,7 @@ class BlocksData extends Component
         if (!empty($dataToUpdate)) {
             $block->update($dataToUpdate);
         }
-
-
-        if (!empty($validatedData['fields'])) {
-             // Fetch all current field IDs for this template
-             $currentFields = Blockfields::where('blocktemplate_id', $id)->pluck('id')->toArray();
-             $validatedFieldIds = array_column($validatedData['fields'], 'id');
-
-            foreach ($validatedData['fields'] as $key => $blockfieldsData) {
-                if (isset($blockfieldsData['id']) && in_array($blockfieldsData['id'], $currentFields)) {
-                    Blockfields::whereId($blockfieldsData['id'])->update([
-                        'name' => $blockfieldsData['name'] ?? null,
-                        'grid' => $blockfieldsData['grid'] ?? null,
-                        'type' => $blockfieldsData['type'] ?? null,
-                    ]);
-                } else {
-                     Log::error('Blockfield ID missing or invalid in validated data for key: ' . $key . ' with ID: ' . ($blockfieldsData['id'] ?? 'null'));
-                }
-                 // Remove processed IDs from the list to find deleted ones later (optional)
-                // if (($idx = array_search($blockfieldsData['id'], $validatedFieldIds)) !== false) {
-                //     unset($validatedFieldIds[$idx]);
-                // }
-            }
-            // Optional: Handle fields that were present initially but not in the validated data (deleted)
-            // $fieldsToDelete = array_diff($currentFields, array_column($validatedData['fields'], 'id'));
-            // if (!empty($fieldsToDelete)) {
-            //     Blockfields::whereIn('id', $fieldsToDelete)->delete();
-            // }
-        }
-
-
+        
         $this->nofifiction = true;
         $this->resetpage();
         session()->flash('message', 'Block erfolgreich aktualisiert.');
