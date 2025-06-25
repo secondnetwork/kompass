@@ -21,38 +21,30 @@
       <x-kompass::form.input  type="text" wire:model="name" placeholder="Name" />
        @error('field.name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-       <x-kompass::select label="Grid Spalten (max 4)" :options="[
-        ['name' => '1', 'id' => '1'],
-        ['name' => '2', 'id' => '2'],
-        ['name' => '3', 'id' => '3'],
-        ['name' => '4', 'id' => '4'],
+       <x-kompass::select label="Grid" :options="[
+        ['name' => '', 'id' => '1', 'icon' => 'tabler-square-number-1'],
+        ['name' => '', 'id' => '2', 'icon' => 'tabler-square-number-2'],
+        ['name' => '', 'id' => '3', 'icon' => 'tabler-square-number-3'],
+        ['name' => '', 'id' => '4', 'icon' => 'tabler-square-number-4'],
     ]" option-label="name"
     option-value="id" wire:model.live="grid" />
 
 
        @error('grid') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-       <select wire:model="type">
-        <option value="">{{__('Select')}}</option>
+      <x-kompass::select label="Type" :options="[
+        ['name' => 'Text', 'id' => 'text', 'icon' => 'tabler-letter-case'],
+        ['name' => 'WYSIWYG-Editor', 'id' => 'wysiwyg', 'icon' => 'tabler-blockquote'],
+        ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'],
+        ['name' => __('Gallery'), 'id' => 'gallery', 'icon' => 'tabler-image-in-picture'],
+        ['name' => 'Link', 'id' => 'link', 'icon' => 'tabler-link'],
+        ['name' => __('true/false'), 'id' => 'true_false', 'icon' => 'tabler-toggle-left'],
+        ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip'],
+        ['name' => __('Color'), 'id' => 'color', 'icon' => 'tabler-palette'],
+      ]" option-label="name"
+      option-value="id" wire:model="type" />
 
-        {{-- Option Groups --}}
-        <optgroup label="{{__('Basis')}}">
-            <option value="text">Text einzeilig</option>
-            <option value="text_headline">Headline</option>
-            <option value="text_link">Text Link</option>
-            <option value="text_url">Url</option>
-            <option value="icon">Icon</option>
-        </optgroup>
-        <optgroup label="{{__('Contents')}}">
-            <option value="image">{{__('Image')}}</option>
-            {{-- <option value="file">Datei</option> --}}
-            <option value="wysiwyg">WYSIWYG-Editor</option>
-            <option value="oembed">oEmbed</option>
-        </optgroup>
-        <optgroup label="{{__('Selection')}}">
-            <option value="true_false">{{__('True / False')}}</option>
-        </optgroup>
-       </select>
+    
         @error('type') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
       
   </div>

@@ -1,37 +1,51 @@
 @props([
     'name' => '',
+    'icons' => '',
     'label' => '',
     'value' => '',
     'options' => [],
     'placeholder' => '',
 ])
 
-@if ($label === '')
+
     @php
         //remove underscores from name
+    $name = $attributes->wire('model')->value();
+    if ($label === '') {
         $label = str_replace('_', ' ', $name);
-        //detect subsequent letters starting with a capital 
-        $label = preg_split('/(?=[A-Z])/', $label);
-        //display capital words with a space
-        $label = implode(' ', $label);
-        //uppercase first letter and lower the rest of a word
-        $label = ucwords(strtolower($label));
+        $label = preg_replace('/(?=[A-Z])/', ' $0', $label);
+        $label = ucwords(strtolower(trim($label)));
+    }
+
+        $icons = collect($options)
+        ->filter(fn($option) => !empty($option['icon'])) // Nur Optionen mit einem 'icon'-Schlüssel
+        ->pluck('icon')
+        ->unique()
+        ->mapWithKeys(function ($iconName) {
+            // Nutzt den blade-ui-kit helper, um das SVG zu rendern
+            return [$iconName => svg($iconName, 'size-5')->toHtml()];
+        })
+        ->all();
     @endphp
-@endif
+
 
     <div x-data="{
         options: @js($options),
+        icons: @js($icons),
         isOpen: false,
         openedWithKeyboard: false,
         selectedOption: @entangle($attributes->wire('model')),
 
-        setSelectedOption(option) {
-            this.selectedOption = option
-            this.selected = option.id
-            this.isOpen = false
-            this.openedWithKeyboard = false
-            {{-- this.$refs.hiddenTextField.id = option.id --}}
+         get selectedItem() {
+            return this.options.find(opt => opt.id == this.selectedOption) || null;
         },
+
+        setSelectedOption(item) {
+            this.selectedOption = item.id; 
+            this.isOpen = false;
+            this.openedWithKeyboard = false;
+        },
+
         highlightFirstMatchingOption(pressedKey) {
             const option = this.options.find((item) =>
                 item.name.toLowerCase().startsWith(pressedKey.toLowerCase()),
@@ -46,41 +60,75 @@
         },
     }" class="w-full flex flex-col gap-1" x-on:keydown="highlightFirstMatchingOption($event.key)" x-on:keydown.esc.window="isOpen = false, openedWithKeyboard = false">
     <label class="w-fit pl-0.5 text-sm text-slate-700 ">{{ $label }}</label>
-    <div class="relative">
-    
-        <!-- trigger button  -->
-        <button type="button" role="combobox" :class="{ 'border-blue-600' : isOpen, 'border-gray-300' : !isOpen}" class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap  bg-white h-10 px-4 py-2 text-sm font-medium capitalize tracking-wide text-slate-700 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 rounded-md border-2" aria-haspopup="listbox" aria-controls="industriesList" x-on:click="isOpen = ! isOpen" x-on:keydown.down.prevent="openedWithKeyboard = true" x-on:keydown.enter.prevent="openedWithKeyboard = true" x-on:keydown.space.prevent="openedWithKeyboard = true" x-bind:aria-label="selectedOption ? selectedOption.id : 'Please Select'" x-bind:aria-expanded="isOpen || openedWithKeyboard">
-            
-            <template x-for="item in options">
-            <div x-show="selectedOption == item.id">                            
-                <span x-show="null != item.display_name" class="block truncate text-sm" x-text="item.display_name"></span>
-                <span x-show="null == item.display_name" class="block truncate text-sm" x-text="item.name"></span>
-            </div>
-                               
-            </template>
+   <div class="relative">
+        {{-- Trigger Button --}}
+        <button 
+            type="button" 
+            role="combobox" 
+            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border-2 bg-white h-10 px-4 py-2 text-sm font-medium tracking-wide text-slate-700 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            :class="{ 'border-blue-600': isOpen, 'border-slate-300': !isOpen }" 
+            aria-haspopup="listbox" 
+            aria-controls="industriesList" 
+            x-on:click="isOpen = !isOpen" 
+            x-on:keydown.down.prevent="openedWithKeyboard = true; $nextTick(() => { $focus.first() })"
+            x-on:keydown.enter.prevent="openedWithKeyboard = true" 
+            x-on:keydown.space.prevent="openedWithKeyboard = true"
+            :aria-label="selectedItem ? selectedItem.name : '{{ $placeholder }}'" 
+            :aria-expanded="isOpen || openedWithKeyboard">
 
-            <div x-show="!selectedOption"  class="block truncate text-sm">                            
-                <span class="block truncate">{{ __('Select') }}</span>
+            <div class="flex items-center gap-2">
+                {{-- OPTIMIERTE ANZEIGE DES GEWÄHLTEN ITEMS --}}
+                <template x-if="selectedItem && selectedItem.icon && icons[selectedItem.icon]">
+                     <div x-html="icons[selectedItem.icon]"></div>
+                </template>
+
+                <span x-show="selectedItem" x-text="selectedItem ? (selectedItem.display_name || selectedItem.name) : ''" class="block truncate"></span>
+                <span x-show="!selectedItem" class="block truncate text-slate-500">{{ $placeholder }}</span>
             </div>
-     
-            <!-- Chevron  -->
-            <x-tabler-selector class="size-5" />
+
+            <x-tabler-selector class="size-5 text-slate-500" />
         </button>
-    
-        <!-- hidden input to grab the selected value  -->
-        <input x-model="selectedOption" hidden type="text"  />
+
+        {{-- Hidden Input ist nicht mehr nötig, da @entangle die Synchronisierung mit Livewire übernimmt --}}
         
-        <ul x-cloak x-show="isOpen || openedWithKeyboard" id="industriesList" class="absolute z-10 left-0 top-11 flex max-h-44 w-full flex-col overflow-hidden overflow-y-auto border-slate-300 bg-white py-1.5 rounded-md border-2" role="listbox" aria-label="industries list" x-on:click.outside="isOpen = false, openedWithKeyboard = false" x-on:keydown.down.prevent="$focus.wrap().next()" x-on:keydown.up.prevent="$focus.wrap().previous()" x-transition x-trap="openedWithKeyboard">
-            <template x-for="(item, index) in options" x-bind:key="item.id">   
-                <li class="combobox-option inline-flex cursor-pointer justify-between gap-6 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-800/5 hover:text-black focus-visible:bg-slate-800/5 focus-visible:text-black focus-visible:outline-none " role="option" x-on:click="setSelectedOption(item.id)" x-on:keydown.enter="setSelectedOption(item.id)" x-bind:id="'option-' + index" tabindex="0" >
-                    <!-- Label  -->
-                    <span x-bind:class="selectedOption == item.id ? 'font-bold' : null" x-text="item.name"></span>
+        {{-- Dropdown Liste --}}
+        <ul 
+            x-cloak x-show="isOpen || openedWithKeyboard" 
+            id="industriesList" 
+            class="absolute z-10 left-0 top-11 max-h-60 w-full flex-col overflow-y-auto rounded-md border-2 border-slate-300 bg-white py-1.5 shadow-lg" 
+            role="listbox" 
+            aria-label="{{ $label }} list" 
+            x-on:click.outside="isOpen = false; openedWithKeyboard = false" 
+            x-on:keydown.down.prevent="$focus.wrap().next()" 
+            x-on:keydown.up.prevent="$focus.wrap().previous()" 
+            x-transition 
+            x-trap.noscroll="openedWithKeyboard">
+            
+            <template x-for="item in options" :key="item.id">
+                <li 
+                    class="combobox-option group inline-flex w-full cursor-pointer items-center justify-between gap-6 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:text-black focus-visible:outline-none" 
+                    role="option" 
+                    :class="{ 'bg-slate-100': selectedOption == item.id }"
+                    :aria-selected="selectedOption == item.id"
+                    x-on:click="setSelectedOption(item)" 
+                    x-on:keydown.enter.prevent="setSelectedOption(item)"
+                    :id="'option-' + item.id" 
+                    tabindex="-1">
                     
-                    <!-- Screen reader 'selected' indicator  -->
-                    <span class="sr-only" x-text="selectedOption == item.id ? 'selected' : null"></span>
-                    <!-- Checkmark  -->
-                    <x-tabler-check class="size-5" x-cloak x-show="selectedOption == item.id" />
- 
+                    {{-- Label und Icon --}}
+                    <div class="flex items-center gap-2">
+                        {{-- TEIL 2: DYNAMISCHES ICON RENDERING MIT x-html --}}
+                        <template x-if="item.icon && icons[item.icon]">
+                            <div x-html="icons[item.icon]"></div>
+                        </template>
+                        
+                        <span :class="{ 'font-semibold': selectedOption == item.id }" x-text="item.name"></span>
+                    </div>
+                    
+                    {{-- Checkmark --}}
+                    <span x-show="selectedOption == item.id">
+                        <x-tabler-check class="size-5 text-blue-600" />
+                    </span>
                 </li>
             </template>
         </ul>
