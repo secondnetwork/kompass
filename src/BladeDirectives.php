@@ -11,7 +11,7 @@ class BladeDirectives
 
         if (! $url200) {
             if (file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
-                $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
+                $content = file_get_contents(public_path('vendor/kompass/assets/manifest.json'));
             } else {
                 $content = '';
             }
@@ -40,7 +40,7 @@ class BladeDirectives
 
         if (! $url200) {
             if (file_exists(public_path('vendor/kompass/assets/manifest.json'))) {
-                $content = file_get_contents(asset('vendor/kompass/assets/manifest.json'));
+                $content = file_get_contents(public_path('vendor/kompass/assets/manifest.json'));
             } else {
                 $content = '';
             }
