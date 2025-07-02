@@ -40,7 +40,7 @@ class Settings extends Component
 
     public $value;
 
-    public $valuedata;
+    public $valuedata = [];
 
     #[Rule('required|min:3')]
     public $key;

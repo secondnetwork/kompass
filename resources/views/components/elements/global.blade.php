@@ -13,16 +13,16 @@
                   <span class="block text-sm">{{ __($setting->name) }}</span>
                   <span class="block text-sm">{{ $setting->description }}</span>
               </td>
-              <td  class="w-2 ">
+              {{-- <td  class="w-2 ">
 
                 @if ($setting->type == 'switch')
-                <label class="inline-flex items-center mb-5 cursor-pointer">
+                <label class="flex cursor-pointer">
                     <input @if($setting->data) checked="" @endif wire:change="update('{{ $setting->id }}', $el.checked)" name="{{ $key }}" type="checkbox" class="sr-only peer">
                     <div class="relative w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                   </label>
                 @endif
                      
-            </td>
+            </td> --}}
               <td class="p-3">
                   <span
                       class="px-2.5 py-2 inline-flex font-semibold rounded-lg text-xs whitespace-nowrap  bg-green-100 text-green-800">
@@ -88,15 +88,14 @@
             <div x-data="{openType: @entangle('type')}">
                 @switch($type)
                 @case('image')
-                
-                @if (!empty($valuedata))
+       
+                @if (!empty($this->valuedata))
                 @php
-                $file = Secondnetwork\Kompass\Models\File::find($valuedata);
+                $file = Secondnetwork\Kompass\Models\File::find($this->valuedata);
                 @endphp
 
                     @if ($file)
-                        @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
-                        $file->extension))
+ 
                         <div class="relative">
 
                             <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
@@ -115,7 +114,7 @@
                             </action-button>
 
                         </div>
-                        @endif
+                    
                     @endif
                 @else
                 <span wire:click="selectItem({{ $setting->id }}, 'addMedia')">
@@ -149,7 +148,7 @@
                 @case('switch')
 
                 <div class="flex items-center">
-                    <input @if($valuedata) checked="" @endif wire:change="update('{{ $getId }}', $el.checked)" type="checkbox" id="hs-small-switch"
+                    <input @if($this->valuedata) checked="" @endif wire:change="update('{{ $getId }}', $el.checked)" type="checkbox" id="hs-small-switch"
                         class="relative shrink-0 w-11 h-6 bg-gray-400 checked:bg-none checked:bg-blue-600 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent focus:border-blue-600 focus:ring-blue-600 ring-offset-white focus:outline-none appearance-none 
            
                            before:inline-block before:w-5 before:h-5 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 ">

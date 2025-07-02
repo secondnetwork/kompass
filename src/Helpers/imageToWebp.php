@@ -20,7 +20,9 @@ function imageToWebp(string $imagePath = '', ?int $width = null, ?int $height = 
         return null;
     }
 
-    $image = Image::read(file_get_contents(config('app.url').$imagePath));
+    //$image = Image::read(file_get_contents(config('app.url').$imagePath));
+
+    $image = Image::read($storage->get($diskPathImages));
     $imageMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
     if (! in_array($image->exif('FILE.MimeType'), $imageMimeTypes)) {
