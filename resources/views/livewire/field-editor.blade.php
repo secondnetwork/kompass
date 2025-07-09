@@ -1,4 +1,5 @@
 <div class="col-span-1 md:col-span-{{ $grid ?? '1' }} ">
+
 <div class="border border-gray-300 rounded-md shadow-sm">
   {{-- Handle muss hier sein und im Parent Div wire:sortable.item --}}
   <div class="flex justify-between items-center bg-slate-200 rounded-t-md p-2 border-b border-gray-300">
@@ -6,9 +7,10 @@
         <x-tabler-grip-horizontal class="stroke-current text-gray-600" />
     </div>
 
-    <span class="cursor-pointer">
-        <x-tabler-trash class="stroke-current text-red-500 hover:text-red-700" />
-    </span>
+              <span wire:click="selectItem({{ $field->id }}, 'delete')"
+                                                class="flex justify-center">
+                                                <x-tabler-trash class="cursor-pointer stroke-red-500" />
+                                            </span>
 </div>
 
   <div class="p-4 flex flex-col gap-4 bg-white rounded-b-md">
@@ -49,4 +51,8 @@
       
   </div>
 </div>
+
+<x-kompass::modal data="FormDelete" />  
+
 </div>
+
