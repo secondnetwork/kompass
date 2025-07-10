@@ -171,8 +171,10 @@
 
           @case('download')
               <div class="@container">
-                  <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6">
-    
+                  <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6"
+                  wire:sortable="updateOrderImages" 
+                  wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }">
+
                       @foreach ($itemblocks->datafield as $key => $itemfields)
              
                       <x-kompass::block.download :itemfield="$itemfields" />

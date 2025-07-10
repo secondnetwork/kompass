@@ -4,7 +4,6 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Kolossal\Multiplex\Meta;
@@ -36,9 +35,15 @@ class PagesData extends Component
     #[Locked]
     public $getId;
 
-    public $page;
+    public Page $page;
 
     public $title;
+
+    public $status;
+
+    public $description;
+
+    public $layout;
 
     public $blocks = [];
 
@@ -76,69 +81,75 @@ class PagesData extends Component
 
     public $oembedUrl;
 
-    public $data;
+    public $data = [];
 
-    public $selected = [];
+    public array $selected = [];
 
     public $setting;
 
     public $cssClassname;
 
-    protected $listeners = ['component:refresh' => '$refresh'];
+    protected $listeners = ['reload-pages-data' => 'reloadMount', 'component:refresh' => '$refresh'];
 
     protected $rules = [
 
-        'page.title' => 'required|string|min:3',
-        'page.meta_description' => '',
-        'page.slug' => '',
-        'page.layout' => '',
-        'page.status' => '',
-        // 'page.password' => '',
-        // 'page.begin_at' => '',
-        // 'page.end_at' => '',
-        // 'blocks.*.id' => '',
-        // 'blocks.*.name' => '',
-        // 'datafield.*.id' => '',
-        // 'datafield.*.data' => '',
-        // 'fields.*.id' => '',
-        // 'fields.*.data' => '',
+        'title' => 'required|string|min:3',
+        'page.meta_description' => 'nullable|string',
+        'page.slug' => 'nullable|string',
+        'page.layout' => 'nullable|string',
+        'page.status' => 'nullable|string',
 
     ];
 
     public function mount($id)
     {
-        $this->page = Page::findOrFail($id);
-
-        $this->blocks = Block::where('blockable_type', 'page')
-            ->where('blockable_id', $id)->with('children')
+        $this->page = Page::with(['blocks.children'])->findOrFail($id); // Eager load related data
+        $this->blocks = $this->page->blocks
+            ->where('blockable_type', 'page')
             ->where('subgroup', null)
-            ->orderBy('order', 'asc')
+            ->sortBy('order');
+        $this->title = $this->page->title;
+        $this->description = $this->page->meta_description;
+        $this->layout = $this->page->layout;
+        $this->status = $this->page->status;
+
+        $this->cssClassname = Meta::published()
+            ->where('key', 'css-classname')
             ->get();
 
-        $metadata = Meta::published()->where('key', 'css-classname')->get();
-        $this->cssClassname = $metadata->unique('value');
+        $this->blocktemplates = Blocktemplates::orderBy('order')->get();
+    }
 
-        $this->blocktemplates = Blocktemplates::orderBy('order', 'asc')->get()->all();
+    public function reloadMount()
+    {
+        $this->mount($this->page->id);
+        $this->resetPageComponent();
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
         $this->getId = $itemId;
+        match ($action) {
+            'addBlock' => $this->setAddBlock($blockgroupId),
+            'addMedia' => $this->setAddMedia($fieldOrPageName, $blockgroupId),
+            'deleteblock' => $this->FormDelete = true,
+            default => null,
+        };
+    }
 
-        if ($action == 'addBlock') {
-            $this->blockgroupId = $blockgroupId;
-            $this->FormBlocks = true;
-        }
-        if ($action == 'update') {
-        }
-        if ($action == 'addMedia') {
-            $this->FormMedia = true;
-            $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
-            $this->dispatch('getIdBlock', $blockgroupId);
-        }
-        if ($action == 'deleteblock') {
-            $this->FormDelete = true;
-        }
+    private function setAddBlock($blockgroupId): void
+    {
+        $this->FormBlocks = true;
+        $this->blockgroupId = $blockgroupId;
+
+
+    }
+
+    private function setAddMedia($fieldOrPageName, $blockgroupId): void
+    {
+        $this->FormMedia = true;
+        $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
+        $this->dispatch('getIdBlock', $blockgroupId);
     }
 
     #[on('FormMedia')]
@@ -153,10 +164,16 @@ class PagesData extends Component
             'block_id' => $blockId,
             'type' => 'oembed',
             'data' => $this->oembedUrl,
-            'order' => '1',
+            'order' => 1,
         ]);
 
-        $videoEmbed = videoEmbed($this->oembedUrl);
+        $this->handleVideoEmbed($this->oembedUrl);
+        $this->resetPageComponent();
+    }
+
+    private function handleVideoEmbed(string $url): void
+    {
+        $videoEmbed = videoEmbed($url);
         if ($videoEmbed['type'] == 'youtube') {
             $thumbnailName = $videoEmbed['id'].'.jpg';
             $thumbnailUrl = 'https://i.ytimg.com/vi/'.$videoEmbed['id'].'/maxresdefault.jpg';
@@ -164,7 +181,7 @@ class PagesData extends Component
             if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
-                    $manager = new ImageManager(new Driver());
+                    $manager = new ImageManager(new Driver);
                     $image = $manager->read($thumbnailContents);
 
                     Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, $image->toJpeg(60));
@@ -172,14 +189,15 @@ class PagesData extends Component
 
             }
         }
-
-        $this->resetPageComponent();
     }
 
     public function addBlock($blocktemplatesID, $name, $type, $iconclass = null)
     {
 
-        $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
+        $tempBlock = null;
+        if (!empty($blocktemplatesID)) {
+            $tempBlock = Blocktemplates::find($blocktemplatesID);
+        }
 
         $block = $this->page->blocks()->create([
             'name' => $name,
@@ -191,76 +209,67 @@ class PagesData extends Component
             'order' => '999',
         ]);
 
-        if ($type == 'wysiwyg') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'type' => 'wysiwyg',
-                'order' => '1',
-            ]);
-        }
-        if ($type == 'anchormenu') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'name' => 'Name Anchormenu',
-                'type' => 'text',
-                'order' => '1',
-            ]);
-        }
+        $this->initializeDataFields($block->id, $type ,$blocktemplatesID);
 
-        if ($type == 'button') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'name' => 'Text',
-                'type' => 'text',
-                'order' => '1',
-            ]);
-            Datafield::create([
-                'block_id' => $block->id,
-                'name' => 'URL',
-                'type' => 'text_url',
-                'order' => '1',
-            ]);
-            Datafield::create([
-                'block_id' => $block->id,
-                'name' => 'iconclass',
-                'type' => 'icon',
-                'order' => '1',
-            ]);
-        }
-
-        // $blockmeta = Block::find($block->id);
-
-        // switch ($type) {
-        //     case 'wysiwyg':
-        //         $blockmeta->saveMeta([
-        //             'layout' => 'popout',
-        //             'alignment' => 'align-left',
-        //         ]);
-        //         break;
-
-        //     default:
-        //         // $blockmeta->saveMeta([
-        //         //     'layout' => 'popout',
-        //         // ]);
-        //         break;
-        // }
-
-        if ($blocktemplatesID != null) {
-            $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
-
-            foreach ($get_blocks as $value) {
-                Datafield::create([
-                    'block_id' => $block->id,
-                    'type' => $value->type,
-                    'name' => $value->name,
-                    'grid' => $value->grid,
-                    'order' => $value->order,
-                ]);
-            }
-        }
         $this->FormBlocks = false;
-
         $this->resetPageComponent();
+    }
+
+    public function addCustomBlock($name, $type, $iconclass = null)
+{
+
+    $block = $this->page->blocks()->create([
+        'name' => $name,
+        'subgroup' => $this->blockgroupId,
+        'status' => 'published',
+        'grid' => '1', // Default grid
+        'iconclass' => $iconclass,
+        'type' => $type,
+        'order' => '999',
+    ]);
+
+    // Note: You might need to adjust this call if it relies on a blocktemplate ID
+    $this->initializeDataFields($block->id, $type);
+
+    $this->FormBlocks = false;
+    $this->resetPageComponent();
+}
+
+    private function initializeDataFields($blockId, string $type,$blocktemplatesID): void
+    {
+        $fieldDefinitions = match ($type) {
+            'wysiwyg' => [['type' => 'wysiwyg', 'order' => '1']],
+            'anchormenu' => [['name' => 'Name Anchormenu', 'type' => 'text', 'order' => '1']],
+            'button' => [
+                ['name' => 'Text', 'type' => 'text', 'order' => '1'],
+                ['name' => 'URL', 'type' => 'text_url', 'order' => '1'],
+                ['name' => 'iconclass', 'type' => 'icon', 'order' => '1'],
+            ],
+            default => [],
+        };
+
+        if(empty($fieldDefinitions)){
+            $fielddate = Blockfields::where('blocktemplate_id',$blocktemplatesID)->get();
+            
+            $fieldDefinitions = [];
+
+            // Iteriere durch die abgerufenen Felder
+            foreach ($fielddate as $item) {
+                // Füge die Felddefinitionen zum Array hinzu
+                $fieldDefinitions[] = [
+                    'name' => $item->name,
+                    'type' => $item->type,
+                    'order' => $item->order,
+                    'grid' => $item->grid,
+                ];
+            }
+
+        }
+
+        foreach ($fieldDefinitions as $definition) {
+            $definition['block_id'] = $blockId;
+            Datafield::create($definition);
+        }
     }
 
     public function refreshmedia()
@@ -284,20 +293,18 @@ class PagesData extends Component
 
     public function clone($id)
     {
-        $block = block::find($id);
-        $newblock = $block->replicate();
-
-        $newblock->created_at = Carbon::now();
-
-        $newblock->push();
+        $block = Block::findOrFail($id);
+        $newBlock = $block->replicate();
+        $newBlock->created_at = now();
+        $newBlock->save();
 
         $fields = Datafield::where('block_id', $id)->get();
 
-        $fields->each(function ($item, $key) use ($newblock) {
-            $copyitem = $item->replicate();
-            $copyitem->block_id = $newblock->id;
-            $copyitem->save();
-        }, );
+        foreach ($fields as $field) {
+            $newField = $field->replicate();
+            $newField->block_id = $newBlock->id;
+            $newField->save();
+        }
 
         $this->resetPageComponent();
     }
@@ -318,12 +325,17 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function savename($id)
+    public function savename($blockId)
     {
-        if ($this->newName != null) {
-            $block = block::findOrFail($id);
-            $block->update(['name' => $this->newName]);
+        if ($this->newName) {
+            Block::whereId($blockId)->update(['name' => $this->newName]);
         }
+        $this->resetPageComponent();
+    }
+
+    public function updateLayoutGrid($blockId, $grid)
+    {
+        Block::whereId($blockId)->update(['layoutgrid' => $grid]);
         $this->resetPageComponent();
     }
 
@@ -334,80 +346,52 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function classname($id)
+    public function setnewName($value)
     {
-        if ($this->newName != null) {
-            $setblock = Block::find($id);
+        $this->newName = $value;
+    }
 
-            $setblock->deleteMeta('css-classname');
-            if ($this->newName != 0) {
-                $setblock->saveMeta([
-                    'css-classname' => $this->newName,
-                ]);
-            }
-
+    private function updateBlockMeta(int $id, string $metaKey, $metaValue): void
+    {
+        if (! empty($metaValue)) {
+            $block = Block::findOrFail($id); // Use findOrFail to handle missing Blocks
+            $block->deleteMeta($metaKey);
+            $block->saveMeta([$metaKey => $metaValue]);
         }
         $this->resetPageComponent();
+    }
+
+    public function classname($id)
+    {
+        $this->updateBlockMeta($id, 'css-classname', $this->newName);
     }
 
     public function idanchor($id)
     {
-        if ($this->newName != null) {
-            $setblock = Block::find($id);
-            $setblock->deleteMeta('id-anchor');
-            $setblock->saveMeta([
-                'id-anchor' => $this->newName,
-            ]);
-        }
-        $this->resetPageComponent();
+        $this->updateBlockMeta($id, 'id-anchor', $this->newName);
     }
 
-    public function saveset($id, $set, $status)
+    public function saveset(int $id, string $set, $status): void
     {
+        $metaKeyMap = [
+            'layout' => 'layout',
+            'id-anchor' => 'id-anchor',
+            'css-classname' => 'classname',
+            'col-span' => 'col-span',
+            'alignment' => 'alignment',
+            'slider' => 'slider',
+        ];
 
-        $setblock = Block::find($id);
-
-        if ($set == 'layout') {
-            $setblock->deleteMeta('layout');
-            $setblock->saveMeta([
-                'layout' => $status,
-            ]);
-        }
-        if ($set == 'id-anchor') {
-            $setblock->deleteMeta('id-anchor');
-            $setblock->saveMeta([
-                'id-anchor' => $status,
-            ]);
-        }
-        if ($set == 'css-classname') {
-            $setblock->deleteMeta('css-classname');
-            $setblock->saveMeta([
-                'classname' => $status,
-            ]);
-        }
-        if ($set == 'col-span') {
-            $setblock->deleteMeta('col-span');
-            $setblock->saveMeta([
-                'col-span' => $status,
-            ]);
-        }
-        if ($set == 'alignment') {
-            $setblock->deleteMeta('alignment');
-            $setblock->saveMeta([
-                'alignment' => $status,
-            ]);
-        }
-        if ($set == 'slider') {
-            $setblock->deleteMeta('slider');
-            $setblock->saveMeta([
-                'slider' => $status,
-            ]);
+        if (isset($metaKeyMap[$set])) {
+            $metaKey = $metaKeyMap[$set];
+            $this->updateBlockMeta($id, $metaKey, $status);
+        } else {
+            $this->resetPageComponent(); // Or you could handle this as error
         }
 
-        $this->resetPageComponent();
     }
 
-    public function status($id, $status)
+    public function updatestatus($id, $status)
     {
         if ($status == 'draft') {
             Block::where('id', $id)->update(['status' => 'draft']);
@@ -441,78 +425,40 @@ class PagesData extends Component
         $this->setting = Setting::query()->where('group', 'classname')->orderBy('order', 'asc')->get();
     }
 
-    public function update($id, $publisheded = null)
+    // public function updating($property, $value)
+    // {
+    //     dump($property);
+    //     dump($value);
+    //     dump($this->getId);
+    // }
+
+    public function update($pageId, $publishIfNeeded = false)
     {
+        $this->validate();
+        $this->handlePageUpdate($pageId, $publishIfNeeded);
+        $this->resetPageComponent();
+    }
 
-        $page = Page::findOrFail($id);
-
+    private function handlePageUpdate($pageId, $publishIfNeeded)
+    {
+        $page = Page::findOrFail($pageId);
         $this->dispatch('saveTheDatafield');
         $this->dispatch('savedatajs');
-
-        $validateData = $this->validate();
-
-        $titlePageDB = Str::slug($page->title, '-', 'de');
-        $slugPageDB = $page->slug;
-        $titlePage = Str::slug($validateData['page']['title'], '-', 'de');
-        $slugPage = $validateData['page']['slug'];
-
-        $placeObj = new Page;
-
-        if ($titlePage != $titlePageDB) {
-            $numericalPrefix = 1;
-            while (1) {
-                $newSlug = $titlePage.'-'.$numericalPrefix++;
-                $newSlug = Str::slug($newSlug, '-', 'de');
-                $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
-                    $slugNameURL = $newSlug; //New Slug
-                    break;
-                }
-            }
-        } else {
-            //Slug do not exists. Just use the selected Slug.
-            $slugNameURL = $titlePage;
-        }
-
-        if ($publisheded == true) {
-            Page::where('id', $id)->update(['status' => 'published']);
-            $this->dispatch('status');
-        }
+        $slugNameURL = genSlug($page->title, $page->slug, Page::class);
 
         $page->update([
-            'title' => $validateData['page']['title'],
-            'meta_description' => $validateData['page']['meta_description'],
-            'layout' => $validateData['page']['layout'],
-            'status' => $validateData['page']['status'],
-            // 'password' => $validateData['page']['password'],
-            // 'begin_at' => $validateData['page']['begin_at'],
-            // 'end_at' => $validateData['page']['end_at'],
-        ]);
-
-        $page->update([
+            'title' => $this->title,
+            'meta_description' => $this->description,
+            'layout' => $this->layout,
+            'status' => $this->status,
             'slug' => $slugNameURL,
             'updated_at' => Carbon::now(),
         ]);
 
-        // if (! empty($validateData['blocks'])) {
-        //     foreach ($validateData['blocks'] as $itemg) {
-        //         Block::whereId($itemg['id'])->update($itemg);
-        //     }
-        // }
-
-        // if (! empty($validateData['fields'])) {
-
-        //     foreach ($validateData['fields'] as $itemg) {
-
-        //         Datafield::whereId($itemg['id'])->update($itemg);
-        //         // foreach($itemg['items'] as $item){
-        //         //     block::whereId($item['value'])->update(['order' => $item['order']]);
-        //         // }
-        //         // dump($itemg);
-        //     }
-        // }
-
-        $this->resetPageComponent();
+        if ($publishIfNeeded) {
+            $page->update(['status' => 'published']);
+            $this->dispatch('status');
+        }
     }
 
     public function removemedia($id)
