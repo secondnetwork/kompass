@@ -9,7 +9,7 @@
         {{ $slot }}
     </div>
 
-    <form method="dialog" class="modal-backdrop">
+    <label method="dialog" class="modal-backdrop" for="modal_{{ $name }}">
         <button>close</button>
-    </form>
+    </label>
 </div>

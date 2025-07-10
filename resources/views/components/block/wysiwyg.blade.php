@@ -1,14 +1,14 @@
-@props(['itemblocks'])
-@foreach ($itemblocks->datafield as $itemfields)
-    <div class="col-span-{{ $itemfields->grid }}" style="order: {{ $itemfields->order }} ">
+{{-- @props(['itemfield']) --}}
+
+    <div class="col-span-{{ $itemfield->grid }}" style="order: {{ $itemfield->order }} ">
         @php
-            $jsfield = json_decode($itemfields->data, true);
-            $gridtables = $itemfields->grid;
+            $jsfield = json_decode($itemfield->data, true);
+            $gridtables = $itemfield->grid;
         @endphp
         @livewire(
             'editorjs',
             [
-                'editorId' => $itemfields->id,
+                'editorId' => $itemfield->id,
                 'value' => $jsfield,
                 'uploadDisk' => 'publish',
                 'downloadDisk' => 'publish',
@@ -16,7 +16,6 @@
                 'style' => '',
                 'placeholder' => __('write something...'),
             ],
-            key($itemfields->id)
+            key($itemfield->id)
         )
     </div>
-@endforeach

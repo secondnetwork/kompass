@@ -117,6 +117,13 @@ $databegleitung = DB::table('contacts')->whereNull('status')->WhereNotNull('begl
 <x-kompass::daisyui.heading type="sub">sdffsdfsdfsdf</x-kompass::daisyui.heading>
 <x-kompass::daisyui.separator variant="neutral" />
 
+<x-kompass::daisyui.modal name="naff">
+  nsh
+
+
+</x-kompass::daisyui.modal>
+
+<label for="modal_naff" class="btn">open modal</label>
 <div class="stats shadow w-full my-16">
   <div class="stat">
     <div class="stat-figure text-primary">
