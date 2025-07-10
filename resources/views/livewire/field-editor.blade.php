@@ -38,7 +38,7 @@
         ['name' => 'Text', 'id' => 'text', 'icon' => 'tabler-letter-case'],
         ['name' => 'WYSIWYG-Editor', 'id' => 'wysiwyg', 'icon' => 'tabler-blockquote'],
         ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'],
-        ['name' => __('Gallery'), 'id' => 'gallery', 'icon' => 'tabler-image-in-picture'],
+        // ['name' => __('Gallery'), 'id' => 'gallery', 'icon' => 'tabler-image-in-picture'],
         ['name' => 'Link', 'id' => 'link', 'icon' => 'tabler-link'],
         ['name' => __('true/false'), 'id' => 'true_false', 'icon' => 'tabler-toggle-left'],
         ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip'],
