@@ -33,6 +33,7 @@
 
   
     @foreach ($itemblocks->datafield as $item)
+      <div class="col-span-1 md:col-span-{{ $item->grid ?? '1' }} ">
       @switch($item['type'])
           @case('video')
               <x-kompass::block.video :itemfield="$item" />
@@ -41,6 +42,13 @@
               <x-kompass::block.download :itemfield="$item" />
           @break
           @case('gallery')
+              {{-- <x-kompass::block.gallery :itemfield="$item" /> --}}
+          @break
+          
+          @case('image')
+              <x-kompass::block.image :itemfield="$item" />
+          @break
+          @case('oembed')
               {{-- <x-kompass::block.gallery :itemfield="$item" /> --}}
           @break 
           @case('wysiwyg')
@@ -56,12 +64,17 @@
               <x-kompass::block.color :itemfield="$item" />
           @break
           @default
-       <livewire:datafield-item :datafield="$item" :key="$item->id" :class="'col-span-'. $item->grid " /> 
-      <x-kompass::block.default :itemblocks="$item" /> 
+       {{-- <livewire:datafield-item :datafield="$item" :key="$item->id" :class="'col-span-'. $item->grid " /> 
+      <x-kompass::block.default :itemblocks="$item" />  --}}
       @endswitch
+      </div>
     @endforeach 
 
   </div>
 
-
-{{-- @dump($itemblocks->toArray()) --}}
+            {{-- @foreach ($fields as $field)
+            <div wire:sortable.item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">
+                 @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-'.$field->id))
+            </div>
+        @endforeach --}}
+@dump($itemblocks->toArray())
