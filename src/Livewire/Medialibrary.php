@@ -132,7 +132,7 @@ class Medialibrary extends Component
 
         if ($action == 'addItem') {
             // PagesData::FormEdit = false;
-            dump($this->fieldId);
+            // dump($this->fieldId);
             // dd(PagesData::getName());
             // $this->belongsTo('App\PagesData');
         }

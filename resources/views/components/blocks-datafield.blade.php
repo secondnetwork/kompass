@@ -77,4 +77,4 @@
                  @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-'.$field->id))
             </div>
         @endforeach --}}
-@dump($itemblocks->toArray())
+{{-- @dump($itemblocks->toArray()) --}}
