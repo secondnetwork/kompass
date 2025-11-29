@@ -113,7 +113,6 @@ class KompassCommand extends Command implements PromptsForMissingInput
             $this->installAssets($packagemanager);
             $this->publishAssets();
 
-            $this->call('volt:install');
         }
 
         warning('Warning: Have you made a backup of you database?');

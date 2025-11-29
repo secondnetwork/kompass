@@ -211,7 +211,7 @@ class Medialibrary extends Component
                 'name' => $this->foldername,
                 'type' => 'folder',
                 'path' => $new_folder,
-                'user_id' => Auth::id(),
+                // 'user_id' => Auth::id(),
             ]);
             $this->dispatch('$refresh');
         } else {
@@ -255,7 +255,7 @@ class Medialibrary extends Component
                     'type' => $type,
                     'alt' => $filename,
                     'description' => '',
-                    'user_id' => Auth::id(),
+                    // 'user_id' => Auth::id(),
                 ]);
             }
 

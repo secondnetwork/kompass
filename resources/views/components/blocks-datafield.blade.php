@@ -12,10 +12,10 @@
   </div>
   <div class="grid grid-cols-{{ $itemblocks->grid }} gap-6">
     @switch($itemblocks->type)
-      {{-- @case('video')
+     @case('video')
         <x-kompass::block.video :itemblocks="$itemblocks" />
       @break
-      @case('download')
+       {{--  @case('download')
         <x-kompass::block.download :itemblocks="$itemblocks" />
         @break --}}
       @case('gallery')
@@ -49,7 +49,7 @@
               <x-kompass::block.image :itemfield="$item" />
           @break
           @case('oembed')
-              {{-- <x-kompass::block.gallery :itemfield="$item" /> --}}
+              <x-kompass::block.gallery :itemfield="$item" />
           @break 
           @case('wysiwyg')
               <x-kompass::block.wysiwyg :itemfield="$item" />

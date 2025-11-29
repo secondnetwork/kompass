@@ -135,9 +135,9 @@ return [
         'confirm-password' => Livewire\Auth\ConfirmPassword::class,
         'verify-email' => Livewire\Auth\VerifyEmail::class,
 
-        'menu' => Livewire\Frontend\Menu::class,
-        'pageview' => Livewire\Frontend\Pageview::class,
-        'blogview' => Livewire\Frontend\Blogview::class,
+        // 'menu' => Livewire\Frontend\Menu::class,
+        // 'pageview' => Livewire\Frontend\Pageview::class,
+        // 'blogview' => Livewire\Frontend\Blogview::class,
 
         'field-editor' => Livewire\FieldEditor::class,
         'adminmenu' => Livewire\Menu::class,
