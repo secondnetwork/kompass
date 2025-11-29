@@ -1,13 +1,12 @@
 <?php
 
-namespace Secondnetwork\Kompass\Livewire;
-
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
+
 use Secondnetwork\Kompass\Models\Menu as Menus;
 use Secondnetwork\Kompass\Models\Menuitem;
 
-class Menu extends Component
+new class extends Component
 {
     public $name;
 
@@ -27,12 +26,10 @@ class Menu extends Component
                 return Menuitem::where('menu_id', $this->menu['id'])->orderBy('order')->where('subgroup', null)->with('children')->get();
             });
         }
-
-        return '';
     }
 
-    public function render()
-    {
-        return view('kompass::components.menus.adminmenu', [$this->menuitem])->layout('layouts.app');
-    }
-}
+    // public function render()
+    // {
+    //     return view('livewire.menu', [$this->menuitem])->layout('layouts.main');
+    // }
+};

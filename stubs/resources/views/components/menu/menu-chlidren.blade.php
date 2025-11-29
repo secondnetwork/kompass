@@ -11,7 +11,7 @@
             x-transition:leave-end="opacity-0">
     @endif
 
-        <x-menus.menu :item="$childitem" class="itemblock shadow border-r-4  border-b-2 border-purple-500"/>
+        <x-menu.menu :item="$childitem" class="itemblock shadow border-r-4  border-b-2 border-purple-500"/>
 
     @if ($loop->last)
     </ul>

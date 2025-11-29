@@ -72,7 +72,7 @@
           <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
           <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo-video class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
-          <livewire:adminmenu name="admin-sidebar-top" />
+          <livewire:menu name="admin-sidebar-top" />
          
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('Theme') }}</div>
 

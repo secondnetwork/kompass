@@ -78,9 +78,20 @@ class KompassServiceProvider extends ServiceProvider
             return;
         }
 
-        foreach (config('kompass.livewire', []) as $alias => $component) {
-            Livewire::component($alias, $component);
-        }
+
+        Livewire::addLocation(
+            classNamespace: 'Secondnetwork\\Kompass\\Livewire'
+        );
+        Livewire::addLocation(
+            viewPath: resource_path('views/components')
+        );
+
+        // Livewire::addLocation(
+        //     classNamespace: 'Secondnetwork\\Kompass'
+        // );
+        // Livewire::addLocation(
+        //     viewPath: resource_path('views/components')
+        // );
     }
 
     public function register(): void

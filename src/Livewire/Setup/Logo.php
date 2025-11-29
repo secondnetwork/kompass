@@ -30,7 +30,7 @@ class Logo extends Component
         $this->logo_type = optional($globalSettings->get($this->dbKeyLogoType))->data ?? 'text';
         $this->logo_image_src = optional($globalSettings->get($this->dbKeyLogoImageSrc))->data ?? '';
         $this->logo_svg_string = optional($globalSettings->get($this->dbKeyLogoSvgString))->data ?? '';
-        $this->logo_height = optional($globalSettings->get($this->dbKeyLogoHeight))->data ?? '32';
+        $this->logo_height = optional($globalSettings->get($this->dbKeyLogoHeight))->data ?? '8';
     }
 
     public function updateSvg($value)

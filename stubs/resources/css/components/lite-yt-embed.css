@@ -6,7 +6,6 @@ lite-youtube {
   background-position: center center;
   background-size: cover;
   cursor: pointer;
-  max-width: 720px;
 }
 
 
@@ -73,11 +72,13 @@ lite-youtube > .lty-playbtn::after {
   background-color: currentColor;
   transform: scale(1.1);
 }
-lite-youtube:hover > .lty-playbtn::before,lite-youtube .lty-playbtn:focus
+lite-youtube:hover > .lty-playbtn::before
 {
   @apply bg-slate-700 scale-110;
 }
-
+lite-youtube .lty-playbtn:focus{
+  @apply bg-slate-700;
+}
 
 /* Post-click styles */
 lite-youtube.lyt-activated {

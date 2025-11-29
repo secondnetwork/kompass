@@ -203,8 +203,8 @@
 
                 </div>
                 <div x-show="asidenav === 'redirection'" x-cloak>
-                    <livewire:redirect lazy />
-                    <livewire:brokenlink lazy />
+                    {{-- <livewire:redirect lazy />
+                    <livewire:brokenlink lazy /> --}}
                 </div>
  
                 <div x-show="asidenav === 'backup'" x-cloak>

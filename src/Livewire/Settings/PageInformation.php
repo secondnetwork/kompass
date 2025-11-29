@@ -29,9 +29,9 @@ class PageInformation extends Component
     {
         $globalSettings = Setting::global()->get()->keyBy('key');
 
-        $this->webtitle = optional($globalSettings->get('webtitle'))->data ?? '';
-        $this->supline = optional($globalSettings->get('supline'))->data ?? '';
-        $this->description = optional($globalSettings->get('description'))->data ?? '';
+        $this->webtitle = optional($globalSettings->get('webtitle'))->data ?? 'Webseite';
+        $this->supline = optional($globalSettings->get('supline'))->data ?? 'Textline';
+        $this->description = optional($globalSettings->get('description'))->data ?? 'Description';
         $this->footer_textarea = optional($globalSettings->get('footer_textarea'))->data ?? '';
         $this->email_address = optional($globalSettings->get('email_address'))->data ?? '';
         $this->phone = optional($globalSettings->get('phone'))->data ?? '';

@@ -20,6 +20,12 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 @import "tailwindcss";
 @source "../views";
+@source "../views/";
+@source "../../app/";
+@source '../**/*.blade.php';
+
+@source inline("{,md:,lg:,xl:}grid-cols-{1..6}");
+@source inline("{,md:,lg:,xl:}grid-span-{1..6}");
 
 @import "./base/base.css";
 @import "./base/fonts.css";

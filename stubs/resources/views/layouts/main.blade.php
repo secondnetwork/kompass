@@ -51,7 +51,9 @@
             </div>
             <div class="flex gap-4">
                 <div  class="animate-fade">
-                    <livewire:menu name="main">
+
+
+          <livewire:menu name="main" />
                 </div>
 
                 <div class="pt-3 md:pt-0">
@@ -106,7 +108,7 @@
 
             </div>
 
-        <nav><livewire:menu name="footer" ></nav>
+        <nav><livewire:menu name="footer" /></nav>
 
         </div>
     </footer>
