@@ -1,6 +1,14 @@
 <?php
 
 use Livewire\Component;
+use Illuminate\Support\Arr;
+use Secondnetwork\Kompass\Models\Post;
+use Illuminate\Support\Facades\Request;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\ErrorLog;
+use Secondnetwork\Kompass\Models\Redirect;
+use Secondnetwork\Kompass\Models\Datafield;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 new class extends Component
 {
@@ -21,7 +29,7 @@ new class extends Component
     public function mount(Request $request, $slug = null)
     {
         try {
-        $this->post = $this->ResolvePath($slug);
+        $this->ResolvePath($slug);
         if ($this->post instanceof Redirect) {
             return redirect($this->post->to_url, $this->post->status_code);
         }
@@ -46,39 +54,24 @@ new class extends Component
 
     public function ResolvePath($slug)
     {
-
         $user = auth()->user();
 
-   
-        if ($user->hasRole('admin')) {
-            $this->post = Post::where('slug', $slug)->first();
-        }
-        if ($user->hasRole('manager')) {
-            $this->post = Post::where('slug', $slug)->first();
-        }
-        if ($user->hasRole('editor')) {
-            $this->post = Post::where('slug', $slug)->first();
-        }
-        if ($user->hasRole('author')) {
-            $this->post = Post::where('slug', $slug)->first();
-        }
-        if ($user->hasRole('contributor')) {
-            $this->post = Post::where('slug', $slug)->first();
-        }
-        if ($user->hasRole('subscriber')) {
-            $this->post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
-        }
-        if ($user->hasRole('writer')) {
-            $this->post = Post::where('slug', $slug)->first();
-        }
-        else{
-            $this->post = Post::where('slug', $slug)->whereNot('status', 'draft')->first();
-        }
-        
+        $privilegedRoles = ['admin', 'manager', 'editor', 'author', 'writer'];
+        $canSeeDrafts = $user && $user->hasAnyRole($privilegedRoles);
 
+        $query = Post::where('slug', $slug);
+
+        if (!$canSeeDrafts) {
+            $query->whereNot('status', 'draft');
+        }
+
+        $this->post = $query->first();
+
+        // Redirect Prüfung
         if (! $this->post) {
             $this->post = Redirect::where('old_url', '/'.$slug)->first();
         }
+
         if (! $this->post) {
             throw new NotFoundHttpException('Post not found - '.$slug);
         }
@@ -168,10 +161,10 @@ new class extends Component
         ]);
     }
 
-    public function render()
-    {
-        return view('livewire.pages.blog.single', [
-            // 'SEOData' => $this->getDynamicSEOData()
-        ])->layout('layouts.main');
-    }
+    // public function render()
+    // {
+    //     return view('livewire.pages.blog.single', [
+    //         // 'SEOData' => $this->getDynamicSEOData()
+    //     ])->layout('layouts.main');
+    // }
 };

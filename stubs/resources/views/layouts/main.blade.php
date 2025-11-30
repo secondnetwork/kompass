@@ -43,7 +43,7 @@
             <div>
                 {{-- Logo Component properties using setting() --}}
                 <x-kompass::elements.logo
-                    :height="setting('global.logo_height', '32')" {{-- Default height if not set --}}
+                    :height="setting('global.logo_height', '2')" {{-- Default height if not set --}}
                     :isImage="(setting('global.logo_type', 'text') == 'image')" {{-- Default type 'text' if not set --}}
                     :imageSrc="setting('global.logo_image_src', '')" {{-- Default empty string --}}
                     :svgString="setting('global.logo_svg_string', '')" {{-- Default empty string --}}
