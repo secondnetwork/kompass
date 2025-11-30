@@ -17,7 +17,6 @@ new class extends Component
     public function mount($name = null)
     {
         $this->name = $name;
-
         $this->menu = Cache::rememberForever('kompass_menu_'.$name, function () {
             return Menus::where('slug', $this->name)->first();
         });

@@ -43,7 +43,7 @@
             <div>
                 {{-- Logo Component properties using setting() --}}
                 <x-kompass::elements.logo
-                    :height="setting('global.logo_height', '2')" {{-- Default height if not set --}}
+                    :height="setting('global.logo_height', '32')" {{-- Default height if not set --}}
                     :isImage="(setting('global.logo_type', 'text') == 'image')" {{-- Default type 'text' if not set --}}
                     :imageSrc="setting('global.logo_image_src', '')" {{-- Default empty string --}}
                     :svgString="setting('global.logo_svg_string', '')" {{-- Default empty string --}}
@@ -53,7 +53,7 @@
                 <div  class="animate-fade">
 
 
-          <livewire:menu name="main" />
+          <livewire:menus name="main" />
                 </div>
 
                 <div class="pt-3 md:pt-0">
@@ -108,7 +108,7 @@
 
             </div>
 
-        <nav><livewire:menu name="footer" /></nav>
+        <nav><livewire:menus name="footer" /></nav>
 
         </div>
     </footer>
