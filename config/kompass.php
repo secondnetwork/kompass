@@ -85,6 +85,18 @@ return [
 
     'driver' => \Intervention\Image\Drivers\Gd\Driver::class,
 
+
+    // Qualitätseinstellungen
+    'quality' => [
+        'avif' => 50,
+        'webp' => 80,
+        'jpeg' => 85,
+    ],
+
+    // Standardgrößen für Konvertierung, falls nichts übergeben wird
+    'default_width' => 1600,
+    'default_height' => 1600,
+
     /*
     |--------------------------------------------------------------------------
     | Configuration Options
