@@ -3,9 +3,9 @@
 ])
 @dump($item->toArray())
 
-<x-blocks.group :item="$item" />
+{{-- <x-blocks.group :item="$item" /> --}}
 
-@if ($item->subgroup)
+{{-- @if ($item->subgroup)
     <x-blocks.longtext :item="$item"
         class="max-w-none grid col-span-{{ $item->layoutgrid }} {{ $item->getMeta('layout') ?? '' }} {{ $item->getMeta('alignment') }} " />
     <x-blocks.gallery :item="$item"
@@ -17,14 +17,14 @@
         class="max-w-none {{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }} " />
     <x-blocks.gallery :item="$item"
         class="{{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }} " />
-@endif
+@endif --}}
 
-<x-blocks.accordiongroup :item="$item" />
+{{-- <x-blocks.accordiongroup :item="$item" />
 
 <x-blocks.oembed :item="$item"
     class="col-span-{{ $item->layoutgrid }} {{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }}" />
 
-<x-blocks.download :item="$item" />
+<x-blocks.download :item="$item" /> --}}
 
 {{-- @switch($item->type)
     @case('group')

@@ -2,7 +2,18 @@
 
 namespace Secondnetwork\Kompass;
 
+use Secondnetwork\Kompass\Features;
+
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Global Settings
+    |--------------------------------------------------------------------------
+    |
+    | Basic configuration for Kompass sets and available locales.
+    |
+    */
 
     'sets' => [
         'default' => [
@@ -19,7 +30,7 @@ return [
     | Storage Config
     |--------------------------------------------------------------------------
     |
-    | Here you can specify attributes related to your application file system
+    | Here you can specify attributes related to your application file system.
     |
     */
 
@@ -28,15 +39,14 @@ return [
     ],
 
     /*
-     |--------------------------------------------------------------------------
-     | Kompass Route Middleware
-     |--------------------------------------------------------------------------
-     |
-     | Here you may specify which middleware Kompass will assign to the routes
-     | that it registers with the application. When necessary, you may modify
-     | these middleware; however, this default value is usually sufficient.
-     |
-     */
+    |--------------------------------------------------------------------------
+    | Kompass Route Middleware
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify which middleware Kompass will assign to the routes
+    | that it registers with the application.
+    |
+    */
 
     'middleware' => ['web'],
 
@@ -46,8 +56,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Some of Kompass's features are optional. You may disable the features
-    | by removing them from this array. You're free to only remove some of
-    | these features or you can even remove all of these if you need to.
+    | by removing them from this array.
     |
     */
 
@@ -61,9 +70,7 @@ return [
     | Date Format
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default date format for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
+    | default date format for your application.
     |
     */
 
@@ -71,13 +78,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Image Processing Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Settings for Intervention Image V3 and the Kompass ImageFactory.
+    |
+    */
+
+    /*
+    |--------------------------------------------------------------------------
     | Image Driver
     |--------------------------------------------------------------------------
     |
-    | Intervention Image supports “GD Library” and “Imagick” to process images
-    | internally. Depending on your PHP setup, you can choose one of them.
+    | Intervention Image supports "GD Library" and "Imagick" to process images.
     |
-    | Included options:
+    | Options:
     |   - \Intervention\Image\Drivers\Gd\Driver::class
     |   - \Intervention\Image\Drivers\Imagick\Driver::class
     |
@@ -85,32 +100,101 @@ return [
 
     'driver' => \Intervention\Image\Drivers\Gd\Driver::class,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Blur Placeholder (LQIP)
+    |--------------------------------------------------------------------------
+    |
+    | If set to true, a tiny, blurred Base64 representation of the image will
+    | be generated and embedded into the HTML. This is displayed while the
+    | high-resolution image is loading (Low Quality Image Placeholder).
+    |
+    */
 
-    // Qualitätseinstellungen
+    'generate_blur_placeholder' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Image Quality
+    |--------------------------------------------------------------------------
+    |
+    | Global default quality settings (0-100) for different file formats.
+    | These values are used if no specific quality is defined in a size preset.
+    |
+    */
+
     'quality' => [
         'avif' => 50,
         'webp' => 80,
         'jpeg' => 85,
     ],
 
-    // Standardgrößen für Konvertierung, falls nichts übergeben wird
-    'default_width' => 1600,
-    'default_height' => 1600,
+    /*
+    |--------------------------------------------------------------------------
+    | Image Presets (Sizes)
+    |--------------------------------------------------------------------------
+    |
+    | Define named presets for your images here. You can reference these keys
+    | (e.g., 'thumbnail', 'landscape') in your Blade directives.
+    |
+    | Methods:
+    | - 'scale': Resizes the image preserving aspect ratio.
+    | - 'cover': Crops the image to fit the dimensions (smart crop).
+    | - 'resize': Stretches the image to fit exactly (ignoring aspect ratio).
+    | - 'scaleDown': Like scale, but prevents upscaling small images.
+    |
+    */
+
+    'sizes' => [
+        'thumbnail' => [
+            'width' => 520, 
+            'height' => 520, 
+            'method' => 'cover', // Crops to square
+            'quality' => 60
+        ],
+        'blog_single' => [
+            'width' => 1200, 
+            'height' => null, // Auto height
+            'method' => 'scale', 
+            'quality' => 80
+        ],
+        'landscape' => [
+            'width' => 1280, 
+            'height' => 720, 
+            'method' => 'cover', // Enforces 16:9 ratio via crop
+            'quality' => 75
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
-    | Configuration Options
+    | Fallback Configuration
     |--------------------------------------------------------------------------
     |
-    | These options control the behavior of Intervention Image.
+    | These settings are used when:
+    | 1. No size key is provided to the helper function.
+    | 2. A size key is provided that does not exist in the 'sizes' array above.
     |
-    | - "autoOrientation" controls whether an imported image should be
-    |    automatically rotated according to any existing Exif data.
+    */
+
+    'fallback' => [
+        'width' => 1600, 
+        'height' => 1600, 
+        'method' => 'scaleDown', // Only shrinks images, never enlarges them
+        'quality' => 85
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Intervention Configuration Options
+    |--------------------------------------------------------------------------
     |
-    | - "decodeAnimation" decides whether a possibly animated image is
-    |    decoded as such or whether the animation is discarded.
+    | These options control the internal behavior of Intervention Image.
     |
-    | - "blendingColor" Defines the default blending color.
+    | - "autoOrientation": Automatically rotate based on Exif data.
+    | - "decodeAnimation": Keep animations (GIF/WebP) or decode first frame only.
+    | - "blendingColor": Default background color for transparent images.
+    |
     */
 
     'options' => [
@@ -121,12 +205,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Profile Photo Disk
+    | Disk Configurations
     |--------------------------------------------------------------------------
     |
-    | This configuration value determines the default disk that will be used
-    | when storing profile photos for your application's users. Typically
-    | this will be the "public" disk but you may adjust this if needed.
+    | Define which storage disks are used for different operations.
     |
     */
 
@@ -137,8 +219,6 @@ return [
 
     // Defines on which disk images, downloaded by pasting an image url into the editor, should be stored.
     'default_img_download_disk' => 'public',
-
-
 
     'prefix' => '',
 ];

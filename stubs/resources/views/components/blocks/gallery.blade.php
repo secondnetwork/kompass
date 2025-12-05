@@ -12,37 +12,12 @@
         @foreach ($item->datafield as $image)
 
                 @php
-
                     $imageId = $image['data'];
-
-                    $file = Cache::rememberForever('kompass_imgId_' . $imageId, function () use ($imageId) {
-                        return Files::where('id',$imageId)->first(); // Use find instead of where()->first() for better performance
-                    });
                 @endphp
+                
+            <x-image :id="$imageId" class="object-cover w-full h-full rounded-lg shadow-md" />
 
-                @if ($file)
 
-                    @php
-                    $dirpath = $file->path ? $file->path . '/' : '';
-                    $imageUrl = Storage::url($dirpath . $file->slug . '.' . $file->extension);
-                    $avifUrl = function_exists('imageToAvif') ? imageToAvif($imageUrl) : null;
-                    $webpUrl = function_exists('imageToWebp') ? imageToWebp($imageUrl) : null;
-                    @endphp
-
-                    <picture>
-                        @if ($avifUrl)
-                        <source type="image/avif" srcset="{{ $avifUrl }}">
-                        @endif
-                        @if ($webpUrl)
-                        <source type="image/webp" srcset="{{ $webpUrl }}">
-                        @endif
-                        <img loading="lazy" src="{{ Storage::url($dirpath . $file->slug . '.' . $file->extension) }}"
-                            alt="{{ $file->alt }}" />
-                        @if ($file->description)
-                            <span class="block mt-4 text-xl font-semibold">{{ $file->description }}</span>
-                        @endif
-                    </picture>
-                @endif
 
         @endforeach
     </div>

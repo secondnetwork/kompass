@@ -2,6 +2,8 @@
 
 use Livewire\Component;
 use Illuminate\Support\Arr;
+use Secondnetwork\Kompass\Models\File;
+use Illuminate\Support\Facades\Cache;
 use Secondnetwork\Kompass\Models\Post;
 use Illuminate\Support\Facades\Request;
 use Secondnetwork\Kompass\Models\Block;
@@ -159,6 +161,15 @@ new class extends Component
             'ip_address' => request()->ip(),
             'status_code' => 404, // Setze den Statuscode auf 404
         ]);
+    }
+
+    public function getPostImage($fileId)
+    {
+        if (!$fileId) return null;
+
+        return Cache::rememberForever('kompass_imgId_' . $fileId, function () use ($fileId) {
+            return File::find($fileId);
+        });
     }
 
     // public function render()

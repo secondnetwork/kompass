@@ -69,9 +69,15 @@ class KompassServiceProvider extends ServiceProvider
             foreach (get_class_methods(BladeDirectives::class) as $method) {
                 Blade::directive($method, [BladeDirectives::class, $method]);
             }
-                Blade::directive('getImage', function ($expression) {
-                    return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::render({$expression}); ?>";
-                });
+  
+            Blade::directive('getImageID', function ($expression) {
+                return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageID({$expression}); ?>";
+            });
+
+        
+            Blade::directive('getImageUrl', function ($expression) {
+                return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageUrl({$expression}); ?>";
+            });
         }
     }
 
