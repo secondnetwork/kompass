@@ -83,9 +83,17 @@ class KompassCommand extends Command implements PromptsForMissingInput
             $this->call('migrate');
         }
 
-        // 5. Globale Seiteneinstellungen abfragen (NEU)
-        $this->configureGlobalSettings();
+        $addGlobalSettings = select(
+            label: 'Update global settings for the Website?',
+            options: [true => 'Yes', false => 'No'],
+            default: true
+        );
 
+        if ($addGlobalSettings) {
+           // 5. Globale Seiteneinstellungen abfragen (NEU)
+            $this->configureGlobalSettings();
+        }
+        
         // 6. Admin User erstellen
         $addNewUser = select(
             label: 'Create new Admin User?',
@@ -229,16 +237,14 @@ class KompassCommand extends Command implements PromptsForMissingInput
             return [
                 '@lehoczky/postcss-fluid' => '^1.0.3',
                 '@tailwindcss/forms' => '^0.5.10',
-                '@tailwindcss/postcss' => '^4.1.17',
+                '@tailwindcss/postcss' => '^4.1.18',
                 '@tailwindcss/typography' => '^0.5.19',
-                '@tailwindcss/vite' => '^4.1.17',
-                'autoprefixer' => '^10.4.22',
-                'axios' => '^1.13.2',
-                'concurrently' => '^9.2.1',
-                'laravel-vite-plugin' => '^1.3.0',
+                '@tailwindcss/vite' => '^4.1.18',
+                'autoprefixer' => '^10.4.23',
+                'laravel-vite-plugin' => '^2.0.1',
                 'postcss' => '^8.5.6',
-                'tailwindcss' => '^4.1.17',
-                'vite' => '^6.4.1',
+                'tailwindcss' => '^4.1.18',
+                'vite' => '^7.3.0',
             ] + $packages;
         });
 

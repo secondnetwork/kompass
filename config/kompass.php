@@ -148,8 +148,8 @@ return [
     'sizes' => [
         'thumbnail' => [
             'width' => 520, 
-            'height' => 520, 
-            'method' => 'cover', // Crops to square
+            'height' => null, 
+            'method' => 'scale', // Crops to square
             'quality' => 60
         ],
         'blog_single' => [
@@ -178,8 +178,8 @@ return [
     */
 
     'fallback' => [
-        'width' => 1600, 
-        'height' => 1600, 
+        'width' => 2500, 
+        'height' => 2500, 
         'method' => 'scaleDown', // Only shrinks images, never enlarges them
         'quality' => 85
     ],
