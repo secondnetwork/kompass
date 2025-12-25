@@ -79,18 +79,18 @@
 
             <div class="grid grid-cols-4 gap-5 my-4 @if (!empty($search)) hidden @endif">
 
+                <div :class=" dir == 'media' ? 'border-blue-400 bg-blue-200' : 'bg-gray-200'"
+                    class="cursor-pointer p-2 gap-1 border-2 bg-gray-200 rounded flex" @click="dir = 'media'">
+                    <x-tabler-arrow-back-up /> {{ __('Base') }}
+                </div>
+
                 @foreach ($dirgroup as $folder)
-                    @if (empty($folder->path))
-                        <div :class=" dir == '{{ $folder->path }}' ? 'border-blue-400 bg-blue-200' : 'bg-gray-200'"
-                            class="cursor-pointer p-2 gap-1 border-2 bg-gray-200 rounded flex" @click="dir = ''">
-                            <x-tabler-arrow-back-up /> Base
-                        </div>
-                    @else
+                    @if (!empty($folder->path) && $folder->path != 'media')
                         <div :class=" dir == '{{ $folder->path }}' ? 'border-blue-400 bg-blue-200' : 'bg-gray-200'"
                             class="cursor-pointer p-2 gap-1 border-2 bg-gray-200 rounded flex"
                             @click="dir = '{{ $folder->path }}'">
                             <x-tabler-folder class="cursor-pointer stroke-current text-blue-500" />
-                            {{ $folder->path }}
+                            {{ str_starts_with($folder->path, 'media/') ? substr($folder->path, 6) : $folder->path }}
                         </div>
                     @endif
                 @endforeach
@@ -391,9 +391,9 @@
                         <label>{{ __('Move to Folder') }}</label>
                         <div class="flex gap-2">
                             <select wire:model="newFolderLocation" class="form-control input">
-                                <option value="">{{ __('Root') }}</option>
+                                <option value="media">{{ __('Base') }}</option>
                                 @foreach ($dirgroup as $folder)
-                                    @if ($folder->path)
+                                    @if ($folder->path && $folder->path != 'media')
                                         <option value="{{ $folder->path }}">{{ $folder->path }}</option>
                                     @endif
                                 @endforeach

@@ -52,7 +52,7 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
     $filename = pathinfo($diskPathImages, PATHINFO_FILENAME);
     $imageDirPrefix = ($imageDir === '.') ? '' : $imageDir . '/';
 
-    $resizedImagePath = "media/{$imageDirPrefix}{$filename}-{$width}x{$height}.avif";
+    $resizedImagePath = "{$imageDirPrefix}{$filename}-{$width}x{$height}.avif";
     
     // 6. Physischer Check (bevor wir das Bild laden!)
     if ($storage->exists($resizedImagePath)) {

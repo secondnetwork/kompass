@@ -50,7 +50,7 @@ function imageToWebp(string $imageUrl = '', ?int $width = null, ?int $height = n
     $imageDirPrefix = ($imageDir === '.') ? '' : $imageDir . '/';
 
     // KORREKTUR: Ordnerstruktur einbeziehen
-    $resizedImagePath = "media/{$imageDirPrefix}{$filename}-{$width}x{$height}.webp";
+    $resizedImagePath = "{$imageDirPrefix}{$filename}-{$width}x{$height}.webp";
     $urlPrefix = Storage::url(''); // Dynamisch ermitteln (z.B. /storage/)
 
     // 4. Prüfen ob konvertierte Datei physisch existiert

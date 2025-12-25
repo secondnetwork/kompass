@@ -24,7 +24,7 @@ class Medialibrary extends Component
 
     public array $metadata = [];
 
-    public $dir = '';
+    public $dir = 'media';
 
     public $files = [];
 
@@ -234,7 +234,8 @@ class Medialibrary extends Component
 
     public function newFolder()
     {
-        $new_folder = genSlug($this->foldername);
+        $new_slug = genSlug($this->foldername);
+        $new_folder = ($this->dir ? rtrim($this->dir, '/') . '/' : '') . $new_slug;
 
         $success = false;
         $error = '';
