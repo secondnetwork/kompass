@@ -286,10 +286,10 @@ class KompassCommand extends Command implements PromptsForMissingInput
         File::copyDirectory(__DIR__.'/../database/seeders', database_path('seeders'));
         
         if ($fresh) {
-            $this->call('migrate:fresh');
+            $this->call('migrate:fresh --seed');
             $this->info('Database wiped and migrated.');
         } else {
-            $this->call('migrate');
+            $this->call('migrate --seed');
             $this->info('Database migrated.');
         }
     }
@@ -336,18 +336,8 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
     protected function runShellCommands(array $commands): void
     {
-        $process = Process::fromShellCommandline(implode(' && ', $commands), null, null, null, null);
-
-        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
-            try {
-                $process->setTty(true);
-            } catch (\RuntimeException $e) {
-                // TTY not supported, ignore
-            }
-        }
-
-        $process->run(function ($type, $line): void {
-            $this->output->write('    '.$line);
+                Process::forever()->run(implode(' && ', $commands), function (string $type, string $output) {
+            $this->output->write('    '.$output);
         });
     }
 }

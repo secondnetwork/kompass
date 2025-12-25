@@ -321,31 +321,33 @@ class Medialibrary extends Component
     {
         $file = File::findOrFail($this->iditem);
 
-        if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
-            $details = config('kompass.media', '{}');
-            // foreach ($details['thumbnails'] as $thumbnail_data) {
+        // Determine disk (fallback to public if not set)
+        $diskName = $this->filesystem ?: config('kompass.storage.disk', 'public');
+        
+        // Construct path relative to disk root
+        $directory = $file->path ? $file->path . '/' : '';
+        $mainFile = $directory . $file->slug . '.' . $file->extension;
+        
+        $filesToDelete = [
+            $mainFile,
+            $directory . $file->slug . '.avif',
+            $directory . $file->slug . '_thumbnail.avif',
+        ];
 
-            //     dump($thumbnail_data);
-            //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.'.$file->extension);
-            //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif');
-            //     // if (Storage::disk('local')->exists('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif')) {
-            //     //     Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_'.$thumbnail_data['name'].'.avif');
+        // Delete from storage
+        Storage::disk($diskName)->delete($filesToDelete);
 
-            //     // }
-            // }
-            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'_thumbnail.avif');
-            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.avif');
-            Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension);
-            if (Storage::disk('local')->delete('/public/'.$file->path.'/'.$file->slug.'.'.$file->extension)) {
-                File::destroy($this->iditem);
-                $this->FormDelete = false;
-                $this->FormEdit = false;
-            }
-        }
+        // Delete from database
+        $file->delete();
 
-        $this->mount('mediafiles');
-
+        // Reset UI state
+        $this->FormDelete = false;
+        $this->FormEdit = false;
+        
+        // Refresh list
+        $this->mount();
     }
+
 
     private function resultDate()
     {

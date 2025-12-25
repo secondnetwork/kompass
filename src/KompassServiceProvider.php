@@ -214,9 +214,6 @@ class KompassServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
-                __DIR__.'/database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
-                __DIR__.'/database/seeders/RoleSeeder.php' => database_path('seeders/RoleSeeder.php'),
-                __DIR__.'/database/seeders/RoleUserSeeder.php' => database_path('seeders/RoleUserSeeder.php'),
                 __DIR__.'/database/seeders/PageSeeder.php' => database_path('seeders/PageSeeder.php'),
             ], 'DatabaseSeeder');
 
