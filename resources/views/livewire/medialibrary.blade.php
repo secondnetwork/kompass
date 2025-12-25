@@ -388,6 +388,18 @@
                         <input wire:model="description" type="text" class="form-control input" />
                         <label>Url:</label>
                         <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
+                        <label>{{ __('Move to Folder') }}</label>
+                        <div class="flex gap-2">
+                            <select wire:model="newFolderLocation" class="form-control input">
+                                <option value="">{{ __('Root') }}</option>
+                                @foreach ($dirgroup as $folder)
+                                    @if ($folder->path)
+                                        <option value="{{ $folder->path }}">{{ $folder->path }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <button wire:click="moveItem" class="btn btn-primary">{{ __('Move') }}</button>
+                        </div>
 
 
                     </div>

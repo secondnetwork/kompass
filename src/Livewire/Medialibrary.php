@@ -84,6 +84,8 @@ class Medialibrary extends Component
 
     public $orderAsc = true;
 
+    public $newFolderLocation;
+
     /** @var string */
     private $filesystem;
 
@@ -146,6 +148,7 @@ class Medialibrary extends Component
             $this->alt = $model->alt;
             $this->description = $model->description;
             $this->type = $model->type;
+            $this->newFolderLocation = $model->path;
             if ($model->path) {
                 $this->file = 'storage/'.$model->path.'/'.$model->slug.'.'.$model->extension;
             } else {
@@ -191,6 +194,42 @@ class Medialibrary extends Component
                 $storage->delete($filePathname);
             }
         }
+    }
+
+        public function moveItem()
+    {
+        $file = File::findOrFail($this->iditem);
+        
+        if ($file->path === $this->newFolderLocation) {
+            return;
+        }
+
+        $diskName = $this->filesystem ?: config('kompass.storage.disk', 'public');
+        $disk = Storage::disk($diskName);
+
+        $oldPath = $file->path ? $file->path . '/' : '';
+        $newPath = $this->newFolderLocation ? $this->newFolderLocation . '/' : '';
+        
+        $filename = $file->slug . '.' . $file->extension;
+        
+        // Move main file
+        if ($disk->exists($oldPath . $filename)) {
+            $disk->move($oldPath . $filename, $newPath . $filename);
+        }
+        
+        // Move related files (avif, thumbnail)
+        $relatedExtensions = ['.avif', '_thumbnail.avif'];
+        foreach ($relatedExtensions as $ext) {
+             if ($disk->exists($oldPath . $file->slug . $ext)) {
+                 $disk->move($oldPath . $file->slug . $ext, $newPath . $file->slug . $ext);
+             }
+        }
+
+        $file->path = $this->newFolderLocation;
+        $file->save();
+
+        $this->FormEdit = false;
+        $this->dispatch('$refresh');
     }
 
     public function newFolder()
