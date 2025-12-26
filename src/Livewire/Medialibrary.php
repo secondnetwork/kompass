@@ -19,71 +19,38 @@ class Medialibrary extends Component
     use WithPagination;
 
     public $search = '';
-
     protected $queryString = ['search'];
-
     public array $metadata = [];
-
     public $dir = 'media';
-
     public $files = [];
-
     public $mediafiles = [];
-
     public $directories = [];
-
     public $allFiles;
-
     public $foldername;
-
     public $name;
-
     public $fieldOrPage;
-
     public $file;
-
     public $description;
-
     public $uploaded_file;
-
     public $photo;
-
     public $slugname;
-
     public $iditem;
-
     public $extension = '';
-
     public $type;
-
     public $alt;
-
     public $path;
-
     public $field_id;
-
     public $block_id;
-
     public $headers;
-
     public $action;
-
     public $selectedItem;
-
     public $FormDelete = false;
-
     public $FormAdd = false;
-
     public $FormEdit = false;
-
     public $FormFolder = false;
-
     public $perPage = 50;
-
     public $orderBy = 'created_at';
-
     public $orderAsc = true;
-
     public $newFolderLocation;
 
     /** @var string */
@@ -177,25 +144,6 @@ class Medialibrary extends Component
         }
     }
 
-    protected function cleanupOldUploads()
-    {
-        $storage = Storage::disk('local');
-
-        foreach ($storage->allFiles('livewire-tmp') as $filePathname) {
-            // On busy websites, this cleanup code can run in multiple threads causing part of the output
-            // of allFiles() to have already been deleted by another thread.
-            if (! $storage->exists($filePathname)) {
-                continue;
-            }
-
-            // $yesterdaysStamp = now()->subDay(1)->timestamp;
-            $yesterdaysStamp = now()->subSeconds(5)->timestamp;
-            if ($yesterdaysStamp > $storage->lastModified($filePathname)) {
-                $storage->delete($filePathname);
-            }
-        }
-    }
-
         public function moveItem()
     {
         $file = File::findOrFail($this->iditem);
@@ -261,49 +209,50 @@ class Medialibrary extends Component
         $this->FormFolder = false;
     }
 
-    public function _finishUpload($name, $tmpPath, $isMultiple)
-    {
 
-        $this->cleanupOldUploads();
-        $this->filesystem = config('kompass.storage.disk');
+public function updatedFiles()
+{
+    $this->filesystem = config('kompass.storage.disk', 'public');
 
-        $files = collect($tmpPath)->map(function ($i) {
-            return \Livewire\Features\SupportFileUploads\TemporaryUploadedFile::createFromLivewire($i);
-        })->toArray();
+    foreach ($this->files as $filedata) {
+        $filename = pathinfo($filedata->getClientOriginalName(), PATHINFO_FILENAME);
+        $original_ext = $filedata->getClientOriginalExtension();
+        
+        $filesSlug = genSlug($filename);
+        $time = date('Y_m_d'); 
+        $timefilesSlug = $time . '_' . $filesSlug;
+        
+        $fileModel = new File();
+        $type = $fileModel->getType($original_ext);
 
-        $this->dispatch('upload:finished', name: $name, tmpFilenames: collect($files)->map->getFilename()->toArray())->self();
+        $storelink = $filedata->storeAs(
+            $this->dir, 
+            $timefilesSlug . '.' . $original_ext, 
+            $this->filesystem
+        );
 
-        $file = new File;
-
-        foreach ($files as $filedata) {
-            $filename = pathinfo($filedata->getClientOriginalName(), PATHINFO_FILENAME);
-            $filesSlug = genSlug($filename);
-            $original_ext = $filedata->getClientOriginalExtension();
-            $type = $file->getType($original_ext);
-            $time = date('Y_m_B');
-            $details = config('kompass.media', '{}');
-            $timefilesSlug = $time.'_'.$filesSlug;
-
-            $storelink = $filedata->storeAs($this->dir, $time.'_'.$filesSlug.'.'.$original_ext, $this->filesystem);
-
-            if ($storelink) {
-                $file::create([
-                    'path' => $this->dir,
-                    'name' => $filename,
-                    'slug' => $timefilesSlug,
-                    'extension' => $original_ext,
-                    'type' => $type,
-                    'alt' => $filename,
-                    'description' => '',
-                    // 'user_id' => Auth::id(),
-                ]);
-            }
-
+        if ($storelink) {
+            File::create([
+                'path' => $this->dir,
+                'name' => $filename,
+                'slug' => $timefilesSlug,
+                'extension' => $original_ext,
+                'type' => $type,
+                'alt' => $filename,
+                'description' => '',
+            ]);
         }
-        $this->reset('files');
-        $this->mount('mediafiles');
-        $this->dispatch('$refresh');
     }
+
+    // Aufräumen
+    $this->reset('files');
+    
+    // Daten neu laden (oder einfach $refresh dispatchen)
+    $this->mediafiles = File::orderBy('created_at', 'DESC')->get();
+    
+    $this->dispatch('$refresh');
+    session()->flash('message', 'Upload erfolgreich.');
+}
 
     #[on('getIdField_changnd')]
     public function getIdField($id_field, $fieldOrPage)
