@@ -1,92 +1,73 @@
 @props(['itemblocks'])
 
-
 @php
-    $hasPoster = false;
-    $hasVideo = false;
-    $hasOembed = false;
-    foreach ($itemblocks->datafield as $itemfield) {
-        if ($itemfield->type === 'poster') {
-            $hasPoster = true;
-        } elseif ($itemfield->type === 'video') {
-            $hasVideo = true;
-        } elseif ($itemfield->type === 'oembed') {
-            $hasOembed = true;
-        }
-    }
-    $boxValue = !$hasOembed && !$hasVideo;
-    // Determine initial active tab based on $hasOembed and $hasVideo
-    $initialActiveTab = $hasOembed ? 'oembed' : ($hasVideo ? 'upload' : 'oembed');
+    $datafields = $itemblocks->datafield;
+    $oembedField = $datafields->firstWhere('type', 'oembed');
+    $videoField = $datafields->firstWhere('type', 'video');
+    $posterField = $datafields->firstWhere('type', 'poster');
+    
+    $initialActiveTab = $oembedField ? 'oembed' : ($videoField ? 'upload' : 'oembed');
 @endphp
 
+<div x-data="{ activeTab: '{{ $initialActiveTab }}' }">
+    <div class="mb-4 flex gap-2">
+        <button @click="activeTab = 'oembed'" 
+            :class="activeTab === 'oembed' ? 'btn-primary' : 'btn-ghost'" 
+            class="btn btn-sm">oEmbed (YouTube/Vimeo)</button>
+        <button @click="activeTab = 'upload'" 
+            :class="activeTab === 'upload' ? 'btn-primary' : 'btn-ghost'" 
+            class="btn btn-sm">Video Upload</button>
+    </div>
 
-<div>
-    <div x-data="{ activeTab: '{{ $initialActiveTab }}' }">
-        @if ($boxValue)
-            
+    <div x-show="activeTab === 'oembed'" class="space-y-4">
+        @if ($oembedField && $oembedField->data)
+            <x-kompass::video.oembed :url="$oembedField->data" :idField="$oembedField->id" />
+        @else
+            <form wire:submit="addoEmbed({{ $itemblocks->id }})">
+                <x-kompass::input wire:model.blur="oembedUrl" type="text" label="YouTube/Vimeo URL:" placeholder="https://www.youtube.com/watch?v=..." />
+            </form>
         @endif
-        <div class="mb-4">
-            <button @click="activeTab = 'oembed'" :class="{ 'bg-blue-600 text-white': activeTab === 'oembed', 'bg-gray-200 text-gray-700': activeTab !== 'oembed' }" class="px-4 py-2 rounded">oEmbed (YouTube)</button>
-            <button @click="activeTab = 'upload'" :class="{ 'bg-blue-600 text-white': activeTab === 'upload', 'bg-gray-200 text-gray-700': activeTab !== 'upload' }" class="px-4 py-2 rounded ml-2">Video Upload</button>
-        </div>
+    </div>
 
-        <div x-show="activeTab === 'oembed'">
-
-            @forelse ($itemblocks->datafield as  $itemfields  )
-                <livewire:datafield-item :datafield="$itemfields" :key="$itemfields->id" />
-            @empty 
-                <form wire:submit="addoEmbed({{ $itemblocks->id }})">
-                    <x-kompass::input wire:model.blur="oembedUrl" type="text" label="YouTube/Vimeo URL:"  wire:dirty.class="border-yellow" />
-                </form>
-            @endforelse
-
-        </div>
-
-        <div x-show="activeTab === 'upload'">
-    
-            <div class="@container">
-                <div class="grid @sm:grid-cols-1 @lg:grid-cols-3  gap-6">
-
-                     @if ($hasVideo)
-                         @foreach ($itemblocks->datafield as $itemfield)
-                            @if ($itemfield->type === 'video')
-                                 <x-kompass::blocks :key="$loop->index" type="{{ $itemfield->type }}"
-                                      name="{{ $itemfield->name }}" fields="{!! $itemfield->data !!}"
-                                     idField="{{ $itemfield->id }}" blockId="{{ $itemblocks->id }}">
-                                </x-kompass::blocks>
-                            @endif
-                         @endforeach
-                    @else
-                           <div>
-                              <img-block wire:click="selectitem('addMedia',0,'video',{{ $itemblocks->id }})"
-                                  class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-video ">
-                                   <x-tabler-video-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                               </img-block>
-                            </div>
-                     @endif
-
-                     @if ($hasPoster)
-                        @foreach ($itemblocks->datafield as $itemfield)
-                            @if ($itemfield->type === 'poster')
-                                <x-kompass::blocks :key="$loop->index" type="{{ $itemfield->type }}"
-                                    name="{{ $itemfield->name }}" fields="{!! $itemfield->data !!}"
-                                    idField="{{ $itemfield->id }}" blockId="{{ $itemblocks->id }}">
-                                </x-kompass::blocks>
-                            @endif
-                        @endforeach
-                    @else
-                        <div>
-                            <img-block wire:click="selectitem('addMedia',0,'poster',{{ $itemblocks->id }})"
-                                    class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl w-full text-gray-400 aspect-video ">
-                                <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                            </img-block>
-                        </div>
-                    @endif
-
+    <div x-show="activeTab === 'upload'" class="@container">
+        <div class="grid grid-cols-3 gap-6">
+            {{-- Video Upload --}}
+            @if ($videoField && $videoField->data)
+                <x-kompass::video.local 
+                    :video="$videoField->data" 
+                    :poster="$posterField?->data" 
+                    :idField="$videoField->id" 
+                    :blockId="$itemblocks->id"
+                    editable />
+            @else
+                <div wire:click="selectitem('addMedia', 0, 'video', {{ $itemblocks->id }})"
+                    class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-2xl aspect-video text-gray-400 hover:border-primary hover:text-primary transition-colors">
+                    <x-tabler-video-plus class="size-12 stroke-[1.5]" />
+                    <span class="mt-2 text-sm font-medium">Add Video</span>
                 </div>
-            </div>
+            @endif
 
-           
-         </div>
+            {{-- Poster Upload --}}
+            @if ($posterField && $posterField->data)
+                @php $posterFile = Secondnetwork\Kompass\Models\File::find($posterField->data); @endphp
+                @if($posterFile)
+                <div class="relative group">
+                    <img src="{{ asset('storage/' . $posterFile->path . '/' . $posterFile->slug . '.' . $posterFile->extension) }}" 
+                        class="w-full aspect-video object-cover rounded-xl shadow-sm">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-xl">
+                        <div class="flex gap-2">
+                            <button wire:click="removemedia({{ $posterField->id }})" class="btn btn-error btn-xs">Remove Poster</button>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            @else
+                <div wire:click="selectitem('addMedia', 0, 'poster', {{ $itemblocks->id }})"
+                    class="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-2xl aspect-video text-gray-400 hover:border-primary hover:text-primary transition-colors">
+                    <x-tabler-photo-plus class="size-12 stroke-[1.5]" />
+                    <span class="mt-2 text-sm font-medium">Add Poster Image</span>
+                </div>
+            @endif
+        </div>
     </div>
 </div>
