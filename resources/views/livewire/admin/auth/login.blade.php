@@ -29,13 +29,22 @@
       <x-kompass::form.input wire:model="password" name="password" type="password" required autocomplete="current-password" />
   </div>
 
-  <div class="flex justify-end">
+  <div class="flex justify-end gap-4 flex-col">
       <button class="btn btn-primary w-full h-14" type="submit" variant="primary">
           {{ __('Login') }}
       </button>
+
   </div>
 
   @if (setting('global.sso') && setting('global.sso-url'))
+
+        {{-- <x-passkeys::authenticate>
+          <div class="btn btn-outline w-full h-14 border-gray-300 hover:border-blue-500">
+              <x-tabler-fingerprint class="w-6 h-6 mr-2" />
+              {{ __('Sign in with Passkey') }}
+          </div>
+      </x-passkeys::authenticate> --}}
+
   <div class="text-center text-sm text-base-content/70">{{ __('or sign in with') }}</div>
   <div class="flex justify-end">
       <a href="/saml2/{{ setting('global.sso-url') }}/login"
