@@ -17,7 +17,7 @@
                     </div>
                     <p class="text-[10px] opacity-60">{{ $file->created_at->format("d.m.Y") }}</p>
                 </div>
-                <div class="flex gap-1">
+                <div class="absolute top-2 left-2 flex gap-1">
                     <button wire:click="selectField({{ $file->id }})" class="badge badge-primary cursor-pointer  selectField" title="{{ __('Use file') }}">
                         <x-tabler-square-plus class="w-4 h-4 stroke-current" />
                     </button>

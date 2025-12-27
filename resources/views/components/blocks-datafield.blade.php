@@ -36,20 +36,20 @@
       <div class="col-span-1 md:col-span-{{ $item->grid ?? '1' }} ">
       @switch($item['type'])
           @case('video')
-              <x-kompass::block.video :itemfield="$item" />
+              <x-kompass::block.video :itemblocks="$itemblocks" :itemfield="$item" />
           @break
           @case('download')
-              <x-kompass::block.download :itemfield="$item" />
+              <x-kompass::block.download :itemblocks="$itemblocks" :itemfield="$item" />
           @break
           @case('gallery')
-              {{-- <x-kompass::block.gallery :itemfield="$item" /> --}}
+              {{-- <x-kompass::block.gallery :itemblocks="$itemblocks" :itemfield="$item" /> --}}
           @break
           
           @case('image')
               <x-kompass::block.image :itemfield="$item" />
           @break
           @case('oembed')
-              <x-kompass::block.gallery :itemfield="$item" />
+              <x-kompass::block.gallery :itemblocks="$itemblocks" :itemfield="$item" />
           @break 
           @case('wysiwyg')
               <x-kompass::block.wysiwyg :itemfield="$item" />

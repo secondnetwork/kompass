@@ -63,12 +63,12 @@ if (! function_exists('get_field')) {
                 }
                 if (in_array($value->type, ['video'])) {
                     if ($file = Files::find($value->data)) {
-                        return Storage::url($file->path.$file->slug.'.'.$file->extension);
+                        return Storage::url($file->path.'/'.$file->slug.'.'.$file->extension);
                     }
                 }
                 if (in_array($value->type, ['poster'])) {
                     if ($file = Files::find($value->data)) {
-                        return Storage::url($file->path.$file->slug.'.'.$file->extension);
+                        return Storage::url($file->path.'/'.$file->slug.'.'.$file->extension);
                     }
                 }
 

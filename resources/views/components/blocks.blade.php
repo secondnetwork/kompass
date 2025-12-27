@@ -99,7 +99,7 @@
         @endphp
 
         @if ($file)
-            @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+         
             <div class="relative">
 
                 <img on="pages.pages-show" alt="logo" class="w-full aspect-[16/9] object-cover rounded-xl"
@@ -119,7 +119,7 @@
 
        
         </div>
-            @endif
+           
 
         @endif
 
@@ -135,7 +135,8 @@
         @endphp
 
         @if ($file)
-            @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+   
+
             <data-item class="bg-white block shadow rounded">
 
                 <div class="relative text-sm font-bold rounded-tr-lg rounded-tl-lg w-full aspect-[16/9] bg-cover bg-center bg-gray-300 overflow-hidden">
@@ -156,7 +157,7 @@
                 </action-button> 
                 </div>
             </data-item>
-            @endif
+           
 
         @endif
 
@@ -172,7 +173,7 @@
         @endphp
 
         @if ($file)
-            @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' . $file->extension))
+            
                 <div class="relative">
             
                         <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded-xl"
@@ -191,7 +192,7 @@
                         </action-button> 
                 </div>
 
-                @endif
+             
         @endif
 
     @endif
