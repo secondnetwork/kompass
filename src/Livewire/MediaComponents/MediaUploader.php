@@ -6,12 +6,15 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\File;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Reactive;
 
 class MediaUploader extends Component
 {
     use WithFileUploads;
 
     public $files = [];
+
+    #[Reactive]
     public $dir = 'media';
 
     public function updatedFiles()

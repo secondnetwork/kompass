@@ -26,6 +26,14 @@ class MediaItem extends Component
         $this->dispatch('media-select-field', fileId: $fileId);
     }
 
+    public function goToFolder()
+    {
+        if ($this->file->type == 'folder') {
+            $full_path = ($this->file->path ? rtrim($this->file->path, '/') . '/' : '') . $this->file->slug;
+            $this->dispatch('go-to-folder', path: $full_path)->to('Secondnetwork\Kompass\Livewire\Medialibrary');
+        }
+    }
+
     public function render()
     {
         return view('kompass::livewire.medialibrary.media-item');

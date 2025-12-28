@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="mt-8 flex justify-center">
-            {{ $files->links() }}
+            {{ $files->links('kompass::livewire.pagination') }}
         </div>
     @endif
 </div>
