@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 // Optional: Setzt den Seitentitel
-new class extends Component
+new #[Layout('layouts.main')] class extends Component
 {
     public $amount = 6; // Anzahl der anzuzeigenden Posts
 

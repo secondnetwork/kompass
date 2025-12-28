@@ -1,4 +1,4 @@
-main > div, footer,header {
+main > div, main > section, footer,header{
     --gap: clamp(1rem, 6vw, 3rem);
     --full: minmax(var(--gap), 1fr);
     --content: min(65ch, 100% - var(--gap) * 2);

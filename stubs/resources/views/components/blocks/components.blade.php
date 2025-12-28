@@ -1,65 +1,28 @@
 @props([
     'item' => ''
 ])
-@dump($item->toArray())
+{{-- @dump($item->toArray())
 
-{{-- <x-blocks.group :item="$item" /> --}}
+       {{ $item->type }} --}}
+            @php
+                // Der Name der Komponente, z.B. "blocks.hero"
+                $componentName = 'blocks.' . $item->type;
 
-{{-- @if ($item->subgroup)
-    <x-blocks.longtext :item="$item"
-        class="max-w-none grid col-span-{{ $item->layoutgrid }} {{ $item->getMeta('layout') ?? '' }} {{ $item->getMeta('alignment') }} " />
-    <x-blocks.gallery :item="$item"
-        class="{{ $item->getMeta('layout') ?? '' }} grid col-span-{{ $item->grid }} {{ $item->getMeta('alignment') }} " />
-@else
+                // Der Pfad zur View, z.B. "components.blocks.hero"
+                $viewName = 'components.' . $componentName;
+            @endphp
 
-{{  $item->getMeta('layout') }}
-    <x-blocks.longtext :item="$item"
-        class="max-w-none {{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }} " />
-    <x-blocks.gallery :item="$item"
-        class="{{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }} " />
-@endif --}}
-
-{{-- <x-blocks.accordiongroup :item="$item" />
-
-<x-blocks.oembed :item="$item"
-    class="col-span-{{ $item->layoutgrid }} {{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }}" />
-
-<x-blocks.download :item="$item" /> --}}
-
-{{-- @switch($item->type)
-    @case('group')
-            <x-blocks.group :item="$item" />
-        @break
-    @case('wysiwyg')
-            <x-blocks.longtext :item="$item" class="max-w-none @if ($item->subgroup) grid col-span-{{ $item->layoutgrid }} @endif {{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }} " />
-        @break
-    @case('gallery')  
-            <x-blocks.gallery :item="$item" class="{{ $item->getMeta('layout') ?? 'fullpage' }} @if ($item->subgroup) grid col-span-{{ $item->grid }} @endif {{ $item->getMeta('alignment') }} " />
-        @break  
-    @case('accordiongroup')
-            <x-blocks.accordiongroup :item="$item" />
-        @break
-    @case('download')
-            <x-blocks.accordiongroup :item="$item" />
-        @break
-    @case('video')
-         <x-blocks.oembed :item="$item" class="col-span-{{ $item->layoutgrid }} {{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('alignment') }}" />
-        @break
-    @default
-        
-@endswitch --}}
-
-
-{{-- <x-blocks.highlights :item="$item" /> --}}
-{{-- <x-blocks.content-box :item="$item" /> --}}
-{{-- <x-blocks.hero :item="$item" /> --}}
-{{-- <x-blocks.heroboxs :item="$item" /> --}}
-{{-- <x-blocks.button :item="$item" /> --}}
-{{-- <x-blocks.morebox :item="$item" /> --}}
-{{-- <x-blocks.teaser :item="$item" /> --}}
-{{-- <x-blocks.anchormenu :item="$item" /> --}}
-
-{{-- <div class="grid grid-cols-2">
-    <p>1</p>
-    <p>2</p>
-</div> --}}
+            @if (view()->exists($viewName))
+                {{-- Komponente existiert -> Rendern --}}
+                    <x-dynamic-component :component="$componentName" :item="$item" />
+      
+            @elseif (app()->hasDebugModeEnabled())
+                {{-- Komponente fehlt & wir sind im Dev-Modus -> Fehler anzeigen --}}
+                <section class="fullpage border border-dashed border-red-500 bg-red-50 p-4 text-red-600 rounded">
+                    <strong>Entwickler-Info:</strong><br>
+                    Die Komponente <code>&lt;x-{{ $componentName }} /&gt;</code> wurde nicht gefunden.<br>
+                </section>
+            @else
+                {{-- Produktion -> Einfach nichts anzeigen (Fallback) --}}
+                <!-- Block {{ $item->type }} konnte nicht geladen werden -->
+            @endif

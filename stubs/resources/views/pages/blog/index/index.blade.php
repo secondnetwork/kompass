@@ -5,14 +5,13 @@
 <section class="grid-set">
 
     @seo(['title' => 'Blog' . ' | ' . setting('global.webtitle' ?? 'Kompass')])
-    @php
+    {{-- @php
         seo()
             ->description($page->meta_description ?? setting('global.description' ?? ''))
             ->locale(str_replace('_', '-', app()->getLocale()))
             ->twitter()
             ->tag('og:image', asset(setting('global.ogimage_src')))
-            ->twitter();
-    @endphp
+    @endphp --}}
 
     <div class="fullpage">
 
@@ -54,7 +53,7 @@
             <!-- End Card -->
 
 
-                               <x-image url="https://bundb.de/content/uploads/2025/05/BundB_Referenz_Wetzlar_01_titel.png" class="object-cover w-full h-full rounded-lg shadow-md aspect-video" />
+
           
             <!-- Card -->
             <a class="group relative flex flex-col w-full min-h-60 bg-[url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=560&q=80')] bg-center bg-cover rounded-xl hover:shadow-lg focus:outline-hidden focus:shadow-lg transition"
