@@ -1,15 +1,51 @@
 <div>
     <media-grid class="flex flex-col">
-        <livewire:media-components.media-uploader />
 
-        <div class="overflow-x-auto mt-4" x-cloak x-data="{ dir: @entangle("dir") }">
-            <livewire:media-components.media-list />
+        <livewire:media-components.media-uploader :dir="$dir" />
+        <div class="breadcrumbs text-sm flex items-center gap-2 bg-base-200 rounded-lg">
+            @php
+                $segments = explode('/', $dir);
+                $currentPath = '';
+            @endphp
+            @foreach ($segments as $segment)
+                @php
+                    $currentPath = $currentPath ? $currentPath . '/' . $segment : $segment;
+                @endphp
+                @if ($loop->first)
+                    <x-tabler-home class="size-4 opacity-40" />
+                @endif
+                @if (!$loop->first)
+                    <x-tabler-chevron-right class="size-4 opacity-40" /><x-tabler-folder class="size-4 opacity-40" />
+                @endif
+                
+                <button wire:click="goToFolder('{{ $currentPath }}')" class="hover:text-primary transition-colors {{ $loop->last ? 'font-bold' : 'opacity-60' }}">
+                     {{ $segment == 'media' ? __('Home') : $segment }}
+                </button>
+            @endforeach
+
+            
+        </div>
+    {{-- Filter UI --}}
+    <div class="flex items-center gap-2 py-2">
+        <label for="filter-type" class="block text-sm font-medium text-gray-700">Filter by Type:</label>
+        <select id="filter-type" wire:model.live="filter" class="select select-sm">
+            <option value="">All</option>
+            <option value="folder">Folders</option>
+            <option value="image">Images</option>
+            <option value="video">Videos</option>
+            <option value="audio">Audio</option>
+            <option value="document">Documents</option>
+        </select>
+    </div> 
+        <div class="overflow-x-auto" x-cloak x-data="{ dir: @entangle('dir') }">
+            <livewire:media-components.media-list :dir="$dir" :filter="$filter" />
         </div>
     </media-grid>
 
+
     <x-kompass::modal data="FormDelete" />
 
-    <div x-data="{ open: @entangle("FormFolder") }">
+    <div x-data="{ open: @entangle('FormFolder') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="body">
                 <x-kompass::form.input type="text" name="name" wire:model="foldername" />
@@ -19,12 +55,12 @@
         </x-kompass::offcanvas>
     </div>
 
-    <div x-data="{ open: @entangle("FormEdit") }">
+    <div x-data="{ open: @entangle('FormEdit') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="body">
                 <div class="modal-body grid gap-1">
                     @if ($file)
-                        @if ($type == "video")
+                        @if ($type == 'video')
                             <video controls src="{{ asset($file) }}"></video>
                         @else
                             <img class="relative text-sm rounded-lg shadow w-full aspect-[4/3] object-cover bg-cover bg-center bg-gray-300"
@@ -33,8 +69,8 @@
                     @endif
                     <label>Name</label>
                     <input wire:model="name" type="text" class="form-control input" />
-                    @if ($errors->has("name"))
-                        <p style="color: red;">{{ $errors->first("name") }}</p>
+                    @if ($errors->has('name'))
+                        <p style="color: red;">{{ $errors->first('name') }}</p>
                     @endif
 
                     <label>Alt</label>
@@ -44,17 +80,18 @@
                     <input wire:model="description" type="text" class="form-control input" />
                     <label>Url:</label>
                     <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
-                    <label>{{ __("Move to Folder") }}</label>
+                    <label>{{ __('Move to Folder') }}</label>
                     <div class="flex gap-2">
                         <select wire:model="newFolderLocation" class="form-control input">
-                            <option value="media">{{ __("Base") }}</option>
+                            <option value="media">{{ __('Base') }}</option>
                             @foreach ($dirgroup as $folder)
-                                @if ($folder->path && $folder->path != "media")
-                                    <option value="{{ $folder->path }}">{{ $folder->path }}</option>
-                                @endif
+                                @php
+                                    $full_path = ($folder->path ? rtrim($folder->path, '/') . '/' : '') . $folder->slug;
+                                @endphp
+                                <option value="{{ $full_path }}">{{ $full_path }}</option>
                             @endforeach
                         </select>
-                        <button wire:click="moveItem" class="btn btn-primary">{{ __("Move") }}</button>
+                        <button wire:click="moveItem" class="btn btn-primary">{{ __('Move') }}</button>
                     </div>
                 </div>
                 <div class="modal-footer mt-4 flex gap-4">
@@ -66,11 +103,11 @@
                             </svg>
                         </div>
                         <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
-                        {{ __("Save") }}
+                        {{ __('Save') }}
                     </button> 
                     <button
                         wire:click="selectItem({{ $iditem ?? 0 }}, 'delete')"
-                        class="btn btn-error flex justify-center"><x-tabler-trash class="cursor-pointer" />{{ __("Delete") }}</button>
+                        class="btn btn-error flex justify-center"><x-tabler-trash class="cursor-pointer" />{{ __('Delete') }}</button>
                 </div>
             </x-slot>
         </x-kompass::offcanvas>

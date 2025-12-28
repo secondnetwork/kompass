@@ -6,11 +6,11 @@
                 <p class="text-xs opacity-60">{{ __("Upload and manage your media files") }}</p>
             </div>
             <div class="flex gap-2">
-                <button class="btn btn-sm btn-ghost gap-2" @click="$dispatch('add-folder')">
+                <button class="btn  btn-ghost gap-2" @click="$dispatch('add-folder')">
                     <x-tabler-folder-plus class="w-4 h-4" />
                     {{ __("New Folder") }}
                 </button>
-                <label for="file-upload" class="btn btn-sm btn-primary gap-2 shadow-sm">
+                <label for="file-upload" class="btn  btn-primary gap-2 shadow-sm">
                     <x-tabler-upload class="w-4 h-4" x-show="!isUploading" />
                     <span class="loading loading-spinner loading-xs" x-show="isUploading"></span>
                     {{ __("Upload Files") }}
@@ -42,22 +42,50 @@
                         this.uploadFiles(event.target.files)
                     }
                 },
-                uploadFiles(files) {
+                async uploadFiles(files) {
                     this.isUploading = true;
                     this.progress = 0;
-                    @this.uploadMultiple('files', files, 
-                        (success) => { 
-                            this.isUploading = false; 
-                            this.progress = 0;
-                        },
-                        (error) => { 
-                            this.isUploading = false;
-                            console.error(error); 
-                        },
-                        (event) => { 
-                            this.progress = event.detail.progress; 
+                    
+                    const fileArray = Array.from(files);
+                    const batchSize = 10; // Stay under max_file_uploads (20)
+                    const totalFiles = fileArray.length;
+                    let uploadedCount = 0;
+
+                    for (let i = 0; i < fileArray.length; i += batchSize) {
+                        const batch = fileArray.slice(i, i + batchSize);
+                        
+                        try {
+                            await new Promise((resolve, reject) => {
+                                @this.uploadMultiple('files', batch, 
+                                    (success) => { 
+                                        uploadedCount += batch.length;
+                                        const totalProgress = Math.round((uploadedCount / totalFiles) * 100);
+                                        this.progress = Math.min(totalProgress, 100);
+                                        resolve(success);
+                                    },
+                                    (error) => { 
+                                        console.error('Batch upload error:', error);
+                                        this.isUploading = false;
+                                        reject(error);
+                                    },
+                                    (event) => { 
+                                        const batchProgress = event.detail.progress / 100;
+                                        const currentProgress = ((uploadedCount + (batch.length * batchProgress)) / totalFiles) * 100;
+                                        this.progress = Math.round(Math.min(currentProgress, 99));
+                                    },
+                                    { chunkSize: 2 * 1024 * 1024 }
+                                );
+                            });
+                        } catch (e) {
+                            console.error('Uploading batch failed', e);
+                            break;
                         }
-                    );
+                    }
+                    
+                    this.isUploading = false;
+                    this.progress = 0;
+                    // Reset input
+                    document.getElementById('file-upload').value = '';
                 }
             }
         }

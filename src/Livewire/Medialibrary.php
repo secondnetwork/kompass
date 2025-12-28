@@ -5,6 +5,7 @@ namespace Secondnetwork\Kompass\Livewire;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
@@ -12,8 +13,11 @@ use Secondnetwork\Kompass\Models\Setting;
 
 class Medialibrary extends Component
 {
+    use WithPagination;
+
     public $search = '';
-    protected $queryString = ['search', 'dir'];
+    protected $queryString = ['search', 'dir', 'filter']; // Add filter to query string
+    public $filter = ''; // Add filter property
     public $dir = 'media';
     public $foldername;
     public $name;
@@ -44,7 +48,7 @@ class Medialibrary extends Component
     #[On('add-folder')]
     public function handleAddFolder()
     {
-        $this->FormFolder = true;
+         $this->FormFolder = true;
     }
 
     #[On('getIdBlock')]
@@ -70,6 +74,8 @@ class Medialibrary extends Component
     public function goToFolder($path)
     {
         $this->dir = $path;
+        $this->filter = '';
+        $this->search = '';
     }
 
     public function mount()

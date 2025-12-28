@@ -20,6 +20,8 @@ class MediaUploader extends Component
     public function updatedFiles()
     {
         $filesystem = config('kompass.storage.disk', 'public');
+        $driverClass = config('kompass.driver', \Intervention\Image\Drivers\Gd\Driver::class);
+        $manager = new \Intervention\Image\ImageManager(new $driverClass());
 
         foreach ($this->files as $filedata) {
             $filename = pathinfo($filedata->getClientOriginalName(), PATHINFO_FILENAME);
@@ -49,12 +51,43 @@ class MediaUploader extends Component
                     'description' => '',
                 ]);
 
-                if ($type === 'image') {
-                    // Pre-generate common sizes to avoid on-the-fly bottleneck
-                    $url = Storage::disk($filesystem)->url($storelink);
-                    imageToWebp($url, 500);
-                    imageToWebp($url, 1000);
-                }
+                // if ($type === 'image') {
+                //             // Pre-generate common sizes to avoid on-the-fly bottleneck
+                // // 1. Image Manager initialisieren (nutzt konfigurierten Driver aus Kompass)
+
+
+                // try {
+                //     // 2. Bild einlesen
+                //     $image = $manager->read($storelink);
+
+                //     // 2.1 Max Auflösung auf 2500px begrenzen (skaliert nur runter, nie hoch)
+                //     $image->scaleDown(width: 2000, height: 2000);
+
+                //     // 3. Als WebP speichern
+                //     $webpName = $filename . '.webp';
+                //     try {
+                //         $webpEncoded = $image->toWebp(70);
+                //         Storage::disk('public')->put($this->dir . '/' . $webpName, (string) $webpEncoded);
+                //         $finalPath = $this->dir . '/' . $webpName;
+                //     } catch (\Exception $e) {
+                //         // Fallback: Falls WebP nicht geht, Original speichern
+                //         $finalPath = $this->photo->storeAs($this->dir, $filename . '.' . $original_ext, 'public');
+                //     }
+
+                //     // 4. Als AVIF speichern (Optionaler Versuch)
+                //     try {
+                //         $avifName = $filename . '.avif';
+                //         $avifEncoded = $image->toAvif(50);
+                //         Storage::disk('public')->put($this->dir . '/' . $avifName, (string) $avifEncoded);
+                //     } catch (\Exception $e) {
+                //         // AVIF nicht unterstützt? Kein Problem, Browser nimmt WebP
+                //     }
+
+                // } catch (\Exception $e) {
+                //     // Falls das Einlesen des Bildes an sich fehlschlägt
+                //     // session()->flash('error', 'Fehler bei der Bildverarbeitung: ' . $e->getMessage());
+                // }
+                // }
             }
         }
 

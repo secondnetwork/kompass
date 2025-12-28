@@ -15,11 +15,18 @@ class MediaList extends Component
     #[Reactive]
     public $dir = 'media';
 
-    public $search = '';
+    #[Reactive]
+    public $filter = ''; // Add filter property
 
-    protected $queryString = ['search'];
+    public $search = '';
+    protected $queryString = ['search', 'dir', 'filter']; // Add filter to query string
 
     public function updatedDir()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedFilter()
     {
         $this->resetPage();
     }
@@ -32,10 +39,22 @@ class MediaList extends Component
 
     public function render()
     {
-        $files = File::where('path', $this->dir)
-            ->where('name', 'like', '%' . $this->search . '%')
-            ->orderBy('created_at', 'DESC')
-            ->paginate(24);
+        $query = File::where('path', $this->dir)
+                      ->where('name', 'like', '%' . $this->search . '%');
+
+        // Apply filter if selected
+        if (!empty($this->filter)) {
+            if ($this->filter === 'folder') {
+                $query->where('type', 'folder');
+            } elseif ($this->filter === 'image') {
+                $query->whereIn('type', ['image', 'svg']);
+            } else {
+                $query->where('type', $this->filter);
+            }
+        }
+
+        $files = $query->orderBy('created_at', 'DESC')
+                       ->paginate(24);
 
         return view('kompass::livewire.medialibrary.media-list', [
             'files' => $files,
