@@ -35,9 +35,7 @@ class Medialibrary extends Component
     public $FormEdit = false;
     public $FormFolder = false;
     public $newFolderLocation;
-
-    /** @var string */
-    private $filesystem;
+    public $filesystem;
 
     #[On('file-selected')]
     public function handleFileSelected($fileId)
@@ -156,7 +154,6 @@ class Medialibrary extends Component
         $file = File::findOrFail($this->iditem);
         $old_path = ($file->path ? rtrim($file->path, '/') . '/' : '') . $file->slug . ($file->extension ? '.' . $file->extension : '');
         $new_path = ($this->newFolderLocation ? rtrim($this->newFolderLocation, '/') . '/' : '') . $file->slug . ($file->extension ? '.' . $file->extension : '');
-
         if (Storage::disk($this->filesystem)->move($old_path, $new_path)) {
             $file->update(['path' => $this->newFolderLocation]);
             $this->FormEdit = false;

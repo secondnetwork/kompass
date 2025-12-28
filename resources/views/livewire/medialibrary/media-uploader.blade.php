@@ -7,11 +7,11 @@
             </div>
             <div class="flex gap-2">
                 <button class="btn  btn-ghost gap-2" @click="$dispatch('add-folder')">
-                    <x-tabler-folder-plus class="w-4 h-4" />
+                    <x-tabler-folder-plus class="size-6" />
                     {{ __("New Folder") }}
                 </button>
-                <label for="file-upload" class="btn  btn-primary gap-2 shadow-sm">
-                    <x-tabler-upload class="w-4 h-4" x-show="!isUploading" />
+                <label for="file-upload" class="btn btn-primary gap-2 shadow-sm">
+                    <x-tabler-upload class="size-6" x-show="!isUploading" />
                     <span class="loading loading-spinner loading-xs" x-show="isUploading"></span>
                     {{ __("Upload Files") }}
                 </label>
