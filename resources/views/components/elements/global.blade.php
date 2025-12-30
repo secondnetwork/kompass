@@ -137,7 +137,7 @@
                 'editorjs',
                     [
                         'editorId' => $this->selectedItem,
-                        'value' => json_decode($this->value, true),
+                        'value' => is_array($this->value) ? $this->value : json_decode($this->value, true),
                         'class' => 'cdx-input',
                         'style' => '',
                         'readOnly' => false,

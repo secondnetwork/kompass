@@ -23,10 +23,10 @@
 
         @default
             @foreach ($itemblocks->datafield as $item)
-                <div class="col-span-1 md:col-span-{{ $item->grid ?? '1' }} ">
+                <div wire:key="datafield-{{ $item->id }}" class="col-span-1 md:col-span-{{ $item->grid ?? '1' }} ">
                     @switch($item['type'])
                         @case('true_false')
-                            true_false
+                            <x-kompass::block.true_false :itemfield="$item" />
                         @break
 
                         @case('image')
@@ -50,8 +50,7 @@
                         @break
 
                         @default
-                            {{-- <input wire:model="fields.{{$fields }}.id"> --}}
-                            <x-kompass::form.input type="text" />
+                            <x-kompass::block.text :itemfield="$item" />
                     @endswitch
                 </div>
             @endforeach

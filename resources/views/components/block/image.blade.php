@@ -23,7 +23,7 @@
                         <span  wire:click="removemedia({{ $itemfield->id }})">
                             <x-tabler-trash class="cursor-pointer stroke-current text-red-500 " />
                         </span>
-                        <span wire:click="selectitem('addMedia','{{ $itemfield->type }}',{{ $itemfield->block_id }})">
+                        <span wire:click="selectitem('addMedia',{{ $itemfield->id }},'{{ $itemfield->type }}',{{ $itemfield->block_id }})">
                             <x-tabler-edit class=" cursor-pointer stroke-current text-blue-500 " />
                         </span>
                     </div>

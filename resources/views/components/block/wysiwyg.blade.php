@@ -2,7 +2,7 @@
 
     <div class="col-span-{{ $itemfield->grid }}" style="order: {{ $itemfield->order }} ">
         @php
-            $jsfield = json_decode($itemfield->data, true);
+            $jsfield = is_array($itemfield->data) ? $itemfield->data : json_decode($itemfield->data, true);
             $gridtables = $itemfield->grid;
         @endphp
         @livewire(
