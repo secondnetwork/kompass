@@ -5,6 +5,7 @@
             <x-slot name="body">
 
                 <x-kompass::form.input wire:model="name" label="Name" type="text" class="mt-1 block w-full" />
+                <x-kompass::form.input wire:model="type" label="Type / Slug" type="text" class="mt-1 block w-full" />
                 <button wire:click="saveBlock" class="btn btn-primary">Save</button>
 
             </x-slot>
