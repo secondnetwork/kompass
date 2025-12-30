@@ -1,43 +1,43 @@
 <div>
-    <media-grid class="flex flex-col">
+    <media-grid class="flex flex-col rounded-xl border border-base-300 bg-base-100">
 
         <livewire:media-components.media-uploader :dir="$dir" />
-        <div class="breadcrumbs text-sm flex items-center gap-2 bg-base-200 rounded-lg">
-            @php
-                $segments = explode('/', $dir);
-                $currentPath = '';
-            @endphp
-            @foreach ($segments as $segment)
-                @php
-                    $currentPath = $currentPath ? $currentPath . '/' . $segment : $segment;
-                @endphp
-                @if ($loop->first)
-                    <x-tabler-home class="size-4 opacity-40" />
-                @endif
-                @if (!$loop->first)
-                    <x-tabler-chevron-right class="size-4 opacity-40" /><x-tabler-folder class="size-4 opacity-40" />
-                @endif
-                
-                <button wire:click="goToFolder('{{ $currentPath }}')" class="hover:text-primary transition-colors {{ $loop->last ? 'font-bold' : 'opacity-60' }}">
-                     {{ $segment == 'media' ? __('Home') : $segment }}
-                </button>
-            @endforeach
 
-            
+        <div class="flex  justify-between gap-4 border-y border-base-300 px-5">
+            <div class="breadcrumbs text-sm flex items-center gap-2 w-full">
+                @php
+                    $segments = explode('/', $dir);
+                    $currentPath = '';
+                @endphp
+                @foreach ($segments as $segment)
+                    @php
+                        $currentPath = $currentPath ? $currentPath . '/' . $segment : $segment;
+                    @endphp
+                    @if ($loop->first)
+                        <x-tabler-home class="size-4 opacity-40" />
+                    @endif
+                    @if (!$loop->first)
+                        <x-tabler-chevron-right class="size-4 opacity-40" /><x-tabler-folder class="size-4 opacity-40" />
+                    @endif
+
+                    <button wire:click="goToFolder('{{ $currentPath }}')"
+                        class="hover:text-primary transition-colors cursor-pointer {{ $loop->last ? 'font-bold' : 'opacity-60' }}">
+                        {{ $segment == 'media' ? __('Home') : $segment }}
+                    </button>
+                @endforeach
+
+
+            </div>
+
+  
+
+
         </div>
-    {{-- Filter UI --}}
-    <div class="flex items-center gap-2 py-2">
-        <label for="filter-type" class="block text-sm font-medium text-gray-700">Filter by Type:</label>
-        <select id="filter-type" wire:model.live="filter" class="select select-sm">
-            <option value="">All</option>
-            <option value="folder">Folders</option>
-            <option value="image">Images</option>
-            <option value="video">Videos</option>
-            <option value="audio">Audio</option>
-            <option value="document">Documents</option>
-        </select>
-    </div> 
-        <div class="overflow-x-auto" x-cloak x-data="{ dir: @entangle('dir') }">
+
+                    {{-- Filter UI --}}
+
+
+        <div class="overflow-x-auto p-4" x-cloak x-data="{ dir: @entangle('dir') }">
             <livewire:media-components.media-list :dir="$dir" :filter="$filter" />
         </div>
     </media-grid>
@@ -97,17 +97,21 @@
                 <div class="modal-footer mt-4 flex gap-4">
                     <button wire:click="update" class="btn btn-primary">
                         <div wire:loading>
-                            <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
                             </svg>
                         </div>
                         <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
                         {{ __('Save') }}
-                    </button> 
-                    <button
-                        wire:click="selectItem({{ $iditem ?? 0 }}, 'delete')"
-                        class="btn btn-error flex justify-center"><x-tabler-trash class="cursor-pointer" />{{ __('Delete') }}</button>
+                    </button>
+                    <button wire:click="selectItem({{ $iditem ?? 0 }}, 'delete')"
+                        class="btn btn-error flex justify-center"><x-tabler-trash
+                            class="cursor-pointer" />{{ __('Delete') }}</button>
                 </div>
             </x-slot>
         </x-kompass::offcanvas>

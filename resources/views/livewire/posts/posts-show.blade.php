@@ -49,12 +49,11 @@
                 @endphp
 
                     @if ($file)
-                        @if (Storage::disk('local')->exists('/public/' . $file->path . '/' . $file->slug . '.' .
-                        $file->extension))
+                 
                         <div class="relative">
 
                             <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
-                                src="{{ asset('storage' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
+                                src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
                             <action-button
                                 class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
                                 <div class="text-xs font-semibold truncate">{{ $file->name }}</div>
@@ -70,7 +69,7 @@
 
                         </div>
                         @endif
-                    @endif
+                    
                 @else
                 <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
                     <img-block

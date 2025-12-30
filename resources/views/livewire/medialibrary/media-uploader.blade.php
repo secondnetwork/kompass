@@ -1,26 +1,26 @@
 <div x-data="fileUpload()">
-    <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-between bg-base-200/50 p-4 rounded-xl border border-base-300">
+    <div class="flex flex-col gap-4 p-5">
+        <div class="flex  justify-between">
             <div class="flex flex-col">
-                <h3 class="font-bold text-sm">{{ __("Media Assets") }}</h3>
+                <h6 class="font-semibold  text-lg">{{ __('Media library') }}</h6>
                 <p class="text-xs opacity-60">{{ __("Upload and manage your media files") }}</p>
             </div>
             <div class="flex gap-2">
-                <button class="btn  btn-ghost gap-2" @click="$dispatch('add-folder')">
+                <button class="btn btn-neutral btn-outline gap-2" @click="$dispatch('add-folder')">
                     <x-tabler-folder-plus class="size-6" />
-                    {{ __("New Folder") }}
+                    {{ __('Add new Folder') }}
                 </button>
                 <label for="file-upload" class="btn btn-primary gap-2 shadow-sm">
                     <x-tabler-upload class="size-6" x-show="!isUploading" />
                     <span class="loading loading-spinner loading-xs" x-show="isUploading"></span>
-                    {{ __("Upload Files") }}
+                    {{ __('Add file') }}
                 </label>
                 <input type="file" id="file-upload" multiple @change="handleFileSelect" class="hidden" />
             </div>
         </div>
         <div x-show="isUploading" x-transition class="bg-base-100 border border-primary/20 p-4 rounded-xl shadow-sm">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-medium text-primary">{{ __("Uploading media...") }}</span>
+                <span class="text-xs font-medium">{{ __("Uploading media...") }}</span>
                 <span class="text-xs font-bold" x-text="progress + '%'"></span>
             </div>
             <progress class="progress progress-primary w-full h-2" :value="progress" max="100"></progress>

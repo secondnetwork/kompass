@@ -36,7 +36,7 @@
         <div class="card-body p-3">
             <div class="flex justify-between items-start gap-2">
                 <div class="truncate">
-                    <div class="card-title font-bold truncate block w-full" title="{{ $file->name }}">
+                    <div class="text-sm font-bold truncate block w-full" title="{{ $file->name }}">
                         {{ $file->name }}
                     </div>
                     <p class="text-[10px] opacity-60">{{ $file->created_at->format('d.m.Y') }}</p>

@@ -15,7 +15,7 @@ class MediaList extends Component
     #[Reactive]
     public $dir = 'media';
 
-    #[Reactive]
+  
     public $filter = ''; // Add filter property
 
     public $search = '';
