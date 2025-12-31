@@ -234,7 +234,7 @@
                     </button>
                 </div>
 
-                    <x-kompass::elements.global :settings="$settings" :type="$type" :getId="$getId"  />
+                    <x-kompass::elements.global :settings="$settings" :type="$type" :getId="$getId" :selectedItem="$selectedItem" :name="$name" :key="$key" :group="$group" :valuedata="$valuedata" />
            
 
                 </div>

@@ -54,9 +54,9 @@ class Settings extends Component
 
     protected $rules = [
 
-        'name' => '',
+        'name' => 'required',
         'value' => '',
-        'key' => '',
+        'key' => 'required',
         'group' => 'required',
         'type' => '',
 
@@ -130,6 +130,36 @@ class Settings extends Component
         if ($action == 'delete') {
             $this->FormDelete = true;
         }
+    }
+
+    public function updatedType($value)
+    {
+        if ($this->selectedItem) {
+            Setting::whereId($this->selectedItem)->update(['type' => $value]);
+        }
+    }
+
+    public function saveStepOne()
+    {
+        $validate = $this->validate([
+            'name' => 'required|min:3',
+            'key' => 'required|min:3',
+            'group' => 'required',
+        ]);
+
+        $setting = Setting::updateOrCreate([
+            'id' => $this->selectedItem,
+        ],
+        [
+            'name' => $this->name,
+            'key' => Str::slug($this->key, '-', 'de'),
+            'group' => strtolower($this->group),
+            'type' => $this->type ?: 'text',
+        ]);
+
+        $this->selectedItem = $setting->id;
+        $this->type = $setting->type;
+        $this->loadSetting();
     }
 
     public function loadSetting()
