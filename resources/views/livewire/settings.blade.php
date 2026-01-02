@@ -73,6 +73,10 @@
                 'name' => 'Login '. __('Page') ,
             ],
             [
+                'slug' => 'admin_panel',
+                'name' => __('Admin Panel'),
+            ],
+            [
                 'slug' => 'global',
                 'name' => __('Global Settings'),
             ],
@@ -142,6 +146,9 @@
                     
                     <livewire:setup.background lazy />
 
+                </div>
+                <div x-show="asidenav === 'admin_panel'" x-cloak>
+                    <livewire:settings.admin-panel lazy />
                 </div>
                 <div x-show="asidenav === 'page_appearance'" class="py-6">
                     <div class="border-b border-gray-200">

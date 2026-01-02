@@ -57,8 +57,8 @@
       <aside class="sidenav">
         <div class="flex flex-col h-screen">
         <div class="logo">
-          @if (!empty(setting('admin.logo')))
-          <img src="{{ setting('admin.logo') }}" alt="">
+          @if (!empty(setting('global.adminlogo')))
+          <img src="{{ setting('global.adminlogo') }}" alt="">
           @else
         <img class="big-logo" src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         <img class="favicon-logo" src="{{ kompass_asset('favicon/512.png') }}" alt="">
@@ -113,7 +113,7 @@
 
       <footer>
         <div class="text-xs flex items-center">
-          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }}  @if (!empty(setting('admin.copyright'))){{ setting('admin.copyright') }} @else secondnetwork @endif| Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
+          <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }}  @if (!empty(setting('global.admincopyright'))){{ setting('global.admincopyright') }} @else secondnetwork @endif| Made with <x-tabler-heart class="w-4 mx-1 stroke-rose-500 fill-rose-500" /> in Hannover, Germany
         </div>
         <div class="text-xs">
 

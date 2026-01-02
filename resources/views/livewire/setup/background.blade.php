@@ -5,7 +5,7 @@
     }"
  class="max-w-2xl">
 
-
+<hr class="h-px w-full border-none bg-base-300">
 
     <div class="pb-5 mb-5 border-b border-zinc-200">
         <div class="pb-3 w-full">

@@ -56,8 +56,8 @@
 <div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100" style="background-color:{{ setting('global.background_color') }};">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-[14rem]">
-        @if (!empty(setting('admin.logo')))
-        <img src="{{ setting('admin.logo') }}" alt="">
+        @if (!empty(setting('global.adminlogo')))
+        <img src="{{ setting('global.adminlogo') }}" alt="">
         @else
         <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         @endif
@@ -85,7 +85,7 @@
 
         <footer class=" flex justify-between mt-auto w-full z-50">
             <div class="text-xs flex items-center text-white p-8">
-                <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('admin.copyright') ?? 'secondnetwork'}}
+                <x-tabler-copyright class="w-4" />{{ \Carbon\Carbon::now()->format('Y') }} {{ setting('global.admincopyright') ?? 'secondnetwork'}}
               </div>
             <div class="text-gray-300 text-xs p-8">
             @php $version = Kompass::getVersion(); @endphp
