@@ -54,6 +54,8 @@ class Settings extends Component
 
     public $type;
 
+    public $navigation = [];
+
     protected $rules = [
 
         'name' => 'required',
@@ -89,6 +91,55 @@ class Settings extends Component
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
+        $this->navigation = [
+            [
+                'slug' => '',
+                'name' => 'Theme ' . __('Settings'),
+            ],
+            [
+                'slug' => 'page_information',
+                'name' => __('Page Information'),
+                'icon' => 'tabler-info-circle',
+            ],
+            [
+                'slug' => 'page_appearance',
+                'name' => __('Page Appearance'),
+                'icon' => 'tabler-palette',
+            ],
+            [
+                'slug' => '',
+                'name' => __('Settings'),
+            ],
+            [
+                'slug' => 'backend',
+                'name' => 'Login ' . __('Page'),
+                'icon' => 'tabler-login',
+            ],
+            [
+                'slug' => 'admin_panel',
+                'name' => __('Admin Panel'),
+                'icon' => 'tabler-layout-dashboard',
+            ],
+            [
+                'slug' => 'global',
+                'name' => __('Global Settings'),
+                'icon' => 'tabler-world',
+            ],
+            [
+                'slug' => '',
+                'name' => __('Tools'),
+            ],
+            [
+                'slug' => 'activity-log',
+                'name' => __('Activity-log'),
+                'icon' => 'tabler-activity',
+            ],
+            [
+                'slug' => 'error-log',
+                'name' => __('Error-log'),
+                'icon' => 'tabler-alert-triangle',
+            ],
+        ];
     }
 
     public function saveEditorState($editorJsonData, $id)

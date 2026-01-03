@@ -49,70 +49,7 @@
 } --}}">
 
 
-    @php
-        $data = [
-            [
-                'slug' => '',
-                'name' => 'Theme ' . __('Settings'),
-            ],
-            [
-                'slug' => 'page_information',
-                'name' => __('Page Information'),
-                'icon' => 'tabler-info-circle',
-            ],
-            [
-                'slug' => 'page_appearance',
-                'name' => __('Page Appearance'),
-                'icon' => 'tabler-palette',
-            ],
-            [
-                'slug' => '',
-                'name' => __('Settings'),
-            ],
-            [
-                'slug' => 'backend',
-                'name' => 'Login ' . __('Page'),
-                'icon' => 'tabler-login',
-            ],
-            [
-                'slug' => 'admin_panel',
-                'name' => __('Admin Panel'),
-                'icon' => 'tabler-layout-dashboard',
-            ],
-            [
-                'slug' => 'global',
-                'name' => __('Global Settings'),
-                'icon' => 'tabler-world',
-            ],
-            [
-                'slug' => '',
-                'name' => __('Tools'),
-            ],
-            // [
-            //     'slug' => 'redirection',
-            //     'name' => __('Redirection'),
-            // ],
-            // [
-            //     'slug' => 'backup',
-            //     'name' => __('Backup'),
-            // ],
-            [
-                'slug' => 'activity-log',
-                'name' => __('Activity-log'),
-                'icon' => 'tabler-activity',
-            ],
-            [
-                'slug' => 'error-log',
-                'name' => __('Error-log'),
-                'icon' => 'tabler-alert-triangle',
-            ],
-        ];
-
-        $collection = collect($data)->map(function ($item) {
-            return (object) $item;
-        });
-
-    @endphp
+    
 
     <grid-side class="grid grid-cols-11 h-full gap-6" x-data="{}">
 
@@ -120,7 +57,8 @@
 
 
             <nav class="flex flex-col" aria-label="asidenav">
-                @foreach ($collection as $tab)
+                @foreach ($navigation as $tab)
+                    @php $tab = (object) $tab; @endphp
                     @if ($tab->slug == '')
                         <div class="uppercase text-xs mt-5 mb-1 text-base-content/70 font-semibold">
                             {{ $tab->name }}</div>
