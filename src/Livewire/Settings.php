@@ -37,6 +37,8 @@ class Settings extends Component
     public $data;
 
     public $name;
+     
+    public $icon;
 
     public $value;
 
