@@ -5,20 +5,27 @@ namespace Secondnetwork\Kompass\Livewire;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Settings extends Component
 {
+        #[Url(as: 'asidenav')]
+    public $asidenav = 'page_information';
+
+    #[Url]
+    public $tab = 'logo';
+
     public $search;
 
     public $headers;
 
     public $selectedItem;
 
-    public $pagetap = 'admin';
+    
 
-    protected $queryString = ['pagetap'];
+    
 
     public $orderBy = 'order';
 
