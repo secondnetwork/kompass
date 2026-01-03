@@ -4,7 +4,7 @@
 
 }">
 
-    <hr class="h-px w-full border-none bg-base-300">
+
     <div class="max-w-2xl py-2">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

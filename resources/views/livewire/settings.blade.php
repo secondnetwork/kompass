@@ -32,20 +32,21 @@
             <item-setting class="align-middle inline-block min-w-full">
                 <div x-show="asidenav === 'page_information'" x-cloak>
 
-                    <div>
+                    <div class="my-3">
                         <h3 class="text-2xl font-bold">{{ __('Page Information') }}</h3>
                         <p class="text-base-content/60 text-sm">
                             {{ __('Manage your website\'s basic information and SEO metadata.') }}</p>
                     </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.page-information />
                 </div>
-                <div x-show="asidenav === 'page_appearance'" class="py-6">
+                <div x-show="asidenav === 'page_appearance'" >
 
-                    <div>
+                    <div class="my-3">
                         <h3 class="text-2xl font-bold">{{ __('Page Appearance') }}</h3>
                         <p class="text-base-content/60 text-sm">{{ __('Change how your dashboard looks and feels.') }}</p>
                     </div>
-
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
                     <div class="border-b border-gray-200">
                         @php
                             $tabs = [
@@ -91,11 +92,12 @@
 
                 </div>
                 <div x-show="asidenav === 'backend'" x-cloak>
-                    <div>
-                        <h3 class="text-lg font-bold mb-1">Login {{ __('Page') }}</h3>
+                    <div class="my-3">
+                        <h3 class="text-lg font-bold">Login {{ __('Page') }}</h3>
                         <p class="text-sm text-base-content/60 text-sm">
                             {{ __('Customize the background of your authentication pages.') }}</p>
                     </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.backend lazy />
 
                     <livewire:setup.background lazy />
@@ -103,7 +105,7 @@
                 </div>
                 <div x-show="asidenav === 'admin_panel'" x-cloak>
 
-                    <div>
+                    <div class="my-3">
                         <h3 class="text-2xl font-bold">{{ __('Admin Panel') }}</h3>
                         <p class="text-base-content/60 text-sm">
                             {{ __('Settings specifically for the administration interface.') }}</p>
@@ -112,10 +114,9 @@
                 </div>
                 <div x-show="asidenav === 'global'" x-cloak>
 
-                    <div
-                        class=" border-gray-200 py-4 whitespace-nowrap flex gap-8 justify-between items-center">
+                    <div class="border-gray-200 whitespace-nowrap flex gap-8 justify-between items-center">
 
-                        <div>
+                        <div class="my-3">
                             <h3 class="text-2xl font-bold">{{ __('Global Settings') }}</h3>
                             <p class="text-base-content/60 text-sm">
                                 {{ __('Key-value pairs for general application configuration.') }}</p>
@@ -133,7 +134,7 @@
 
                 <div x-show="asidenav === 'activity-log'" x-cloak>
 
-                    <div class="mb-6">
+                    <div class="my-3">
                         <h3 class="text-2xl font-bold">{{ __('Activity Log') }}</h3>
                         <p class="text-base-content/60 text-sm">{{ __('Monitor all changes and actions within the system.') }}
                         </p>
@@ -145,7 +146,7 @@
 
                 <div x-show="asidenav === 'error-log'" x-cloak>
 
-                    <div class="mb-6">
+                    <div class="my-3">
                         <h3 class="text-2xl font-bold">{{ __('Error Log') }}</h3>
                         <p class="text-base-content/60 text-sm">{{ __('Review 404 errors and other system exceptions.') }}</p>
                     </div>

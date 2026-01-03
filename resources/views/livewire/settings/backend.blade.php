@@ -1,14 +1,13 @@
-<div class="grid grid-cols-1 items-center w-full h-auto gap-4 py-8" x-data="{ isDropping: false, isUploading: false, progress: 0 }"
+<div class="grid grid-cols-1 items-center w-full h-auto gap-4" x-data="{ isDropping: false, isUploading: false, progress: 0 }"
     x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false"
     x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
 
-    <hr class="h-px w-full border-none bg-base-300">
     <x-kompass::form.switch wire:model.live="registration_can_user" label="{{ __('User can register') }}" />
 
     <hr class="h-px w-full border-none bg-base-300">
-
+    <label class="text-base-content font-bold text-sm">Admin Logo</label>
     <div class="max-w-120">
-        <h5>Admin Logo</h5>
+       
         @if (isset($adminlogo) && $adminlogo != '')
             <div class="relative  border border-dashed border-base-300 rounded-lg">
 
@@ -35,9 +34,9 @@
                             <input id="file-upload" x-ref="fileInput" wire:model="adminlogo" type="file"
                                 class="sr-only" accept="image/*">
 
-                            <p class="pl-1">Upload a file or drag and drop</p>
+                            <p class="pl-1">{{ __('Upload a file or drag and drop') }}</p>
                         </div>
-                        <p class="text-xs leading-5">SVG, PNG, JPG up to 10MB</p>
+                        <p class="text-xs leading-5">SVG, PNG, JPG</p>
                     </div>
                 </label>
             </div>
