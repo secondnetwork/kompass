@@ -122,11 +122,11 @@ class Settings extends Component
                 'name' => 'Login ' . __('Page'),
                 'icon' => 'tabler-login',
             ],
-            [
-                'slug' => 'admin_panel',
-                'name' => __('Admin Panel'),
-                'icon' => 'tabler-layout-dashboard',
-            ],
+            // [
+            //     'slug' => 'admin_panel',
+            //     'name' => __('Admin Panel'),
+            //     'icon' => 'tabler-layout-dashboard',
+            // ],
             [
                 'slug' => 'global',
                 'name' => __('Global Settings'),

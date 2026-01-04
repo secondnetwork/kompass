@@ -13,12 +13,11 @@ class Background extends Component
     use WithFileUploads;
 
     public $color;
-    public $imageBG; // Wird den Bildpfad speichern
+    public $adminBackground; // Wird den Bildpfad speichern
     public $image_overlay_color;
     public $image_overlay_opacity; // Wird den Wert 0-100 speichern (für die Anzeige/Eingabe)
 
     // Definiere die Datenbank-Keys für die Einstellungen
-    private $dbKeyColor = 'background_color';
     private $dbKeyImage = 'background_image';
     private $dbKeyOverlayColor = 'background_image_overlay_color';
     private $dbKeyOverlayOpacity = 'background_image_overlay_opacity'; // Datenbank speichert 0-1
@@ -32,9 +31,8 @@ class Background extends Component
 
         // Weise die Werte den Component-Eigenschaften zu
         // Verwende optional() und ?? '' für sicheren Zugriff
-        $this->color = optional($globalSettings->get($this->dbKeyColor))->data ?? '#ffffff'; // Standardwert, falls nicht vorhanden
-        $this->imageBG = optional($globalSettings->get($this->dbKeyImage))->data ?? '';
-        $this->image_overlay_color = optional($globalSettings->get($this->dbKeyOverlayColor))->data ?? '#000000'; // Standardwert
+        $this->adminBackground = optional($globalSettings->get($this->dbKeyImage))->data ?? '';
+        $this->image_overlay_color = optional($globalSettings->get($this->dbKeyOverlayColor))->data ?? ''; // Standardwert
         // Lese die Opazität aus der DB (0-1) und multipliziere für die Anzeige (0-100)
         $dbOpacity = optional($globalSettings->get($this->dbKeyOverlayOpacity))->data ?? '0'; // Standardwert 0
         $this->image_overlay_opacity = (floatval($dbOpacity) * 100);
@@ -61,11 +59,11 @@ class Background extends Component
 
     // Updated Hooks werden ausgelöst, NACHDEM sich die Eigenschaft geändert hat
     // Dies ist oft besser für FileUploads, aber die updating-Methode funktioniert auch.
-    // Wir behalten hier updated für imageBG, wie im Originalcode
+    // Wir behalten hier updated für adminBackground, wie im Originalcode
     public function updated($property, $value)
     {
-        // Handle den Dateiupload für imageBG
-        if ($property == 'imageBG') {
+        // Handle den Dateiupload für adminBackground
+        if ($property == 'adminBackground') {
             if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                  // Optional: Lösche das alte Bild, bevor du das neue speicherst
                  $this->deleteImageFile(); // Nur die Datei löschen, nicht den DB-Eintrag
@@ -85,7 +83,7 @@ class Background extends Component
                  $this->updateSettingInDatabase($this->dbKeyImage, $publicPath);
 
                  // Setze die Eigenschaft im Component auf den neuen Pfad
-                 $this->imageBG = $publicPath;
+                 $this->adminBackground = $publicPath;
 
                  // Kein value = null mehr nötig, Livewire managed das FileInput Property
             }
@@ -120,7 +118,7 @@ class Background extends Component
      */
     private function deleteImageFile()
     {
-        $imagePath = $this->imageBG; // Hole den aktuellen Bildpfad aus der Eigenschaft
+        $imagePath = $this->adminBackground; // Hole den aktuellen Bildpfad aus der Eigenschaft
 
         // Entferne die Datei aus dem Speicher, falls sie existiert und ein Speicherpfad ist
         if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
@@ -142,10 +140,10 @@ class Background extends Component
         $this->updateSettingInDatabase($this->dbKeyImage, '');
 
         // Setze die Component-Eigenschaft auf leer, um die Anzeige zu aktualisieren
-        $this->imageBG = '';
+        $this->adminBackground = '';
 
         // Sende eine Benachrichtigung oder ähnliches
-        $this->js('savedMessageOpen()');
+        //$this->js('savedMessageOpen()');
     }
 
     public function render()

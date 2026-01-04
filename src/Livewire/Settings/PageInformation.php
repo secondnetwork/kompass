@@ -91,7 +91,7 @@ class PageInformation extends Component
 
         $this->image = '';
 
-        $this->js('savedMessageOpen()');
+        //$this->js('savedMessageOpen()');
     }
 
     public function render()

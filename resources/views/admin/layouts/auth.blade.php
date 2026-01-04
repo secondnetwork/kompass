@@ -73,9 +73,9 @@
 
     <div class="hidden lg:grid col-start-5 col-end-12 bg-cover h-full bg-gray-900 bg-opacity-75" >    
         <div class="relative flex flex-col">
-        
-            @if(setting('global.background.image'))
-                <img src="{{ setting('global.background.image') }}" id="auth-background-image" class="object-cover absolute z-10 w-screen h-screen" />
+     
+            @if(setting('global.background_image'))
+                <img src="{{ setting('global.background_image') }}" id="auth-background-image" class="object-cover absolute z-10 w-screen h-screen" />
                 <div id="auth-background-image-overlay" class="absolute inset-0 z-20 " style="background-color:{{ setting('global.background_image_overlay_color') }}; opacity:{{ setting('global.background_image_overlay_opacity') }};"></div>
             
             @else

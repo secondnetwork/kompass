@@ -32,8 +32,8 @@ class Backend extends Component
         if ($property === 'registration_can_user') {
             $this->updateSettingInDatabase($this->dbKeyRegistration, (string) $value);
         }
-        if ($property === 'copyright') {
-            $this->updateSettingInDatabase($this->dbKeyCopyright, $value);
+        if ($property === 'admincopyright') {
+            $this->updateSettingInDatabase('admincopyright', $value);
         }
         if ($property == 'adminlogo') {
         

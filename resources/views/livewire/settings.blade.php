@@ -52,7 +52,6 @@
                             $tabs = [
                                 'logo' => 'Logo',
                                 'favicon' => 'Favicon',
-                                'css' => 'css',
                             ];
                         @endphp
                         <nav class="flex -mb-px space-x-8" aria-label="Tabs">
@@ -82,11 +81,7 @@
                         <div x-show="tab == 'favicon'" class="w-full h-auto" x-cloak>
                             <livewire:setup.favicon lazy />
                         </div>
-                        <div x-show="tab == 'css'" class="w-full h-auto" x-cloak>
-                            <livewire:setup.css lazy />
-                        </div>
-
-                        
+                               
 
                     </div>
 
@@ -99,11 +94,11 @@
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.backend lazy />
-
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:setup.background lazy />
 
                 </div>
-                <div x-show="asidenav === 'admin_panel'" x-cloak>
+                {{-- <div x-show="asidenav === 'admin_panel'" x-cloak>
 
                     <div class="my-3">
                         <h3 class="text-2xl font-bold">{{ __('Admin Panel') }}</h3>
@@ -111,7 +106,7 @@
                             {{ __('Settings specifically for the administration interface.') }}</p>
                     </div>
                     <livewire:settings.admin-panel lazy />
-                </div>
+                </div> --}}
                 <div x-show="asidenav === 'global'" x-cloak>
 
                     <div class="border-gray-200 whitespace-nowrap flex gap-8 justify-between items-center">
