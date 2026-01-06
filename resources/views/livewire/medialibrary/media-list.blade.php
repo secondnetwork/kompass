@@ -23,8 +23,8 @@
 
     @if ($files->isEmpty())
         <div class="flex flex-col items-center justify-center py-20 opacity-40">
-            <x-tabler-photo-off class="w-16 h-16 mb-4" />
-            <p class="text-lg font-medium">{{ __('No media found') }}</p>
+            <x-tabler-photo-video stroke-width="1" class="w-16 h-16 mb-4" />
+            <p class="text-lg font-medium">{{ __('No Media') }}</p>
         </div>
     @else
         <div class="@container">

@@ -1,8 +1,8 @@
 <div class="h-full" x-data="{ asidenav: @entangle('asidenav'), tab: @entangle('tab') }">
 
-    <grid-side class="grid grid-cols-11 h-full gap-6" x-data="{}">
+    <grid-side class="flex gap-6" x-data="{}">
 
-        <aside class="col-start-1 col-end-3  border-r border-gray-200 h-full ">
+        <aside class="pr-4 w-52  border-r border-gray-200 h-full ">
 
             <nav class="flex flex-col" aria-label="asidenav">
                 @foreach ($navigation as $tab)
@@ -27,7 +27,7 @@
 
         </aside>
 
-        <div class="flex flex-col col-start-3 col-end-12">
+        <div class="flex flex-col w-full">
 
             <item-setting class="align-middle inline-block min-w-full">
                 <div x-show="asidenav === 'page_information'" x-cloak>
