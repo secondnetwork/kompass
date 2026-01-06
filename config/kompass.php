@@ -2,7 +2,18 @@
 
 namespace Secondnetwork\Kompass;
 
+use Secondnetwork\Kompass\Features;
+
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Global Settings
+    |--------------------------------------------------------------------------
+    |
+    | Basic configuration for Kompass sets and available locales.
+    |
+    */
 
     'sets' => [
         'default' => [
@@ -19,7 +30,7 @@ return [
     | Storage Config
     |--------------------------------------------------------------------------
     |
-    | Here you can specify attributes related to your application file system
+    | Here you can specify attributes related to your application file system.
     |
     */
 
@@ -28,15 +39,14 @@ return [
     ],
 
     /*
-     |--------------------------------------------------------------------------
-     | Kompass Route Middleware
-     |--------------------------------------------------------------------------
-     |
-     | Here you may specify which middleware Kompass will assign to the routes
-     | that it registers with the application. When necessary, you may modify
-     | these middleware; however, this default value is usually sufficient.
-     |
-     */
+    |--------------------------------------------------------------------------
+    | Kompass Route Middleware
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify which middleware Kompass will assign to the routes
+    | that it registers with the application.
+    |
+    */
 
     'middleware' => ['web'],
 
@@ -46,8 +56,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Some of Kompass's features are optional. You may disable the features
-    | by removing them from this array. You're free to only remove some of
-    | these features or you can even remove all of these if you need to.
+    | by removing them from this array.
     |
     */
 
@@ -61,9 +70,7 @@ return [
     | Date Format
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default date format for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
+    | default date format for your application.
     |
     */
 
@@ -71,13 +78,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Image Processing Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Settings for Intervention Image V3 and the Kompass ImageFactory.
+    |
+    */
+
+    /*
+    |--------------------------------------------------------------------------
     | Image Driver
     |--------------------------------------------------------------------------
     |
-    | Intervention Image supports “GD Library” and “Imagick” to process images
-    | internally. Depending on your PHP setup, you can choose one of them.
+    | Intervention Image supports "GD Library" and "Imagick" to process images.
     |
-    | Included options:
+    | Options:
     |   - \Intervention\Image\Drivers\Gd\Driver::class
     |   - \Intervention\Image\Drivers\Imagick\Driver::class
     |
@@ -87,18 +102,99 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Configuration Options
+    | Blur Placeholder (LQIP)
     |--------------------------------------------------------------------------
     |
-    | These options control the behavior of Intervention Image.
+    | If set to true, a tiny, blurred Base64 representation of the image will
+    | be generated and embedded into the HTML. This is displayed while the
+    | high-resolution image is loading (Low Quality Image Placeholder).
     |
-    | - "autoOrientation" controls whether an imported image should be
-    |    automatically rotated according to any existing Exif data.
+    */
+
+    'generate_blur_placeholder' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Image Quality
+    |--------------------------------------------------------------------------
     |
-    | - "decodeAnimation" decides whether a possibly animated image is
-    |    decoded as such or whether the animation is discarded.
+    | Global default quality settings (0-100) for different file formats.
+    | These values are used if no specific quality is defined in a size preset.
     |
-    | - "blendingColor" Defines the default blending color.
+    */
+
+    'quality' => [
+        'avif' => 50,
+        'webp' => 80,
+        'jpeg' => 85,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Image Presets (Sizes)
+    |--------------------------------------------------------------------------
+    |
+    | Define named presets for your images here. You can reference these keys
+    | (e.g., 'thumbnail', 'landscape') in your Blade directives.
+    |
+    | Methods:
+    | - 'scale': Resizes the image preserving aspect ratio.
+    | - 'cover': Crops the image to fit the dimensions (smart crop).
+    | - 'resize': Stretches the image to fit exactly (ignoring aspect ratio).
+    | - 'scaleDown': Like scale, but prevents upscaling small images.
+    |
+    */
+
+    'sizes' => [
+        'thumbnail' => [
+            'width' => 520, 
+            'height' => null, 
+            'method' => 'scale', // Crops to square
+            'quality' => 60
+        ],
+        'blog_single' => [
+            'width' => 1200, 
+            'height' => null, // Auto height
+            'method' => 'scale', 
+            'quality' => 80
+        ],
+        'landscape' => [
+            'width' => 1280, 
+            'height' => 720, 
+            'method' => 'cover', // Enforces 16:9 ratio via crop
+            'quality' => 75
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fallback Configuration
+    |--------------------------------------------------------------------------
+    |
+    | These settings are used when:
+    | 1. No size key is provided to the helper function.
+    | 2. A size key is provided that does not exist in the 'sizes' array above.
+    |
+    */
+
+    'fallback' => [
+        'width' => 2500, 
+        'height' => 2500, 
+        'method' => 'scaleDown', // Only shrinks images, never enlarges them
+        'quality' => 85
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Intervention Configuration Options
+    |--------------------------------------------------------------------------
+    |
+    | These options control the internal behavior of Intervention Image.
+    |
+    | - "autoOrientation": Automatically rotate based on Exif data.
+    | - "decodeAnimation": Keep animations (GIF/WebP) or decode first frame only.
+    | - "blendingColor": Default background color for transparent images.
+    |
     */
 
     'options' => [
@@ -109,12 +205,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Profile Photo Disk
+    | Disk Configurations
     |--------------------------------------------------------------------------
     |
-    | This configuration value determines the default disk that will be used
-    | when storing profile photos for your application's users. Typically
-    | this will be the "public" disk but you may adjust this if needed.
+    | Define which storage disks are used for different operations.
     |
     */
 
@@ -125,54 +219,6 @@ return [
 
     // Defines on which disk images, downloaded by pasting an image url into the editor, should be stored.
     'default_img_download_disk' => 'public',
-
-    'livewire' => [
-
-        'login' => Livewire\Auth\Login::class,
-        'register' => Livewire\Auth\Register::class,
-        'forgot-password' => Livewire\Auth\ForgotPassword::class,
-        'reset-password' => Livewire\Auth\ResetPassword::class,
-        'confirm-password' => Livewire\Auth\ConfirmPassword::class,
-        'verify-email' => Livewire\Auth\VerifyEmail::class,
-
-        'menu' => Livewire\Frontend\Menu::class,
-        'pageview' => Livewire\Frontend\Pageview::class,
-        'blogview' => Livewire\Frontend\Blogview::class,
-
-        'field-editor' => Livewire\FieldEditor::class,
-        'adminmenu' => Livewire\Menu::class,
-        'blocks.blocks-table' => Livewire\BlocksTable::class,
-        'blocks.blocks-data' => Livewire\BlocksData::class,
-        'pages.posts-table' => Livewire\PostsTable::class,
-        'pages.posts-show' => Livewire\PostsData::class,
-        'pages.pages-table' => Livewire\PagesTable::class,
-        'pages.pages-show' => Livewire\PagesData::class,
-        'menus.menus-table' => Livewire\MenuTable::class,
-        'menus.menus-show' => Livewire\MenuData::class,
-        'medialibrary' => Livewire\Medialibrary::class,
-        'settings' => Livewire\Settings::class,
-        'settings.profile' => Livewire\Settings\Profile::class,
-        'settings.page-information' => Livewire\Settings\PageInformation::class,
-        'settings.backend' => Livewire\Settings\Backend::class,
-        'settings.activity-log' => Livewire\Settings\ActivityLog::class,
-        'settings.error-log' => Livewire\Settings\ErrorLog::class,
-        'setup.logo' => Livewire\Setup\Logo::class,
-        'setup.background' => Livewire\Setup\Background::class,
-        'setup.color' => Livewire\Setup\Color::class,
-        'setup.favicon' => Livewire\Setup\Favicon::class,
-        'setup.css' => Livewire\Setup\Css::class,
-        'brokenlink' => Livewire\Brokenlink::class,
-        'redirection' => Livewire\Redirection::class,
-        'update-password-form' => Livewire\UpdatePasswordForm::class,
-        'update-profile-photo' => Livewire\UpdateProfilePhoto::class,
-        'account' => Livewire\AccountForm::class,
-        'roles' => Livewire\Roles::class,
-        'datafield-item' => Livewire\DatafieldItem::class,
-        'editable-meta' => Livewire\EditableMeta::class,
-        'editable-name' => Livewire\EditableName::class,
-        'editorjs' => Livewire\EditorJS::class,
-        'redirect' => Livewire\Redirection::class,
-    ],
 
     'prefix' => '',
 ];

@@ -167,7 +167,7 @@ class="relative overflow-hidden rounded-md aspect-video">
     <source :src="sources.ogg" type="video/ogg" /> --}}
 </video>
 <div x-show="videoPlayerReady" class="absolute inset-0 w-full h-full">
-    <div x-ref="videoBackground" @click="togglePlay()" class="absolute inset-0 z-30 flex items-center justify-center w-full h-full bg-black bg-opacity-0 cursor-pointer group">
+    <div x-ref="videoBackground" @click="togglePlay()" class="absolute inset-0 z-30 flex items-center justify-center w-full h-full  bg-opacity-0 cursor-pointer group">
         <div
             x-show="playing"
             x-transition:enter="transition ease-out duration-1000"

@@ -20,9 +20,17 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 @import "tailwindcss";
 @source "../views";
+@source "../views/";
+@source "../../app/";
+@source '../**/*.blade.php';
+
+@plugin "daisyui";
+
+@source inline("{,md:,lg:,xl:}grid-cols-{1..6}");
+@source inline("{,md:,lg:,xl:}grid-span-{1..6}");
 
 @import "./base/base.css";
-@import "./base/fonts.css";
+@import "./fonts.css";
 @import "./base/typography.css";
 @import "./base/grid_layout.css";
 
@@ -34,7 +42,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Hind', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -72,18 +80,47 @@ License URI: http://opensource.org/licenses/mit-license.php
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    img {
+    /* Verhindert, dass der Alt-Text hässlich über dem Placeholder liegt, während es lädt */
+    color: transparent; 
+}
 }
 
-[data-flux-field] {
-    @apply grid gap-2;
+
+
+@plugin "daisyui/theme" {
+  name: "blaiq";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(98% 0 0);
+  --color-base-300: oklch(87% 0 0);
+  --color-base-content: oklch(21% 0.034 264.665);
+  --color-primary: oklch(51% 0.262 276.966);
+  --color-primary-content: oklch(98% 0.003 247.858);
+  --color-secondary: #f6319a;
+  --color-secondary-content: oklch(21% 0.034 264.665);
+  --color-accent: #b4fa4b;
+  --color-accent-content: oklch(38% 0.063 188.416);
+  --color-neutral: oklch(87% 0.006 286.286);
+  --color-neutral-content: oklch(21% 0.034 264.665);
+  --color-info: #5bf1ff;
+  --color-info-content: oklch(21% 0.034 264.665);
+  --color-success: #26C486;
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: #FFD500;
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(50% 0.213 27.518);
+  --color-error-content: oklch(98% 0.003 247.858);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
-}
-
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
-}

@@ -103,7 +103,7 @@ class PagesData extends Component
 
     public function mount($id)
     {
-        $this->page = Page::with(['blocks.children'])->findOrFail($id); // Eager load related data
+        $this->page = Page::with(['blocks.datafield', 'blocks.children'])->findOrFail($id); // Eager load related data
         $this->blocks = $this->page->blocks
             ->where('blockable_type', 'page')
             ->where('subgroup', null)
@@ -284,19 +284,27 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function selected($id)
+    public function selectedAction($id)
     {
-        $data = Datafield::findOrFail($id);
+        $datafield = Datafield::findOrFail($id);
+        $datafield->data = $datafield->data ? 0 : 1;
+        $datafield->save();
 
-        if ($data->data == 0) {
-            $data->update([
-                'data' => '1',
-            ]);
-        } else {
-            $data->update([
-                'data' => '0',
-            ]);
-        }
+        $this->resetPageComponent();
+    }
+
+    public function updateDatafield($id, $value)
+    {
+        Datafield::findOrFail($id)->update(['data' => $value]);
+        $this->resetPageComponent();
+    }
+
+    public function updateDatafieldArray($id, $key, $value)
+    {
+        $datafield = Datafield::findOrFail($id);
+        $data = $datafield->data ?? [];
+        $data[$key] = $value;
+        $datafield->update(['data' => $data]);
         $this->resetPageComponent();
     }
 

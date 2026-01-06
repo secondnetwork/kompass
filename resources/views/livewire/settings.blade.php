@@ -1,163 +1,68 @@
-<div class="h-full" x-data="{
-    'asidenav': new URLSearchParams(window.location.search).get('asidenav') || 'page_information',
-    'tab': new URLSearchParams(window.location.search).get('tab') || 'logo',
-    addQueryParam(key, value) {
-        // Create a URL object based on the current document URL
-        let url = new URL(window.location.href);
+<div class="h-full" x-data="{ asidenav: @entangle('asidenav'), tab: @entangle('tab') }">
 
-        // Set or replace the query parameter
-        url.searchParams.set(key, value);
+    <grid-side class="flex gap-6" x-data="{}">
 
-        // Update the URL in the address bar without reloading the page
-        window.history.pushState({ path: url.toString() }, '', url.toString());
-    }
-}" x-init="$watch('asidenav', function(value) {
-    if (value !== null) {
-        addQueryParam('asidenav', value);
-    }
-    
-    $watch('tab', function(value) {
-    if (value !== null) {
-        addQueryParam('tab', value);
-    }
-    {{-- if(tab == 'css'){
-        if(codemirrorEditor == null){
-            setTimeout(function(){
-                enableCodeMirror();
-            }, 100);
-        }
-        //enableCodeMirror();
-    } --}}
-
-});
-
-    {{-- if(tab == 'css'){
-        if(codemirrorEditor == null){
-            setTimeout(function(){
-                enableCodeMirror();
-            }, 100);
-        }
-        //enableCodeMirror();
-    } --}}
-
-});
-{{-- if(tab == 'css'){
-    console.log('accessed');
-    setTimeout(function(){
-        enableCodeMirror();
-    }, 100);
-} --}}">
-
-
-    @php
-        $data = [
-
-            [
-                'slug' => '',
-                'name' => 'Theme ' . __('Settings'),
-            ],
-            [
-                'slug' => 'page_information',
-                'name' => __('Page Information'),
-            ],
-            [
-                'slug' => 'page_appearance',
-                'name' => __('Page Appearance'),
-            ],
-            [
-                'slug' => '',
-                'name' => __('Settings'),
-            ],
-            [
-                'slug' => 'backend',
-                'name' => 'Login '. __('Page') ,
-            ],
-            [
-                'slug' => 'global',
-                'name' => __('Global Settings'),
-            ],
-            [
-                'slug' => '',
-                'name' => __('Tools'),
-            ],
-            // [
-            //     'slug' => 'redirection',
-            //     'name' => __('Redirection'),
-            // ],
-            // [
-            //     'slug' => 'backup',
-            //     'name' => __('Backup'),
-            // ],
-            [
-                'slug' => 'activity-log',
-                'name' => __('Activity-log'),
-            ],
-            [
-                'slug' => 'error-log',
-                'name' => __('Error-log'),
-            ],
-
-        ];
-
-        $collection = collect($data)->map(function ($item) {
-            return (object) $item;
-        });
-
-    @endphp
-
-    <grid-side class="grid grid-cols-11 h-full gap-6" x-data="{}">
-
-        <aside class="col-start-1 col-end-3  border-r border-gray-200 h-full ">
-
+        <aside class="pr-4 w-52  border-r border-gray-200 h-full ">
 
             <nav class="flex flex-col" aria-label="asidenav">
-                @foreach ($collection as $tab)
+                @foreach ($navigation as $tab)
+                    @php $tab = (object) $tab; @endphp
                     @if ($tab->slug == '')
                         <div class="uppercase text-xs mt-5 mb-1 text-base-content/70 font-semibold">
                             {{ $tab->name }}</div>
                     @else
                         <a href="#_" @click.prevent="asidenav = '{{ $tab->slug }}'"
-                            :class="{ 'border-indigo-500 text-indigo-600': asidenav ==
-                                '{{ $tab->slug }}', 'text-base-content/70 hover:border-gray-300 hover:text-gray-700': asidenav !=
-                                    '{{ $tab->slug }}' }"
-                            class="py-1 text-sm font-medium">{{ $tab->name }}</a>
+                            :class="{
+                                'border-indigo-500 text-indigo-600': asidenav ==
+                                    '{{ $tab->slug }}',
+                                'text-base-content/70 hover:border-gray-300 hover:text-gray-700': asidenav !=
+                                    '{{ $tab->slug }}'
+                            }"
+                            class="py-1 text-sm font-medium flex items-center gap-2">@svg($tab->icon ?? 'tabler-x')
+                            {{ $tab->name }}</a>
                     @endif
                 @endforeach
                 <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700" -->
             </nav>
 
-
         </aside>
 
-        <div class="flex flex-col col-start-3 col-end-12">
-
+        <div class="flex flex-col w-full">
 
             <item-setting class="align-middle inline-block min-w-full">
                 <div x-show="asidenav === 'page_information'" x-cloak>
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Page Information') }}</h3>
+                        <p class="text-base-content/60 text-sm">
+                            {{ __('Manage your website\'s basic information and SEO metadata.') }}</p>
+                    </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.page-information />
                 </div>
-                <div x-show="asidenav === 'backend'" x-cloak>
-                   
-                    <livewire:settings.backend lazy />
-                    
-                    <livewire:setup.background lazy />
+                <div x-show="asidenav === 'page_appearance'" >
 
-                </div>
-                <div x-show="asidenav === 'page_appearance'" class="py-6">
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Page Appearance') }}</h3>
+                        <p class="text-base-content/60 text-sm">{{ __('Change how your dashboard looks and feels.') }}</p>
+                    </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
                     <div class="border-b border-gray-200">
                         @php
                             $tabs = [
                                 'logo' => 'Logo',
                                 'favicon' => 'Favicon',
-                                'css' => 'css',
                             ];
                         @endphp
                         <nav class="flex -mb-px space-x-8" aria-label="Tabs">
                             @foreach ($tabs as $slug => $tab)
                                 <a href="#_" @click.prevent="tab = '{{ $slug }}'"
-                                    :class="{ 'border-indigo-500 text-indigo-600': tab ==
-                                        '{{ $slug }}', 'border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700': tab !=
-                                            '{{ $slug }}' }"
+                                    :class="{
+                                        'border-indigo-500 text-indigo-600': tab ==
+                                            '{{ $slug }}',
+                                        'border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700': tab !=
+                                            '{{ $slug }}'
+                                    }"
                                     class="px-1 py-4 text-sm font-medium whitespace-nowrap border-b-2">{{ $tab }}</a>
                             @endforeach
                             <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700" -->
@@ -166,86 +71,95 @@
 
                     <div class="grid gap-y-4 py-8">
 
-                 
                         <div x-show="tab == 'logo'" class="w-full h-auto" x-cloak>
                             <livewire:setup.logo lazy />
 
                         </div>
-                        <div x-show="tab == 'background'" class="w-full h-auto" x-cloak>
-                            
-                        </div>
-                        {{-- <div x-show="tab == 'color'" class="w-full h-auto" x-cloak>
-                                <livewire:setup.color />
-                         </div> --}}
-                        {{-- <div x-show="tab == 'alignment'" class="w-full h-auto" x-cloak>
-                                <livewire:setup.alignment />
-                            </div> --}}
+                        
+                        
+                        
                         <div x-show="tab == 'favicon'" class="w-full h-auto" x-cloak>
                             <livewire:setup.favicon lazy />
                         </div>
-                        <div x-show="tab == 'css'" class="w-full h-auto" x-cloak>
-                            <livewire:setup.css lazy />
-                        </div>
-
-                        <div x-show="tab == 'meta'" class="w-full h-auto grid gap-4 max-w-xl" x-cloak>
-
-
-
-
-                        </div>
-
+                               
 
                     </div>
 
-
-
-
+                </div>
+                <div x-show="asidenav === 'backend'" x-cloak>
+                    <div class="my-3">
+                        <h3 class="text-lg font-bold">Login {{ __('Page') }}</h3>
+                        <p class="text-sm text-base-content/60 text-sm">
+                            {{ __('Customize the background of your authentication pages.') }}</p>
+                    </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
+                    <livewire:settings.backend lazy />
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
+                    <livewire:setup.background lazy />
 
                 </div>
-                <div x-show="asidenav === 'redirection'" x-cloak>
-                    <livewire:redirect lazy />
-                    <livewire:brokenlink lazy />
-                </div>
- 
-                <div x-show="asidenav === 'backup'" x-cloak>
-     
+                {{-- <div x-show="asidenav === 'admin_panel'" x-cloak>
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Admin Panel') }}</h3>
+                        <p class="text-base-content/60 text-sm">
+                            {{ __('Settings specifically for the administration interface.') }}</p>
+                    </div>
+                    <livewire:settings.admin-panel lazy />
+                </div> --}}
+                <div x-show="asidenav === 'global'" x-cloak>
+
+                    <div class="border-gray-200 whitespace-nowrap flex gap-8 justify-between items-center">
+
+                        <div class="my-3">
+                            <h3 class="text-2xl font-bold">{{ __('Global Settings') }}</h3>
+                            <p class="text-base-content/60 text-sm">
+                                {{ __('Key-value pairs for general application configuration.') }}</p>
+                        </div>
+
+                        <button wire:click="selectItem('', 'add')" class="btn btn-primary" @click="open = true">
+                            <x-tabler-settings-plus stroke-width="1.5" />{{ __('New Setting') }}
+                        </button>
+                    </div>
+
+                    <x-kompass::elements.global :settings="$settings" :type="$type" :getId="$getId" :selectedItem="$selectedItem"
+                        :name="$name" :key="$key" :group="$group" :valuedata="$valuedata" />
 
                 </div>
+
                 <div x-show="asidenav === 'activity-log'" x-cloak>
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Activity Log') }}</h3>
+                        <p class="text-base-content/60 text-sm">{{ __('Monitor all changes and actions within the system.') }}
+                        </p>
+                    </div>
+
                     <livewire:settings.activity-log lazy />
 
                 </div>
 
                 <div x-show="asidenav === 'error-log'" x-cloak>
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Error Log') }}</h3>
+                        <p class="text-base-content/60 text-sm">{{ __('Review 404 errors and other system exceptions.') }}</p>
+                    </div>
                     <livewire:settings.error-log lazy />
 
                 </div>
 
-                <div x-show="asidenav === 'global'" x-cloak>
-
-                    <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
-      
-                        <h3 class="font-bold text-left">{{ __('Global Settings') }}</h3>
-               
-         
-                    <button wire:click="selectItem('', 'add')" class="btn btn-primary"
-                        @click="open = true">
-                        <x-tabler-settings-plus stroke-width="1.5" />{{ __('New Setting') }}
-                    </button>
+                <div x-show="asidenav === 'redirection'" x-cloak>
+                    {{-- <livewire:redirect lazy />
+                    <livewire:brokenlink lazy /> --}}
                 </div>
 
-                    <x-kompass::elements.global :settings="$settings" :type="$type" :getId="$getId"  />
-           
+                <div x-show="asidenav === 'backup'" x-cloak>
 
                 </div>
-              
-          
             </item-setting>
-
-
 
         </div>
     </grid-side>
-
 
 </div>

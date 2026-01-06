@@ -1,62 +1,19 @@
 <div
     x-data="{
-        imageBG: @entangle('imageBG').live,
+        adminBackground: @entangle('adminBackground').live,
         image_overlay_opacity: @entangle('image_overlay_opacity').live
     }"
  class="max-w-2xl">
 
-
-
-    <div class="pb-5 mb-5 border-b border-zinc-200">
-        <div class="pb-3 w-full">
-            <label class="block text-sm font-medium leading-6 text-gray-900">{{ __('Background Color') }}</label>
-        </div>
-        
-        <div x-data="{ selectedColor: @entangle('color'), showPicker: false }" class="w-full h-auto flex items-center gap-2">
- 
-        
-            <!-- Hidden Color Input -->
-            <input type="color" x-ref="colorInput" style="display: none;" @change="selectedColor = $refs.colorInput.value; $wire.set('color', selectedColor)" />
-    
-            <!-- Custom Button to Open Color Picker -->
-            <div class="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center cursor-pointer" :style="{ backgroundColor: selectedColor }" @click="$refs.colorInput.click()">
-         
-            </div>
-            <input type="text" value="#000000"  wire:model.live="color" class="w-28" />
-    
-        </div>
-    </div>
-
-    <div class="pb-5 mb-5 border-b border-zinc-200">
-        <div class="pb-3 w-full">
-            <label class="block text-sm font-medium leading-6 text-gray-900">{{ __('Background Image') }}</label>
-            <p class="text-sm leading-6 text-gray-400">{{ __('Choose a nice background image to use as your authentication background.') }}</p>
-        </div>
-        <div class="w-2/3 h-auto">
-        @if(isset($imageBG) && $imageBG != '')
-            <div class="relative">
-                <img src="{{ is_string($imageBG ) ? url($imageBG) . '?' . uniqid() : $imageBG->temporaryUrl() }}" class="w-full h-auto rounded-lg object-cover aspect-[16/9]" />
-                <button wire:click="deleteImage()" class="flex absolute top-0 right-0 items-center px-3 py-1.5 mt-2 mr-2 text-xs font-medium text-white rounded-md bg-red-500/70 hover:bg-red-500/90">
-                    <x-tabler-trash class="mr-1 w-4 h-4" />
-                    <span>{{ __('Remove Image') }}</span>
-                </button>
-            </div>
-        @else
-            <div class="flex items-center w-full">
-                <label for="imagebg" class="flex flex-col justify-center items-center aspect-[1.91/1] w-full bg-gray-50 rounded-t-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                    <div class="flex flex-col justify-center items-center pt-5 pb-6">
-                        <x-tabler-cloud-upload class="mb-4 w-8 h-8 text-base-content/70 dark:text-gray-400" />
-                        <p class="mb-2 text-sm text-base-content/70 dark:text-gray-400"><span class="font-semibold">{{ __('Click to upload') }}</span></p>
-                        <p class="text-xs text-base-content/70 dark:text-gray-400">{{ __('PNG, JPG or GIF') }}</p>
-                    </div>
-                    <input id="imagebg" type="file" wire:model="imageBG" class="hidden" />
-                </label>
-            </div> 
-        @endif
-        </div>
-    </div>
-
-    <div class="pb-5 mb-5 border-b border-zinc-200">
+      
+<x-kompass::upload-image 
+    wire:model="adminBackground" 
+    :image="$adminBackground" 
+    delete-action="deleteImage()" 
+    label="{{ __('Background Image') }}" 
+/>
+<p class="text-sm leading-6 text-gray-400 mt-1">{{ __('Choose a nice background image to use as your authentication background.') }}</p>
+    <div class="py-5 mb-5 border-b border-zinc-200">
         <div class="pb-3 w-full ">
             <label class="block text-sm font-medium leading-6 text-gray-900">{{ __('Image Overlay Color') }}</label>
             <p class="text-sm leading-6 text-gray-400">{{ __('If you use a background image you can specify a color overlay here.') }}</p>
@@ -77,7 +34,7 @@
 
     </div>
 
-    <div class="pb-5 mb-5 border-b border-zinc-200">
+    <div class="py-5 mb-5 border-b border-zinc-200">
         <div class="pb-3 w-full">
             <label class="block text-sm font-medium leading-6 text-gray-900">{{ __('Image Overlay Opacity') }}</label>
             <p class="text-sm leading-6 text-gray-400">{{ __('The opacity of the image overlay color. Set to 0 for no overlay') }}</p>
@@ -96,7 +53,7 @@
 
         
     </div>
-
+    </div>
 
 
 

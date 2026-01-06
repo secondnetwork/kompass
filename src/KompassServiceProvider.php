@@ -69,6 +69,15 @@ class KompassServiceProvider extends ServiceProvider
             foreach (get_class_methods(BladeDirectives::class) as $method) {
                 Blade::directive($method, [BladeDirectives::class, $method]);
             }
+  
+            Blade::directive('getImageID', function ($expression) {
+                return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageID({$expression}); ?>";
+            });
+
+        
+            Blade::directive('getImageUrl', function ($expression) {
+                return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageUrl({$expression}); ?>";
+            });
         }
     }
 
@@ -78,9 +87,20 @@ class KompassServiceProvider extends ServiceProvider
             return;
         }
 
-        foreach (config('kompass.livewire', []) as $alias => $component) {
-            Livewire::component($alias, $component);
-        }
+
+        Livewire::addLocation(
+            classNamespace: 'Secondnetwork\\Kompass\\Livewire'
+        );
+        // Livewire::addLocation(
+        //     viewPath: resource_path('views/components')
+        // );
+
+        // Livewire::addLocation(
+        //     classNamespace: 'Secondnetwork\\Kompass'
+        // );
+        // Livewire::addLocation(
+        //     viewPath: resource_path('views/components')
+        // );
     }
 
     public function register(): void
@@ -194,9 +214,6 @@ class KompassServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
-                __DIR__.'/database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
-                __DIR__.'/database/seeders/RoleSeeder.php' => database_path('seeders/RoleSeeder.php'),
-                __DIR__.'/database/seeders/RoleUserSeeder.php' => database_path('seeders/RoleUserSeeder.php'),
                 __DIR__.'/database/seeders/PageSeeder.php' => database_path('seeders/PageSeeder.php'),
             ], 'DatabaseSeeder');
 

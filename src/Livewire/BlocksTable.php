@@ -41,9 +41,11 @@ class BlocksTable extends Component
 
     public $name;
 
+    public $type;
+
     protected $rules = [
 
-        'name' => '',
+        'name' => '',        'type' => '',
         // 'blockarray.meta_description' => '',
         // 'blockarray.slug' => ''
 

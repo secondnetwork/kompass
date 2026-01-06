@@ -7,6 +7,28 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Models\File as Files;
+use Secondnetwork\Kompass\Helpers\ImageFactory;
+
+if (!function_exists('getImageID')) {
+    /**
+     * Helper für Bild-IDs aus der Datenbank
+     */
+    function getImageID($id, $sizeKey = null)
+    {
+        // Ruft die Factory auf, die den Builder zurückgibt
+        return ImageFactory::getImageID($id, $sizeKey);
+    }
+}
+
+if (!function_exists('getImageUrl')) {
+    /**
+     * Helper für direkte URLs
+     */
+    function getImageUrl($url, $sizeKey = null)
+    {
+        return ImageFactory::getImageUrl($url, $sizeKey);
+    }
+}
 
 if (! function_exists('vendor_path')) {
     /**
@@ -41,12 +63,12 @@ if (! function_exists('get_field')) {
                 }
                 if (in_array($value->type, ['video'])) {
                     if ($file = Files::find($value->data)) {
-                        return Storage::url($file->path.$file->slug.'.'.$file->extension);
+                        return Storage::url($file->path.'/'.$file->slug.'.'.$file->extension);
                     }
                 }
                 if (in_array($value->type, ['poster'])) {
                     if ($file = Files::find($value->data)) {
-                        return Storage::url($file->path.$file->slug.'.'.$file->extension);
+                        return Storage::url($file->path.'/'.$file->slug.'.'.$file->extension);
                     }
                 }
 

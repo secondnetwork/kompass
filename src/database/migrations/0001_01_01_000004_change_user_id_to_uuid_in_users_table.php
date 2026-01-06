@@ -15,37 +15,83 @@ return new class extends Migration
      */
     public function up()
     {
-        // First, modify the existing table to add the UUID column
-        Schema::table('users', function (Blueprint $table): void {
-            $table->uuid('new_id')->after('id')->index(); // Add new UUID column + index
-        });
+        // ---------------------------------------------------------
+        // TEIL 1: USERS TABELLE (Integer ID -> UUID)
+        // ---------------------------------------------------------
 
-        // Copy existing data to the new UUID column
-        $users = DB::table('users')->get();
-        foreach ($users as $user) {
-            DB::table('users')->where('id', $user->id)->update(['new_id' => (string) Str::uuid()]);
+        // 1. Neue UUID Spalte anlegen
+        if (!Schema::hasColumn('users', 'new_id')) {
+            Schema::table('users', function (Blueprint $table): void {
+                $table->uuid('new_id')->after('id')->nullable();
+            });
         }
 
-        // Delete the old ID column
-        Schema::table('users', function (Blueprint $table): void {
-            $table->dropColumn('id'); // Delete old ID column
-            $table->renameColumn('new_id', 'id'); // Rename new UUID column
-            $table->primary('id'); // Set the UUID column as the Primary Key
+        // 2. Daten generieren (falls es schon User gibt)
+        DB::table('users')->whereNull('new_id')->orderBy('id')->chunk(200, function ($users) {
+            foreach ($users as $user) {
+                DB::table('users')
+                    ->where('id', $user->id)
+                    ->update(['new_id' => (string) Str::uuid()]);
+            }
         });
 
-        Schema::table('sessions', function (Blueprint $table): void {
-            // Check if the user_id column exists before attempting to delete the foreign key
-            if (Schema::hasColumn('sessions', 'user_id')) {
-                // Check if the foreign key exists before attempting to delete it
-                $foreignKeys = DB::select("SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = 'sessions' AND COLUMN_NAME = 'user_id'");
-                if (! empty($foreignKeys)) {
-                    $table->dropForeign(['user_id']); // Delete foreign key
-                }
+        // 3. Alte ID löschen
+        Schema::table('users', function (Blueprint $table): void {
+            if (Schema::hasColumn('users', 'id')) {
+                $table->dropColumn('id');
             }
-            $table->dropColumn('user_id'); // Delete old user_id column
+        });
 
-            // Add new user_id column as UUID
-            $table->uuid('user_id')->nullable()->index(); // UUID for the user_id with index
+        // 4. Neue Spalte umbenennen und Primary Key setzen
+        Schema::table('users', function (Blueprint $table): void {
+            if (Schema::hasColumn('users', 'new_id')) {
+                $table->renameColumn('new_id', 'id');
+            }
+        });
+
+        Schema::table('users', function (Blueprint $table): void {
+             // Sicherstellen, dass es Primary Key ist
+             $table->uuid('id')->nullable(false)->change();
+             $table->primary('id');
+        });
+
+
+        // ---------------------------------------------------------
+        // TEIL 2: SESSIONS TABELLE (user_id anpassen)
+        // ---------------------------------------------------------
+
+        // WICHTIG: Wir prüfen manuell, ob der Foreign Key existiert, 
+        // bevor wir Schema::table aufrufen. Das verhindert den Absturz.
+        
+        $fkExists = false;
+        // Prüfung nur für MySQL/MariaDB (dein aktueller Treiber)
+        if (DB::getDriverName() !== 'sqlite') {
+            $check = DB::select("
+                SELECT CONSTRAINT_NAME 
+                FROM information_schema.TABLE_CONSTRAINTS 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                AND TABLE_NAME = 'sessions' 
+                AND CONSTRAINT_NAME = 'sessions_user_id_foreign'
+            ");
+            $fkExists = !empty($check);
+        }
+
+        // Wenn FK existiert, löschen wir ihn
+        if ($fkExists) {
+            Schema::table('sessions', function (Blueprint $table) {
+                $table->dropForeign(['user_id']);
+            });
+        }
+
+        // Spalte löschen und neu anlegen
+        Schema::table('sessions', function (Blueprint $table) {
+            if (Schema::hasColumn('sessions', 'user_id')) {
+                $table->dropColumn('user_id');
+            }
+        });
+
+        Schema::table('sessions', function (Blueprint $table) {
+            $table->uuid('user_id')->nullable()->index();
         });
     }
 
@@ -56,23 +102,9 @@ return new class extends Migration
      */
     public function down()
     {
-        // Reversing this migration can be difficult in practice because
-        // data loss could occur. A complete reversal is often not possible
-        // or sensible.
-
-        // **Example** (incomplete) reversal (use with caution!):
-
         Schema::table('sessions', function (Blueprint $table): void {
-            $table->dropColumn('user_id'); // Remove UUID user_id
-            $table->integer('user_id')->nullable()->unsigned(); // Restore integer user_id (adjust as needed)
-            // You would need to restore the foreign key here, if possible.
-        });
-
-        Schema::table('users', function (Blueprint $table): void {
-            $table->dropColumn('id'); // Remove UUID id
-            $table->increments('id'); // Restore integer id
-
-            // You would need to restore the data here, if possible.
+            $table->dropColumn('user_id');
+            $table->foreignId('user_id')->nullable()->index();
         });
     }
 };

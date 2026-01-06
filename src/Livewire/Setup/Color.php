@@ -72,7 +72,7 @@ class Color extends Component
                 'name' => ucwords(str_replace(['_', '.'], ' ', $key)),
             ]
         );
-         $this->js('savedMessageOpen()');
+        // $this->js('savedMessageOpen()');
     }
 
     public function render()

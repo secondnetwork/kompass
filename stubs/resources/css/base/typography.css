@@ -1,15 +1,4 @@
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-    font-weight: 700;
-    line-height: 1.3;
-    /* @apply text-blau-600; */
-}
 
 .dark h1,
 .dark h2,

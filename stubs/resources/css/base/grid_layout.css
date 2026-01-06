@@ -1,4 +1,4 @@
-main > div, footer,header {
+main > div, main > section, footer,header{
     --gap: clamp(1rem, 6vw, 3rem);
     --full: minmax(var(--gap), 1fr);
     --content: min(65ch, 100% - var(--gap) * 2);
@@ -83,41 +83,3 @@ grid-4 {
     @apply grid gap-4;
 }
 
-@media screen(md) {
-    grid-4 {
-        @apply grid grid-cols-4 gap-4;
-    }
-}
-
-@media screen(md) {
-    grid-2-3 {
-        display: grid;
-        row-gap: 5rem;
-        grid-template-columns: 2fr;
-        grid-column: 2/3;
-    }
-}
-
-grid-2-3 {
-    display: grid;
-    gap: 5rem;
-    grid-template-columns: 2fr 4fr;
-    grid-column: 2/3;
-}
-
-@media screen(md) {
-    .grid-3-2,
-    grid-3-2 {
-        display: grid;
-        row-gap: 2rem;
-        grid-template-columns: 2fr;
-        grid-column: 2/3;
-    }
-}
-.grid-3-2,
-grid-3-2 {
-    display: grid;
-    row-gap: 2rem;
-    grid-template-columns: 2fr 1fr;
-    grid-column: 2/3;
-}

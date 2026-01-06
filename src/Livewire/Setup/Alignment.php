@@ -39,7 +39,7 @@ class Alignment extends Component
     {
         \Config::write('kompass.appearance.'.$key, $value);
         Artisan::call('config:clear');
-        $this->js('savedMessageOpen()');
+       // $this->js('savedMessageOpen()');
     }
 
     public function render()

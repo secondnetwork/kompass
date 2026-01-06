@@ -5,20 +5,27 @@ namespace Secondnetwork\Kompass\Livewire;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Settings extends Component
 {
+        #[Url(as: 'asidenav')]
+    public $asidenav = 'page_information';
+
+    #[Url]
+    public $tab = 'logo';
+
     public $search;
 
     public $headers;
 
     public $selectedItem;
 
-    public $pagetap = 'admin';
+    
 
-    protected $queryString = ['pagetap'];
+    
 
     public $orderBy = 'order';
 
@@ -37,6 +44,8 @@ class Settings extends Component
     public $data;
 
     public $name;
+     
+    public $icon;
 
     public $value;
 
@@ -52,11 +61,13 @@ class Settings extends Component
 
     public $type;
 
+    public $navigation = [];
+
     protected $rules = [
 
-        'name' => '',
+        'name' => 'required',
         'value' => '',
-        'key' => '',
+        'key' => 'required',
         'group' => 'required',
         'type' => '',
 
@@ -87,6 +98,55 @@ class Settings extends Component
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
+        $this->navigation = [
+            [
+                'slug' => '',
+                'name' => 'Theme ' . __('Settings'),
+            ],
+            [
+                'slug' => 'page_information',
+                'name' => __('Page Information'),
+                'icon' => 'tabler-info-circle',
+            ],
+            [
+                'slug' => 'page_appearance',
+                'name' => __('Page Appearance'),
+                'icon' => 'tabler-palette',
+            ],
+            [
+                'slug' => '',
+                'name' => __('Settings'),
+            ],
+            [
+                'slug' => 'backend',
+                'name' => 'Login ' . __('Page'),
+                'icon' => 'tabler-login',
+            ],
+            // [
+            //     'slug' => 'admin_panel',
+            //     'name' => __('Admin Panel'),
+            //     'icon' => 'tabler-layout-dashboard',
+            // ],
+            [
+                'slug' => 'global',
+                'name' => __('Global Settings'),
+                'icon' => 'tabler-world',
+            ],
+            [
+                'slug' => '',
+                'name' => __('Tools'),
+            ],
+            [
+                'slug' => 'activity-log',
+                'name' => __('Activity-log'),
+                'icon' => 'tabler-activity',
+            ],
+            [
+                'slug' => 'error-log',
+                'name' => __('Error-log'),
+                'icon' => 'tabler-alert-triangle',
+            ],
+        ];
     }
 
     public function saveEditorState($editorJsonData, $id)
@@ -130,6 +190,36 @@ class Settings extends Component
         if ($action == 'delete') {
             $this->FormDelete = true;
         }
+    }
+
+    public function updatedType($value)
+    {
+        if ($this->selectedItem) {
+            Setting::whereId($this->selectedItem)->update(['type' => $value]);
+        }
+    }
+
+    public function saveStepOne()
+    {
+        $validate = $this->validate([
+            'name' => 'required|min:3',
+            'key' => 'required|min:3',
+            'group' => 'required',
+        ]);
+
+        $setting = Setting::updateOrCreate([
+            'id' => $this->selectedItem,
+        ],
+        [
+            'name' => $this->name,
+            'key' => Str::slug($this->key, '-', 'de'),
+            'group' => strtolower($this->group),
+            'type' => $this->type ?: 'text',
+        ]);
+
+        $this->selectedItem = $setting->id;
+        $this->type = $setting->type;
+        $this->loadSetting();
     }
 
     public function loadSetting()

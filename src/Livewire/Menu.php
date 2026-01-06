@@ -20,7 +20,7 @@ class Menu extends Component
         $this->name = $name;
 
         $this->menu = Cache::rememberForever('kompass_menu_'.$name, function () {
-            return Menus::where('slug', $this->name)->first();
+            return Menus::where('group', $this->name)->first();
         });
         if ($this->menu) {
             $this->menuitem = Cache::rememberForever('kompass_menuitem_'.$name, function () {
@@ -33,6 +33,6 @@ class Menu extends Component
 
     public function render()
     {
-        return view('kompass::livewire.adminmenu', [$this->menuitem])->layout('layouts.app');
+        return view('kompass::components.menus.adminmenu', [$this->menuitem])->layout('layouts.app');
     }
 }

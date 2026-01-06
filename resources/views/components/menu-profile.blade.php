@@ -6,7 +6,7 @@
             <span class="truncate">{{ auth()->user()->name }}</span>
             <span class="text-xs font-light text-neutral-400">{{auth()->user()->email}}</span>
         </span>
-        <div class="relative rounded-full pl-1 h-10 w-10 flex items-center justify-center object-cover">
+        <div class="relative rounded-full h-10 w-10 flex items-center justify-center object-cover">
           <span class="absolute inset-0 z-0 flex items-center justify-center text-[#36424A] bg-[#FFA700] rounded-full text-base">
             {{ nameWithLastInitial(auth()->user()->name) }}
           </span>

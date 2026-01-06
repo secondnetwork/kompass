@@ -1,9 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
-use Secondnetwork\Kompass\Livewire\Frontend\Blogview;
-use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +15,9 @@ use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 
 require __DIR__.'/auth.php';
 
-Volt::route('/blog', 'pages.blog.index');
-
 Route::group(['middleware' => ['web']], function (): void {
-    Route::get('/', Pageview::class)->name('is_front_page');
-    Route::get('/{slug}', Pageview::class)->name('page');
-    Route::get('/blog/{slug}', Blogview::class)->name('post');
+    Route::livewire('/', 'pages::page');
+    Route::livewire('/blog', 'pages::blog.index');
+    Route::livewire('/blog/{slug}', 'pages::blog.single');
+    Route::livewire('/{slug}', 'pages::page');
 });

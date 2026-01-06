@@ -10,10 +10,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('kompass::admin.layouts.app')]
 class Profile extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
 
     public string $email = '';
@@ -25,12 +28,35 @@ class Profile extends Component
     public string $password_confirmation = '';
 
     /**
+     * The new display photo.
+     *
+     * @var mixed
+     */
+    public $photo;
+
+    /**
      * Mount the component.
      */
     public function mount(): void
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+    }
+
+    /**
+     * Update the display photo.
+     *
+     * @return void
+     */
+    public function updatedPhoto()
+    {
+        $this->validate([
+            'photo' => ['image', 'max:1024'],
+        ]);
+
+        Auth::user()->updateProfilePhoto($this->photo);
+
+        $this->dispatch('profile-updated');
     }
 
     /**
@@ -88,6 +114,20 @@ class Profile extends Component
         $user->save();
 
         $this->dispatch('profile-updated', name: $user->name);
+    }
+
+    /**
+     * Delete the user's profile photo.
+     *
+     * @return void
+     */
+    public function deleteProfilePhoto()
+    {
+        Auth::user()->deleteProfilePhoto();
+
+        $this->reset('photo');
+
+        $this->dispatch('profile-updated');
     }
 
     /**

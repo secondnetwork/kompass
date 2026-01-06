@@ -3,19 +3,15 @@
 namespace Secondnetwork\Kompass\Commands;
 
 use App\Models\User;
+use Secondnetwork\Kompass\Models\Setting; // Importiert das Setting Model
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
-use RuntimeException;
-use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
@@ -38,17 +34,150 @@ class KompassCommand extends Command implements PromptsForMissingInput
      */
     protected array $options;
 
+    public function handle(): int
+    {
+        $this->options = $this->options();
+
+        info('Welcome to the installation of Kompass - A Laravel CMS.');
+
+        // 1. Service Provider registrieren
+        $this->updateServiceProviders();
+
+        // 2. Abfragen (Frontend & DB)
+        $installFrontend = select(
+            label: 'Install Frontend Themes?',
+            options: [true => 'Yes', false => 'No'],
+            default: true
+        );
+
+        $packageManager = 'npm';
+        if ($installFrontend) {
+            $packageManager = select(
+                label: 'Which package manager do you use?',
+                options: [
+                    'bun' => 'Bun',
+                    'yarn' => 'Yarn',
+                    'npm' => 'Npm',
+                    'pnpm' => 'pnpm',
+                ],
+                default: 'npm'
+            );
+        }
+
+        warning('Warning: Have you made a backup of your database?');
+        $dropDatabase = select(
+            label: 'Drop all tables from the database for a fresh installation?',
+            options: [true => 'Yes', false => 'No'],
+            default: false
+        );
+
+        // 3. Grundlegende Assets & Migrationen veröffentlichen
+        // Wir müssen die Migrationen publishen, bevor wir migrieren können.
+        $this->publishCoreAssets();
+
+        // 4. Datenbank Migration
+        if ($dropDatabase) {
+            $this->runDatabaseMigrations(fresh: true);
+        } else {
+            // Sicherstellen, dass Tabellen existieren, auch ohne Fresh
+            $this->call('migrate');
+        }
+
+        $addGlobalSettings = select(
+            label: 'Update global settings for the Website?',
+            options: [true => 'Yes', false => 'No'],
+            default: true
+        );
+
+        if ($addGlobalSettings) {
+           // 5. Globale Seiteneinstellungen abfragen (NEU)
+            $this->configureGlobalSettings();
+        }
+        
+        // 6. Admin User erstellen
+        $addNewUser = select(
+            label: 'Create new Admin User?',
+            options: [true => 'Yes', false => 'No'],
+            default: true
+        );
+
+        if ($addNewUser) {
+            $this->createUser();
+        }
+
+        // 7. Frontend Assets installieren (falls gewählt)
+        if ($installFrontend) {
+            $this->installAssets($packageManager);
+        }
+
+        // 8. Finalisierung
+        $this->call('optimize:clear');
+
+        if (! File::exists(public_path('storage'))) {
+            $this->call('storage:link');
+        }
+
+        $this->sendSuccessMessage();
+
+        return self::SUCCESS;
+    }
+
     /**
-     * @return array{'name': string, 'email': string, 'password': string}
+     * Fragt die globalen Einstellungen ab und speichert sie in der DB.
      */
+    protected function configureGlobalSettings(): void
+    {
+        info('--- Global Website Configuration ---');
+
+        $webtitle = text(
+            label: 'Website Title',
+            placeholder: 'My Great Website',
+            default: 'Kompass Website',
+            required: true
+        );
+
+        $supline = text(
+            label: 'Supline (Slogan)',
+            placeholder: 'Welcome to our site',
+            default: ''
+        );
+
+        $description = text(
+            label: 'SEO Description',
+            placeholder: 'A short description of the website',
+            default: ''
+        );
+
+        $settings = [
+            'webtitle' => $webtitle,
+            'supline' => $supline,
+            'description' => $description,
+        ];
+
+        // Speichern analog zur Livewire Komponente
+        foreach ($settings as $key => $value) {
+            Setting::updateOrCreate(
+                [
+                    'key' => $key,
+                    'group' => 'global',
+                ],
+                [
+                    'data' => $value,
+                    'name' => ucwords(str_replace('_', ' ', $key)),
+                ]
+            );
+        }
+
+        info('Settings saved successfully.');
+    }
+
     protected function getUserData(): array
     {
         return [
             'name' => $this->options['name'] ?? text(
-                label: 'Name',
+                label: 'Admin Name',
                 required: true,
             ),
-
             'email' => $this->options['email'] ?? text(
                 label: __('E-Mail Address'),
                 required: true,
@@ -58,356 +187,157 @@ class KompassCommand extends Command implements PromptsForMissingInput
                     default => null,
                 },
             ),
-
             'password' => Hash::make($this->options['password'] ?? password(
                 label: __('Password'),
                 required: true,
+                validate: fn (string $value) => strlen($value) < 8 ? 'The password must be at least 8 characters.' : null,
             )),
         ];
     }
 
-    protected function createUser(): Authenticatable
+    protected function createUser(): void
     {
         $now = Carbon::now()->toDateTimeString();
-        $maildata = Arr::prepend($this->getUserData(), $now, 'email_verified_at');
-        $user = User::create($maildata);
-        // $user->roles()->sync(1);
-        $user->syncRoles('admin');
-
-        return $user;
+        $userData = Arr::prepend($this->getUserData(), $now, 'email_verified_at');
+        
+        $user = User::create($userData);
+        
+        if (method_exists($user, 'syncRoles')) {
+            $user->syncRoles('admin');
+        }
     }
 
     protected function sendSuccessMessage(): void
     {
-        $loginUrl = env('APP_URL').'/login';
+        $loginUrl = config('app.url').'/login';
         note('Kompass is now installed.');
-        info("Logging at {$loginUrl} with you credentials.");
+        info("Log in at {$loginUrl} with your credentials.");
     }
 
-    public function handle(): int
+    protected function installAssets(string $packageManager): void
     {
-        $this->options = $this->options();
+        info('Installing Frontend Assets...');
 
-        info('Welcome to the installation of Kompass A Laravel CMS.');
+        // Config Files
+        File::copy(__DIR__.'/../../stubs/livewire/postcss.config.cjs', base_path('postcss.config.cjs'));
+        File::copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
 
-        $this->updateServiceProviders();
+        // Directories & Clean up
+        File::deleteDirectory(resource_path('resources')); // clean default laravel resources if needed
+        File::ensureDirectoryExists(resource_path('views'));
+        File::ensureDirectoryExists(resource_path('views/layouts'));
 
-        $publishAssets = select(
-            label: 'Install Frontend Themen?',
-            options: [
-                true => 'Yes',
-                false => 'no',
-            ],
-        );
-
-        if ($publishAssets) {
-            $packagemanager = select(
-                label: 'Which package manager do you have on the system?',
-                options: [
-                    'bun' => 'Bun',
-                    'yarn' => 'Yarn',
-                    'npm' => 'Npm',
-                    'pnpm' => 'pnpm',
-                ]
-            );
-            $this->installAssets($packagemanager);
-            $this->publishAssets();
-
-            $this->call('volt:install');
-        }
-
-        warning('Warning: Have you made a backup of you database?');
-        $database = select(
-            label: 'Drop all tables from the database? For a new installation of Kompass!',
-            options: [
-                true => 'Yes',
-                false => 'no',
-            ]
-        );
-
-        if ($database) {
-            $this->databaserun();
-        }
-
-        $addNewUser = select(
-            label: 'Create new Admin User?',
-            options: [
-                true => 'Yes',
-                false => 'no',
-            ]
-        );
-
-        if ($addNewUser) {
-            $this->createUser();
-        }
-
-        $this->call('optimize:clear');
-
-        $linkPath = public_path('storage');
-        if (! file_exists($linkPath)) {
-            $this->call('storage:link');
-        }
-
-        $this->sendSuccessMessage();
-
-        return static::SUCCESS;
-    }
-
-    protected function installAssets($packagemanager)
-    {
-        // Tailwind Configuration...
-        copy(__DIR__.'/../../stubs/livewire/postcss.config.cjs', base_path('postcss.config.cjs'));
-        copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
-
-        // Directories...
-        (new Filesystem)->deleteDirectory('resources');
-
-        (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
-        copy(__DIR__.'/../../stubs/app/Http/Controllers/Auth/VerifyEmailController.php', base_path('app/Http/Controllers/Auth/VerifyEmailController.php'));
-        (new Filesystem)->ensureDirectoryExists(app_path('Models'));
-        (new Filesystem)->ensureDirectoryExists(app_path('View/Components'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
-
-        // Layouts...
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources', 'resources');
+        // Layouts copying
+        File::copyDirectory(__DIR__.'/../../stubs/resources', resource_path());
 
         $this->flushNodeModules();
 
-        // NPM Packages...
+        // NPM Packages Update (Deine neue Liste)
         $this->updateNodePackages(function ($packages) {
             return [
                 '@lehoczky/postcss-fluid' => '^1.0.3',
                 '@tailwindcss/forms' => '^0.5.10',
-                '@tailwindcss/typography' => '^0.5.16',
-                'autoprefixer' => '^10.4.20',
-                'axios' => '^1.7.9',
-                'concurrently' => '^9.1.2',
-                'laravel-vite-plugin' => '^1.2.0',
-                'postcss' => '^8.5.1',
-                'vite' => '^6.0.11',
-                '@tailwindcss/postcss' => '^4.0.0',
-                '@tailwindcss/vite' => '^4.0.0',
-                'tailwindcss' => '^4.0.0',
+                '@tailwindcss/postcss' => '^4.1.18',
+                '@tailwindcss/typography' => '^0.5.19',
+                '@tailwindcss/vite' => '^4.1.18',
+                'autoprefixer' => '^10.4.23',
+                'laravel-vite-plugin' => '^2.0.1',
+                'postcss' => '^8.5.6',
+                'tailwindcss' => '^4.1.18',
+                'vite' => '^7.3.0',
             ] + $packages;
         });
-        switch ($packagemanager) {
-            case 'bun':
-                $this->runCommands(['bun install', 'bun run build']);
-                break;
-            case 'yarn':
-                $this->runCommands(['yarn install', 'yarn run build']);
-                break;
-            case 'npm':
-                $this->runCommands(['npm install', 'npm run build']);
-                break;
-            case 'pnpm':
-                $this->runCommands(['pnpm install', 'pnpm run build']);
-                break;
-            default:
-                // code...
-                break;
+
+        $commands = [
+            'bun' => ['bun install', 'bun run build'],
+            'yarn' => ['yarn install', 'yarn run build'],
+            'npm' => ['npm install', 'npm run build'],
+            'pnpm' => ['pnpm install', 'pnpm run build'],
+        ];
+
+        if (isset($commands[$packageManager])) {
+            $this->runShellCommands($commands[$packageManager]);
         }
 
-        info('Frontend Theme Install');
+        info('Frontend Theme Installed');
     }
 
-    // Service Providers...
-    protected function publishAssets()
+    protected function publishCoreAssets(): void
     {
+        File::deleteDirectory(public_path('vendor/kompass'));
+        
+        // Auth Controller & User Model
+        File::ensureDirectoryExists(app_path('Http/Controllers/Auth'));
+        File::copy(__DIR__.'/../../stubs/app/Http/Controllers/Auth/VerifyEmailController.php', base_path('app/Http/Controllers/Auth/VerifyEmailController.php'));
+        File::copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
+        
+        // Routes
+        File::copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
+        File::copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
 
-        (new Filesystem)->deleteDirectory('public/vendor/kompass');
-        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
-        copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
-
+        // Publish Vendor Files & Migrations
         $this->callSilent('vendor:publish', ['--provider' => 'Secondnetwork\Kompass\KompassServiceProvider']);
         $this->callSilent('vendor:publish', ['--tag' => 'migrations', '--force' => true]);
     }
 
-    public function databaserun()
+    public function runDatabaseMigrations(bool $fresh = false): void
     {
         // Database seeders...
-        (new Filesystem)->copyDirectory(__DIR__.'/../database/seeders', 'database/seeders');
-        $this->call('migrate');
-        $this->info('migrate Database...');
+        File::copyDirectory(__DIR__.'/../database/seeders', database_path('seeders'));
+        
+        if ($fresh) {
+            $this->call('migrate:fresh --seed');
+            $this->info('Database wiped and migrated.');
+        } else {
+            $this->call('migrate --seed');
+            $this->info('Database migrated.');
+        }
     }
 
-    public function updateServiceProviders()
+    public function updateServiceProviders(): void
     {
-
         if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
             return;
         }
-
         ServiceProvider::addProviderToBootstrapFile(\App\Providers\KompassServiceProvider::class);
-        // ServiceProvider::addProviderToBootstrapFile(Spatie\Permission\PermissionServiceProvider::class);
-        // $appConfig = file_get_contents(config_path('app.php'));
-
-        // if (
-        //     ! Str::contains($appConfig, 'App\\Providers\\FortifyServiceProvider::class')
-        //     &&
-        //     ! Str::contains($appConfig, 'App\\Providers\\KompassServiceProvider::class')
-        // ) {
-
-        //     $this->callSilent('vendor:publish', [
-        //         '--provider' => FortifyServiceProvider::class,
-        //         '--provider' => KompassServiceProvider::class,
-        //     ]);
-
-        //     $this->registerFortifyServiceProvider();
-        //     $this->info('Fortify scaffolding installed successfully');
-        // File::put(config_path('app.php'), str_replace(
-        //     "App\Providers\RouteServiceProvider::class,",
-        //     "App\Providers\RouteServiceProvider::class,".PHP_EOL.
-        //         "App\Providers\FortifyServiceProvider::class,".PHP_EOL.
-        //         'App\\Providers\\KompassServiceProvider::class,',
-        //     $appConfig
-        // ));
-        // }
     }
 
-    /**
-     * Installs the given Composer Packages into the application.
-     *
-     * @param  mixed  $packages
-     * @return void
-     */
-    protected function requireComposerPackages($packages)
+    protected static function updateNodePackages(callable $callback, bool $dev = true): void
     {
-        $composer = $this->option('composer');
-
-        if ($composer !== 'global') {
-            $command = [$this->phpBinary(), $composer, 'require'];
-        }
-
-        $command = array_merge(
-            $command ?? ['composer', 'require'],
-            is_array($packages) ? $packages : func_get_args()
-        );
-
-        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-            ->setTimeout(null)
-            ->run(function ($type, $output): void {
-                $this->output->write($output);
-            });
-    }
-
-    /**
-     * Install the given Composer Packages as "dev" dependencies.
-     *
-     * @param  mixed  $packages
-     * @return void
-     */
-    protected function requireComposerDevPackages($packages)
-    {
-        $composer = $this->option('composer');
-
-        if ($composer !== 'global') {
-            $command = [$this->phpBinary(), $composer, 'require', '--dev'];
-        }
-
-        $command = array_merge(
-            $command ?? ['composer', 'require', '--dev'],
-            is_array($packages) ? $packages : func_get_args()
-        );
-
-        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-            ->setTimeout(null)
-            ->run(function ($type, $output): void {
-                $this->output->write($output);
-            });
-    }
-
-    /**
-     * Update the "package.json" file.
-     *
-     * @param  bool  $dev
-     * @return void
-     */
-    protected static function updateNodePackages(callable $callback, $dev = true)
-    {
-        if (! file_exists(base_path('package.json'))) {
+        if (! File::exists(base_path('package.json'))) {
             return;
         }
 
         $configurationKey = $dev ? 'devDependencies' : 'dependencies';
-
-        $packages = json_decode(file_get_contents(base_path('package.json')), true);
+        $packages = json_decode(File::get(base_path('package.json')), true);
 
         $packages[$configurationKey] = $callback(
-            array_key_exists($configurationKey, $packages) ? $packages[$configurationKey] : [],
+            $packages[$configurationKey] ?? [],
             $configurationKey
         );
 
         ksort($packages[$configurationKey]);
 
-        file_put_contents(
+        File::put(
             base_path('package.json'),
             json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT).PHP_EOL
         );
     }
 
-    /**
-     * Delete the "node_modules" directory and remove the associated lock files.
-     *
-     * @return void
-     */
-    protected static function flushNodeModules()
+    protected static function flushNodeModules(): void
     {
-        tap(new Filesystem, function ($files): void {
-            $files->deleteDirectory(base_path('node_modules'));
-            $files->delete(base_path('bun.lockb'));
-            $files->delete(base_path('bun.lock'));
-            $files->delete(base_path('pnpm-lock.yaml'));
-            $files->delete(base_path('yarn.lock'));
-            $files->delete(base_path('package-lock.json'));
-        });
-    }
-
-    /**
-     * Replace a given string within a given file.
-     *
-     * @param  string  $search
-     * @param  string  $replace
-     * @param  string  $path
-     * @return void
-     */
-    protected function replaceInFile($search, $replace, $path)
-    {
-        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
-    }
-
-    /**
-     * Get the path to the appropriate PHP binary.
-     *
-     * @return string
-     */
-    protected function phpBinary()
-    {
-        return (new PhpExecutableFinder)->find(false) ?: 'php';
-    }
-
-    /**
-     * Run the given commands.
-     *
-     * @param  array  $commands
-     * @return void
-     */
-    protected function runCommands($commands)
-    {
-        $process = Process::fromShellCommandline(implode(' && ', $commands), null, null, null, null);
-
-        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
-            try {
-                $process->setTty(true);
-            } catch (RuntimeException $e) {
-                $this->output->writeln('  <bg=yellow;fg=black> WARN </> '.$e->getMessage().PHP_EOL);
-            }
+        File::deleteDirectory(base_path('node_modules'));
+        
+        $filesToDelete = ['bun.lockb', 'bun.lock', 'pnpm-lock.yaml', 'yarn.lock', 'package-lock.json'];
+        foreach ($filesToDelete as $file) {
+            File::delete(base_path($file));
         }
+    }
 
-        $process->run(function ($type, $line): void {
-            $this->output->write('    '.$line);
+    protected function runShellCommands(array $commands): void
+    {
+                Process::forever()->run(implode(' && ', $commands), function (string $type, string $output) {
+            $this->output->write('    '.$output);
         });
     }
 }

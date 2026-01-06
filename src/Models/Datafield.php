@@ -19,6 +19,10 @@ class Datafield extends Model
     // protected $fillable = [
     //     'id','status', 'name', 'blocktemplate_id', 'slug', 'type', 'grid', 'layout','content'
     // ];
+    protected $casts = [
+        "data" => "array",
+    ];
+
     protected $guarded = [];
 
     public static function boot()

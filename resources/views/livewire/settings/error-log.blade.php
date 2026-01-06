@@ -1,5 +1,8 @@
 
 <div class="align-middle inline-block min-w-full my-6">
+
+
+
     <div class="shadow border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-100">
