@@ -109,7 +109,7 @@
                 </div> --}}
                 <div x-show="asidenav === 'global'" x-cloak>
 
-                    <div class="border-gray-200 whitespace-nowrap flex gap-8 justify-between items-center">
+                    <div class="border-gray-200 whitespace-nowrap flex gap-8 justify-between items-center mb-4">
 
                         <div class="my-3">
                             <h3 class="text-2xl font-bold">{{ __('Global Settings') }}</h3>
