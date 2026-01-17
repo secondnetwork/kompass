@@ -131,7 +131,7 @@ class PagesTable extends Component
     {
         $this->validate();
 
-        $slugNameURL = Str::slug($this->title, '-', 'de'); //Convert Input to Str Slug
+        $slugNameURL = Str::slug($this->title, '-', 'de'); // Convert Input to Str Slug
 
         $placeObj = new Page;
 
@@ -144,12 +144,12 @@ class PagesTable extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $newpageslug = $newSlug; //New Slug
+                    $newpageslug = $newSlug; // New Slug
                     break;
                 }
             }
         } else {
-            //Slug do not exists. Just use the selected Slug.
+            // Slug do not exists. Just use the selected Slug.
             $newpageslug = $slugNameURL;
         }
 
@@ -172,7 +172,7 @@ class PagesTable extends Component
     {
         $pagemodel = Page::find($id);
 
-        $slugNameURL = $pagemodel['slug']; //Convert Input to Str Slug
+        $slugNameURL = $pagemodel['slug']; // Convert Input to Str Slug
 
         $placeObj = new Page;
 
@@ -185,12 +185,12 @@ class PagesTable extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $clonepageslug = $newSlug; //New Slug
+                    $clonepageslug = $newSlug; // New Slug
                     break;
                 }
             }
         } else {
-            //Slug do not exists. Just use the selected Slug.
+            // Slug do not exists. Just use the selected Slug.
             $clonepageslug = $slugNameURL;
         }
 
@@ -229,74 +229,46 @@ class PagesTable extends Component
                 }
             }
 
-            foreach ($blockcopy->datafield as $itemdata) {
+            foreach ($item->datafield as $itemdata) {
                 $copydatablock = $itemdata->replicate();
                 $copydatablock->block_id = $blockcopy->id;
                 $copydatablock->push();
             }
 
-            foreach ($blockcopy->children as $subgroup) {
-
-                $copygroup = $subgroup->replicate();
-                $copygroup->blockable_id = $clone->id;
-                $copygroup->subgroup = $blockcopy->id;
-                $copygroup->push();
-
-                if ($itemMeta = $subgroup->allMeta) {
-                    $mod = Block::find($copygroup->id);
-
-                    foreach ($itemMeta as $value) {
-                        $mod->saveMeta([
-                            $value->key => $value->value,
-                        ]);
-                    }
-                }
-
-                foreach ($subgroup->datafield as $itemdata) {
-                    $copydatablock = $itemdata->replicate();
-                    $copydatablock->block_id = $copygroup->id;
-                    $copydatablock->push();
-                }
-            }
-
-            self::cloneTree($blockcopy->children, $blocksclone, $clone->id, $copygroup->id);
+            $children = $blocksclone->where('subgroup', $item->id);
+            $this->cloneTree($children, $blocksclone, $clone->id, $blockcopy->id);
         }
 
         $this->resetpage();
     }
 
-    public function cloneTree($categories, $allCategories, $cloneid, $blockid)
+    public function cloneTree($categories, $allCategories, $cloneid, $parentId)
     {
         foreach ($categories as $item) {
+            $copy = $item->replicate();
+            $copy->blockable_id = $cloneid;
+            $copy->subgroup = $parentId;
+            $copy->push();
 
-            $item->children = $allCategories->where('subgroup', $item->id);
+            if ($itemMeta = $item->allMeta) {
+                $mod = Block::find($copy->id);
 
-            if ($item->children->isNotEmpty()) {
-                foreach ($item->children as $subgroup) {
-
-                    $copygroup = $subgroup->replicate();
-                    $copygroup->blockable_id = $cloneid;
-                    $copygroup->subgroup = $blockid;
-                    $copygroup->push();
-
-                    if ($itemMeta = $subgroup->allMeta) {
-                        $mod = Block::find($copygroup->id);
-
-                        foreach ($itemMeta as $value) {
-                            $mod->saveMeta([
-                                $value->key => $value->value,
-                            ]);
-                        }
-                    }
-
-                    foreach ($subgroup->datafield as $itemdata) {
-                        $copydatablock = $itemdata->replicate();
-                        $copydatablock->block_id = $copygroup->id;
-                        $copydatablock->push();
-                    }
+                foreach ($itemMeta as $value) {
+                    $mod->saveMeta([
+                        $value->key => $value->value,
+                    ]);
                 }
+            }
 
-                self::cloneTree($item->children, $allCategories, $cloneid, $copygroup->id);
+            foreach ($item->datafield as $itemdata) {
+                $copydatablock = $itemdata->replicate();
+                $copydatablock->block_id = $copy->id;
+                $copydatablock->push();
+            }
+
+            $children = $allCategories->where('subgroup', $item->id);
+            if ($children->isNotEmpty()) {
+                $this->cloneTree($children, $allCategories, $cloneid, $copy->id);
             }
         }
     }

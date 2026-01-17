@@ -8,7 +8,6 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Post;
 
 class PostsTable extends Component
@@ -93,7 +92,7 @@ class PostsTable extends Component
 
     public function resetpost()
     {
-        $this->mount($this->post_id);
+        $this->resetpage();
     }
 
     private function resultDate()
@@ -140,7 +139,7 @@ class PostsTable extends Component
     {
         $this->validate();
 
-        $slugNameURL = Str::slug($this->title, '-', 'de'); //Convert Input to Str Slug
+        $slugNameURL = Str::slug($this->title, '-', 'de'); // Convert Input to Str Slug
 
         $placeObj = new Post;
 
@@ -153,12 +152,12 @@ class PostsTable extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $newpostslug = $newSlug; //New Slug
+                    $newpostslug = $newSlug; // New Slug
                     break;
                 }
             }
         } else {
-            //Slug do not exists. Just use the selected Slug.
+            // Slug do not exists. Just use the selected Slug.
             $newpostslug = $slugNameURL;
         }
 
@@ -182,7 +181,7 @@ class PostsTable extends Component
 
         $newpost = $post->replicate();
 
-        $slugNameURL = Str::slug($newpost['title'], '-', 'de'); //Convert Input to Str Slug
+        $slugNameURL = Str::slug($newpost['title'], '-', 'de'); // Convert Input to Str Slug
 
         $placeObj = new Post;
 
@@ -195,12 +194,12 @@ class PostsTable extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $newpost->slug = $newSlug; //New Slug
+                    $newpost->slug = $newSlug; // New Slug
                     break;
                 }
             }
         } else {
-            //Slug do not exists. Just use the selected Slug.
+            // Slug do not exists. Just use the selected Slug.
             $newpost->slug = $slugNameURL;
         }
         $newpost->status = 'draft';
@@ -208,31 +207,67 @@ class PostsTable extends Component
 
         $newpost->push();
 
-        $blocksclone = Block::where('post_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        $relationships = ['datafield', 'meta', 'children'];
+        $blocksclone = Block::where('blockable_id', $id)->where('blockable_type', 'post')->with($relationships)->get();
 
-        $blocksclone->each(function ($item, $key) use ($newpost): void {
-            $altID = $item->id;
+        $rootblock = $blocksclone->whereNull('subgroup');
 
-            $copy = $item->replicate();
+        foreach ($rootblock as $item) {
+            $blockcopy = $item->replicate();
+            $blockcopy->blockable_id = $newpost->id;
+            $blockcopy->push();
 
-            $copy->post_id = $newpost->id;
-            $copy->save();
-            if ($copy->children) {
-                foreach ($copy->children as $subgroup) {
-                    $copygroup = $subgroup->replicate();
-                    $copygroup->post_id = $newpost->id;
-                    $copygroup->subgroup = $copy->id;
-                    $copygroup->save();
+            if ($itemMeta = $item->allMeta) {
+                $mod = Block::find($blockcopy->id);
+                foreach ($itemMeta as $value) {
+                    $mod->saveMeta([
+                        $value->key => $value->value,
+                    ]);
                 }
             }
 
-            $fields = Datafield::where('block_id', $altID)->get();
-            $fields->each(function ($item, $key) use ($copy): void {
-                $copyitem = $item->replicate();
-                $copyitem->block_id = $copy->id;
-                $copyitem->save();
-            }, );
-        }, );
+            foreach ($item->datafield as $itemdata) {
+                $copydatablock = $itemdata->replicate();
+                $copydatablock->block_id = $blockcopy->id;
+                $copydatablock->push();
+            }
+
+            $children = $blocksclone->where('subgroup', $item->id);
+            $this->cloneTree($children, $blocksclone, $newpost->id, $blockcopy->id);
+        }
+
+        $this->resetpage();
+    }
+
+    public function cloneTree($categories, $allCategories, $cloneid, $parentId)
+    {
+        foreach ($categories as $item) {
+            $copy = $item->replicate();
+            $copy->blockable_id = $cloneid;
+            $copy->subgroup = $parentId;
+            $copy->push();
+
+            if ($itemMeta = $item->allMeta) {
+                $mod = Block::find($copy->id);
+
+                foreach ($itemMeta as $value) {
+                    $mod->saveMeta([
+                        $value->key => $value->value,
+                    ]);
+                }
+            }
+
+            foreach ($item->datafield as $itemdata) {
+                $copydatablock = $itemdata->replicate();
+                $copydatablock->block_id = $copy->id;
+                $copydatablock->push();
+            }
+
+            $children = $allCategories->where('subgroup', $item->id);
+            if ($children->isNotEmpty()) {
+                $this->cloneTree($children, $allCategories, $cloneid, $copy->id);
+            }
+        }
     }
 
     public function delete()
