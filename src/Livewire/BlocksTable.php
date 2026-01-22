@@ -123,9 +123,38 @@ class BlocksTable extends Component
     {
         $validatedData = $this->validate();
         $validatedData['type'] = Str::slug($this->name);
-        Blocktemplates::create($validatedData);
+        
+        $block = Blocktemplates::create($validatedData);
+        
+        $this->createBlockViewFile($block->type);
+        
         $this->reset(['name', 'type']);
         $this->FormAdd = false;
+    }
+
+    protected function createBlockViewFile($type)
+    {
+        $path = resource_path('views/components/blocks/' . $type . '.blade.php');
+        
+        if (file_exists($path)) {
+            session()->flash('error', "File {$type}.blade.php already exists.");
+            return;
+        }
+        
+        $content = <<<BLADE
+@props([
+    'item' => '',
+])
+@if(\$item->type == '{$type}')
+<div>
+    {{-- {$type} block content --}}
+</div>
+@endif
+BLADE;
+        
+        if (!file_put_contents($path, $content)) {
+            session()->flash('error', "Could not create file {$type}.blade.php.");
+        }
     }
 
     public function updatedName($value)
