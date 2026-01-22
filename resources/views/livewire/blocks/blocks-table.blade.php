@@ -4,8 +4,10 @@
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
-                <x-kompass::form.input wire:model="name" label="Name" type="text" class="mt-1 block w-full" />
-                <x-kompass::form.input wire:model="type" label="Type / Slug" type="text" class="mt-1 block w-full" />
+                <x-kompass::form.input wire:model.live="name" label="Name" type="text" class="mt-1 block w-full" />
+                @error('name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                <x-kompass::form.input wire:model="type" label="Type / Slug" type="text" class="mt-1 block w-full bg-gray-100" readonly />
+                @error('type') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                 <button wire:click="saveBlock" class="btn btn-primary">Save</button>
 
             </x-slot>

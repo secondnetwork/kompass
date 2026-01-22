@@ -36,7 +36,7 @@
                                             @if ($key == 2)
                                                 @if ($page->$value == 'published')
                                                     <span
-                                                        class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        class="badge badge-sm bg-green-100 text-green-800">
                                                     @else
                                                         <span
                                                             class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">

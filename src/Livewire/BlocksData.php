@@ -18,16 +18,18 @@ class BlocksData extends Component
 
     /**
      * The component's listeners.
-     *
-     * @var array
      */
-    public $data;
-
     public $fields;
 
     public $title;
 
     public $name;
+
+    public $type;
+
+    public $iconclass;
+
+    public $grid;
 
     public $slug;
 
@@ -44,30 +46,25 @@ class BlocksData extends Component
     public $filestoredata;
 
     protected $rules = [
-        'data.name' => 'required|string|min:3',
-        // 'data.slug' => '',
-        'data.grid' => '',
-        'data.iconclass' => '',
-        'data.icon_img_path' => '',
-        // 'fields.*.id' => '',
-        // 'fields.*.name' => '',
-        // 'fields.*.grid' => '',
-        // // 'fields.*.slug' => '',
-        // 'fields.*.type' => '',
-        // 'filestoredata.*' => 'required|file|mimes:' . File::getAllExtensions() . '|max:' . File::getMaxSize(),
-        // 'filestoredata' => 'image|max:1024', // 1MB Max
+        'name' => 'required|string|min:1',
+        'type' => 'required|string|min:1|unique:blocktemplates,type,' . null . ',id',
+        'iconclass' => 'nullable',
+        'grid' => 'nullable',
+        'icon_img_path' => 'nullable',
     ];
 
     public function mount($id)
     {
-        $this->data = Blocktemplates::findOrFail($id);
+        $block = Blocktemplates::findOrFail($id);
         $fields = Blockfields::where('blocktemplate_id', $id)->orderBy('order')->get();
 
         $this->fields = $fields;
-        $this->name = $this->data->name;
-        // $this->slug = $this->data->slug;
+        $this->name = $block->name;
+        $this->type = $block->type;
+        $this->iconclass = $block->iconclass;
+        $this->grid = $block->grid;
+        $this->icon_img_path = $block->icon_img_path;
         $this->blocktemplatesId = $id;
-        // $this->fields->slug = $mfields->slug;
     }
 
     protected $listeners = ['selectItemForAction']; // Event-Name muss passen
@@ -138,7 +135,9 @@ class BlocksData extends Component
 
     public function saveUpdate()
     {
-        $this->dispatch('field-update'); 
+        $validatedData = $this->validate();
+        
+        $this->dispatch('field-update');
         $id = $this->blocktemplatesId;
 
         if (!$id) {
@@ -146,34 +145,44 @@ class BlocksData extends Component
             return;
         }
 
-        // Ensure data is loaded if needed (might be redundant if always loaded in mount)
-        if (empty($this->data)) {
-             $this->data = Blocktemplates::findOrFail($id)->toArray();
-        }
-        if (empty($this->fields)) {
-            $this->fields = Blockfields::where('blocktemplate_id', $id)->orderBy('order')->get()->toArray();
-        }
-
-        $validatedData = $this->validate();
-
         $block = Blocktemplates::findOrFail($id);
 
-        $dataToUpdate = $validatedData['data'] ?? [];
+        $dataToUpdate = [];
+
+        if (!empty($validatedData['name'])) {
+            $dataToUpdate['name'] = $validatedData['name'];
+        }
+        if (isset($validatedData['type'])) {
+            $dataToUpdate['type'] = $validatedData['type'];
+        }
+        if (isset($validatedData['iconclass'])) {
+            $dataToUpdate['iconclass'] = $validatedData['iconclass'];
+        }
+        if (isset($validatedData['grid'])) {
+            $dataToUpdate['grid'] = $validatedData['grid'];
+        }
+        if (isset($validatedData['icon_img_path'])) {
+            $dataToUpdate['icon_img_path'] = $validatedData['icon_img_path'];
+        }
 
         if (! empty($this->filestoredata)) {
-            // Consider deleting the old file if it exists
             if ($block->icon_img_path && Storage::disk('public')->exists($block->icon_img_path)) {
                 Storage::disk('public')->delete($block->icon_img_path);
             }
             $original_strorlink = $this->filestoredata->store('block_icons', 'public');
             $dataToUpdate['icon_img_path'] = $original_strorlink;
-            $this->filestoredata = null; // Clear the temporary file upload state
+            $this->filestoredata = null;
         }
 
         if (!empty($dataToUpdate)) {
             $block->update($dataToUpdate);
+            $this->name = $block->fresh()->name;
+            $this->type = $block->fresh()->type;
+            $this->iconclass = $block->fresh()->iconclass;
+            $this->grid = $block->fresh()->grid;
+            $this->icon_img_path = $block->fresh()->icon_img_path;
         }
-        
+
         $this->nofifiction = true;
         $this->resetpage();
         session()->flash('message', 'Block erfolgreich aktualisiert.');

@@ -285,7 +285,7 @@
 
                     @foreach ($blocktemplates as $itemblock)
                     <div class="border-gray-400 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['iconclass'] }})">
+                        wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}','{{ $itemblock['iconclass'] }}')">
                         @if ($itemblock['icon_img_path'])
                             <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
                                 src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">

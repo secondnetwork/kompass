@@ -175,7 +175,7 @@ class="relative overflow-hidden rounded-md aspect-video">
             x-transition:enter-end="scale-100 opacity-0"
             class="absolute z-20 flex items-center justify-center w-24 h-24 bg-blue-600 rounded-full opacity-0 bg-opacity-20"
             x-cloak>
-            <svg class="w-10 h-10 translate-x-0.5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.42737 3.41611C6.46665 2.24586 4.00008 3.67188 4.00007 5.9427L4 18.0572C3.99999 20.329 6.46837 21.7549 8.42907 20.5828L18.5698 14.5207C20.4775 13.3802 20.4766 10.6076 18.568 9.46853L8.42737 3.41611Z" fill="currentColor"></path></svg>
+            <x-tabler-player-play-filled class="w-10 h-10 translate-x-0.5 text-white" />
         </div>
         <div
             x-show="!playing && !ended"
@@ -184,7 +184,7 @@ class="relative overflow-hidden rounded-md aspect-video">
             x-transition:enter-end="scale-100 opacity-0"
             class="absolute z-20 flex items-center justify-center w-24 h-24 bg-blue-600 rounded-full opacity-0 bg-opacity-20"
             x-cloak>
-            <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 3C8.55228 3 9 3.44772 9 4L9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20L7 4C7 3.44772 7.44772 3 8 3ZM16 3C16.5523 3 17 3.44772 17 4V20C17 20.5523 16.5523 21 16 21C15.4477 21 15 20.5523 15 20V4C15 3.44772 15.4477 3 16 3Z" fill="currentColor"></path></svg>
+            <x-tabler-player-pause-filled class="w-10 h-10 text-white" />
         </div>
         <div class="absolute z-10 duration-300 ease-out group-hover:scale-110">
             <button
@@ -196,7 +196,7 @@ class="relative overflow-hidden rounded-md aspect-video">
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
                 class="flex items-center justify-center w-12 h-12 text-white duration-150 ease-out bg-blue-600 rounded-full cursor-pointer bg-opacity-80" type="button">
-                <svg  class="w-5 h-5 translate-x-px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.42737 3.41611C6.46665 2.24586 4.00008 3.67188 4.00007 5.9427L4 18.0572C3.99999 20.329 6.46837 21.7549 8.42907 20.5828L18.5698 14.5207C20.4775 13.3802 20.4766 10.6076 18.568 9.46853L8.42737 3.41611Z" fill="currentColor" x-cloak></path></svg>
+                <x-tabler-player-play-filled class="w-5 h-5 translate-x-px" x-cloak />
             </button>
         </div>
     </div>
@@ -239,8 +239,8 @@ class="relative overflow-hidden rounded-md aspect-video">
         <ul class="absolute bottom-0 left-0 z-20 flex items-center w-full text-white">
             <li class="inline">
                 <button @click="togglePlay()" class="flex items-center justify-center w-10 h-10 duration-150 ease-out opacity-80 hover:opacity-100" type="button">
-                    <svg x-show="!playing" class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.42737 3.41611C6.46665 2.24586 4.00008 3.67188 4.00007 5.9427L4 18.0572C3.99999 20.329 6.46837 21.7549 8.42907 20.5828L18.5698 14.5207C20.4775 13.3802 20.4766 10.6076 18.568 9.46853L8.42737 3.41611Z" fill="currentColor" x-cloak></path></svg>
-                    <svg x-show="playing" class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 3C8.55228 3 9 3.44772 9 4L9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20L7 4C7 3.44772 7.44772 3 8 3ZM16 3C16.5523 3 17 3.44772 17 4V20C17 20.5523 16.5523 21 16 21C15.4477 21 15 20.5523 15 20V4C15 3.44772 15.4477 3 16 3Z" fill="currentColor" x-cloak></path></svg>
+                    <x-tabler-player-play-filled x-show="!playing" class="w-5 h-5" x-cloak />
+                    <x-tabler-player-pause-filled x-show="playing" class="w-5 h-5" x-cloak />
                 </button>
             </li>
             <li class="w-full">
@@ -266,9 +266,10 @@ class="relative overflow-hidden rounded-md aspect-video">
             </li>
             <li class="flex items-center group">
                 <button @click="toggleMute()" type="button" class="flex items-center justify-center w-6 h-10 duration-150 ease-out opacity-80 hover:opacity-100">
-                    <svg x-show="!muted" class="w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" x-cloak><path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" /><path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" /></svg>
-                    <svg x-show="muted" class="w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" x-cloak><path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z" /></svg>
+                    <x-tabler-volume x-show="!muted" class="w-[18px] h-[18px]" x-cloak />
+                    <x-tabler-volume-off x-show="muted" class="w-[18px] h-[18px]" x-cloak />
                 </button>
+                <div class="relative h-1.5 w-0 mx-0 group-hover:mx-1 rounded-full group-hover:w-12 invisible group-hover:visible w-0 ease-out duration-300">
                 <div class="relative h-1.5 w-0 mx-0 group-hover:mx-1 rounded-full group-hover:w-12 invisible group-hover:visible w-0 ease-out duration-300">
                     <input
                         x-ref="volume"
@@ -285,7 +286,7 @@ class="relative overflow-hidden rounded-md aspect-video">
             </li>
             <li class="ml-auto">
                 <button x-ref="fullscreenButton" @click="handleFullscreen" class="flex items-center justify-center w-10 h-10 duration-150 ease-out scale-90 opacity-80 hover:opacity-100 hover:scale-100" type="button">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.72685 5C5.77328 5 5 5.77318 5 6.72727V9C5 9.55228 4.55228 10 4 10C3.44772 10 3 9.55228 3 9V6.72727C3 4.6689 4.66842 3 6.72685 3H9C9.55228 3 10 3.44772 10 4C10 4.55228 9.55228 5 9 5H6.72685ZM14 4C14 3.44772 14.4477 3 15 3H17.2727C19.3312 3 21 4.66876 21 6.72727V9C21 9.55228 20.5523 10 20 10C19.4477 10 19 9.55228 19 9V6.72727C19 5.77333 18.2267 5 17.2727 5H15C14.4477 5 14 4.55228 14 4ZM4 14C4.55228 14 5 14.4477 5 15V17.2727C5 18.2268 5.77328 19 6.72685 19H9C9.55228 19 10 19.4477 10 20C10 20.5523 9.55228 21 9 21H6.72685C4.66842 21 3 19.3311 3 17.2727V15C3 14.4477 3.44772 14 4 14ZM20 14C20.5523 14 21 14.4477 21 15V17.2727C21 19.3312 19.3312 21 17.2727 21H15C14.4477 21 14 20.5523 14 20C14 19.4477 14.4477 19 15 19H17.2727C18.2267 19 19 18.2267 19 17.2727V15C19 14.4477 19.4477 14 20 14Z" fill="currentColor"></path></svg>
+                    <x-tabler-maximize class="w-5 h-5" />
                 </button>
             </li>
         </ul>

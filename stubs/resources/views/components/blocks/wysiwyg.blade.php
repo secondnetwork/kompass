@@ -6,7 +6,8 @@
     <div  {{ $attributes }}>
 
         @php
-            $data = json_decode(get_field('wysiwyg',$item->datafield));
+            $fieldData = get_field('wysiwyg',$item->datafield);
+            $data = is_array($fieldData) || is_object($fieldData) ? json_decode(json_encode($fieldData)) : json_decode($fieldData);
         @endphp
 
         @if($data)

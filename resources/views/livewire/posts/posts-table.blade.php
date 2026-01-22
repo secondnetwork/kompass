@@ -68,7 +68,7 @@
                                                 @switch($post->$value)
                                                     @case('published')
                                                         <span
-                                                            class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            class="badge badge-sm bg-green-100 text-green-800">
                                                             <span class="relative flex h-2 w-2">
                                                                 <span
                                                                     class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
@@ -79,7 +79,7 @@
 
                                                         @case('password')
                                                             <span
-                                                                class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
+                                                                class="badge badge-sm bg-violet-100 text-violet-800">
                                                                 <span class="relative flex h-2 w-2">
                                                                     <span
                                                                         class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
@@ -90,7 +90,7 @@
 
                                                             @default
                                                                 <span
-                                                                    class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                    class="badge badge-sm bg-gray-100 text-gray-800">
                                                                     <span class="relative flex h-2 w-2">
 
                                                                         <span

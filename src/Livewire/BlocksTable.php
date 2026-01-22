@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 
 class BlocksTable extends Component
@@ -45,9 +46,8 @@ class BlocksTable extends Component
 
     protected $rules = [
 
-        'name' => '',        'type' => '',
-        // 'blockarray.meta_description' => '',
-        // 'blockarray.slug' => ''
+        'name' => 'required|string|min:1',
+        'type' => 'required|string|min:1|unique:blocktemplates,type',
 
     ];
 
@@ -56,6 +56,7 @@ class BlocksTable extends Component
         return [
             '',
             'name',
+            'type',
             // 'thumbnails',
             // 'description',
             // 'status',
@@ -68,6 +69,7 @@ class BlocksTable extends Component
     {
         return [
             'name',
+            'type',
             // 'thumbnails',
             // 'meta_description',
             // 'status',
@@ -119,12 +121,16 @@ class BlocksTable extends Component
 
     public function saveBlock()
     {
-        $validate = $this->validate();
-        Blocktemplates::create($validate);
-        // $user->roles()->sync($maildata['role']);
+        $validatedData = $this->validate();
+        $validatedData['type'] = Str::slug($this->name);
+        Blocktemplates::create($validatedData);
+        $this->reset(['name', 'type']);
+        $this->FormAdd = false;
+    }
 
-        // $this->FormAdd = false;
-        // $this->reset(['name', 'email', 'password', 'role']);
+    public function updatedName($value)
+    {
+        $this->type = Str::slug($value);
     }
 
     public function delete()
