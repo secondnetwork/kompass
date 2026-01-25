@@ -103,6 +103,10 @@ License URI: http://opensource.org/licenses/mit-license.php
       background-color: var(--color-base-300);
     }
   }
+
+  .badge-sm {
+    @apply border;
+  }
 }
 
 

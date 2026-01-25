@@ -6,21 +6,21 @@
 ])
 
 <div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 border-2 @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-gray-200 shadow-inner'"
-    wire:sortable.item="{{ $itemblocks->id }}"
-    @if ($itemblocks->subgroup) wire:sortable-group.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
+
+    @if ($itemblocks->subgroup) wire:sort:item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else
-    wire:sortable.item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}" @endif
+ wire:key="group-{{ $itemblocks->id }}" @endif
     x-data="{ expanded: false }">
     
     <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4" 
         @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-slate-200 border-slate-600'" @endif>
         <span class="flex items-center py-2 w-full ">
             @if ($itemblocks->subgroup)
-                <span wire:sortable-group.handle>
+                <span wire:sort:handle>
                     <x-tabler-grip-vertical class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
                 </span>
             @else
-                <span wire:sortable.handle>
+                <span wire:sort:handle>
                     <x-tabler-grip-vertical class="cursor-move stroke-current h-6 w-6 mr-1 text-gray-900" />
                 </span>
             @endif
@@ -118,7 +118,7 @@
     </nav>
     @endif
 
-    <div wire:sortable-group.item-group="{{ $itemblocks->id }}" class="bg-purple-700 grid grid-cols-{{ $itemblocks->layoutgrid }}" >
+    <div wire:sort="handleSort" wire:sort:item-group="{{ $itemblocks->id }}" class="bg-purple-700 grid grid-cols-{{ $itemblocks->layoutgrid }}" >
         <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
     </div>
 </div>

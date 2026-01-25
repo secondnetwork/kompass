@@ -14,6 +14,35 @@ use Secondnetwork\Kompass\Models\Blocktemplates;
 
 class BlocksData extends Component
 {
+    public function call_emit_reset()
+    {
+        $this->mount($this->blocktemplatesId);
+        $this->dispatch('status');
+    }
+
+    public function handleSort($item, $position)
+    {
+        $fields = Blockfields::where('blocktemplate_id', $this->blocktemplatesId)->orderBy('order', 'asc')->get();
+
+        $movedItemIndex = $fields->search(function ($field) use ($item) {
+            return $field->id == $item;
+        });
+
+        if ($movedItemIndex === false) {
+            return;
+        }
+
+        $movedItem = $fields->pull($movedItemIndex);
+
+        $fields->splice($position, 0, [$movedItem]);
+
+        foreach ($fields->values() as $index => $field) {
+            if ($field->order !== $index) {
+                $field->update(['order' => $index]);
+            }
+        }
+        $this->call_emit_reset();
+    }
     use WithFileUploads;
 
     /**

@@ -52,17 +52,19 @@
 
 
 
-                            <tbody wire:sortable="updateMenusOrder" class="bg-white divide-y divide-gray-200">
+
+
+                        <tbody class="bg-white divide-y divide-gray-200" wire:sort="handleSort">
                                 @foreach ($menus as $key => $menu)
-                                    <tr wire:sortable.item="{{ $menu->id }}">
-                                        <td wire:sortable.handle class="pl-4 w-4 bg-white">
+                                    <tr wire:sort:item="{{ $menu->id }}">
+                                        <td wire:sort:handle class="pl-4 w-4 bg-white">
                                             <x-tabler-arrow-autofit-height
                                                 class="cursor-move stroke-current  text-gray-400" />
                                         </td>
 
 
                                         @foreach ($data as $key => $value)
-                                            <td wire:sortable.handle class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                            <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
                                                     {{-- {{ $menu->$value }} --}}
                                                     <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                                                     <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">

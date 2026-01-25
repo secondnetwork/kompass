@@ -156,14 +156,15 @@
     <div class="divider"></div>
     <div class="ordre-1">
 
-        <div wire:sortable="updateBlocksOrder" wire:sortable-group="updateItemsOrder"
+        <div wire:sort="handleSort" wire:sortable-group="updateItemsOrder"
             wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-            wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
+            wire:sort.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
             class="">
 
             @forelse ($blocks as $itemblocks)
-
-                <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                <div wire:sort:item="{{ $itemblocks->id }}">
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                </div>
 
             @empty
                 <div

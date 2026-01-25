@@ -150,8 +150,8 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
 
 
 
-        <block-ltem wire:sortable="updateOrder" class="grid gap-4 my-4 p-2 border rounded-md border-dashed border-cyan-400  grid-cols-{{ $grid ?? '1' }}"
-            wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }">
+        <block-ltem wire:sort="handleSort" class="grid gap-4 my-4 p-2 border rounded-md border-dashed border-cyan-400  grid-cols-{{ $grid ?? '1' }}"
+            wire:sort.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }">
 
             {{-- @dump($fields->toArray()) --}}
             {{-- Loop through fields --}}
@@ -159,7 +159,7 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
             {{-- Use wire:key to ensure each item has a unique key --}}
 
             @foreach ($fields as $field)
-            <div wire:sortable.item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">
+            <div wire:sort:item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">
                  @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-'.$field->id))
             </div>
         @endforeach

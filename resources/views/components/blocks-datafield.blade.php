@@ -59,7 +59,7 @@
     </div>
 
     {{-- @foreach ($fields as $field)
-            <div wire:sortable.item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">
+            <div wire:sort:item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">
                  @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-'.$field->id))
             </div>
         @endforeach --}}

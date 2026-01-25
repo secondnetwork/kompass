@@ -26,6 +26,7 @@
     "dotenv": "^17.2.3",
     "install": "^0.13.0",
     "preline": "^3.2.3",
+    "apexcharts": "^4.5.0",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {

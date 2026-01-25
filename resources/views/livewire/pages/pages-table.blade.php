@@ -52,12 +52,10 @@
 
                         </thead>
 
-                        <tbody wire:sortable="updateOrder" 
-                         wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                        class="bg-white divide-y divide-gray-200 ">
+                        <tbody class="bg-white divide-y divide-gray-200" wire:sort="handleSort">
                             @foreach ($pages as $key => $page)
-                                <tr wire:sortable.item="{{ $page->id }}">
-                                    <td wire:sortable.handle class="pl-4 w-4 bg-white">
+                                <tr wire:sort:item="{{ $page->id }}">
+                                    <td wire:sort:handle class="pl-4 w-4 bg-white">
                                         <x-tabler-arrow-autofit-height
                                             class="cursor-move stroke-current  text-gray-400" />
                                     </td>
@@ -71,7 +69,7 @@
                                                 @switch($page->$value)
                                                     @case('published')
                                                         <span
-                                                            class="badge badge-sm bg-green-100 text-green-800">
+                                                            class="badge badge-sm border-green-200 bg-green-100 text-green-800">
                                                             <span class="relative flex h-2 w-2">
                                                                 <span
                                                                     class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
@@ -82,7 +80,7 @@
 
                                                         @case('password')
                                                             <span
-                                                                class="badge badge-sm bg-violet-100 text-violet-800">
+                                                                class="badge badge-sm border-violet-200 bg-violet-100 text-violet-800">
                                                                 <span class="relative flex h-2 w-2">
                                                                     <span
                                                                         class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
@@ -93,7 +91,7 @@
 
                                                             @default
                                                                 <span
-                                                                    class="badge badge-sm bg-gray-900/10 text-gray-800">
+                                                                    class="badge badge-sm border-gray-300 bg-gray-900/10 text-gray-800">
                                                                     <span class="relative flex h-2 w-2">
 
                                                                         <span
@@ -117,7 +115,7 @@
                                         </td>
                                     @endforeach
 
-                                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                        <td class="px-4 py-3 whitespace-nowrap bg-white">
                                         <div class="flex justify-end items-center gap-1">
 
 

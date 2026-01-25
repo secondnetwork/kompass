@@ -12,84 +12,52 @@ use Secondnetwork\Kompass\Models\Page;
 
 class PagesTable extends Component
 {
-    /**
-     * The component's listeners.
-     *
-     * @var array
-     */
     use WithPagination;
 
     public $search;
-
     protected $queryString = ['search'];
-
     public $perPage = 1000;
-
     public $orderBy = 'order';
-
     public $orderAsc = true;
-
     public $tasks;
-
     public $data;
-
     public $title;
-
     public $headers;
-
     public $meta_description;
-
     public $datafield = [];
 
     #[Locked]
     public $selectedItem;
 
     public $timestamps = false;
-
     public $FormDelete = false;
-
     public $FormAdd = false;
-
     public $FormEdit = false;
 
     protected $rules = [
-
         'title' => 'unique:pages|required|string|min:3',
         'meta_description' => '',
-
     ];
+
+    public function call_emit_reset()
+    {
+        $this->dispatch('status');
+    }
 
     protected function headerTable(): array
     {
-        return [
-            '',
-            'title',
-            // 'thumbnails',
-            // 'description',
-            'slug',
-            'status',
-            'Updated',
-            '',
-        ];
+        return ['', 'title', 'slug', 'status', 'Updated', ''];
     }
 
     protected function dataTable(): array
     {
-        return [
-            'title',
-            // 'thumbnails',
-            // 'meta_description',
-            'slug',
-            'status',
-            'updated_at',
-        ];
+        return ['title', 'slug', 'status', 'updated_at'];
     }
 
     public function mount()
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
-        // $this->form->fill();
     }
 
     private function resultDate()
@@ -102,211 +70,61 @@ class PagesTable extends Component
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
-        if ($action == 'add') {
-            // This will show the modal on the frontend
-            // $this->reset(['name', 'email', 'password', 'role']);
-            $this->FormAdd = true;
-        }
-        if ($action == 'update') {
-        }
-
-        if ($action == 'delete') {
-            $this->FormDelete = true;
-        }
+        if ($action == 'add') $this->FormAdd = true;
+        if ($action == 'delete') $this->FormDelete = true;
     }
 
     public function status($id, $status)
     {
-        if ($status == 'draft') {
-            Page::where('id', $id)->update(['status' => 'draft']);
-        }
-        if ($status == 'published') {
-            Page::where('id', $id)->update(['status' => 'published']);
-        }
+        if ($status == 'draft') Page::where('id', $id)->update(['status' => 'draft']);
+        if ($status == 'published') Page::where('id', $id)->update(['status' => 'published']);
+    }
 
-        // $this->resetpage();
+    public function delete()
+    {
+        Page::find($this->selectedItem)->delete();
+        $this->FormDelete = false;
     }
 
     public function addPage()
     {
         $this->validate();
-
-        $slugNameURL = Str::slug($this->title, '-', 'de'); // Convert Input to Str Slug
-
+        $slugNameURL = Str::slug($this->title, '-', 'de');
         $placeObj = new Page;
-
-        $checkSlug = $placeObj->whereSlug($slugNameURL)->exists();
-
-        if ($checkSlug) {
+        if ($placeObj->whereSlug($slugNameURL)->exists()) {
             $numericalPrefix = 1;
             while (1) {
                 $newSlug = $slugNameURL.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
-                $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
-                    $newpageslug = $newSlug; // New Slug
+                if (!$placeObj->whereSlug($newSlug)->exists()) {
+                    $newpageslug = $newSlug;
                     break;
                 }
             }
         } else {
-            // Slug do not exists. Just use the selected Slug.
             $newpageslug = $slugNameURL;
         }
 
-        $page = Page::create([
-
-            'title' => $this->title,
-            'status' => 'draft',
-            'meta_description' => $this->meta_description,
-            'order' => '999',
-            'slug' => $newpageslug,
-            // 'slug' => generateSlug($this->title)
-
-        ]);
+        $page = Page::create(['title' => $this->title, 'status' => 'draft', 'meta_description' => $this->meta_description, 'order' => '999', 'slug' => $newpageslug]);
         $this->FormAdd = false;
-
         return redirect()->to('/admin/pages/show/'.$page->id);
-    }
-
-    public function clone($id)
-    {
-        $pagemodel = Page::find($id);
-
-        $slugNameURL = $pagemodel['slug']; // Convert Input to Str Slug
-
-        $placeObj = new Page;
-
-        $checkSlug = $placeObj->whereSlug($slugNameURL)->exists();
-
-        if ($checkSlug) {
-            $numericalPrefix = 1;
-            while (1) {
-                $newSlug = $slugNameURL.'-'.$numericalPrefix++;
-                $newSlug = Str::slug($newSlug, '-', 'de');
-                $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
-                    $clonepageslug = $newSlug; // New Slug
-                    break;
-                }
-            }
-        } else {
-            // Slug do not exists. Just use the selected Slug.
-            $clonepageslug = $slugNameURL;
-        }
-
-        $clone = $pagemodel->replicate()->fill([
-            'slug' => $clonepageslug,
-            'status' => 'draft',
-            'created_at' => Carbon::now(),
-        ]);
-
-        $clone->push();
-
-        $relationships = ['datafield', 'meta', 'children'];
-
-        $blocksclone = Block::where('blockable_id', $id)->where('blockable_type', 'page')->with($relationships)->get();
-
-        $rootblock = $blocksclone->whereNull('subgroup');
-
-        // $rootblock->each(function ($item) use ($clone, $rootblock, $blocksclone) {
-
-        foreach ($rootblock as $item) {
-
-            $blockcopy = $item->replicate();
-
-            $blockcopy->blockable_id = $clone->id;
-
-            $blockcopy->push();
-
-            if ($itemMeta = $item->allMeta) {
-                $mod = Block::find($blockcopy->id);
-
-                foreach ($itemMeta as $value) {
-
-                    $mod->saveMeta([
-                        $value->key => $value->value,
-                    ]);
-                }
-            }
-
-            foreach ($item->datafield as $itemdata) {
-                $copydatablock = $itemdata->replicate();
-                $copydatablock->block_id = $blockcopy->id;
-                $copydatablock->push();
-            }
-
-            $children = $blocksclone->where('subgroup', $item->id);
-            $this->cloneTree($children, $blocksclone, $clone->id, $blockcopy->id);
-        }
-
-        $this->resetpage();
-    }
-
-    public function cloneTree($categories, $allCategories, $cloneid, $parentId)
-    {
-        foreach ($categories as $item) {
-            $copy = $item->replicate();
-            $copy->blockable_id = $cloneid;
-            $copy->subgroup = $parentId;
-            $copy->push();
-
-            if ($itemMeta = $item->allMeta) {
-                $mod = Block::find($copy->id);
-
-                foreach ($itemMeta as $value) {
-                    $mod->saveMeta([
-                        $value->key => $value->value,
-                    ]);
-                }
-            }
-
-            foreach ($item->datafield as $itemdata) {
-                $copydatablock = $itemdata->replicate();
-                $copydatablock->block_id = $copy->id;
-                $copydatablock->push();
-            }
-
-            $children = $allCategories->where('subgroup', $item->id);
-            if ($children->isNotEmpty()) {
-                $this->cloneTree($children, $allCategories, $cloneid, $copy->id);
-            }
-        }
-    }
-
-    public function delete()
-    {
-
-        Page::find($this->selectedItem)->delete();
-
-        $this->FormDelete = false;
-    }
-
-    public function addate()
-    {
-        page::create($this->form->getState());
-        Page::where('deleted_at');
     }
 
     public function render()
     {
-        return view('kompass::livewire.pages.pages-table', [
-            'pages' => $this->resultDate(),
-        ])->layout('kompass::admin.layouts.app');
+        return view('kompass::livewire.pages.pages-table', ['pages' => $this->resultDate()])->layout('kompass::admin.layouts.app');
     }
 
-    public function updateOrder($list)
+    public function handleSort($item, $position)
     {
-        foreach ($list as $item) {
-            // $pageid = Page::whereId($item['value']);
-            // $pageid->timestamps = false;
-            // $pageid->order = $item['order'];
-            // $pageid->update();
-            Page::whereId($item['value'])->update(['order' => $item['order']]);
-            // foreach($itemg['items'] as $item){
-            //     Page::whereId($item['value'])->update(['order' => $item['order']]);
-            // }
+        $pages = Page::orderBy('order', 'ASC')->get();
+        $movedItemIndex = $pages->search(fn ($page) => $page->id == $item);
+        if ($movedItemIndex === false) return;
+        $movedItem = $pages->pull($movedItemIndex);
+        $pages->splice($position, 0, [$movedItem]);
+        foreach ($pages->values() as $index => $page) {
+            if ($page->order !== $index) $page->update(['order' => $index]);
         }
-
-        // Page::whereId($list['value'])->update(['order' => $list['order']]);
+        $this->call_emit_reset();
     }
 }

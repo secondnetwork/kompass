@@ -58,20 +58,20 @@
 </div>
 
 <div class="flex justify-end my-4">
-    <button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus stroke-width="1.5" />{{__('Add Menu')}}</button>
+<button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus stroke-width="1.5" />{{__('Add Menu')}}</button>
 </div>
 
 
-<div wire:sortable="updateGroupOrder" wire:sortable-group="updateItemsOrder"
+<div wire:sort="handleSort"
 {{-- wire:sortable-group="updateOrder" --}}
-wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
+
 >
 
 
 @forelse ($menuitem as $key => $item)
-
+<div wire:sort:item="{{ $item->id }}">
 <x-kompass::menugroup :item="$item" :fields="$menuitem" :key="$key" :class="'itemblock border-blue-400 shadow border-r-4 border-b-2 mt-4'" />
+</div>
 
 @empty
 <div

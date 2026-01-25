@@ -4,7 +4,7 @@ import '/resources/css/kompass.css'
 import 'preline'
 import click_to_edit from './alpine/click_to_edit'
 
-import '@nextapps-be/livewire-sortablejs';
+// import '@nextapps-be/livewire-sortablejs';
 import * as editorjs from './editorjs';
 
 if (document.getElementsByClassName('embed-video')) {
@@ -87,6 +87,7 @@ Alpine.store('showside', {
       this.on = ! this.on
   }
 });
-
-// Click-to-edit Funktion
 window.click_to_edit = click_to_edit;
+// Click-to-edit Funktion
+// Initialize dashboard charts module (Chart.js based)
+import './dashboard-charts.js';

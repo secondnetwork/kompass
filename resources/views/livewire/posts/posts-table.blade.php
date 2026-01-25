@@ -28,7 +28,12 @@
 <x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
-        <div class=" border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+        <div class=" border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
+            
+            <div class="w-full">
+                <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search posts...') }}" />
+            </div>
+
             <div x-data="{ open: @entangle('FormAdd').live  }" class="flex justify-end gap-4">
 
                 <button class="btn btn-primary" @click="open = true">
@@ -47,19 +52,34 @@
                 @if ($posts->count())
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-100">
-                            @foreach ($headers as $key => $value)
-                                <th scope="col"
-                                    class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
-                                    {{ __($value) }}
-                                </th>
-                            @endforeach
-
+                            <tr>
+                                @foreach ($headers as $key => $value)
+                                    <th scope="col"
+                                        class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
+                                        
+                                        @if($value == 'title' || $value == 'updated_at')
+                                            <button wire:click="sortBy('{{ $value }}')" class="flex items-center gap-1 uppercase font-medium">
+                                                {{ __($value) }}
+                                                @if($orderBy === $value)
+                                                    @if($orderAsc)
+                                                        <x-tabler-chevron-up class="w-4 h-4" />
+                                                    @else
+                                                        <x-tabler-chevron-down class="w-4 h-4" />
+                                                    @endif
+                                                @endif
+                                            </button>
+                                        @else
+                                            {{ __($value) }}
+                                        @endif
+                                    </th>
+                                @endforeach
+                            </tr>
                         </thead>
 
-                        <tbody class="bg-white divide-y divide-gray-200 ">
-                            @foreach ($posts as $key => $post)
-                                <tr>
-                                    @foreach ($data as $key => $value)
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach ($posts as $key => $post)
+                        <tr>
+                            @foreach ($data as $key => $value)
                                         <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
                                             @if ($key == 0)
                                                 <a wire:navigate href="/admin/posts/show/{{ $post->id }}">
@@ -68,7 +88,7 @@
                                                 @switch($post->$value)
                                                     @case('published')
                                                         <span
-                                                            class="badge badge-sm bg-green-100 text-green-800">
+                                                            class="badge badge-sm border-green-200 bg-green-100 text-green-800">
                                                             <span class="relative flex h-2 w-2">
                                                                 <span
                                                                     class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
@@ -79,26 +99,32 @@
 
                                                         @case('password')
                                                             <span
-                                                                class="badge badge-sm bg-violet-100 text-violet-800">
+                                                                class="badge badge-sm border-violet-200 bg-violet-100 text-violet-800">
                                                                 <span class="relative flex h-2 w-2">
                                                                     <span
                                                                         class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
                                                                     <span
                                                                         class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
                                                                 </span>
-                                                            @break
+                                                        @break
 
-                                                            @default
-                                                                <span
-                                                                    class="badge badge-sm bg-gray-100 text-gray-800">
-                                                                    <span class="relative flex h-2 w-2">
+                                                        @default
+                                                            <span
+                                                                class="badge badge-sm border-gray-300 bg-gray-100 text-gray-800">
+                                                                <span class="relative flex h-2 w-2">
 
-                                                                        <span
-                                                                            class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
-                                                                    </span>
+                                                                    <span
+                                                                        class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
+                                                                </span>
                                                             @endswitch
                                             @endif
-                                            {{ __($post->$value) }}
+                                            
+                                            @if($value == 'updated_at')
+                                                {{ $post->updated_at }}
+                                            @else
+                                                {{ __($post->$value) }}
+                                            @endif
+
                                             @if ($key == 0)
                                                 </a>
                                             @endif

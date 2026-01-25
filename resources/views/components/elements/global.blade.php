@@ -12,16 +12,16 @@
 <div>
   @if ($settings->count())
   <table class="min-w-full divide-y divide-gray-200">
-      <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200">
+      <tbody wire:sort="updateOrder" class="bg-white divide-y divide-gray-200">
           @foreach ($settings as $key => $setting)
-          <tr wire:sortable.item="{{ $setting->id }}" >
+          <tr wire:sort:item="{{ $setting->id }}" >
               <td class="p-3">
                   <span class="block text-sm font-medium">{{ __($setting->name) }}</span>
                   <span class="block text-xs text-base-content/50">{{ $setting->description }}</span>
               </td>
               <td class="p-3 text-xs text-base-content/60">
                     <span
-                      class="badge badge-sm bg-green-100 text-green-800">
+                      class="badge badge-sm border-green-200 bg-green-100 text-green-800">
                       @php echo '{{' @endphp setting('{{ $setting->group }}.{{ $setting->key }}') @php
                       echo '}}' @endphp
                   </span>
@@ -37,7 +37,7 @@
                       <span wire:click="selectItem({{ $setting->id }}, 'delete')" class="cursor-pointer p-1 hover:bg-base-200 rounded">
                           <x-tabler-trash class="h-5 w-5 stroke-red-500" />
                       </span>
-                      <x-tabler-arrow-autofit-height wire:sortable.handle class="cursor-move h-5 w-5 stroke-current text-gray-400" />
+                      <x-tabler-arrow-autofit-height wire:sort:handle class="cursor-move h-5 w-5 stroke-current text-gray-400" />
                   </div>
               </td>
           </tr>

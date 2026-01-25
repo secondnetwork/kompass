@@ -8,6 +8,7 @@ use Secondnetwork\Kompass\Http\Controllers\KompassController;
 use Secondnetwork\Kompass\Livewire\AccountForm;
 use Secondnetwork\Kompass\Livewire\BlocksData;
 use Secondnetwork\Kompass\Livewire\BlocksTable;
+use Secondnetwork\Kompass\Livewire\Dashboard;
 use Secondnetwork\Kompass\Livewire\Medialibrary;
 use Secondnetwork\Kompass\Livewire\MenuData;
 use Secondnetwork\Kompass\Livewire\MenuTable;
@@ -38,8 +39,8 @@ View::composer('*', function ($view): void {
 });
 
 Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {
-    Route::view('/', 'kompass::admin.dashboard')->name('dashboard-root');
-    Route::view('dashboard', 'kompass::admin.dashboard')->name('dashboard');
+    Route::get('/', Dashboard::class)->name('dashboard-root');
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('profile', Profile::class)->name('profile');
 
     Route::get('posts', PostsTable::class)->name('posts');

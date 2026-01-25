@@ -8,20 +8,20 @@
 
 
 <div class="{{ $class }}" x-data="{ expanded: false }"
-    wire:sortable.item="{{ $item->id }}"
+    wire:sort:item="{{ $item->id }}"
     @if ($item->subgroup)
-    wire:sortable-group.item="{{ $item->id }}" wire:key="group-{{ $item->id }}"
+    wire:sort:item="{{ $item->id }}" wire:key="group-{{ $item->id }}"
     @else
-    wire:sortable.item="{{ $item->id }}" wire:key="group-{{ $item->id }}" 
+    wire:sort:item="{{ $item->id }}" wire:key="group-{{ $item->id }}" 
     @endif
     >
     
     <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4">
         <span class="flex items-center py-2 w-full ">
             @if ($item->subgroup)
-            <x-tabler-grip-vertical wire:sortable-group.handle class="cursor-move stroke-current h-4 w-4 text-gray-900" />
+            <x-tabler-grip-vertical wire:sort:handle class="cursor-move stroke-current h-4 w-4 text-gray-900" />
             @else
-            <div wire:sortable.handle><x-tabler-grip-vertical class="cursor-move stroke-current h-4 w-4 text-gray-900" /></div>
+            <div wire:sort:handle><x-tabler-grip-vertical class="cursor-move stroke-current h-4 w-4 text-gray-900" /></div>
             
             @endif
             
@@ -88,6 +88,6 @@
 
 </div>
 
-<div wire:sortable-group.item-group="{{ $item->id }}" class="pl-8 bg-purple-600">
+<div wire:sort="handleSort" wire:sort:item-group="{{ $item->id }}" class="pl-8 bg-purple-600">
     <x-kompass::menugroupsub :childrensub="$item['children']->sortBy('order')"/>
 </div>

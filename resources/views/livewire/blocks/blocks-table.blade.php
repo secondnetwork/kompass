@@ -43,16 +43,16 @@
                         </thead>
 
 
-                        <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200 ">
+                        <tbody class="bg-white divide-y divide-gray-200" wire:sort="handleSort">
                             @foreach ($pages as $key => $page)
-                                <tr wire:sortable.item="{{ $page->id }}">
-                                    <td wire:sortable.handle class="pl-4 w-4 bg-white">
+                                <tr wire:sort:item="{{ $page->id }}">
+                                    <td wire:sort:handle class="pl-4 w-4 bg-white">
                                         <x-tabler-arrow-autofit-height
                                             class="cursor-move stroke-current  text-gray-400" />
                                     </td>
 
-                                    @foreach ($data as $key => $value)
-                                        <td wire:sortable.handle
+                                        @foreach ($data as $key => $value)
+                                        <td
                                             class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
                                             <div class="flex items-center ">
                                                 @if ($key == '1')

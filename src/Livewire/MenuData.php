@@ -8,6 +8,42 @@ use Secondnetwork\Kompass\Models\Menuitem;
 
 class MenuData extends Component
 {
+    public function call_emit_reset()
+    {
+        $this->mount($this->menu->id);
+        $this->dispatch('refreshComponentGroup');
+        $this->dispatch('status');
+    }
+
+    public function handleSort($item, $position)
+    {
+        $movedItemModel = Menuitem::findOrFail($item);
+        $subgroup = $movedItemModel->subgroup;
+
+        $items = Menuitem::where('menu_id', $this->menu->id)
+            ->where('subgroup', $subgroup)
+            ->orderBy('order', 'asc')
+            ->get();
+
+        $movedItemIndex = $items->search(function ($menuItem) use ($item) {
+            return $menuItem->id == $item;
+        });
+
+        if ($movedItemIndex === false) {
+            return;
+        }
+
+        $movedItem = $items->pull($movedItemIndex);
+
+        $items->splice($position, 0, [$movedItem]);
+
+        foreach ($items->values() as $index => $menuItem) {
+            if ($menuItem->order !== $index) {
+                $menuItem->update(['order' => $index]);
+            }
+        }
+        $this->call_emit_reset();
+    }
     public $title;
 
     public $newName;
@@ -119,12 +155,6 @@ class MenuData extends Component
             ->layout('kompass::admin.layouts.app');
     }
 
-    public function call_emit_reset()
-    {
-        $this->mount($this->menu->id);
-        $this->dispatch('refreshComponentGroup');
-        $this->dispatch('status');
-    }
 
     public function delete()
     {

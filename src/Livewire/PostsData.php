@@ -18,6 +18,41 @@ use Secondnetwork\Kompass\Models\Setting;
 #[Layout('kompass::admin.layouts.app')]
 class PostsData extends Component
 {
+    public function call_emit_reset()
+    {
+        $this->resetPageComponent();
+    }
+
+    public function handleSort($item, $position)
+    {
+        $movedBlock = Block::findOrFail($item);
+        $subgroup = $movedBlock->subgroup;
+
+        $blocks = Block::where('blockable_type', 'post')
+            ->where('blockable_id', $this->post->id)
+            ->where('subgroup', $subgroup)
+            ->orderBy('order', 'asc')
+            ->get();
+
+        $movedItemIndex = $blocks->search(function ($block) use ($item) {
+            return $block->id == $item;
+        });
+
+        if ($movedItemIndex === false) {
+            return;
+        }
+
+        $movedItem = $blocks->pull($movedItemIndex);
+
+        $blocks->splice($position, 0, [$movedItem]);
+
+        foreach ($blocks->values() as $index => $block) {
+            if ($block->order !== $index) {
+                $block->update(['order' => $index]);
+            }
+        }
+        $this->call_emit_reset();
+    }
     // use WithPagination;
     /**
      * The component's listeners.
