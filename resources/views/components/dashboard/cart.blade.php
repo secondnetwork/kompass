@@ -37,11 +37,11 @@
         {{ $slot }}
     </div>
 
-    {{-- @if($chartId)
+    @if($chartId)
     <div class="h-[60px] p-1 mt-auto">
         <div id="{{ $chartId }}"></div>
     </div>
-    @endif --}}
+    @endif
 
     @if($footerLabel || $link)
     <div class="mt-auto border-t border-base-200 p-4 pt-2">

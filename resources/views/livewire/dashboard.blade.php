@@ -38,7 +38,7 @@
                 :footerLabel="__('Published')" 
                 :footerValue="$publishedPagesCount"
                 link="/admin/pages"
-                chartId="area-chart"
+                chartId="chartPagesSparkline"
             >
                 <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">

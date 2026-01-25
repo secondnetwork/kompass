@@ -16,7 +16,7 @@ function getSparklineOptions(data, color, type = 'area') {
     },
     stroke: {
       curve: 'smooth',
-      width: 2,
+      width: 3,
       colors: [color]
     },
     fill: {
@@ -56,7 +56,7 @@ function initDashboardCharts() {
       window[chartKey].render();
     }
   };
-
+  renderChart('chartPagesSparkline', getSparklineOptions(pages, primary), 'PagesSparkChart');
   renderChart('chartPostsSparkline', getSparklineOptions(posts, primary), 'postsSparkChart');
   renderChart('chartMediaSparkline', getSparklineOptions(mediaData, primary, 'line'), 'mediaSparkChart');
 
