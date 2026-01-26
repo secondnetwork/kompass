@@ -286,10 +286,10 @@ class KompassCommand extends Command implements PromptsForMissingInput
         File::copyDirectory(__DIR__.'/../database/seeders', database_path('seeders'));
         
         if ($fresh) {
-            $this->call('migrate:fresh --seed');
+            $this->call('migrate:fresh');
             $this->info('Database wiped and migrated.');
         } else {
-            $this->call('migrate --seed');
+            $this->call('migrate');
             $this->info('Database migrated.');
         }
     }
