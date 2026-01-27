@@ -188,10 +188,7 @@
         <div class="divider"></div>
         <div class="ordre-1">
 
-            <div wire:sort="handleSort" wire:sortable-group="updateItemsOrder"
-                wire:sortable-group.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                wire:sortable.options="{ animation: 100, ghostClass: 'sort-ghost' , chosenClass: 'sort-chosen' ,dragClass: 'sort-drag', removeCloneOnHide: true }"
-                class="">
+            <div wire:sort="handleSort" class="">
                 
             @forelse ($blocks as $itemblocks)
             <div wire:sort:item="{{ $itemblocks->id }}">
@@ -204,14 +201,14 @@
                         {{ __('Click "Add" to create the layout') }}
                     </div>
                 @endforelse
+
+
+
+            </div>
                 <div class="flex  justify-end my-6">
                     <button class="btn btn-primary"
                         wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
                 </div>
-
-
-            </div>
-
         </div>
     </div>
 
