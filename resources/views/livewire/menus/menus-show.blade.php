@@ -23,14 +23,56 @@
             <x-kompass::form.input type="text" label="{{__('Title')}}" wire:model="title" />
             <x-kompass::input-error for="title" class="mt-2" />
 
+            <div>
+                <x-kompass::select wire:model.live="page_id" label="{{ __('Page') }}" placeholder="{{ __('Select a page') }}" :options="$pages" />
+                <p class="text-xs text-gray-500 mt-1">{{ __('Select a page to auto-fill the URL') }}</p>
+            </div>
+
             <x-kompass::form.input type="text" label="URL" wire:model="url" />
             <x-kompass::input-error for="url" class="mt-2" />
 
             <div>
-            <x-kompass::form.input type="text" label="Iconclass" wire:model="iconclass" />
-            <x-kompass::input-error for="iconclass" class="mt-2" />
-            <p class="text-xs text-gray-400">{{__('Find class name at')}} <a class="text-blue-400" href="https://tabler-icons.io/" target="_blank">tabler-icons.io</a></p>
+                <x-kompass::form.input type="text" label="{{ __('Search Icon') }}" wire:model.live="iconSearch" placeholder="{{ __('Type to search icon...') }}" />
             </div>
+
+            <div class="border rounded-lg p-2 max-h-80 overflow-y-auto">
+                @if(count($filteredIcons) > 0)
+                <div class="grid grid-cols-8 gap-2">
+                    @foreach($filteredIcons as $icon)
+                        <button
+                            type="button"
+                            wire:click="selectIcon('{{ $icon['name'] }}')"
+                            class="p-2 border rounded flex items-center justify-center hover:bg-blue-50 transition
+                                {{ $selectedIcon === $icon['full_name'] ? 'bg-blue-500 text-white border-blue-600' : 'bg-white' }}"
+                            title="{{ $icon['full_name'] }}"
+                        >
+                            <x-icon :name="$icon['full_name']" class="w-6 h-6" />
+                        </button>
+                    @endforeach
+                </div>
+                @else
+                    <p class="text-center text-gray-500 py-8">
+                        @if($iconSearch)
+                            {{ __('No icons found for: :search', ['search' => $iconSearch]) }}
+                        @else
+                            {{ __('No icons available') }}
+                        @endif
+                    </p>
+                @endif
+            </div>
+
+            @if($selectedIcon)
+                <div class="mt-2 flex items-center gap-2 text-sm">
+                    <span class="text-gray-600">{{ __('Selected:') }}</span>
+                    <x-icon :name="$selectedIcon" class="w-5 h-5" />
+                    <code class="bg-gray-100 px-2 py-0.5 rounded">{{ $selectedIcon }}</code>
+                    <button type="button" wire:click="resetIcon" class="text-red-500 hover:text-red-700" title="{{ __('Reset icon') }}">
+                        <x-tabler-x class="w-4 h-4" />
+                    </button>
+                </div>
+            @endif
+
+            <input type="hidden" wire:model="iconclass" />
 
             <div>
                 <label>{{__('Open')}}</label>

@@ -5,9 +5,23 @@ namespace Secondnetwork\Kompass\Livewire;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Menu;
 use Secondnetwork\Kompass\Models\Menuitem;
+use Secondnetwork\Kompass\Models\Page;
+use Illuminate\Support\Facades\File;
 
 class MenuData extends Component
 {
+    public $page_id = null;
+
+    public $pages = [];
+
+    public $iconSearch = '';
+
+    public $selectedIcon = '';
+
+    public $filteredIcons = [];
+
+    private $iconPath = '';
+
     public function call_emit_reset()
     {
         $this->mount($this->menu->id);
@@ -79,9 +93,9 @@ class MenuData extends Component
     ];
 
     protected $rules = [
-
         'title' => 'required|string|min:3',
-        'url' => 'required|string|min:1',
+        'url' => 'required_without:page_id|string|min:1',
+        'page_id' => 'nullable|exists:pages,id',
         'color' => '',
         'iconclass' => '',
         'target' => '',
@@ -91,6 +105,85 @@ class MenuData extends Component
     {
         $this->menu = Menu::findOrFail($id);
         $this->menuitem = Menuitem::where('menu_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+        $this->pages = Page::orderBy('order', 'asc')->get()->map(fn($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
+        
+        $this->loadIcons();
+    }
+
+    private function getIconPath(): string
+    {
+        $possiblePaths = [
+            '/Users/andreasfarah/webseiten/packages/kompass/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
+            dirname(base_path()) . '/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            public_path('vendor/blade-tabler-icons'),
+        ];
+
+        foreach ($possiblePaths as $path) {
+            if (is_dir($path)) {
+                return $path;
+            }
+        }
+
+        return '';
+    }
+
+    public function loadIcons()
+    {
+        $this->filteredIcons = [];
+
+        $iconPath = $this->getIconPath();
+        
+        if (empty($iconPath) || !is_dir($iconPath)) {
+            return;
+        }
+
+        try {
+            $files = File::files($iconPath);
+            
+            if (empty($files)) {
+                return;
+            }
+            
+            $icons = collect($files)
+                ->map(fn($file) => str_replace('.svg', '', $file->getFilename()))
+                ->sort()
+                ->values();
+
+            if ($this->iconSearch) {
+                $search = strtolower(trim($this->iconSearch));
+                if (!empty($search)) {
+                    $icons = $icons->filter(fn($name) =>
+                        str_contains(strtolower($name), $search)
+                    );
+                }
+            }
+
+            $this->filteredIcons = $icons->take(100)->map(fn($name) => [
+                'id' => 'tabler-' . $name,
+                'name' => $name,
+                'full_name' => 'tabler-' . $name,
+            ])->values()->toArray();
+        } catch (\Exception $e) {
+            $this->filteredIcons = [];
+        }
+    }
+
+    public function updatedIconSearch()
+    {
+        $this->loadIcons();
+    }
+
+    public function selectIcon($name)
+    {
+        $this->selectedIcon = 'tabler-' . $name;
+        $this->iconclass = 'tabler-' . $name;
+    }
+
+    public function resetIcon()
+    {
+        $this->selectedIcon = '';
+        $this->iconclass = '';
     }
 
     public function selectItem($itemId, $action, $groupId = null)
@@ -104,6 +197,8 @@ class MenuData extends Component
             $this->target = '';
             $this->color = '';
             $this->iconclass = '';
+            $this->selectedIcon = '';
+            $this->page_id = null;
             $this->selectedItem = false;
             $this->FormEdit = true;
         }
@@ -114,6 +209,8 @@ class MenuData extends Component
             $this->target = $model->target;
             $this->color = $model->color;
             $this->iconclass = $model->iconclass;
+            $this->selectedIcon = $model->iconclass;
+            $this->page_id = $model->page_id;
             $this->FormEdit = true;
         }
         if ($action == 'deleteblock') {
@@ -131,6 +228,7 @@ class MenuData extends Component
             'menu_id' => $this->menu->id,
             'title' => $this->title,
             'url' => $this->url,
+            'page_id' => $this->page_id,
             'target' => $this->target,
             'color' => $this->color,
             'iconclass' => $this->iconclass,
@@ -153,6 +251,16 @@ class MenuData extends Component
     {
         return view('kompass::livewire.menus.menus-show')
             ->layout('kompass::admin.layouts.app');
+    }
+
+    public function updatedPageId($value)
+    {
+        if ($value) {
+            $page = Page::find($value);
+            if ($page && $page->slug) {
+                $this->url = '/' . $page->slug;
+            }
+        }
     }
 
 

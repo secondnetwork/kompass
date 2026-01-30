@@ -34,4 +34,9 @@ class Menuitem extends Model
     {
         return $this->hasMany(Menuitem::class, 'subgroup')->with('children');
     }
+
+    public function page()
+    {
+        return $this->belongsTo(Page::class);
+    }
 }

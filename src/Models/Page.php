@@ -52,6 +52,11 @@ class Page extends Model
         // return $this->hasOne('Rote');
     }
 
+    public function menuitems()
+    {
+        return $this->hasMany(Menuitem::class);
+    }
+
     public function getCreatedAtAttribute($date)
     {
         $timezone = config('app.timezone');
