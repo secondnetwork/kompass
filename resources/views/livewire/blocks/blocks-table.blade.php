@@ -32,7 +32,7 @@
 
                   @if ($pages->count())
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -43,42 +43,35 @@
                         </thead>
 
 
-                        <tbody class="bg-white divide-y divide-gray-200" wire:sort="handleSort">
+                        <tbody class="bg-base-100 divide-y divide-gray-200" wire:sort="handleSort">
                             @foreach ($pages as $key => $page)
                                 <tr wire:sort:item="{{ $page->id }}">
-                                    <td wire:sort:handle class="pl-4 w-4 bg-white">
+                                    <td wire:sort:handle class="pl-4 w-4 bg-base-100">
                                         <x-tabler-arrow-autofit-height
                                             class="cursor-move stroke-current  text-gray-400" />
                                     </td>
 
                                         @foreach ($data as $key => $value)
                                         <td
-                                            class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                            class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                             <div class="flex items-center ">
-                                                @if ($key == '1')
-                                                    <div
-                                                        class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
-                                                        {{-- <img class="h-12 w-12 rounded-full" src="{{ asset('storage/'.$user->profile_photo_path) }}" alt=""> --}}
-                                                        <img class="h-14 w-14 rounded-lg" src="{{ $page->$value }}"
-                                                            alt="">
 
-                                                    </div>
-                                                @else
+                            
                                                     <div class="">
-                                                        <div class="text-sm font-medium text-gray-900">
+                                                        <div class="text-sm font-medium text-base-content">
 
                                                             {{ $page->$value }}
 
                                                         </div>
                                                     </div>
-                                                @endif
+                                           
 
 
                                             </div>
                                         </td>
                                     @endforeach
 
-                                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                    <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                                         <div class="flex justify-end items-center gap-1">
 
 

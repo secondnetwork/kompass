@@ -1,7 +1,6 @@
 // resources/js/app.js
 
 import '/resources/css/kompass.css'
-import 'preline'
 import click_to_edit from './alpine/click_to_edit'
 
 // import '@nextapps-be/livewire-sortablejs';

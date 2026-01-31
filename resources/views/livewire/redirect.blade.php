@@ -14,7 +14,7 @@
 
                 @if ($pages->count())
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -24,12 +24,12 @@
 
                         </thead>
 
-                        <tbody class="bg-white divide-y divide-gray-200 ">
+                        <tbody class="bg-base-100 divide-y divide-gray-200 ">
                             @foreach ($pages as $key => $page)
 
                                     @foreach ($data as $key => $value)
                                         <td
-                                            class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                            class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                             @if ($key == 0)
                                                 <a target="_blank" href="/{{ $page->slug }}">
                                             @endif
@@ -52,7 +52,7 @@
                                         </td>
                                     @endforeach
 
-                                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                    <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                                         <div class="flex justify-end items-center gap-1">
 
                                             <a 

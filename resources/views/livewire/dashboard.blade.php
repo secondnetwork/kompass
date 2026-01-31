@@ -1,7 +1,7 @@
 <div>
     <div>
         <div class="py-4" >
-        <div class="rounded-xl items-center shadow bg-center bg-cover col-span-3"
+        <div class="rounded-xl items-center shadow bg-center col-span-3"
             style="background-image: url({{ kompass_asset('kompass_bg.png') }})">
 
             @env('local')

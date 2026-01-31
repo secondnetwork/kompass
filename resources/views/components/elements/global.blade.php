@@ -12,7 +12,7 @@
 <div>
   @if ($settings->count())
   <table class="min-w-full divide-y divide-gray-200">
-      <tbody wire:sort="updateOrder" class="bg-white divide-y divide-gray-200">
+      <tbody wire:sort="updateOrder" class="bg-base-100 divide-y divide-gray-200">
           @foreach ($settings as $key => $setting)
           <tr wire:sort:item="{{ $setting->id }}" >
               <td class="p-3">
@@ -26,7 +26,7 @@
                       echo '}}' @endphp
                   </span>
               </td>
-              <td class="px-4 py-3 whitespace-nowrap bg-white text-right">
+              <td class="px-4 py-3 whitespace-nowrap bg-base-100 text-right">
                   <div class="flex items-center justify-end gap-2">
                       <span wire:click="selectItem({{ $setting->id }}, 'update')" class="cursor-pointer p-1 hover:bg-base-200 rounded">
                           <x-tabler-edit class="h-5 w-5 stroke-blue-500" />

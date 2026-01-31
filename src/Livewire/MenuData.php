@@ -113,7 +113,6 @@ class MenuData extends Component
     private function getIconPath(): string
     {
         $possiblePaths = [
-            '/Users/andreasfarah/webseiten/packages/kompass/vendor/secondnetwork/blade-tabler-icons/resources/svg',
             base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
             dirname(base_path()) . '/vendor/secondnetwork/blade-tabler-icons/resources/svg',
             public_path('vendor/blade-tabler-icons'),
@@ -194,7 +193,7 @@ class MenuData extends Component
         if ($action == 'additem') {
             $this->title = '';
             $this->url = '';
-            $this->target = '';
+            $this->target = '_self';
             $this->color = '';
             $this->iconclass = '';
             $this->selectedIcon = '';

@@ -51,7 +51,7 @@
 
                 @if ($posts->count())
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-base-300">
                             <tr>
                                 @foreach ($headers as $key => $value)
                                     <th scope="col"
@@ -76,11 +76,11 @@
                             </tr>
                         </thead>
 
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-base-100 divide-y divide-gray-200">
                     @foreach ($posts as $key => $post)
                         <tr>
                             @foreach ($data as $key => $value)
-                                        <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                        <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                             @if ($key == 0)
                                                 <a wire:navigate href="/admin/posts/show/{{ $post->id }}">
                                             @endif
@@ -134,7 +134,7 @@
                                         </td>
                                     @endforeach
 
-                                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                    <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                                         <div class="flex justify-end items-center gap-1">
 
                                             <a wire:navigate href="/admin/posts/show/{{ $post->id }}" class="flex justify-center">

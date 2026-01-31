@@ -75,8 +75,7 @@
             <input type="hidden" wire:model="iconclass" />
 
             <div>
-                <label>{{__('Open')}}</label>
-                <x-kompass::select wire:model="target" :options="[
+                <x-kompass::select wire:model="Open target" :options="[
                             ['name' => __('Same tab'),  'id' => '_self'],
                             ['name' => __('New tab'),  'id' => '_blank'],
                         ]">

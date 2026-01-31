@@ -42,7 +42,7 @@
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-100">
+                    <thead class="bg-base-300">
                         @foreach ($headers as $key => $value)
                             <th scope="col"
                                 class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -52,7 +52,7 @@
 
                     </thead>
 
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-base-100 divide-y divide-gray-200">
                         @if ($users->count())
 
                             @foreach ($users as $user)

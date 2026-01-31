@@ -5,7 +5,7 @@
 
     <div class="shadow border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
+            <thead class="bg-base-300">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">URL</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Status</th>
@@ -14,7 +14,7 @@
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Date</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-base-100 divide-y divide-gray-200">
               
                 @forelse($logsact as $activity)
                     <tr>

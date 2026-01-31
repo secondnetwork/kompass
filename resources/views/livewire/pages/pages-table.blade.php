@@ -42,7 +42,7 @@
 
                 @if ($pages->count())
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -52,16 +52,16 @@
 
                         </thead>
 
-                        <tbody class="bg-white divide-y divide-gray-200" wire:sort="handleSort">
+                        <tbody class="bg-base-100 divide-y divide-gray-200" wire:sort="handleSort">
                             @foreach ($pages as $key => $page)
                                 <tr wire:sort:item="{{ $page->id }}">
-                                    <td wire:sort:handle class="pl-4 w-4 bg-white">
+                                    <td wire:sort:handle class="pl-4 w-4 bg-base-100">
                                         <x-tabler-arrow-autofit-height
                                             class="cursor-move stroke-current  text-gray-400" />
                                     </td>
 
                                     @foreach ($data as $key => $value)
-                                        <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                        <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                             @if ($key == 0)
                                                 <a wire:navigate href="/admin/pages/show/{{ $page->id }}">
                                             @endif
@@ -115,7 +115,7 @@
                                         </td>
                                     @endforeach
 
-                                        <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                        <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                                         <div class="flex justify-end items-center gap-1">
 
 

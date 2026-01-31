@@ -40,7 +40,7 @@
 
                 @if ($menus->count())
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
+                        <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -54,17 +54,17 @@
 
 
 
-                        <tbody class="bg-white divide-y divide-gray-200" wire:sort="handleSort">
+                        <tbody class="bg-base-100 divide-y divide-gray-200" wire:sort="handleSort">
                                 @foreach ($menus as $key => $menu)
                                     <tr wire:sort:item="{{ $menu->id }}">
-                                        <td wire:sort:handle class="pl-4 w-4 bg-white">
+                                        <td wire:sort:handle class="pl-4 w-4 bg-base-100">
                                             <x-tabler-arrow-autofit-height
                                                 class="cursor-move stroke-current  text-gray-400" />
                                         </td>
 
 
                                         @foreach ($data as $key => $value)
-                                            <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                                            <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                                     {{-- {{ $menu->$value }} --}}
                                                     <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                                                     <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
@@ -99,7 +99,7 @@
                                             </td>
                                         @endforeach
 
-                                        <td class="px-4 py-3 whitespace-nowrap bg-white">
+                                        <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                                             <div class="flex justify-end items-center gap-1">
                                                 <a wire:navigate href="/admin/menus/show/{{ $menu->id }}"
                                                     class="flex justify-center">

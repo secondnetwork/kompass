@@ -22,11 +22,11 @@
     "@tailwindcss/postcss": "^0.0.0-oxide.4",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
+    "apexcharts": "^4.5.0",
     "caniuse-lite": "^1.0.30001760",
     "dotenv": "^17.2.3",
     "install": "^0.13.0",
     "preline": "^3.2.3",
-    "apexcharts": "^4.5.0",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
@@ -44,6 +44,7 @@
     "daisyui": "^5.5.14",
     "laravel-vite-plugin": "^2.0.1",
     "postcss": "^8.5.6",
+    "postcss-preset-env": "^11.1.2",
     "tailwindcss": "^4.1.18",
     "vite": "^7.3.0"
   }

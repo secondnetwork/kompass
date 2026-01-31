@@ -2,7 +2,7 @@
     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
+            <thead class="bg-base-300">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
 
@@ -20,9 +20,9 @@
                 </tr>
             </thead>
 
-            <tbody wire:sortable="updateOrder" class="bg-white divide-y divide-gray-200 ">
+            <tbody wire:sortable="updateOrder" class="bg-base-100 divide-y divide-gray-200 ">
                 <tr wire:sortable.item="1">
-                    <td wire:sortable.handle="" class="pl-4 w-4 bg-white">
+                    <td wire:sortable.handle="" class="pl-4 w-4 bg-base-100">
                         <svg class="cursor-move stroke-current  text-gray-400" xmlns="http://www.w3.org/2000/svg"
                             width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -35,23 +35,23 @@
                         </svg>
                     </td>
 
-                    <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                    <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                         <a target="_blank" href="/">
                             /impressum
                         </a>
                     </td>
 
-                    <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                    <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                         <span
                             class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">
                             404
                         </span>
                     </td>
-                    <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                    <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
 
                     </td>
 
-                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                    <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                         <div class="flex justify-end items-center gap-1">
 
                             <a class="flex justify-center">
@@ -82,7 +82,7 @@
                     </td>
                 </tr>
                 <tr wire:sortable.item="2">
-                    <td wire:sortable.handle="" class="pl-4 w-4 bg-white">
+                    <td wire:sortable.handle="" class="pl-4 w-4 bg-base-100">
                         <svg class="cursor-move stroke-current  text-gray-400" xmlns="http://www.w3.org/2000/svg"
                             width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                             fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -95,23 +95,23 @@
                         </svg>
                     </td>
 
-                    <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                    <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                         <a target="_blank" href="/">
                             /news
                         </a>
                     </td>
 
-                    <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                    <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                         <span
                             class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-100 text-red-800">
                             404
                         </span>
                     </td>
-                    <td class="px-4 whitespace-nowrap text-sm font-medium text-gray-800 bg-white">
+                    <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
 
                     </td>
 
-                    <td class="px-4 py-3 whitespace-nowrap bg-white">
+                    <td class="px-4 py-3 whitespace-nowrap bg-base-100">
                         <div class="flex justify-end items-center gap-1">
 
                             <a class="flex justify-center">

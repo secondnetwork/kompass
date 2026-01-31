@@ -86,11 +86,11 @@ class BlocksTable extends Component
         $path = resource_path('views/components/blocks/' . $type . '.blade.php');
         if (file_exists($path)) return;
         $content = "@props(['item' => ''])
-@if(\$item->type == '{$type}')
-<div>
-    {{-- {$type} block content --}}
-</div>
-@endif";
+        @if(\$item->type == '{$type}')
+        <div>
+            {{-- {$type} block content --}}
+        </div>
+        @endif";
         file_put_contents($path, $content);
     }
 
