@@ -21,9 +21,12 @@ class KompassController extends Controller
             abort(400, 'Invalid Path');
         }
 
-        $basePath = dirname(__DIR__, 3).'/public/assets/';
         $decodedPath = urldecode($requestedAsset);
-        $path = $basePath.$decodedPath;
+
+        $publishedPath = public_path('vendor/kompass/assets/'.$decodedPath);
+        $vendorPath = dirname(__DIR__, 3).'/public/assets/'.$decodedPath;
+
+        $path = File::exists($publishedPath) ? $publishedPath : $vendorPath;
 
         if (! File::exists($path)) {
             return response()->json(['error' => 'Asset not found', 'requested' => $decodedPath], 404);
