@@ -2,39 +2,29 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use Secondnetwork\Kompass\Facades\Image;
 
 function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = null, array $config = []): ?string
 {
-    // 1. Validierung & Support Check
     if (empty($imageUrl)) {
         return null;
     }
 
-    // Prüfen, ob der Server überhaupt AVIF kann (GD oder Imagick)
     if (! isAvifSupported()) {
         return null;
     }
 
     $quality = $config['quality'] ?? 50;
     $crop = $config['crop'] ?? false;
-
-    // Defaults
     $width = $width ?? 1600;
     $height = $height ?? 1600;
 
-    // Cache Key
     $cacheKey = "imageAvif/{$imageUrl}/{$width}/{$height}/{$quality}/".($crop ? '1' : '0');
 
-    // 2. Cache Check (URL)
     if (Cache::has($cacheKey)) {
         return Cache::get($cacheKey);
     }
 
     $storage = Storage::disk(config('kompass.storage.disk', 'public'));
-
-    // 3. Pfad bereinigen
-    // Wir entfernen '/storage/' (oder was auch immer die URL ist) vom Pfad
     $diskPathImages = str_replace(Storage::url(''), '', $imageUrl);
     $diskPathImages = ltrim($diskPathImages, '/');
 
@@ -42,21 +32,16 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
         return null;
     }
 
-    // 4. MimeType Check (Ressourcensparend über Storage, nicht Image-Lib)
     $mimeType = $storage->mimeType($diskPathImages);
     if (! in_array($mimeType, ['image/jpeg', 'image/png', 'image/webp'])) {
-        // WICHTIG: Return null statt Original, damit <source> Tag nicht kaputt geht
         return null;
     }
 
-    // 5. Zielpfad definieren
     $imageDir = pathinfo($diskPathImages, PATHINFO_DIRNAME);
     $filename = pathinfo($diskPathImages, PATHINFO_FILENAME);
     $imageDirPrefix = ($imageDir === '.') ? '' : $imageDir.'/';
-
     $resizedImagePath = "{$imageDirPrefix}{$filename}-{$width}x{$height}.avif";
 
-    // 6. Physischer Check (bevor wir das Bild laden!)
     if ($storage->exists($resizedImagePath)) {
         $fullUrl = $storage->url($resizedImagePath);
         Cache::put($cacheKey, $fullUrl, now()->addDay());
@@ -64,66 +49,91 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
         return $fullUrl;
     }
 
-    // 7. Verarbeitung (Nur wenn Bild noch nicht existiert)
     try {
-        $image = Image::read($storage->get($diskPathImages));
+        $image = \Secondnetwork\Kompass\Facades\Image::read($storage->get($diskPathImages));
 
         if ($crop) {
-            // 'cover' ist Smart-Crop in V3
             $image->cover($width, $height);
         } else {
-            // 'scaleDown' behält Aspect Ratio, skaliert aber nicht hoch (pixelig)
             $image->scaleDown($width, $height);
         }
 
-        // Konvertieren
         $encoded = $image->toAvif($quality);
-
-        // Speichern
         $storage->put($resizedImagePath, (string) $encoded, 'public');
-
         $fullUrl = $storage->url($resizedImagePath);
         Cache::put($cacheKey, $fullUrl, now()->addDay());
 
         return $fullUrl;
 
+    } catch (\Error $e) {
+        // Wenn imageavif() fehlt (Error, nicht Exception), markiere AVIF als nicht verfügbar
+        if (str_contains($e->getMessage(), 'imageavif') || str_contains($e->getMessage(), 'AvifEncoder')) {
+            Cache::put('server_avif_support', false, now()->addHours(24));
+        }
+
+        return null;
     } catch (\Exception $e) {
-        // AVIF Konvertierung ist rechenintensiv und kann fehlschlagen (Memory Limit, Timeout).
-        // Return null -> Browser nutzt WebP oder JPG Fallback.
         return null;
     }
 }
 
-/**
- * Helper: Prüft ob AVIF unterstützt wird (GD oder Imagick)
- */
 function isAvifSupported(): bool
 {
-    // Check GD mit AVIF Support
+    // Speichere das Ergebnis im Cache, damit wir nicht jedes Mal testen müssen
+    $cacheKey = 'server_avif_support';
+
+    if (Cache::has($cacheKey)) {
+        return Cache::get($cacheKey);
+    }
+
+    $supported = false;
+
+    // Test 1: GD mit AVIF
     if (extension_loaded('gd')) {
-        if (function_exists('gd_info')) {
-            $gdInfo = gd_info();
-            if (isset($gdInfo['AVIF Support']) && $gdInfo['AVIF Support'] === true) {
-                return true;
+        // Prüfe ob GD überhaupt AVIF unterstützt (PHP 8.1+)
+        $gdInfo = gd_info();
+        if (isset($gdInfo['AVIF Support']) && $gdInfo['AVIF Support'] === true) {
+            // GD sagt es unterstützt AVIF, aber wir müssen testen ob imageavif() wirklich funktioniert
+            if (function_exists('imageavif')) {
+                try {
+                    $testImage = imagecreatetruecolor(10, 10);
+                    if ($testImage !== false) {
+                        $tempFile = sys_get_temp_dir().'/avif_test_'.uniqid().'.avif';
+                        $result = @imageavif($testImage, $tempFile, 50);
+                        imagedestroy($testImage);
+
+                        if ($result === true && file_exists($tempFile) && filesize($tempFile) > 0) {
+                            $supported = true;
+                        }
+
+                        // Cleanup
+                        if (file_exists($tempFile)) {
+                            unlink($tempFile);
+                        }
+                    }
+                } catch (\Throwable $e) {
+                    // Test fehlgeschlagen
+                }
             }
-        }
-        // Fallback: Check ob imageavif() existiert
-        if (function_exists('imageavif')) {
-            return true;
         }
     }
 
-    // Check Imagick
-    if (extension_loaded('imagick') && class_exists('Imagick')) {
+    // Test 2: Imagick mit AVIF (wenn GD nicht funktioniert hat)
+    if (! $supported && extension_loaded('imagick') && class_exists('Imagick')) {
         try {
             $imagick = new \Imagick;
             $formats = $imagick->queryFormats();
-
-            return in_array('AVIF', $formats, true);
+            if (in_array('AVIF', $formats, true)) {
+                $supported = true;
+            }
         } catch (\Exception $e) {
-            return false;
+            // Test fehlgeschlagen
         }
     }
 
-    return false;
+    // Speichere für 1 Stunde (wir wollen nicht bei jedem Request testen,
+    // aber auch nicht für immer, falls sich die Konfiguration ändert)
+    Cache::put($cacheKey, $supported, now()->addHour());
+
+    return $supported;
 }
