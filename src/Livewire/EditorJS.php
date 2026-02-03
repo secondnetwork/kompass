@@ -13,6 +13,8 @@ class EditorJS extends Component
 {
     use WithFileUploads;
 
+    protected static string $name = 'editorjs';
+
     public $uploads = [];
 
     public $editorId;
