@@ -94,7 +94,7 @@ function generateImageHtml($file, $class = null, $size = null, $includeDescripti
 if (! function_exists('kompass_asset')) {
     function kompass_asset($path, $secure = null): string
     {
-        return route('kompass_asset', ['path' => $path]);
+        return asset('vendor/kompass/assets/'.$path);
     }
 }
 
