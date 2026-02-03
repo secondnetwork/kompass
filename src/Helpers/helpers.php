@@ -3,13 +3,12 @@
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Secondnetwork\Kompass\Models\File as Files;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
+use Secondnetwork\Kompass\Models\File as Files;
 
-if (!function_exists('getImageID')) {
+if (! function_exists('getImageID')) {
     /**
      * Helper für Bild-IDs aus der Datenbank
      */
@@ -20,7 +19,7 @@ if (!function_exists('getImageID')) {
     }
 }
 
-if (!function_exists('getImageUrl')) {
+if (! function_exists('getImageUrl')) {
     /**
      * Helper für direkte URLs
      */
@@ -95,7 +94,7 @@ function generateImageHtml($file, $class = null, $size = null, $includeDescripti
 if (! function_exists('kompass_asset')) {
     function kompass_asset($path, $secure = null): string
     {
-        return route('kompass_asset').'?path='.urlencode($path);
+        return route('kompass_asset', ['path' => $path]);
     }
 }
 
@@ -206,7 +205,7 @@ if (! function_exists('setting')) {
 
         if ($settings !== null) {
 
-            $value = Arr::get($settings, $group . '.' . $actualKey);
+            $value = Arr::get($settings, $group.'.'.$actualKey);
 
             return $value ?? $default;
         }

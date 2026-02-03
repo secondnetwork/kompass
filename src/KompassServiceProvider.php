@@ -5,7 +5,6 @@ namespace Secondnetwork\Kompass;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +12,6 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
 use Intervention\Image\ImageManager;
 use Livewire\Livewire;
-use Log;
 use Secondnetwork\Kompass\Commands\CreateUserCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
@@ -69,12 +67,11 @@ class KompassServiceProvider extends ServiceProvider
             foreach (get_class_methods(BladeDirectives::class) as $method) {
                 Blade::directive($method, [BladeDirectives::class, $method]);
             }
-  
+
             Blade::directive('getImageID', function ($expression) {
                 return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageID({$expression}); ?>";
             });
 
-        
             Blade::directive('getImageUrl', function ($expression) {
                 return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageUrl({$expression}); ?>";
             });
@@ -86,7 +83,6 @@ class KompassServiceProvider extends ServiceProvider
         if (! class_exists(Livewire::class)) {
             return;
         }
-
 
         Livewire::addLocation(
             classNamespace: 'Secondnetwork\\Kompass\\Livewire'
@@ -108,20 +104,24 @@ class KompassServiceProvider extends ServiceProvider
         $this->mergeConfigurations();
         $this->registerSingletons();
 
-        if (Schema::hasTable('settings')) {
-            $this->app->singleton('settings', function ($app) {
-                return $app['cache']->rememberForever('settings', function () {
-                    $settings = Setting::all()
-                        ->groupBy('group')
-                        ->map(function ($groupSettings) {
-                            return $groupSettings->keyBy('key')->map(function ($setting) {
-                                return $setting->data;
+        try {
+            if (Schema::hasTable('settings')) {
+                $this->app->singleton('settings', function ($app) {
+                    return $app['cache']->rememberForever('settings', function () {
+                        $settings = Setting::all()
+                            ->groupBy('group')
+                            ->map(function ($groupSettings) {
+                                return $groupSettings->keyBy('key')->map(function ($setting) {
+                                    return $setting->data;
+                                });
                             });
-                        });
-    
-                    return $settings;
+
+                        return $settings;
+                    });
                 });
-            });
+            }
+        } catch (\Exception $e) {
+            // Database not available yet, skip settings initialization
         }
     }
 

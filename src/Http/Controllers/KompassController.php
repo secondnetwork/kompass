@@ -11,9 +11,9 @@ class KompassController extends Controller
 {
     public function assets(Request $request)
     {
-        $requestedAsset = $request->query('path');
+        $requestedAsset = $request->query('path') ?? $request->path();
 
-        if (empty($requestedAsset)) {
+        if (empty($requestedAsset) || $requestedAsset === 'assets') {
             return response()->json(['error' => 'Path parameter is required'], 400);
         }
 
