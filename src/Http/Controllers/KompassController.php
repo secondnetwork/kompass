@@ -11,50 +11,36 @@ class KompassController extends Controller
 {
     public function assets(Request $request)
     {
-        $requestedAsset = $request->input('path');
+        $requestedAsset = $request->query('path');
 
-        if (! $requestedAsset) {
-            return redirect()->route('kompass');
+        if (empty($requestedAsset)) {
+            return response()->json(['error' => 'Path parameter is required'], 400);
         }
 
-        if (Str::contains($requestedAsset, '..')) {
+        if (Str::contains($requestedAsset, '..') || str_starts_with($requestedAsset, '/')) {
             abort(400, 'Invalid Path');
         }
 
-        try {
-            // Baue den Pfad zum 'public/assets' Verzeichnis innerhalb des Pakets
-            $basePath = dirname(__DIR__, 3).'/public/assets/';
+        $basePath = dirname(__DIR__, 3).'/public/assets/';
+        $decodedPath = urldecode($requestedAsset);
+        $path = $basePath.$decodedPath;
 
-            // Hänge den angeforderten und bereinigten Asset-Pfad an
-            $path = $basePath.urldecode($requestedAsset);
-
-        } catch (\LogicException $e) {
-            // Dieser Catch-Block ist unwahrscheinlich, aber sicher ist sicher
-            abort(404);
+        if (! File::exists($path)) {
+            return response()->json(['error' => 'Asset not found', 'requested' => $decodedPath], 404);
         }
 
-        if (File::exists($path)) {
-            $mime = '';
-            if (Str::endsWith($path, '.js')) {
-                $mime = 'text/javascript';
-            } elseif (Str::endsWith($path, '.css')) {
-                $mime = 'text/css';
-            } else {
-                $mime = File::mimeType($path);
-            }
-            $response = response(File::get($path), 200, ['Content-Type' => $mime]);
-            $response->setSharedMaxAge(31536000);
-            $response->setMaxAge(31536000);
-            $response->setExpires(new \DateTime('+1 year'));
+        $mime = match (true) {
+            Str::endsWith($path, '.js') => 'text/javascript',
+            Str::endsWith($path, '.css') => 'text/css',
+            Str::endsWith($path, '.svg') => 'image/svg+xml',
+            default => File::mimeType($path),
+        };
 
-            // Die header() Funktion ist hier nicht ideal, da sie global ist.
-            // Besser ist es, die Header direkt auf dem Response-Objekt zu setzen.
-            // Laravel macht das meiste davon aber schon automatisch (wie ETag).
-            // $response->header('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($path)).' GMT');
+        $response = response(File::get($path), 200, ['Content-Type' => $mime]);
+        $response->setSharedMaxAge(31536000);
+        $response->setMaxAge(31536000);
+        $response->setExpires(new \DateTime('+1 year'));
 
-            return $response;
-        }
-
-        return response('', 404);
+        return $response;
     }
 }
