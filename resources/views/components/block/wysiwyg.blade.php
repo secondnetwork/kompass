@@ -6,7 +6,7 @@
             $gridtables = $itemfield->grid;
         @endphp
         @livewire(
-            'editorjs',
+            \Secondnetwork\Kompass\Livewire\EditorJS::class,
             [
                 'editorId' => $itemfield->id,
                 'value' => $jsfield,
