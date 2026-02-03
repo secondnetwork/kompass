@@ -20,8 +20,8 @@ use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 use Secondnetwork\Kompass\Livewire\Settings\Profile;
 
-//Asset Routes
-Route::get('assets', [KompassController::class, 'assets'])->name('kompass_asset');
+// Asset Routes
+Route::get('assets/{path?}', [KompassController::class, 'assets'])->name('kompass_asset');
 
 // Route::get('/password/create/{id}', [AccountForm::class, 'create'])
 //     ->middleware(['signed'])

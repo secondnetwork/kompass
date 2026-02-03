@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 
 class KompassController extends Controller
 {
-    public function assets(Request $request)
+    public function assets(Request $request, ?string $path = null)
     {
-        $requestedAsset = $request->query('path') ?? $request->path();
+        $requestedAsset = $path ?? $request->query('path');
 
         if (empty($requestedAsset) || $requestedAsset === 'assets') {
             return response()->json(['error' => 'Path parameter is required'], 400);
