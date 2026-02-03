@@ -7,22 +7,24 @@ use Secondnetwork\Kompass\Facades\Image;
 function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = null, array $config = []): ?string
 {
     // 1. Validierung & Support Check
-    if (empty($imageUrl)) return null;
+    if (empty($imageUrl)) {
+        return null;
+    }
 
     // Prüfen, ob der Server überhaupt AVIF kann (GD oder Imagick)
-    if (!function_exists('imageavif') && !isAvifSupported()) {
+    if (! isAvifSupported()) {
         return null;
     }
 
     $quality = $config['quality'] ?? 50;
     $crop = $config['crop'] ?? false;
-    
+
     // Defaults
     $width = $width ?? 1600;
     $height = $height ?? 1600;
 
     // Cache Key
-    $cacheKey = "imageAvif/{$imageUrl}/{$width}/{$height}/{$quality}/" . ($crop ? '1' : '0');
+    $cacheKey = "imageAvif/{$imageUrl}/{$width}/{$height}/{$quality}/".($crop ? '1' : '0');
 
     // 2. Cache Check (URL)
     if (Cache::has($cacheKey)) {
@@ -42,22 +44,23 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
 
     // 4. MimeType Check (Ressourcensparend über Storage, nicht Image-Lib)
     $mimeType = $storage->mimeType($diskPathImages);
-    if (!in_array($mimeType, ['image/jpeg', 'image/png', 'image/webp'])) {
+    if (! in_array($mimeType, ['image/jpeg', 'image/png', 'image/webp'])) {
         // WICHTIG: Return null statt Original, damit <source> Tag nicht kaputt geht
-        return null; 
+        return null;
     }
 
     // 5. Zielpfad definieren
     $imageDir = pathinfo($diskPathImages, PATHINFO_DIRNAME);
     $filename = pathinfo($diskPathImages, PATHINFO_FILENAME);
-    $imageDirPrefix = ($imageDir === '.') ? '' : $imageDir . '/';
+    $imageDirPrefix = ($imageDir === '.') ? '' : $imageDir.'/';
 
     $resizedImagePath = "{$imageDirPrefix}{$filename}-{$width}x{$height}.avif";
-    
+
     // 6. Physischer Check (bevor wir das Bild laden!)
     if ($storage->exists($resizedImagePath)) {
         $fullUrl = $storage->url($resizedImagePath);
         Cache::put($cacheKey, $fullUrl, now()->addDay());
+
         return $fullUrl;
     }
 
@@ -92,15 +95,30 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
 }
 
 /**
- * Helper: Prüft ob Imagick installiert ist und AVIF unterstützt
+ * Helper: Prüft ob AVIF unterstützt wird (GD oder Imagick)
  */
 function isAvifSupported(): bool
 {
-    // Erst checken ob Extension geladen ist, um Fatal Errors zu vermeiden
+    // Check GD mit AVIF Support
+    if (extension_loaded('gd')) {
+        if (function_exists('gd_info')) {
+            $gdInfo = gd_info();
+            if (isset($gdInfo['AVIF Support']) && $gdInfo['AVIF Support'] === true) {
+                return true;
+            }
+        }
+        // Fallback: Check ob imageavif() existiert
+        if (function_exists('imageavif')) {
+            return true;
+        }
+    }
+
+    // Check Imagick
     if (extension_loaded('imagick') && class_exists('Imagick')) {
         try {
             $imagick = new \Imagick;
             $formats = $imagick->queryFormats();
+
             return in_array('AVIF', $formats, true);
         } catch (\Exception $e) {
             return false;
