@@ -201,6 +201,19 @@ class ImageFactory
         return '<div class="' . $defaultClasses . ' ' . $cssClass . '">' . $svg . '</div>';
     }
 
+    private static function avifSupported(): bool
+    {
+        if (!extension_loaded('gd')) {
+            return false;
+        }
+        
+        if (!function_exists('imageavif')) {
+            return false;
+        }
+        
+        return true;
+    }
+
     protected static function getTinyPlaceholder($path, $storage)
     {
         $cacheKey = 'img_blur_' . $path;
@@ -251,11 +264,17 @@ class ImageFactory
                 else $image->scaleDown($width, $height);
             }
 
+            if ($format === 'avif' && !self::avifSupported()) {
+                // AVIF not supported, fallback to WebP
+                $format = 'webp';
+                $newPath = str_replace('.avif', '.webp', $newPath);
+            }
+
             if ($format === 'avif') {
                 try {
                     $encoded = $image->toAvif($quality);
                 } catch (\Exception $e) {
-                    // AVIF not supported, fallback to WebP
+                    // Final fallback
                     $format = 'webp';
                     $newPath = str_replace('.avif', '.webp', $newPath);
                     $encoded = $image->toWebp($quality);
