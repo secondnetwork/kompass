@@ -251,9 +251,20 @@ class ImageFactory
                 else $image->scaleDown($width, $height);
             }
 
-            if ($format === 'avif') $encoded = $image->toAvif($quality);
-            elseif ($format === 'webp') $encoded = $image->toWebp($quality);
-            else return null;
+            if ($format === 'avif') {
+                try {
+                    $encoded = $image->toAvif($quality);
+                } catch (\Exception $e) {
+                    // AVIF not supported, fallback to WebP
+                    $format = 'webp';
+                    $newPath = str_replace('.avif', '.webp', $newPath);
+                    $encoded = $image->toWebp($quality);
+                }
+            } elseif ($format === 'webp') {
+                $encoded = $image->toWebp($quality);
+            } else {
+                return null;
+            }
 
             $storage->put($newPath, (string) $encoded, 'public');
             $url = $storage->url($newPath);
