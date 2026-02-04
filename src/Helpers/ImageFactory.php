@@ -11,10 +11,15 @@ class ImageFactory
 {
     // Instanz-Variablen für das Fluent Interface
     protected $idOrUrl;
+
     protected $type; // 'id' oder 'url'
+
     protected $sizeKey;
+
     protected $cssClass = '';
+
     protected $altText = null;
+
     protected $attributes = [];
 
     // Statische Manager Instanz
@@ -54,6 +59,7 @@ class ImageFactory
     public function class(string $class): self
     {
         $this->cssClass = $class;
+
         return $this;
     }
 
@@ -63,6 +69,7 @@ class ImageFactory
     public function alt(string $alt): self
     {
         $this->altText = $alt;
+
         return $this;
     }
 
@@ -72,6 +79,7 @@ class ImageFactory
     public function attr(string $key, string $value): self
     {
         $this->attributes[$key] = $value;
+
         return $this;
     }
 
@@ -81,10 +89,11 @@ class ImageFactory
     public function mergeAttributes(array $attributes): self
     {
         if (isset($attributes['class'])) {
-            $this->cssClass = trim($this->cssClass . ' ' . $attributes['class']);
+            $this->cssClass = trim($this->cssClass.' '.$attributes['class']);
             unset($attributes['class']);
         }
         $this->attributes = array_merge($this->attributes, $attributes);
+
         return $this;
     }
 
@@ -115,29 +124,31 @@ class ImageFactory
 
         // 2. Pfad ermitteln (ID oder URL)
         if ($this->type === 'id') {
-            $file = Cache::rememberForever('kompass_file_' . $this->idOrUrl, function () {
+            $file = Cache::rememberForever('kompass_file_'.$this->idOrUrl, function () {
                 return File::find($this->idOrUrl);
             });
 
-            if (!$file) {
+            if (! $file) {
                 return self::getPlaceholder($this->cssClass);
             }
 
-            $relativePath = $file->path ? $file->path . '/' . $file->slug . '.' . $file->extension : $file->slug . '.' . $file->extension;
+            $relativePath = $file->path ? $file->path.'/'.$file->slug.'.'.$file->extension : $file->slug.'.'.$file->extension;
             if ($finalAlt === null) {
                 $finalAlt = $file->alt ?? $file->title ?? '';
             }
         } else {
             $path = str_replace(Storage::url(''), '', $this->idOrUrl);
             $relativePath = ltrim($path, '/');
-            if ($finalAlt === null) $finalAlt = '';
+            if ($finalAlt === null) {
+                $finalAlt = '';
+            }
         }
 
         // 3. HTML generieren (interne Methode aufrufen)
         return self::generateHtml(
-            $relativePath, 
-            $this->sizeKey, 
-            $this->cssClass, 
+            $relativePath,
+            $this->sizeKey,
+            $this->cssClass,
             $finalAlt,
             $this->attributes
         );
@@ -149,10 +160,11 @@ class ImageFactory
 
     protected static function getManager()
     {
-        if (!self::$manager) {
+        if (! self::$manager) {
             $driver = config('kompass.driver', \Intervention\Image\Drivers\Gd\Driver::class);
             self::$manager = new ImageManager($driver);
         }
+
         return self::$manager;
     }
 
@@ -160,7 +172,7 @@ class ImageFactory
     {
         $storage = Storage::disk(config('kompass.storage.disk', 'public'));
 
-        if (!$storage->exists($relativePath)) {
+        if (! $storage->exists($relativePath)) {
             return self::getPlaceholder($cssClass);
         }
 
@@ -168,7 +180,10 @@ class ImageFactory
         $fallback = config('kompass.fallback');
         $config = $preset ?? $fallback;
 
-        $avifUrl = self::processImage($relativePath, 'avif', $config);
+        $avifUrl = null;
+        if (self::avifSupported()) {
+            $avifUrl = self::processImage($relativePath, 'avif', $config);
+        }
         $webpUrl = self::processImage($relativePath, 'webp', $config);
         $originalUrl = $storage->url($relativePath);
 
@@ -182,13 +197,17 @@ class ImageFactory
 
         $attrString = '';
         foreach ($attributes as $key => $val) {
-            $attrString .= ' ' . $key . '="' . htmlspecialchars($val) . '"';
+            $attrString .= ' '.$key.'="'.htmlspecialchars($val).'"';
         }
 
         $html = '<picture>';
-        if ($avifUrl) $html .= '<source type="image/avif" srcset="' . $avifUrl . '">';
-        if ($webpUrl) $html .= '<source type="image/webp" srcset="' . $webpUrl . '">';
-        $html .= '<img loading="lazy" src="' . $originalUrl . '" alt="' . htmlspecialchars($alt) . '" class="' . $cssClass . '" ' . $placeholderStyle . $attrString . '>';
+        if ($avifUrl) {
+            $html .= '<source type="image/avif" srcset="'.$avifUrl.'">';
+        }
+        if ($webpUrl) {
+            $html .= '<source type="image/webp" srcset="'.$webpUrl.'">';
+        }
+        $html .= '<img loading="lazy" src="'.$originalUrl.'" alt="'.htmlspecialchars($alt).'" class="'.$cssClass.'" '.$placeholderStyle.$attrString.'>';
         $html .= '</picture>';
 
         return $html;
@@ -198,25 +217,42 @@ class ImageFactory
     {
         $defaultClasses = 'flex items-center justify-center bg-gray-200 text-gray-400 aspect-video rounded-lg';
         $svg = '<svg class="w-10 h-10 opacity-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>';
-        return '<div class="' . $defaultClasses . ' ' . $cssClass . '">' . $svg . '</div>';
+
+        return '<div class="'.$defaultClasses.' '.$cssClass.'">'.$svg.'</div>';
     }
 
     private static function avifSupported(): bool
     {
-        if (!extension_loaded('gd')) {
+        if (! extension_loaded('gd')) {
             return false;
         }
-        
-        if (!function_exists('imageavif')) {
+
+        if (! function_exists('imageavif')) {
             return false;
         }
-        
-        return true;
+
+        // Test if imageavif actually works
+        try {
+            $test = @imageavif(imagecreatetruecolor(1, 1), 'php://temp');
+            if ($test === false) {
+                return false;
+            }
+            if (is_resource($test)) {
+                imagedestroy($test);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        } catch (\Error $e) {
+            return false;
+        }
     }
 
     protected static function getTinyPlaceholder($path, $storage)
     {
-        $cacheKey = 'img_blur_' . $path;
+        $cacheKey = 'img_blur_'.$path;
+
         return Cache::rememberForever($cacheKey, function () use ($path, $storage) {
             try {
                 $content = $storage->get($path);
@@ -224,8 +260,11 @@ class ImageFactory
                 $image = $manager->read($content);
                 $image->scale(width: 20);
                 $image->blur(5);
+
                 return $image->toJpeg(quality: 50)->toDataUri();
-            } catch (\Exception $e) { return null; }
+            } catch (\Exception $e) {
+                return null;
+            }
         });
     }
 
@@ -236,10 +275,12 @@ class ImageFactory
         $method = $config['method'] ?? 'scaleDown';
         $quality = $config['quality'] ?? config("kompass.quality.{$format}", 75);
 
-        $dimString = ($width ?? 'auto') . 'x' . ($height ?? 'auto');
+        $dimString = ($width ?? 'auto').'x'.($height ?? 'auto');
         $cacheKey = "img_{$sourcePath}_{$format}_{$dimString}_{$method}_{$quality}";
-        
-        if (Cache::has($cacheKey)) return Cache::get($cacheKey);
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
 
         $storage = Storage::disk(config('kompass.storage.disk', 'public'));
         $dir = pathinfo($sourcePath, PATHINFO_DIRNAME);
@@ -250,6 +291,7 @@ class ImageFactory
         if ($storage->exists($newPath)) {
             $url = $storage->url($newPath);
             Cache::put($cacheKey, $url, now()->addDay());
+
             return $url;
         }
 
@@ -259,12 +301,16 @@ class ImageFactory
             $image = $manager->read($content);
 
             if ($width || $height) {
-                if ($method === 'cover') $image->cover($width, $height);
-                elseif ($method === 'resize') $image->resize($width, $height);
-                else $image->scaleDown($width, $height);
+                if ($method === 'cover') {
+                    $image->cover($width, $height);
+                } elseif ($method === 'resize') {
+                    $image->resize($width, $height);
+                } else {
+                    $image->scaleDown($width, $height);
+                }
             }
 
-            if ($format === 'avif' && !self::avifSupported()) {
+            if ($format === 'avif' && ! self::avifSupported()) {
                 // AVIF not supported, fallback to WebP
                 $format = 'webp';
                 $newPath = str_replace('.avif', '.webp', $newPath);
@@ -288,7 +334,10 @@ class ImageFactory
             $storage->put($newPath, (string) $encoded, 'public');
             $url = $storage->url($newPath);
             Cache::put($cacheKey, $url, now()->addDay());
+
             return $url;
-        } catch (\Exception $e) { return null; }
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
