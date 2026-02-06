@@ -1,18 +1,17 @@
 <?php
 
-use Livewire\Component;
 use Illuminate\Http\Request;
-use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Page;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\Redirect;
-use Secondnetwork\Kompass\Models\Datafield;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-new #[Layout('layouts.main')] class extends Component
+new class extends Component
 {
     public $page;
 

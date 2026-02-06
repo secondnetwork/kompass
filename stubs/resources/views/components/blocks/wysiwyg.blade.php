@@ -6,12 +6,23 @@
     <div  {{ $attributes }}>
 
         @php
-            $fieldData = get_field('wysiwyg',$item->datafield);
-            $data = is_array($fieldData) || is_object($fieldData) ? json_decode(json_encode($fieldData)) : json_decode($fieldData);
+            $raw = get_field('wysiwyg', $item->datafield);
+            $data = is_string($raw) ? json_decode($raw) : $raw;
+            if (is_array($data)) {
+                $data = (object) $data;
+            }
         @endphp
 
         @if($data)
             @foreach ($data->blocks as $block)
+                @php
+                    if (is_array($block)) {
+                        $block = (object) $block;
+                    }
+                    if (is_array($block->data)) {
+                        $block->data = (object) $block->data;
+                    }
+                @endphp
 
                 @switch($block->type)
                     @case('header')

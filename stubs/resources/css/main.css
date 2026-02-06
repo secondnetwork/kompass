@@ -30,7 +30,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @source inline("{,md:,lg:,xl:}grid-span-{1..6}");
 
 @import "./base/base.css";
-@import "./fonts.css";
+@import "./base/fonts.css";
 @import "./base/typography.css";
 @import "./base/grid_layout.css";
 
@@ -42,7 +42,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 
 @theme {
-    --font-sans: 'Hind', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;

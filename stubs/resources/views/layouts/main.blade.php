@@ -43,7 +43,7 @@
 <body class="{{ str_replace('.', '-', Route::currentRouteName()) }}">
 
 <!-- ========== HEADER ========== -->
-<header class="navbar">
+<header class="navbar" x-data="{ mobileMenuOpen: false }">
   <nav class="relative  w-full mx-auto md:flex md:items-center md:justify-between md:gap-3">
     <div class="flex justify-between items-center gap-x-1">
       {{-- <a class="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80" href="#" aria-label="Brand">Brand</a> --}}
@@ -55,17 +55,17 @@
                 />
 
       <!-- Collapse Button -->
-      <button type="button" class="hs-collapse-toggle md:hidden relative size-9 flex justify-center items-center font-medium text-sm rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none" id="hs-header-base-collapse"  aria-expanded="false" aria-controls="hs-header-base" aria-label="Toggle navigation"  data-hs-collapse="#hs-header-base" >
-        <svg class="hs-collapse-open:hidden size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
-        <svg class="hs-collapse-open:block shrink-0 hidden size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      <button type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden relative size-9 flex justify-center items-center font-medium text-sm rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none" aria-label="Toggle navigation">
+        <x-tabler-menu-2 x-show="!mobileMenuOpen" class="size-4" />
+        <x-tabler-x x-show="mobileMenuOpen" class="size-4" x-cloak />
         <span class="sr-only">Toggle navigation</span>
       </button>
       <!-- End Collapse Button -->
     </div>
 
     <!-- Collapse -->
-    <div id="hs-header-base" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block "  aria-labelledby="hs-header-base-collapse" >
-      <div class="overflow-hidden overflow-y-auto max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
+    <div :class="mobileMenuOpen ? 'block' : 'hidden'" class=" transition-all duration-300 basis-full grow md:block">
+      <div class="max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
         <div class="py-2 md:py-0  flex flex-col md:flex-row md:items-center gap-0.5 md:gap-1">
           <div class="grow">
             <div class="flex flex-col md:flex-row md:justify-end md:items-center gap-0.5 md:gap-1">
@@ -119,12 +119,17 @@
         @endisset
     </main>
 
-
-    <div class="divider"></div>
-    <footer>
+    <footer class="bg-base-200 py-12 md:pt-16">
         <div>
+                 <x-kompass::elements.logo
+                    :height="setting('global.logo_height', '2')" {{-- Default height if not set --}}
+                    :isImage="(setting('global.logo_type', 'text') == 'image')" {{-- Default type 'text' if not set --}}
+                    :imageSrc="setting('global.logo_image_src', '')" {{-- Default empty string --}}
+                    :svgString="setting('global.logo_svg_string', '')" {{-- Default empty string --}}
+                />
+
             @if(!empty(setting('global.footer_textarea')))
-            <p>
+            <p class="md:max-w-xs">
                 {{ setting('global.footer_textarea', '') }}
             </p>    
             @endif
@@ -135,10 +140,14 @@
             </p>
             @endif
 
-        <div class="md:flex gap-4 py-8">
+
+<nav><livewire:menus name="footer" /></nav>
+
+
+        <div class="mt-12 flex flex-col-reverse justify-between gap-6 border-t border-base-300 pt-8 md:mt-16 md:flex-row">
             <div class="">
                       
-                <a class="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80" href="#" aria-label="Brand">Brand</a>
+               
                 @if (!empty(setting('global.copyright')))
                 <p> © {{ date('Y') }} {{ setting('global.copyright') }}</p>
                 @endif
@@ -147,9 +156,9 @@
 
             </div>
 
-        <nav><livewire:menus name="footer" /></nav>
-
-        </div>
+        
+</div>
+     
     </footer>
 
     

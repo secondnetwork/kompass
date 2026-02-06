@@ -22,6 +22,18 @@
 }
 .bg-logo{
 
-
+    @screen md {
+        &:before{
+            content: '';
+            position: absolute;
+            top: -12rem;
+            left: -10rem;
+            width: 100rem;
+            height: 100rem;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+    }
+    position: relative;
 
 }
