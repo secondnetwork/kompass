@@ -8,6 +8,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 
 class PagesTable extends Component
@@ -84,6 +85,47 @@ class PagesTable extends Component
     {
         Page::find($this->selectedItem)->delete();
         $this->FormDelete = false;
+    }
+
+    public function clone($id)
+    {
+        $originalPage = Page::findOrFail($id);
+        
+        $newTitle = $originalPage->title . ' (copy)';
+        $slugNameURL = Str::slug($originalPage->title, '-', 'de');
+        $newSlug = $slugNameURL . '-copy';
+        
+        $pageObj = new Page;
+        $numericalPrefix = 1;
+        while ($pageObj->whereSlug($newSlug)->exists()) {
+            $newSlug = $slugNameURL . '-copy-' . $numericalPrefix++;
+        }
+
+        $newPage = $originalPage->replicate();
+        $newPage->title = $newTitle;
+        $newPage->slug = $newSlug;
+        $newPage->order = 999;
+        $newPage->status = 'draft';
+        $newPage->push();
+
+        $blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->get();
+        
+        foreach ($blocks as $block) {
+            $newBlock = $block->replicate();
+            $newBlock->blockable_id = $newPage->id;
+            $newBlock->created_at = Carbon::now();
+            $newBlock->updated_at = Carbon::now();
+            $newBlock->push();
+
+            $datafields = Datafield::where('block_id', $block->id)->get();
+            foreach ($datafields as $datafield) {
+                $newDatafield = $datafield->replicate();
+                $newDatafield->block_id = $newBlock->id;
+                $newDatafield->created_at = Carbon::now();
+                $newDatafield->updated_at = Carbon::now();
+                $newDatafield->save();
+            }
+        }
     }
 
     public function addPage()

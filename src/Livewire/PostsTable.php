@@ -8,6 +8,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Post;
 
 class PostsTable extends Component
@@ -105,6 +106,48 @@ class PostsTable extends Component
     {
         Post::find($this->selectedItem)->delete();
         $this->FormDelete = false;
+    }
+
+    public function clone($id)
+    {
+        $originalPost = Post::findOrFail($id);
+        
+        $newTitle = $originalPost->title . ' (copy)';
+        $slugNameURL = Str::slug($originalPost->title, '-', 'de');
+        $newSlug = $slugNameURL . '-copy';
+        
+        $postObj = new Post;
+        $numericalPrefix = 1;
+        while ($postObj->whereSlug($newSlug)->exists()) {
+            $newSlug = $slugNameURL . '-copy-' . $numericalPrefix++;
+        }
+
+        $newPost = $originalPost->replicate();
+        $newPost->title = $newTitle;
+        $newPost->slug = $newSlug;
+        $newPost->created_at = Carbon::now();
+        $newPost->updated_at = Carbon::now();
+        $newPost->status = 'draft';
+        $newPost->push();
+
+        $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $id)->get();
+        
+        foreach ($blocks as $block) {
+            $newBlock = $block->replicate();
+            $newBlock->blockable_id = $newPost->id;
+            $newBlock->created_at = Carbon::now();
+            $newBlock->updated_at = Carbon::now();
+            $newBlock->push();
+
+            $datafields = Datafield::where('block_id', $block->id)->get();
+            foreach ($datafields as $datafield) {
+                $newDatafield = $datafield->replicate();
+                $newDatafield->block_id = $newBlock->id;
+                $newDatafield->created_at = Carbon::now();
+                $newDatafield->updated_at = Carbon::now();
+                $newDatafield->save();
+            }
+        }
     }
 
     public function addPost()
