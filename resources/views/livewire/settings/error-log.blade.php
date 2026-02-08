@@ -3,7 +3,7 @@
 
 
 
-    <div class="shadow border-b border-gray-200 sm:rounded-lg">
+    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-base-300">
                 <tr>

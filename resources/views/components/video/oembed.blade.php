@@ -22,12 +22,12 @@
         @endif
 
         @if ($idField)
-            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="absolute top-2 left-2  transition-opacity">
                 <button type="button" 
                     wire:click="removemedia({{ $idField }})" 
-                    class="btn btn-error btn-sm btn-circle"
+                    class="btn btn-error btn-xs"
                     title="{{ __('Delete') }}">
-                    <x-tabler-trash class="size-4" />
+                    <x-tabler-trash class="size-4" />{{ __('Remove') }}
                 </button>
             </div>
         @endif
