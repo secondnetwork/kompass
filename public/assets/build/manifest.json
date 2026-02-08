@@ -15,7 +15,7 @@
     "name": "vendor"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.DaBOPuap.css",
+    "file": "css/kompass.CZPvVirg.css",
     "src": "resources/css/kompass.css",
     "isEntry": true,
     "name": "kompass",
@@ -30,7 +30,7 @@
     "isEntry": true
   },
   "resources/js/main.js": {
-    "file": "js/main.DP0lRHKG.js",
+    "file": "js/main.yAcGt643.js",
     "name": "main",
     "src": "resources/js/main.js",
     "isEntry": true,
@@ -44,7 +44,7 @@
       "resources/js/plugins/lite-vimeo-embed.js"
     ],
     "css": [
-      "css/kompass.DaBOPuap.css"
+      "css/kompass.CZPvVirg.css"
     ]
   },
   "resources/js/plugins/lite-vimeo-embed.js": {
