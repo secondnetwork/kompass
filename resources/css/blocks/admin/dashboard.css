@@ -65,16 +65,16 @@
       }
 
       font-weight: 700;
-      @apply bg-gradient-to-r from-gray-50 to-gray-100 text-gray-500;
+      @apply bg-brand-500/20 ;
 
-      &::after {
+      /* &::after {
         content: "";
         position: absolute;
         height: 100%;
         width: 0.3rem;
         left: 0;
         @apply bg-brand-500;
-      }
+      } */
     }
   }
   nav.setting a {

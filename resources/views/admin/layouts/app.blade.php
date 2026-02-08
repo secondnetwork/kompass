@@ -64,29 +64,29 @@
         <img class="favicon-logo" src="{{ kompass_asset('favicon/512.png') }}" alt="">
         @endif
         </div>
-        <ul class="sidenav__list">
+        <ul class="w-full menu">
 
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
 
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.posts*')) class="active" @endif href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
-          <li class="sidenav__list-item "><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.posts*')) class="active" @endif href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
 
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo-video class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo-video class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
           <livewire:menu name="admin_aside" />
          
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('Theme') }}</div>
 
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-layout-grid-add class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-layout-grid-add class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
           
           @role(['super_admin','admin'])
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('User management') }}</div>
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
-          <li class="sidenav__list-item"><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Manage Role') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Manage Role') }}</span></a></li>
           @endrole
           
-          <li class="sidenav__list-item mt-8"><a wire:navigate @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
+          <li class=" mt-8"><a wire:navigate @if(Route::is('admin.about*')  ) class="active" @endif href="/admin/about"><x-tabler-signature class="icon-lg"/><span>{{ __('About') }}</span></a></li>
         </ul>
 
     
