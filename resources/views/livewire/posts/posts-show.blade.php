@@ -29,6 +29,21 @@
                     ]">
                     </x-kompass::select>
 
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <select wire:model="category_id" class="select select-bordered w-full">
+                                <option value="">{{ __('No category') }}</option>
+                                @foreach($availableCategories as $category)
+                                    <option value="{{ $category->id }}">
+                                        @if($category->icon)
+                                            <x-kompass::icon :name="$category->icon" class="w-4 h-4 inline mr-1" />
+                                        @endif
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                 </div>
 
                 @if ($post->status == 'draft')

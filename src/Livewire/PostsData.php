@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
+use Secondnetwork\Kompass\Models\Category;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
@@ -115,6 +116,10 @@ class PostsData extends Component
 
     public $cssClassname;
 
+    public $category_id;
+
+    public $availableCategories = [];
+
     protected $rules = [
 
         'post.title' => 'required|string|min:3',
@@ -165,6 +170,9 @@ class PostsData extends Component
         $this->description = $this->post->meta_description;
         $this->layout = $this->post->layout;
         $this->status = $this->post->status;
+        $this->category_id = $this->post->category_id;
+
+        $this->availableCategories = Category::orderBy('name', 'asc')->get();
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
@@ -402,9 +410,9 @@ class PostsData extends Component
         $post->update([
             'title' => $this->title,
             'meta_description' => $this->description,
-            // 'layout' => $this->layout,
             'status' => $this->status,
             'slug' => $slugNameURL,
+            'category_id' => $this->category_id ?: null,
             'updated_at' => Carbon::now(),
         ]);
 

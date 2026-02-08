@@ -9,15 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Post extends Model
+class Category extends Model
 {
     use HasFactory;
     use LogsActivity;
     use SoftDeletes;
-
-    protected $casts = [
-        'content' => 'array',
-    ];
 
     protected $guarded = [];
 
@@ -42,14 +38,9 @@ class Post extends Model
         });
     }
 
-    public function blocks()
+    public function posts()
     {
-        return $this->morphMany(Block::class, 'blockable');
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
+        return $this->hasMany(Post::class);
     }
 
     public function getCreatedAtAttribute($date)
@@ -71,7 +62,6 @@ class Post extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['title']);
-        // Chain fluent methods for configuration options
+            ->logOnly(['name']);
     }
 }
