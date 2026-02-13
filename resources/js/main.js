@@ -87,6 +87,10 @@ Alpine.store('showside', {
   }
 });
 window.click_to_edit = click_to_edit;
-// Click-to-edit Funktion
-// Initialize dashboard charts module (Chart.js based)
-import './dashboard-charts.js';
+
+// Dashboard Charts - Lazy Loading (nur laden wenn Charts auf der Seite sind)
+if (document.getElementById('chartPagesSparkline') || 
+    document.getElementById('area-chart') || 
+    document.getElementById('grid-chart')) {
+  import('./dashboard-charts.js');
+}

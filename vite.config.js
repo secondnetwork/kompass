@@ -12,24 +12,50 @@ export default defineConfig({
         entryFileNames: `js/[name].[hash].js`,
         chunkFileNames: `js/[name].[hash].js`,
         assetFileNames: `css/[name].[hash].[ext]`,
-        manualChunks(id, { getModuleInfo, getChunkModules }) {
-          if (id.includes('node_modules/@alpinejs')) {
+        manualChunks(id) {
+          // Reihenfolge ist wichtig: Spezifische Module ZUERST prüfen!
+          
+          // EditorJS und Plugins (große Library)
+          if (id.includes('node_modules/@editorjs') || id.includes('editorjs.js')) {
+            return 'editorjs';
+          }
+          
+          // ApexCharts für Dashboard (nur dort benötigt)
+          if (id.includes('node_modules/apexcharts')) {
+            return 'charts';
+          }
+          
+          // Alpine.js Core
+          if (id.includes('node_modules/@alpinejs') || id.includes('node_modules/alpinejs')) {
             return 'alpine';
           }
+          
+          // Livewire
           if (id.includes('node_modules/livewire')) {
             return 'livewire';
           }
-          if (id.includes('node_modules')) {
-            return 'vendor';
+          
+          // UI Libraries (Preline, etc.)
+          if (id.includes('node_modules/preline')) {
+            return 'ui';
           }
+          
+          // SortableJS (falls verwendet)
+          if (id.includes('node_modules/sortablejs')) {
+            return 'sortable';
+          }
+          
+          // Projekt-spezifische Chunks
           if (id.includes('/alpine/')) {
             return 'alpine-components';
           }
-          if (id.includes('/editorjs')) {
-            return 'editorjs';
-          }
           if (id.includes('./plugins/')) {
             return 'plugins';
+          }
+          
+          // Restliche node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor';
           }
         }
       },

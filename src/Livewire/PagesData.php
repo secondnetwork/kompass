@@ -16,6 +16,7 @@ use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\Menuitem;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Setting;
 
@@ -462,6 +463,8 @@ class PagesData extends Component
         $page = Page::findOrFail($pageId);
         $this->dispatch('saveTheDatafield');
         $this->dispatch('savedatajs');
+        
+        $oldSlug = $page->slug;
         $slugNameURL = genSlug($page->title, $page->slug, Page::class);
 
         $page->update([
@@ -472,6 +475,13 @@ class PagesData extends Component
             'slug' => $slugNameURL,
             'updated_at' => Carbon::now(),
         ]);
+
+        // NUR wenn Slug sich ändert: Menuitems aktualisieren
+        if ($slugNameURL !== $oldSlug) {
+            Menuitem::where('page_id', $pageId)->update([
+                'url' => '/' . $slugNameURL,
+            ]);
+        }
 
         if ($publishIfNeeded) {
             $page->update(['status' => 'published']);
