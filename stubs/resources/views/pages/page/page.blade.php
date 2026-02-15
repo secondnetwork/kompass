@@ -44,7 +44,7 @@
                 // Der Pfad zur View, z.B. "components.blocks.hero"
                 $viewName = 'components.' . $componentName;
             @endphp
-            
+
             @if (view()->exists($viewName))
                 {{-- Komponente existiert -> Rendern --}}
                 <section class="{{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('css-classname') }}"

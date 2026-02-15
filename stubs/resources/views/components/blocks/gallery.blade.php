@@ -7,7 +7,7 @@
 @if ('gallery' == $item->type)
 
 <div {{ $attributes }} >
-    <div  class="grid md:grid gap-4 transition-all ease-in-out duration-500  grid-cols-{{ $item->grid }}  one-image {{ $item->getMeta('css-classname') }}">
+    <div  class="md:grid gap-4 transition-all ease-in-out duration-500 grid-cols-{{ $item->grid }}  one-image {{ $item->getMeta('css-classname') }}">
 
         @foreach ($item->datafield as $image)
 
@@ -15,7 +15,7 @@
                     $imageId = $image['data'];
                 @endphp
                 
-            <x-image :id="$imageId" class="object-cover w-full h-full rounded-lg shadow-md" />
+            <x-image :id="$imageId" class="w-full h-full rounded-lg shadow-md mask-center mask-no-repeat" />
 
 
 

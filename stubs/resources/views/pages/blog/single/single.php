@@ -2,8 +2,9 @@
 
 use Livewire\Component;
 use Illuminate\Support\Arr;
-use Secondnetwork\Kompass\Models\File;
+use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Cache;
+use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
 use Illuminate\Support\Facades\Request;
 use Secondnetwork\Kompass\Models\Block;
@@ -12,7 +13,7 @@ use Secondnetwork\Kompass\Models\Redirect;
 use Secondnetwork\Kompass\Models\Datafield;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-new class extends Component
+new #[Layout('layouts.main')] class extends Component
 {
     public $post;
 

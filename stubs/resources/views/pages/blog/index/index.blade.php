@@ -5,14 +5,13 @@
 <section class="grid-set">
 
     @seo(['title' => 'Blog' . ' | ' . setting('global.webtitle' ?? 'Kompass')])
-    @php
+    {{-- @php
         seo()
             ->description($page->meta_description ?? setting('global.description' ?? ''))
             ->locale(str_replace('_', '-', app()->getLocale()))
             ->twitter()
             ->tag('og:image', asset(setting('global.ogimage_src')))
-            ->twitter();
-    @endphp
+    @endphp --}}
 
     <div class="fullpage">
 
@@ -42,7 +41,7 @@
                         </span>
                     </div>
 
-                        <h3 class="text-xl font-semibold  group-hover:text-gray-600 my-2">
+                        <h3 class="text-xl font-semibold text-gray-800 group-hover:text-gray-600 my-2">
                             {{ $post->title }}
                         </h3>
                         <p class="text-base!">{{ $post->meta_description }}</p>
@@ -53,6 +52,9 @@
             @endforeach
             <!-- End Card -->
 
+
+
+          
             <!-- Card -->
             <a class="group relative flex flex-col w-full min-h-60 bg-[url('https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=560&q=80')] bg-center bg-cover rounded-xl hover:shadow-lg focus:outline-hidden focus:shadow-lg transition"
                 href="#">

@@ -3,26 +3,26 @@
 ])
 
 @if ('wysiwyg' == $item->type)
-    <div  {{ $attributes }}>
-
+@php
+    $alignment = $item->getMeta('alignment');
+    $alignmentClass = match($alignment) {
+        'align-left' => 'text-left flex flex-col justify-center',
+        'align-center' => 'text-center flex flex-col justify-center',
+        'align-right' => 'text-right flex flex-col justify-center',
+        default => 'flex flex-col justify-center',
+    };
+    $layoutgrid = $item->layoutgrid ?? 12;
+    $gridCols = 'grid-cols-' . $layoutgrid;
+    $colSpan = $item->layoutgrid ? 'col-span-' . $item->layoutgrid : '';
+@endphp
+    <div {{ $attributes->merge(['class' => $alignmentClass . ' ' . $gridCols . ' ' . $colSpan]) }}>
         @php
-            $raw = get_field('wysiwyg', $item->datafield);
-            $data = is_string($raw) ? json_decode($raw) : $raw;
-            if (is_array($data)) {
-                $data = (object) $data;
-            }
+            $fieldData = get_field('wysiwyg',$item->datafield);
+            $data = is_array($fieldData) || is_object($fieldData) ? json_decode(json_encode($fieldData)) : json_decode($fieldData);
         @endphp
 
         @if($data)
             @foreach ($data->blocks as $block)
-                @php
-                    if (is_array($block)) {
-                        $block = (object) $block;
-                    }
-                    if (is_array($block->data)) {
-                        $block->data = (object) $block->data;
-                    }
-                @endphp
 
                 @switch($block->type)
                     @case('header')
