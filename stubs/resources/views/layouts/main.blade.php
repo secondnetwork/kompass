@@ -66,21 +66,7 @@
 </head>
 
 <body class="{{ str_replace('.', '-', Route::currentRouteName()) }}">
-    <!-- Global Background Elements -->
-    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-brand-dark">
-        <!-- Top Left Vibrant Glow -->
-        <div class="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-brand-primary/20 rounded-full blur-[150px] animate-pulse"></div>
-        <!-- Center Purple Splash -->
-        <div class="absolute top-[20%] right-[-10%] w-[60%] h-[60%] bg-purple-500/15 rounded-full blur-[130px]"></div>
-        <!-- Bottom Mint Accent -->
-        <div class="absolute bottom-[-10%] left-[10%] w-[50%] h-[50%] bg-mint-500/10 rounded-full blur-[120px]"></div>
-        <!-- Extra Accent for Depth -->
-        <div class="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[80%] h-[40%] bg-red-700/5 rounded-full blur-[160px] rotate-45"></div>
-        
-        <!-- Grain Texture Overlay -->
-        <div class="absolute inset-0 opacity-[0.05] mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
-    </div>
-<!-- ========== HEADER ========== -->
+
 <header class="navbar relative" x-data="{ mobileMenuOpen: false }" @keydown.escape="mobileMenuOpen = false">
   <nav class="relative w-full mx-auto md:flex md:items-center md:justify-between md:gap-3">
     <div class="flex justify-between items-center gap-x-1">
@@ -93,7 +79,7 @@
                 />
 
       <!-- Collapse Button -->
-      <button type="button" @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen" class="md:hidden relative size-12 flex justify-center items-center font-medium focus:outline-hidden " aria-controls="hs-header-base" aria-label="Toggle navigation">
+      <button type="button" @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen" class="md:hidden relative size-12 flex justify-center items-center font-medium focus:outline-hidden" aria-label="Toggle navigation">
         <svg x-show="!mobileMenuOpen" class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
         <svg x-show="mobileMenuOpen" class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         <span class="sr-only">Toggle navigation</span>
@@ -101,8 +87,9 @@
     </div>
 
     <!-- Mobile Menu Overlay -->
-    <div id="hs-header-base" 
+    <div 
          x-show="mobileMenuOpen"
+         @click.away="mobileMenuOpen = false"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="-translate-x-full opacity-0"
          x-transition:enter-end="translate-x-0 opacity-100"
