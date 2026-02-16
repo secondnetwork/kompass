@@ -2,9 +2,7 @@
 
 import '/resources/css/kompass.css'
 import click_to_edit from './alpine/click_to_edit'
-
-// import '@nextapps-be/livewire-sortablejs';
-import * as editorjs from './editorjs';
+import './tiptap';
 
 if (document.getElementsByClassName('embed-video')) {
   const { app } = import('./plugins/lite-yt-embed')

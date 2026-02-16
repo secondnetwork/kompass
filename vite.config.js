@@ -15,9 +15,9 @@ export default defineConfig({
         manualChunks(id) {
           // Reihenfolge ist wichtig: Spezifische Module ZUERST prüfen!
           
-          // EditorJS und Plugins (große Library)
-          if (id.includes('node_modules/@editorjs') || id.includes('editorjs.js')) {
-            return 'editorjs';
+          // Tiptap Editor
+          if (id.includes('node_modules/@tiptap')) {
+            return 'tiptap';
           }
           
           // ApexCharts für Dashboard (nur dort benötigt)

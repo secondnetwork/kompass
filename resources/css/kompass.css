@@ -182,3 +182,171 @@ License URI: http://opensource.org/licenses/mit-license.php
   --depth: 0;
   --noise: 0;
 }
+
+
+/* Tiptap Editor Styles */
+.tiptap-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid oklch(var(--b3));
+    background-color: oklch(var(--b2));
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.dark .tiptap-toolbar {
+    background-color: oklch(var(--bd));
+    border-color: oklch(var(--b3));
+}
+
+.tiptap-content {
+    min-height: 200px;
+    padding: 1rem;
+    border: 1px solid oklch(var(--b3));
+    border-top: none;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    background-color: oklch(var(--b1));
+}
+
+.dark .tiptap-content {
+    background-color: oklch(var(--bd));
+    border-color: oklch(var(--b3));
+}
+
+.tiptap-content:focus {
+    outline: none;
+}
+
+.tiptap-content p {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.tiptap-content h1,
+.tiptap-content h2,
+.tiptap-content h3,
+.tiptap-content h4,
+.tiptap-content h5,
+.tiptap-content h6 {
+    line-height: 1.3;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.tiptap-content h1 { font-size: 2rem; }
+.tiptap-content h2 { font-size: 1.5rem; }
+.tiptap-content h3 { font-size: 1.25rem; }
+.tiptap-content h4 { font-size: 1.125rem; }
+
+.tiptap-content ul,
+.tiptap-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tiptap-content ul {
+    list-style-type: disc;
+}
+
+.tiptap-content ol {
+    list-style-type: decimal;
+}
+
+.tiptap-content li {
+    margin-bottom: 0.25rem;
+}
+
+.tiptap-content blockquote {
+    border-left: 3px solid oklch(var(--p));
+    padding-left: 1rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    color: oklch(var(--bc) / 0.7);
+}
+
+.tiptap-content pre {
+    background-color: oklch(var(--b2));
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 0.75rem;
+}
+
+.dark .tiptap-content pre {
+    background-color: oklch(var(--bd));
+}
+
+.tiptap-content code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    background-color: oklch(var(--b2));
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.dark .tiptap-content code {
+    background-color: oklch(var(--bd));
+}
+
+.tiptap-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.tiptap-content hr {
+    border: none;
+    border-top: 1px solid oklch(var(--b3));
+    margin: 1.5rem 0;
+}
+
+.tiptap-content a {
+    color: oklch(var(--p));
+    text-decoration: underline;
+}
+
+.tiptap-content a:hover {
+    color: oklch(var(--pf));
+}
+
+.tiptap-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.tiptap-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.tiptap-content th,
+.tiptap-content td {
+    border: 1px solid oklch(var(--b3));
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.tiptap-content th {
+    background-color: oklch(var(--b2));
+    font-weight: 600;
+}
+
+.dark .tiptap-content th {
+    background-color: oklch(var(--bd));
+}
+
+.tiptap-content p.is-editor-empty:first-child::before {
+    color: oklch(var(--bc) / 0.4);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}

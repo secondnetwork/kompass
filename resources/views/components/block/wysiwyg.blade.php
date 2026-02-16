@@ -6,13 +6,12 @@
             $gridtables = $itemfield->grid;
         @endphp
         @livewire(
-            \Secondnetwork\Kompass\Livewire\EditorJS::class,
+            \Secondnetwork\Kompass\Livewire\TiptapEditor::class,
             [
                 'editorId' => $itemfield->id,
                 'value' => $jsfield,
                 'uploadDisk' => 'publish',
-                'downloadDisk' => 'publish',
-                'class' => 'cdx-input',
+                'class' => 'tiptap-editor-wrapper',
                 'style' => '',
                 'placeholder' => __('write something...'),
             ],
