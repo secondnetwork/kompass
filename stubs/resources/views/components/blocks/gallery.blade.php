@@ -15,7 +15,7 @@
                     $imageId = $image['data'];
                 @endphp
                 
-            <x-image :id="$imageId" class="w-full h-full rounded-lg shadow-md mask-center mask-no-repeat" />
+            <x-image :id="$imageId" class="w-full h-full rounded-lg " />
 
 
 
