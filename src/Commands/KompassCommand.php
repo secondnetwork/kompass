@@ -3,8 +3,7 @@
 namespace Secondnetwork\Kompass\Commands;
 
 use App\Models\User;
-use Secondnetwork\Kompass\Models\Setting; // Importiert das Setting Model
-use Illuminate\Console\Command;
+use Illuminate\Console\Command; // Importiert das Setting Model
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -12,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\ServiceProvider;
+use Secondnetwork\Kompass\Models\Setting;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
@@ -90,10 +90,10 @@ class KompassCommand extends Command implements PromptsForMissingInput
         );
 
         if ($addGlobalSettings) {
-           // 5. Globale Seiteneinstellungen abfragen (NEU)
+            // 5. Globale Seiteneinstellungen abfragen (NEU)
             $this->configureGlobalSettings();
         }
-        
+
         // 6. Admin User erstellen
         $addNewUser = select(
             label: 'Create new Admin User?',
@@ -199,9 +199,9 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         $now = Carbon::now()->toDateTimeString();
         $userData = Arr::prepend($this->getUserData(), $now, 'email_verified_at');
-        
+
         $user = User::create($userData);
-        
+
         if (method_exists($user, 'syncRoles')) {
             $user->syncRoles('admin');
         }
@@ -266,7 +266,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     protected function publishCoreAssets(): void
     {
         File::deleteDirectory(public_path('vendor/kompass'));
-        
+
         // Auth Controller & User Model
         File::ensureDirectoryExists(app_path('Http/Controllers/Auth'));
         File::copy(__DIR__.'/../../stubs/app/Http/Controllers/Auth/VerifyEmailController.php', base_path('app/Http/Controllers/Auth/VerifyEmailController.php'));
@@ -277,16 +277,16 @@ class KompassCommand extends Command implements PromptsForMissingInput
         File::copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
 
         // Delete old Laravel default migrations
-        $defaultMigrations = [
-            database_path('migrations/0001_01_01_000000_create_users_table.php'),
-            database_path('migrations/0001_01_01_000001_create_cache_table.php'),
-            database_path('migrations/0001_01_01_000002_create_jobs_table.php'),
-        ];
-        foreach ($defaultMigrations as $migration) {
-            if (File::exists($migration)) {
-                File::delete($migration);
-            }
-        }
+        // $defaultMigrations = [
+        //     database_path('migrations/0001_01_01_000000_create_users_table.php'),
+        //     database_path('migrations/0001_01_01_000001_create_cache_table.php'),
+        //     database_path('migrations/0001_01_01_000002_create_jobs_table.php'),
+        // ];
+        // foreach ($defaultMigrations as $migration) {
+        //     if (File::exists($migration)) {
+        //         File::delete($migration);
+        //     }
+        // }
 
         // Publish Vendor Files & Migrations
         $this->callSilent('vendor:publish', ['--provider' => 'Secondnetwork\Kompass\KompassServiceProvider']);
@@ -297,7 +297,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     {
         // Database seeders...
         File::copyDirectory(__DIR__.'/../database/seeders', database_path('seeders'));
-        
+
         if ($fresh) {
             $this->call('migrate:fresh');
             $this->info('Database wiped and migrated.');
@@ -340,7 +340,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
     protected static function flushNodeModules(): void
     {
         File::deleteDirectory(base_path('node_modules'));
-        
+
         $filesToDelete = ['bun.lockb', 'bun.lock', 'pnpm-lock.yaml', 'yarn.lock', 'package-lock.json'];
         foreach ($filesToDelete as $file) {
             File::delete(base_path($file));
@@ -349,7 +349,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
     protected function runShellCommands(array $commands): void
     {
-                Process::forever()->run(implode(' && ', $commands), function (string $type, string $output) {
+        Process::forever()->run(implode(' && ', $commands), function (string $type, string $output) {
             $this->output->write('    '.$output);
         });
     }

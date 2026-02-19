@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Features\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -15,22 +15,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasProfilePhoto;
     use HasRoles;
-    use HasUuids;
     use Notifiable;
-
-    /**
-     * Indicates if the model's ID is auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false; // WICHTIG für UUIDs
-
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string'; // ID ist ein String (UUID)
 
     /**
      * The attributes that are mass assignable.
@@ -42,7 +27,28 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
+        'ulid',
     ];
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'ulid';
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (empty($user->ulid)) {
+                $user->ulid = (string) Str::ulid();
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for arrays.
