@@ -271,10 +271,22 @@ class KompassCommand extends Command implements PromptsForMissingInput
         File::ensureDirectoryExists(app_path('Http/Controllers/Auth'));
         File::copy(__DIR__.'/../../stubs/app/Http/Controllers/Auth/VerifyEmailController.php', base_path('app/Http/Controllers/Auth/VerifyEmailController.php'));
         File::copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-        
+
         // Routes
         File::copy(__DIR__.'/../../stubs/routes/auth.php', base_path('routes/auth.php'));
         File::copy(__DIR__.'/../../stubs/routes/web.php', base_path('routes/web.php'));
+
+        // Delete old Laravel default migrations
+        $defaultMigrations = [
+            database_path('migrations/0001_01_01_000000_create_users_table.php'),
+            database_path('migrations/0001_01_01_000001_create_cache_table.php'),
+            database_path('migrations/0001_01_01_000002_create_jobs_table.php'),
+        ];
+        foreach ($defaultMigrations as $migration) {
+            if (File::exists($migration)) {
+                File::delete($migration);
+            }
+        }
 
         // Publish Vendor Files & Migrations
         $this->callSilent('vendor:publish', ['--provider' => 'Secondnetwork\Kompass\KompassServiceProvider']);
