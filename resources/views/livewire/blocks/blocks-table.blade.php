@@ -93,10 +93,10 @@
                         </tbody>
                     </table>
                 @else
-                    <div class="h-[20rem] flex justify-center items-center bg-gray-100">
-                        <div>
-                            <x-tabler-clipboard-text class="h-[6rem] w-[6rem] m-auto stroke-[1.2] stroke-[#FFA700]" />
-                            <div class="font-semibold text-md"> {{ __('No Data') }} </div>
+                    <div class="min-h-[60vh] flex flex-col items-center justify-center bg-gray-100">
+                        <div class="flex flex-col items-center">
+                            <x-tabler-layout-grid-add stroke-width="1.5" class="w-16 h-16 mb-2 text-brand-500" />
+                            <div class="font-semibold text-lg"> {{ __('No Data') }} </div>
                         </div>
                     </div>
 

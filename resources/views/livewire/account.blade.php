@@ -117,7 +117,7 @@
                         @else
                             <tr>
                                 <td>
-                                  <div class="flex justify-center p-4">{{ __('No Data') }}</div></td>
+                                  <div class="flex items-center justify-center gap-2 p-4"><x-tabler-user stroke-width="1.5" class="w-5 h-5" /> <span class="font-semibold">{{ __('No Data') }}</span></div></td>
                             </tr>
                             @endif
                             <!-- More people... -->

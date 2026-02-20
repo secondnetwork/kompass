@@ -77,7 +77,10 @@
                         </tbody>
                     </table>
                 @else
-                    <div class="h-36 text-center">{{__('No Data')}}</div>
+                    <div class="min-h-[60vh] flex flex-col items-center justify-center">
+                        <x-tabler-arrow-forward-up stroke-width="1.5" class="w-16 h-16 mb-2 text-brand-500" />
+                        <div class="text-lg font-semibold">{{__('No Data')}}</div>
+                    </div>
 
                 @endif
 

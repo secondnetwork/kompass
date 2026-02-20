@@ -80,7 +80,7 @@
 
                   @else
                   <tr>
-                      <td>{{__('No Data')}}</td>
+                      <td class="flex items-center gap-2"><x-tabler-lock-access stroke-width="1.5" class="w-5 h-5" /> <span class="font-semibold">{{__('No Data')}}</span></td>
                   </tr>
                   @endif
                   <!-- More people... -->

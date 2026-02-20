@@ -35,8 +35,8 @@
 
         <div class="divider"></div>
       
-        <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+        <div class=" align-middle inline-block min-w-full h-full">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg h-full">
 
 
 
@@ -155,7 +155,10 @@
                         </tbody>
                     </table>
                 @else
-                    <div class="h-36 text-center">{{ __('No Data') }}</div>
+                    <div class="min-h-[60vh] flex flex-col items-center justify-center">
+                        <x-tabler-file-text stroke-width="1.5" class="w-16 h-16 mb-2 text-brand-500" />
+                        <div class="text-lg font-semibold">{{ __('No Data') }}</div>
+                    </div>
 
                 @endif
 
