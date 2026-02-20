@@ -82,6 +82,7 @@ class AccountForm extends Component
         if ($action == 'add') {
             // This will show the modal on the frontend
             $this->reset(['name', 'email', 'password', 'role']);
+            $this->selectedItem = null;
             $this->FormEdit = true;
         }
         if ($action == 'update') {
