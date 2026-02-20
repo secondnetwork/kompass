@@ -1,4 +1,4 @@
-<div>
+<div class="flex flex-col gap-6">
 
   @if (session('status'))
   <div>
@@ -7,9 +7,10 @@
 @endif
 
 @if ($errors->any())
-  <div>
-      <div>{{ __('Whoops! Something went wrong.') }}</div>
-  </div>
+        <div role="alert" class="alert alert-error alert-soft">
+            <span>{{ __('An error has occurred. Please check your inputs.') }}</span>
+
+        </div>
 @endif
 
 <form wire:submit="login" class="grid gap-y-6">

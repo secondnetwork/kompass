@@ -6,7 +6,7 @@
   ":resource Details": ":resource Details",
   ":resource Details: :title": ":resource Details: :title",
   "A color for the browser toolbar and the status bar on mobile devices.": "Eine Farbe für die Browser-Symbolleiste und die Statusleiste auf Mobilgeräten.",
-  "A fresh verification link has been sent to your email address.": "Ein neuer Bestätigungslink wurde verschickt.",
+  "A reset link will be sent if the account exists.": "Ein Link zum Zurücksetzen wird gesendet, falls das Konto existiert.",
   "A new verification link has been sent to the email address you provided during registration.": "Ein neuer Bestätigungslink wurde an die E-Mail-Adresse gesendet, die Sie bei der Registrierung angegeben haben.",
   "API Token": "API-Token",
   "API Token Permissions": "API-Token-Berechtigungen",
@@ -703,7 +703,7 @@
   "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.": "Wenn die Zwei-Faktor-Authentifizierung aktiviert ist, werden Sie während der Authentifizierung zur Eingabe eines sicheren, zufälligen Tokens aufgefordert. Sie können dieses Token aus der Google Authenticator-Anwendung Ihres Telefons abrufen.",
   "Whoops": "Whoops",
   "Whoops!": "Ups!",
-  "Whoops! Something went wrong.": "Ups, etwas ist schief gelaufen.",
+  "An error has occurred. Please check your inputs.": "Es ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Eingaben.",
   "With Trashed": "With Trashed",
   "With your email": "Mit deine E-Mail",
   "Write": "Write",
@@ -886,5 +886,13 @@
   "Selected:": "Ausgewählt:",
   "Reset icon": "Symbol zurücksetzen",
   "New Folder": "Neuer Ordner",
-  "Select a page to auto-fill the URL": "Wählen Sie eine Seite aus, um die URL automatisch auszufüllen"
+  "Select a page to auto-fill the URL": "Wählen Sie eine Seite aus, um die URL automatisch auszufüllen",
+  "Sign in with Passkey": "Mit Passkey anmelden",
+  "Whoops, your device has lost connection. The web page you are viewing is offline.": "Ups, Ihr Gerät hat die Verbindung verloren. Die Webseite, die Sie ansehen, ist offline.",
+  "No category": "Keine Kategorie",
+  "No icons found for: :search": "Keine Symbole gefunden für: :search",
+  "Published ratio": "Veröffentlichungsquote",
+  "Pub. / Draft": "Ver. / Entwurf",
+  "Activity": "Aktivität",
+  "Media": "Medien"
 }

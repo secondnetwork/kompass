@@ -2,7 +2,7 @@
 
     @if ($errors->any())
     <div>
-        <div>{{ __('Whoops! Something went wrong.') }}</div>
+        <div>{{ __('An error has occurred. Please check your inputs.') }}</div>
 
         <ul>
             @foreach ($errors->all() as $error)

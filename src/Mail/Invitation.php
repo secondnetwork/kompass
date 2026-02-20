@@ -31,6 +31,6 @@ class Invitation extends Mailable
      */
     public function build()
     {
-        return $this->markdown('kompass::mail.invitation')->subject(Lang::get('Invitation to access of').' '.env('APP_NAME'));
+        return $this->markdown('kompass::mail.invitation-new')->subject(Lang::get('Invitation to access of').' '.config('app.name'));
     }
 }

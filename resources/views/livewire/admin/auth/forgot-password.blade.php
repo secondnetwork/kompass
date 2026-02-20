@@ -6,20 +6,15 @@
     </div>
 
     @if (session('status'))
-        <div>
+        <div role="alert" class="alert alert-success alert-soft">
             {{ session('status') }}
         </div>
     @endif
 
     @if ($errors->any())
-        <div>
-            <div>{{ __('Whoops! Something went wrong.') }}</div>
+        <div role="alert" class="alert alert-error alert-soft">
+            <span>{{ __('An error has occurred. Please check your inputs.') }}</span>
 
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
         </div>
     @endif
     
