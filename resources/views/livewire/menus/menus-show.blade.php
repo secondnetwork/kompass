@@ -3,16 +3,7 @@
     {{-- @dump($menuitem->toArray()) --}}
 
 
-    <x-kompass::action-message class="fixed bottom-8 right-8 alert text-white bg-gray-800 w-[35rem] p-8  flex"
-        on="status">
-        <div class=" mr-4 ">
-            <x-tabler-circle-check class="stroke-green-500" />
-        </div>
-        <div>
-            <h4 class="pb-4 text-white">{{ __('Saved.') }}</h4>
-            <p class="text-md">{{ __('successfully updated') }}</p>
-        </div>
-    </x-kompass::action-message>
+    <x-kompass::action-message class="" on="status" />
 
     <x-kompass::modal data="FormDelete" />
 

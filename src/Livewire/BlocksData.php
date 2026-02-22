@@ -2,12 +2,10 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
-use Illuminate\Support\Str;
-use Livewire\Attributes\On;
-use Livewire\WithFileUploads;
-use Secondnetwork\Kompass\Models\File;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
@@ -43,6 +41,7 @@ class BlocksData extends Component
         }
         $this->call_emit_reset();
     }
+
     use WithFileUploads;
 
     /**
@@ -74,13 +73,16 @@ class BlocksData extends Component
 
     public $filestoredata;
 
-    protected $rules = [
-        'name' => 'required|string|min:1',
-        'type' => 'required|string|min:1|unique:blocktemplates,type,' . null . ',id',
-        'iconclass' => 'nullable',
-        'grid' => 'nullable',
-        'icon_img_path' => 'nullable',
-    ];
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|min:1',
+            'type' => 'required|string|min:1|unique:blocktemplates,type,'.$this->blocktemplatesId.',id',
+            'iconclass' => 'nullable',
+            'grid' => 'nullable',
+            'icon_img_path' => 'nullable',
+        ];
+    }
 
     public function mount($id)
     {
@@ -113,10 +115,11 @@ class BlocksData extends Component
 
         // ->slot('main');
     }
+
     #[On('block-resetpage')]
     public function resetpage()
     {
- 
+
         $this->reset('filestoredata');
         $this->mount($this->blocktemplatesId);
         $this->dispatch('status');
@@ -136,7 +139,7 @@ class BlocksData extends Component
         }
     }
 
-    public function delete() //delete block
+    public function delete() // delete block
     {
         Blockfields::where('id', $this->selectedItem)->delete();
 
@@ -165,12 +168,13 @@ class BlocksData extends Component
     public function saveUpdate()
     {
         $validatedData = $this->validate();
-        
+
         $this->dispatch('field-update');
         $id = $this->blocktemplatesId;
 
-        if (!$id) {
+        if (! $id) {
             session()->flash('error', 'Block Template ID nicht gefunden.');
+
             return;
         }
 
@@ -178,7 +182,7 @@ class BlocksData extends Component
 
         $dataToUpdate = [];
 
-        if (!empty($validatedData['name'])) {
+        if (! empty($validatedData['name'])) {
             $dataToUpdate['name'] = $validatedData['name'];
         }
         if (isset($validatedData['type'])) {
@@ -203,7 +207,7 @@ class BlocksData extends Component
             $this->filestoredata = null;
         }
 
-        if (!empty($dataToUpdate)) {
+        if (! empty($dataToUpdate)) {
             $block->update($dataToUpdate);
             $this->name = $block->fresh()->name;
             $this->type = $block->fresh()->type;
