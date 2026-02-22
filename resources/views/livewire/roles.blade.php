@@ -16,9 +16,9 @@
       <x-kompass::offcanvas :w="'w-2/6'">
         <x-slot name="body">
           <div class="modal-body grid gap-4">
-            <x-kompass::input wire:model="display_name" label="Display Name" />
+            <x-kompass::input wire:model="display_name" label="{{ __('Display Name') }}" />
             
-            <x-kompass::input wire:model="name" label="Role Name" />
+            <x-kompass::input wire:model="name" label="{{ __('Role Name') }}" />
 
             <button wire:click="createOrUpdateRole" class="btn btn-primary">{{ __('Save') }}</button>
           </div>

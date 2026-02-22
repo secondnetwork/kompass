@@ -2,23 +2,16 @@
     <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd') }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
-                <h3 class="text-lg font-medium mb-4">{{ __('New Category') }}</h3>
+                <x-kompass::form.input label="{{ __('Name') }}" type="text" name="name" wire:model="name" />
 
-                <x-kompass::form.input label="Name" type="text" name="name" wire:model="name" />
-                <x-kompass::input-error for="name" class="mt-2" />
-
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">Slug</label>
-                    <input type="text" wire:model="slug" class="input input-bordered w-full" />
-                    <x-kompass::input-error for="slug" class="mt-2" />
-                </div>
+                <x-kompass::form.input label="{{ __('Slug') }}" type="text" name="slug" wire:model="slug" />
 
                 <x-kompass::form.textarea wire:model="description" id="description" name="description"
-                    label="Description" type="text" class="mt-4 block w-full h-24" />
+                    label="{{ __('Description') }}" type="text" class="block w-full h-24" />
 
                 <div class="grid grid-cols-2 gap-4 mt-4">
                     <div>
-                        <label class="block text-sm font-medium text-base-content/70 mb-1">Color</label>
+                        <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Color') }}</label>
                         <div class="flex flex-wrap gap-2">
                             <button type="button" wire:click="$set('color', 'primary')"
                                 class="w-8 h-8 rounded-full border-2 {{ $color === 'primary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
@@ -48,19 +41,13 @@
                         <div class="mt-2 text-sm text-base-content/70">{{ $color }}</div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-base-content/70 mb-1">Order</label>
-                        <input type="number" wire:model="order" class="input input-bordered w-full" />
+                        <x-kompass::form.input label="{{ __('Order') }}" type="number" name="order" wire:model="order" />
                     </div>
                 </div>
 
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">Icon</label>
-                    <div class="relative">
-                        <input type="text" wire:model="iconSearch" wire:keyup.debounce.300ms="loadIcons"
-                            placeholder="{{ __('Search icon...') }}" class="input input-bordered w-full pl-10" />
-                        <x-tabler-search
-                            class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/50" />
-                    </div>
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Icon') }}</label>
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
 
                     @if ($selectedIcon)
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
@@ -109,21 +96,16 @@
             <x-slot name="body">
                 <h3 class="text-lg font-medium mb-4">{{ __('Edit Category') }}</h3>
 
-                <x-kompass::form.input label="Name" type="text" name="name" wire:model="name" />
-                <x-kompass::input-error for="name" class="mt-2" />
+                <x-kompass::form.input label="{{ __('Name') }}" type="text" name="name" wire:model="name" />
 
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">Slug</label>
-                    <input type="text" wire:model="slug" class="input input-bordered w-full" />
-                    <x-kompass::input-error for="slug" class="mt-2" />
-                </div>
+                <x-kompass::form.input label="{{ __('Slug') }}" type="text" name="slug" wire:model="slug" />
 
                 <x-kompass::form.textarea wire:model="description" id="description" name="description"
-                    label="Description" type="text" class="mt-4 block w-full h-24" />
+                    label="{{ __('Description') }}" type="text" class="mt-4 block w-full h-24" />
 
                 <div class="grid grid-cols-2 gap-4 mt-4">
                     <div>
-                        <label class="block text-sm font-medium text-base-content/70 mb-1">Color</label>
+                        <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Color') }}</label>
                         <div class="flex flex-wrap gap-2">
                             <button type="button" wire:click="$set('color', 'primary')"
                                 class="w-8 h-8 rounded-full border-2 {{ $color === 'primary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
@@ -153,19 +135,13 @@
                         <div class="mt-2 text-sm text-base-content/70">{{ $color }}</div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-base-content/70 mb-1">Order</label>
-                        <input type="number" wire:model="order" class="input input-bordered w-full" />
+                        <x-kompass::form.input label="{{ __('Order') }}" type="number" name="order" wire:model="order" />
                     </div>
                 </div>
 
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">Icon</label>
-                    <div class="relative">
-                        <input type="text" wire:model="iconSearch" wire:keyup.debounce.300ms="loadIcons"
-                            placeholder="{{ __('Search icon...') }}" class="input input-bordered w-full pl-10" />
-                        <x-tabler-search
-                            class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/50" />
-                    </div>
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Icon') }}</label>
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
 
                     @if ($selectedIcon)
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">

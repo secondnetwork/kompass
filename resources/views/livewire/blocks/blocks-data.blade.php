@@ -20,9 +20,9 @@
 
 
 
-            <x-kompass::form.input wire:model.live="name" id="name" name="name" label="name" type="text" class="mt-1 block w-full"   />
-            <x-kompass::form.input wire:model.live="type" id="type" name="type" label="type" type="text" class="mt-1 block w-full"   />
-            <x-kompass::form.input wire:model.live="iconclass" id="iconclass" name="iconclass" label="iconclass" type="text" class="mt-1 block w-full"   />
+            <x-kompass::form.input wire:model.live="name" id="name" name="name" label="{{ __('Name') }}" type="text" class="mt-1 block w-full"   />
+            <x-kompass::form.input wire:model.live="type" id="type" name="type" label="{{ __('Type') }}" type="text" class="mt-1 block w-full"   />
+            <x-kompass::form.input wire:model.live="iconclass" id="iconclass" name="iconclass" label="{{ __('Icon Class') }}" type="text" class="mt-1 block w-full"   />
 
     <img src="{{ asset('storage/' . $icon_img_path) }}" alt="">
     <pre>

@@ -8,13 +8,13 @@
                 <div>
 
               <div>
-               <x-kompass::form.input type="text" label="Iconclass" wire:model="iconclass" />
-                   <p class="text-xs text-gray-400">{{__('Find class name at')}} <a class="text-blue-400" href="https://tabler-icons.io/" target="_blank">tabler-icons.io</a></p>
+                <x-kompass::form.input type="text" label="{{ __('Icon class') }}" wire:model="iconclass" />
+                    <p class="text-xs text-gray-400">{{__('Find class name at')}} <a class="text-blue-400" href="https://tabler-icons.io/" target="_blank">tabler-icons.io</a></p>
             </div>
 
 
             <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6">
-                Block Icon
+                <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Block Icon') }}</label>
                 <input type="file" class="hidden" wire:model="filestoredata" x-ref="photo"
                     x-on:change="
                                         photoName = $refs.photo.files[0].name;
@@ -50,9 +50,6 @@
 
             @endif
 
-
-                <x-kompass::input-error for="photo" class="mt-2" />
-            </div>
 </div>
 
 <button class="flex btn gap-x-2   justify-center items-center"
@@ -75,8 +72,8 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
     </x-kompass::action-message>
 
     <div class="border-b border-gray-200  py-5 grid-3-2 items-center">
-        <div>
-                            <span class="text-gray-400 text-base">Block Titel</span>
+                <div>
+                            <span class="text-gray-400 text-base">{{ __('Block Title') }}</span>
 
 
                 <div x-data="click_to_edit()">
@@ -113,7 +110,7 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
 @endphp
 
         <nav-item class="flex items-center gap-2">
-            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Block Type</span>
+            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">{{ __('Block Type') }}</span>
             <div class="flex flex-col">
                 <input
                     type="text"
@@ -121,12 +118,11 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
                     wire:model.live="type"
                     placeholder="Type"
                 />
-                @error('type') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
             </div>
         </nav-item>
 
         <nav-item class="flex items-center gap-2">
-            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid</span>
+            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">{{ __('Grid') }}</span>
             <select
                 class="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-20"
                 wire:model.live="grid">
@@ -137,7 +133,7 @@ wire:click="saveUpdate('{{ $blocktemplatesId }}')">
         </nav-item>
 
         <nav-item class="flex items-center gap-2">
-            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Block Icon</span>
+            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">{{ __('Block Icon') }}</span>
                 <span class="cursor-pointer" wire:click="selectItem({{ $blocktemplatesId }}, 'addblock')">
 
                     <x-tabler-photo-cog/>

@@ -8,8 +8,7 @@
         
 
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700">{{ __('Copyright') }}</label>
-                <input type="text" wire:model="copyright" class="input input-bordered w-full mt-1">
+                <x-kompass::form.input label="{{ __('Copyright') }}" type="text" name="copyright" wire:model="copyright" />
             </div>
 
             <div class="flex items-center gap-4">

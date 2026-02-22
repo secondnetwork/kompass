@@ -48,9 +48,8 @@
     <div x-data="{ open: @entangle('FormFolder') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="body">
-                <x-kompass::form.input type="text" name="name" wire:model="foldername" />
-                <x-kompass::input-error for="name" class="mt-2" />
-                <button wire:click="newFolder" class="btn btn-primary">Save</button>
+                <x-kompass::form.input type="text" name="name" label="{{ __('Folder Name') }}" wire:model="foldername" />
+                <button wire:click="newFolder" class="btn btn-primary">{{ __('Save') }}</button>
             </x-slot>
         </x-kompass::offcanvas>
     </div>
@@ -67,18 +66,10 @@
                                 src="{{ asset($file) }}" alt="">
                         @endif
                     @endif
-                    <label>Name</label>
-                    <input wire:model="name" type="text" class="form-control input" />
-                    @if ($errors->has('name'))
-                        <p style="color: red;">{{ $errors->first('name') }}</p>
-                    @endif
-
-                    <label>Alt</label>
-                    <input wire:model="alt" type="text" class="form-control input" />
-
-                    <label>Description</label>
-                    <input wire:model="description" type="text" class="form-control input" />
-                    <label>Url:</label>
+                    <x-kompass::form.input wire:model="name" label="{{ __('Name') }}" type="text" class="form-control" />
+                    <x-kompass::form.input wire:model="alt" label="{{ __('Alt') }}" type="text" class="form-control" />
+                    <x-kompass::form.input wire:model="description" label="{{ __('Description') }}" type="text" class="form-control" />
+                    <label>{{ __('Url') }}:</label>
                     <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
                     <label>{{ __('Move to Folder') }}</label>
                     <div class="flex gap-2">

@@ -9,7 +9,7 @@
             <x-kompass::offcanvas :w="'w-2/6'">
               <x-slot name="body">
                     <div class="grid gap-4">
-                    <x-kompass::input wire:model="name" label="Name" />
+                    <x-kompass::input wire:model="name" label="{{ __('Name') }}" />
 
                     <x-kompass::input wire:model="email" label="{{ __('E-Mail Address') }}" />
 

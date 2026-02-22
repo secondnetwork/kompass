@@ -56,10 +56,10 @@
             <div class="grid gap-6 p-2">
                 @if(!$selectedItem)
                     <div class="step-1 grid gap-4">
-                        <x-kompass::form.input type="text" name="name" label="Name" wire:model="name" />
-                        <x-kompass::form.input type="text" name="key" label="Key" wire:model="key" />
-                        <x-kompass::select wire:model="group" name="Group" label="Gruppe" :options="[['name' => 'Header', 'id' => 'header'], ['name' => 'Main', 'id' => 'main'], ['name' => 'Footer', 'id' => 'footer'], ['name' => 'Admin Panel', 'id' => 'admin'], ['name' => 'Mail', 'id' => 'mail'], ['name' => 'Form', 'id' => 'form']]" />
-                        <button wire:click="saveStepOne" class="btn btn-primary mt-4 w-full"><span>Weiter zu Typ & Inhalt</span></button>
+                        <x-kompass::form.input type="text" name="name" label="{{ __('Name') }}" wire:model="name" />
+                        <x-kompass::form.input type="text" name="key" label="{{ __('Key') }}" wire:model="key" />
+                        <x-kompass::select wire:model="group" name="Group" label="{{ __('Group') }}" :options="[['name' => 'Header', 'id' => 'header'], ['name' => 'Main', 'id' => 'main'], ['name' => 'Footer', 'id' => 'footer'], ['name' => 'Admin Panel', 'id' => 'admin'], ['name' => 'Mail', 'id' => 'mail'], ['name' => 'Form', 'id' => 'form']]" />
+                        <button wire:click="saveStepOne" class="btn btn-primary mt-4 w-full"><span>{{ __('Next to Type & Content') }}</span></button>
                     </div>
                 @else
                     <div class="step-2 grid gap-4 animate-in slide-in-from-right duration-300">
@@ -68,11 +68,11 @@
                                 <button @click="showDetails = !showDetails" class="btn btn-ghost text-[10px]">Details</button>
                             </div>
                             <div x-show="showDetails" class="grid gap-3 my-4">
-                                <x-kompass::form.input type="text" name="name" label="Name" wire:model="name" />
-                                <x-kompass::form.input type="text" name="key" label="Key" wire:model="key" />
+                                <x-kompass::form.input type="text" name="name" label="{{ __('Name') }}" wire:model="name" />
+                                <x-kompass::form.input type="text" name="key" label="{{ __('Key') }}" wire:model="key" />
                             </div>
                         </div>
-                        <x-kompass::select wire:model.live="type" name="type" label="Type" :options="[['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'], ['name' => __('Rich Textbox'), 'id' => 'rich_text_box', 'icon' => 'tabler-blockquote'], ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'], ['name' => __('true or false'), 'id' => 'switch', 'icon' => 'tabler-toggle-left'], ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip']]" />
+                        <x-kompass::select wire:model.live="type" name="type" label="{{ __('Type') }}" :options="[['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'], ['name' => __('Rich Textbox'), 'id' => 'rich_text_box', 'icon' => 'tabler-blockquote'], ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'], ['name' => __('true or false'), 'id' => 'switch', 'icon' => 'tabler-toggle-left'], ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip']]" />
                         <div class="">
                             @switch($type)
                                 @case('image')
@@ -98,7 +98,7 @@
                                 @break
                                 @case('switch') <input @if($valuedata) checked="" @endif wire:change="update('{{ $selectedItem }}', $el.checked)" type="checkbox" class="toggle toggle-primary"> @break
                                 @case('rich_text_box') @livewire('editorjs', ['editorId' => $selectedItem, 'value' => is_array($valuedata) ? $valuedata : json_decode($valuedata, true)], key('editor-'.$selectedItem)) @break
-                                @default <x-kompass::form.input type="text" name="value" label="Wert" wire:model="valuedata" />
+                                @default <x-kompass::form.input type="text" name="value" label="{{ __('Value') }}" wire:model="valuedata" />
                             @endswitch
                         </div>
                         <button wire:click="addNew" class="btn btn-primary w-full shadow-md">Speichern</button>

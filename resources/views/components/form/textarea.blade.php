@@ -18,6 +18,9 @@
 @endif
 
 <div>
-    <label for='{{ $name }}' class="block text-sm font-medium leading-6 text-gray-900 ">{{ $label }}</label>
-    <textarea name='{{ $name }}' id='{{ $name }}' {{ $attributes->merge(['class' => 'bg-white block mt-1.5 p-2.5 w-full border-2 border-gray-300 text-sm border-gray-300 rounded-md']) }}>{{ $slot }}</textarea>
+    <label class="block font-medium text-base-content/70 mb-1" for='{{ $name }}'>{{ $label }}</label>
+    <textarea name='{{ $name }}' id='{{ $name }}' {{ $attributes->merge(['class' => '']) }}>{{ $slot }}</textarea>
+    @error($name)
+        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
 </div>

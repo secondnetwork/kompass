@@ -18,9 +18,9 @@
             <x-slot name="body">
                 <div>
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
-                    <strong class="text-gray-600">Letztes Update:</strong> {{ $page->updated_at }}</br>
+                    <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $page->updated_at }}</br>
   
-                    <x-kompass::select wire:model="status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -28,21 +28,13 @@
 
                 </div>
 
-                {{-- @if ($status == 'draft')
-                        <button class="btn btn-primary"
-                            wire:click="update('{{ $page->id }}','true')">
-                            <x-tabler-send class="icon-lg" />
-                            {{ __('published') }}
-                        </button>
-                @endif --}}
-
-                    <x-kompass::select wire:model="layout" label="Seite Template" :options="[
+                    <x-kompass::select wire:model="layout" label="{{ __('Page Template') }}" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="{{ __('Description') }}" type="text" class="block w-full h-[10rem]" />
             </x-slot>
         </x-kompass::offcanvas>
     </div>

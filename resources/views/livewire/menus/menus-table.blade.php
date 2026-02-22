@@ -3,17 +3,16 @@
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
-                <x-kompass::form.input label="Name" type="text" name="name" wire:model="name" />
-                <x-kompass::input-error for="name" class="mt-2" />
+                <x-kompass::form.input label="{{ __('Name') }}" type="text" name="name" wire:model="name" />
 
-                <x-kompass::select  label="Select" wire:model="group"
+                <x-kompass::select  label="{{ __('Group') }}" wire:model="group"
                 :options="[
                             ['name' => __('Page'),  'id' => 'page'],
                             ['name' => __('Admin Sidebar'),  'id' => 'admin_aside']
                         ]">
                 </x-kompass::select>
 
-                <button wire:click="addMenu" class="btn btn-primary">Save</button>
+                <button wire:click="addMenu" class="btn btn-primary">{{ __('Save') }}</button>
 
             </x-slot>
         </x-kompass::offcanvas>

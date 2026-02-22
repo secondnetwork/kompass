@@ -21,16 +21,16 @@
 
                 <div>
                     <strong class="text-gray-600">{{ __('Post Attributes') }}</strong></br>
-                    <strong class="text-gray-600">Letztes Update:</strong> {{ $post->updated_at }}</br>
+                    <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $post->updated_at }}</br>
   
-                    <x-kompass::select wire:model="status" label="Status" placeholder="Select one status" :options="[
+                    <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
                     </x-kompass::select>
 
                         <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Category') }}</label>
                             <select wire:model="category_id" class="select select-bordered w-full">
                                 <option value="">{{ __('No category') }}</option>
                                 @foreach($availableCategories as $category)
@@ -55,7 +55,7 @@
                 @endif
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="Description" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="{{ __('Description') }}" type="text" class="block w-full h-[10rem]" />
                 Thumbnails
                 {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
                 @if (!empty($post->thumbnails))

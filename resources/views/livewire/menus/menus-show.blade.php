@@ -21,7 +21,6 @@
             <x-slot name="body">
 
                 <x-kompass::form.input type="text" label="{{ __('Title') }}" wire:model="title" />
-                <x-kompass::input-error for="title" class="mt-2" />
 
                 <div>
                     <x-kompass::select wire:model.live="page_id" label="{{ __('Page') }}"
@@ -29,16 +28,10 @@
                     <p class="text-xs text-gray-500 mt-1">{{ __('Select a page to auto-fill the URL') }}</p>
                 </div>
 
-                <x-kompass::form.input type="text" label="URL" wire:model="url" />
-                <x-kompass::input-error for="url" class="mt-2" />
+                <x-kompass::form.input type="text" label="{{ __('URL') }}" wire:model="url" />
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">Icon</label>
-                    <div class="relative">
-                        <input type="text" wire:model="iconSearch" wire:keyup.debounce.300ms="loadIcons"
-                            placeholder="{{ __('Search icon...') }}" class="input input-bordered w-full pl-10" />
-                        <x-tabler-search
-                            class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/50" />
-                    </div>
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Icon') }}</label>
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
                     @if ($selectedIcon)
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
                             <x-icon :name="$selectedIcon" class="w-5 h-5" />
@@ -78,7 +71,7 @@
                 <input type="hidden" wire:model="iconclass" />
 
                 <div>
-                    <x-kompass::select wire:model="Open target" :options="[
+                    <x-kompass::select wire:model="target" label="{{ __('Open target') }}" :options="[
                         ['name' => __('Same tab'), 'id' => '_self'],
                         ['name' => __('New tab'), 'id' => '_blank'],
                     ]">

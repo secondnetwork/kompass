@@ -5,10 +5,9 @@
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
-                <x-kompass::form.input type="text" name="title" wire:model="title" />
-                <x-kompass::input-error for="title" class="mt-2" />
+                <x-kompass::form.input label="{{ __('Title') }}" type="text" name="title" wire:model="title" />
                 <x-kompass::form.textarea wire:model="meta_description" id="name" name="Description"
-                    label="Description" type="text" class="mt-1 block w-full h-[15rem]" />
+                    label="{{ __('Description') }}" type="text" class="mt-1 block w-full h-[15rem]" />
 
                 <button wire:click="addPage" class="btn btn-primary">{{ __('Save') }}</button>
 

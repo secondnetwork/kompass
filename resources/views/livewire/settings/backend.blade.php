@@ -12,8 +12,7 @@
     />
 
     <div class="mb-6 max-w-2xl">
-         <label class="text-base-content font-bold text-sm block">{{ __('Admin Copyright') }}</label>
-           <input type="text" wire:model.live="admincopyright" class="input input-bordered w-full mt-1">
+        <x-kompass::form.input label="{{ __('Admin Copyright') }}" type="text" name="admincopyright" wire:model.live="admincopyright" />
     </div>
 
 </div>

@@ -21,4 +21,7 @@
 <div>
     @if ($label !== '')<label for='{{ $name }}' class="text-md mb-1 block">{{ $label }}</label>@endif
     <input type='{{ $type }}' name='{{ $name }}' id='{{ $name }}' value='{{ $value }}'  {{ $attributes->merge(['class' => 'block p-2.5 w-full border-2 border-gray-300 text-base border-gray-300 rounded-md']) }}>
+    @error($attributes->wire('model')->value() ?? $name)
+        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+    @enderror
 </div>
