@@ -22,12 +22,14 @@
         ->pluck('icon')
         ->unique()
         ->mapWithKeys(function ($iconName) {
-            // Nutzt den blade-ui-kit helper, um das SVG zu rendern
-            return [$iconName => svg($iconName, 'size-5')->toHtml()];
+            try {
+                return [$iconName => svg($iconName, 'size-5')->toHtml()];
+            } catch (\Exception $e) {
+                return [$iconName => ''];
+            }
         })
         ->all();
     @endphp
-
 
     <div x-data="{
         options: @js($options),

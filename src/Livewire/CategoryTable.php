@@ -120,6 +120,7 @@ class CategoryTable extends Component
             $this->filteredIcons = $icons->take(100)->map(fn($name) => [
                 'id' => $name,
                 'name' => $name,
+                'display' => $name,
             ])->values()->toArray();
         } catch (\Exception $e) {
             $this->filteredIcons = [];
@@ -131,10 +132,23 @@ class CategoryTable extends Component
         $this->loadIcons();
     }
 
+    private function ensureIconPrefix($icon): string
+    {
+        if (empty($icon)) {
+            return '';
+        }
+        
+        if (!str_starts_with($icon, 'tabler-')) {
+            return 'tabler-' . $icon;
+        }
+        
+        return $icon;
+    }
+
     public function selectIcon($name)
     {
-        $this->icon = $name;
-        $this->selectedIcon = $name;
+        $this->icon = $this->ensureIconPrefix($name);
+        $this->selectedIcon = $this->icon;
     }
 
     public function resetIcon()
@@ -196,8 +210,8 @@ class CategoryTable extends Component
         $this->slug = $category->slug;
         $this->description = $category->description;
         $this->color = $category->color ?? 'primary';
-        $this->icon = $category->icon ?? '';
-        $this->selectedIcon = $category->icon ?? '';
+        $this->icon = $this->ensureIconPrefix($category->icon ?? '');
+        $this->selectedIcon = $this->icon;
         $this->order = $category->order;
         $this->selectedItem = $category->id;
     }
@@ -233,7 +247,7 @@ class CategoryTable extends Component
             'slug' => $slug,
             'description' => $this->description,
             'color' => $this->color,
-            'icon' => $this->icon,
+            'icon' => $this->ensureIconPrefix($this->icon),
             'order' => $this->order,
         ]);
 
@@ -267,7 +281,7 @@ class CategoryTable extends Component
             'slug' => $slug,
             'description' => $this->description,
             'color' => $this->color,
-            'icon' => $this->icon,
+            'icon' => $this->ensureIconPrefix($this->icon),
             'order' => $this->order,
         ]);
 

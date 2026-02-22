@@ -50,8 +50,11 @@
                     <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
 
                     @if ($selectedIcon)
+                        @php
+                            $displayIcon = str_replace('tabler-', '', $selectedIcon);
+                        @endphp
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
-                            <x-kompass::icon :name="$selectedIcon" class="w-6 h-6" />
+                            <x-kompass::icon :name="$displayIcon" class="w-6 h-6" />
                             <span class="text-sm flex-1">{{ $selectedIcon }}</span>
                             <button wire:click="resetIcon" class="btn btn-ghost btn-xs text-error">
                                 <x-tabler-x class="w-4 h-4" />
@@ -94,8 +97,7 @@
     <div x-cloak id="FormEdit" x-data="{ open: @entangle('FormEdit') }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
-                <h3 class="text-lg font-medium mb-4">{{ __('Edit Category') }}</h3>
-
+               
                 <x-kompass::form.input label="{{ __('Name') }}" type="text" name="name" wire:model="name" />
 
                 <x-kompass::form.input label="{{ __('Slug') }}" type="text" name="slug" wire:model="slug" />
@@ -144,8 +146,11 @@
                     <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
 
                     @if ($selectedIcon)
+                        @php
+                            $displayIcon = str_replace('tabler-', '', $selectedIcon);
+                        @endphp
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
-                            <x-kompass::icon :name="$selectedIcon" class="w-6 h-6" />
+                            <x-kompass::icon :name="$displayIcon" class="w-6 h-6" />
                             <span class="text-sm flex-1">{{ $selectedIcon }}</span>
                             <button wire:click="resetIcon" class="btn btn-ghost btn-xs text-error">
                                 <x-tabler-x class="w-4 h-4" />
@@ -242,10 +247,11 @@
                                                 <span
                                                     class="badge badge-{{ $category->color }}">{{ $category->color }}</span>
                                             @elseif ($value == 'icon' && $category->icon)
+                                                @php
+                                                    $iconName = str_replace('tabler-', '', $category->icon);
+                                                @endphp
                                                 <div class="flex items-center gap-2">
-                                                    @if ($category->icon)
-                                                        <x-kompass::icon :name="$category->icon" class="w-5 h-5" />
-                                                    @endif
+                                                    <x-kompass::icon :name="$iconName" class="w-5 h-5" />
                                                     <span>{{ $category->icon }}</span>
                                                 </div>
                                             @else

@@ -19,7 +19,7 @@
 
 <div>
     <label class="block font-medium text-base-content/70 mb-1" for='{{ $name }}'>{{ $label }}</label>
-    <textarea name='{{ $name }}' id='{{ $name }}' {{ $attributes->merge(['class' => '']) }}>{{ $slot }}</textarea>
+    <textarea name='{{ $name }}' id='{{ $name }}' {{ $attributes->merge(['class' => 'textarea']) }}>{{ $slot }}</textarea>
     @error($name)
         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
     @enderror
