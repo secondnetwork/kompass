@@ -264,8 +264,8 @@
                         <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
                         <span class="text-xs block mt-2">Images and Gallery</span>
                     </div>
-
-                    {{-- <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+{{-- 
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Anchormenu','anchormenu','anchor')">
                         <img src="{{ kompass_asset('icons-blocks/anchormenu.png') }}" alt="">
                         <span class="text-xs block mt-2">Anchor menu</span>
@@ -279,6 +279,8 @@
                         @if ($itemblock['icon_img_path'])
                             <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
                                 src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
+                        @else
+                                <img class="rounded" src="{{ kompass_asset('icons-blocks/contact.png') }}" alt="">
                         @endif
                         <span class="text-xs block mt-2">{{ $itemblock['name'] }}</span>
                     </div>
