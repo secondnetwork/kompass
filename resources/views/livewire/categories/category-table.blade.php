@@ -9,40 +9,35 @@
                 <x-kompass::form.textarea wire:model="description" id="description" name="description"
                     label="{{ __('Description') }}" type="text" class="block w-full h-24" />
 
-                <div class="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                        <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Color') }}</label>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" wire:click="$set('color', 'primary')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'primary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #3b82f6;" title="primary"></button>
-                            <button type="button" wire:click="$set('color', 'secondary')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'secondary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #a855f7;" title="secondary"></button>
-                            <button type="button" wire:click="$set('color', 'accent')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'accent' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #f472b6;" title="accent"></button>
-                            <button type="button" wire:click="$set('color', 'info')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'info' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #06b6d4;" title="info"></button>
-                            <button type="button" wire:click="$set('color', 'success')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'success' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #22c55e;" title="success"></button>
-                            <button type="button" wire:click="$set('color', 'warning')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'warning' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #eab308;" title="warning"></button>
-                            <button type="button" wire:click="$set('color', 'error')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'error' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #ef4444;" title="error"></button>
-                            <button type="button" wire:click="$set('color', 'neutral')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'neutral' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #71717a;" title="neutral"></button>
-                        </div>
-                        <div class="mt-2 text-sm text-base-content/70">{{ $color }}</div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Color') }}</label>
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <button type="button" wire:click="$set('color', 'primary')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'primary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #3b82f6;" title="primary"></button>
+                        <button type="button" wire:click="$set('color', 'secondary')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'secondary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #a855f7;" title="secondary"></button>
+                        <button type="button" wire:click="$set('color', 'accent')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'accent' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #f472b6;" title="accent"></button>
+                        <button type="button" wire:click="$set('color', 'info')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'info' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #06b6d4;" title="info"></button>
+                        <button type="button" wire:click="$set('color', 'success')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'success' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #22c55e;" title="success"></button>
+                        <button type="button" wire:click="$set('color', 'warning')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'warning' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #eab308;" title="warning"></button>
+                        <button type="button" wire:click="$set('color', 'error')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'error' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #ef4444;" title="error"></button>
+                        <button type="button" wire:click="$set('color', 'neutral')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'neutral' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #71717a;" title="neutral"></button>
                     </div>
-                    <div>
-                        <x-kompass::form.input label="{{ __('Order') }}" type="number" name="order" wire:model="order" />
-                    </div>
+                    <x-kompass::form.input type="text" name="color" wire:model="color" placeholder="#3b82f6" />
                 </div>
 
                 <div class="mt-4">
@@ -105,40 +100,35 @@
                 <x-kompass::form.textarea wire:model="description" id="description" name="description"
                     label="{{ __('Description') }}" type="text" class="mt-4 block w-full h-24" />
 
-                <div class="grid grid-cols-2 gap-4 mt-4">
-                    <div>
-                        <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Color') }}</label>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" wire:click="$set('color', 'primary')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'primary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #3b82f6;" title="primary"></button>
-                            <button type="button" wire:click="$set('color', 'secondary')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'secondary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #a855f7;" title="secondary"></button>
-                            <button type="button" wire:click="$set('color', 'accent')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'accent' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #f472b6;" title="accent"></button>
-                            <button type="button" wire:click="$set('color', 'info')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'info' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #06b6d4;" title="info"></button>
-                            <button type="button" wire:click="$set('color', 'success')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'success' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #22c55e;" title="success"></button>
-                            <button type="button" wire:click="$set('color', 'warning')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'warning' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #eab308;" title="warning"></button>
-                            <button type="button" wire:click="$set('color', 'error')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'error' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #ef4444;" title="error"></button>
-                            <button type="button" wire:click="$set('color', 'neutral')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === 'neutral' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: #71717a;" title="neutral"></button>
-                        </div>
-                        <div class="mt-2 text-sm text-base-content/70">{{ $color }}</div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Color') }}</label>
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <button type="button" wire:click="$set('color', 'primary')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'primary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #3b82f6;" title="primary"></button>
+                        <button type="button" wire:click="$set('color', 'secondary')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'secondary' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #a855f7;" title="secondary"></button>
+                        <button type="button" wire:click="$set('color', 'accent')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'accent' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #f472b6;" title="accent"></button>
+                        <button type="button" wire:click="$set('color', 'info')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'info' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #06b6d4;" title="info"></button>
+                        <button type="button" wire:click="$set('color', 'success')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'success' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #22c55e;" title="success"></button>
+                        <button type="button" wire:click="$set('color', 'warning')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'warning' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #eab308;" title="warning"></button>
+                        <button type="button" wire:click="$set('color', 'error')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'error' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #ef4444;" title="error"></button>
+                        <button type="button" wire:click="$set('color', 'neutral')"
+                            class="w-8 h-8 rounded-full border-2 {{ $color === 'neutral' ? 'border-gray-900 scale-110' : 'border-transparent hover:scale-105' }}"
+                            style="background-color: #71717a;" title="neutral"></button>
                     </div>
-                    <div>
-                        <x-kompass::form.input label="{{ __('Order') }}" type="number" name="order" wire:model="order" />
-                    </div>
+                    <x-kompass::form.input type="text" name="color" wire:model="color" placeholder="#3b82f6" />
                 </div>
 
                 <div class="mt-4">
@@ -244,8 +234,11 @@
                                         <td
                                             class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                             @if ($value == 'color' && $category->color)
-                                                <span
-                                                    class="badge badge-{{ $category->color }}">{{ $category->color }}</span>
+                                                @if (in_array($category->color, ['primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error', 'neutral']))
+                                                    <span class="badge badge-{{ $category->color }}">{{ $category->color }}</span>
+                                                @else
+                                                    <span class="badge" style="background-color: {{ $category->color }}; color: white;">{{ $category->color }}</span>
+                                                @endif
                                             @elseif ($value == 'icon' && $category->icon)
                                                 @php
                                                     $iconName = str_replace('tabler-', '', $category->icon);
