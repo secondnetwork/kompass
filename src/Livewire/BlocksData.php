@@ -2,6 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -57,6 +58,12 @@ class BlocksData extends Component
 
     public $iconclass;
 
+    public $iconSearch = '';
+
+    public $selectedIcon = '';
+
+    public $filteredIcons = [];
+
     public $grid;
 
     public $slug;
@@ -68,6 +75,8 @@ class BlocksData extends Component
     public $FormBlocks = false;
 
     public $FormDelete = false;
+
+    public $selectedItem = null;
 
     public $nofifiction = false;
 
@@ -96,6 +105,84 @@ class BlocksData extends Component
         $this->grid = $block->grid;
         $this->icon_img_path = $block->icon_img_path;
         $this->blocktemplatesId = $id;
+        $this->selectedIcon = $block->iconclass;
+
+        $this->loadIcons();
+    }
+
+    private function getIconPath(): string
+    {
+        $possiblePaths = [
+            base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
+            dirname(base_path()) . '/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            public_path('vendor/blade-tabler-icons'),
+        ];
+
+        foreach ($possiblePaths as $path) {
+            if (is_dir($path)) {
+                return $path;
+            }
+        }
+
+        return '';
+    }
+
+    public function loadIcons()
+    {
+        $this->filteredIcons = [];
+
+        $iconPath = $this->getIconPath();
+        
+        if (empty($iconPath) || !is_dir($iconPath)) {
+            return;
+        }
+
+        try {
+            $files = File::files($iconPath);
+            
+            if (empty($files)) {
+                return;
+            }
+            
+            $icons = collect($files)
+                ->map(fn($file) => str_replace('.svg', '', $file->getFilename()))
+                ->sort()
+                ->values();
+
+            if ($this->iconSearch) {
+                $search = strtolower(trim($this->iconSearch));
+                if (!empty($search)) {
+                    $icons = $icons->filter(fn($name) =>
+                        str_contains(strtolower($name), $search)
+                    );
+                }
+            }
+
+            $this->filteredIcons = $icons->take(100)->map(fn($name) => [
+                'id' => 'tabler-' . $name,
+                'name' => $name,
+                'full_name' => 'tabler-' . $name,
+            ])->values()->toArray();
+        } catch (\Exception $e) {
+            $this->filteredIcons = [];
+        }
+    }
+
+    public function updatedIconSearch()
+    {
+        $this->loadIcons();
+    }
+
+    public function selectIcon($name)
+    {
+        $this->selectedIcon = 'tabler-' . $name;
+        $this->iconclass = 'tabler-' . $name;
+    }
+
+    public function resetIcon()
+    {
+        $this->selectedIcon = '';
+        $this->iconclass = '';
     }
 
     protected $listeners = ['selectItemForAction']; // Event-Name muss passen

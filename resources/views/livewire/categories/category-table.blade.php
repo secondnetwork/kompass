@@ -133,7 +133,7 @@
 
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Icon') }}</label>
-                    <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model.live="iconSearch" placeholder="{{ __('Search icon...') }}" />
 
                     @if ($selectedIcon)
                         @php

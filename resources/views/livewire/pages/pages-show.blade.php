@@ -279,13 +279,17 @@
                         @if ($itemblock['icon_img_path'])
                             <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
                                 src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
+                        @elseif($itemblock['iconclass'])
+                            <div class="flex items-center justify-center h-16">
+                                @svg(str_starts_with($itemblock['iconclass'], 'tabler-') ? $itemblock['iconclass'] : 'tabler-' . $itemblock['iconclass'], 'w-10 h-10 text-blue-600')
+                            </div>
                         @else
-                                <img class="rounded" src="{{ kompass_asset('icons-blocks/contact.png') }}" alt="">
+                            <img class="rounded" src="{{ kompass_asset('icons-blocks/contact.png') }}" alt="">
                         @endif
                         <span class="text-xs block mt-2">{{ $itemblock['name'] }}</span>
                     </div>
 
-     
+      
                 @endforeach
                 </div>
             </x-slot>

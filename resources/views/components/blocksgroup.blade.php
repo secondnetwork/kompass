@@ -38,7 +38,7 @@
 
                     @default
                         @if ($itemblocks->iconclass)
-                            @svg('tabler-' . $itemblocks->iconclass, 'w-5')
+                            @svg(str_starts_with($itemblocks->iconclass, 'tabler-') ? $itemblocks->iconclass : 'tabler-' . $itemblocks->iconclass, 'w-5')
                         @else
                             @svg('tabler-section', 'w-5')
                         @endif

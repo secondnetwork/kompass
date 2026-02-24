@@ -4,13 +4,46 @@
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/6'">
-            <x-slot name="body">
+             <x-slot name="body">
                 <div>
-                    <x-kompass::form.input type="text" label="{{ __('Icon class') }}" wire:model="iconclass" />
-                    <p class="text-xs text-gray-400">{{__('Find class name at')}} <a class="text-blue-400" href="https://tabler-icons.io/" target="_blank">tabler-icons.io</a></p>
+  
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model.live="iconSearch" placeholder="{{ __('Search icon...') }}" />
+                    @if ($selectedIcon)
+                        <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
+                            <x-icon :name="$selectedIcon" class="w-5 h-5" />
+                            <span class="text-sm flex-1">{{ $selectedIcon }}</span>
+                            <button wire:click="resetIcon" class="btn btn-ghost btn-xs text-error">
+                                <x-tabler-x class="w-4 h-4" />
+                            </button>
+                        </div>
+                    @endif
+
+                    @if (count($filteredIcons) > 0)
+                        <div class="mt-2 max-h-40 overflow-y-auto border border-base-300 rounded bg-base-100">
+                            <div class="grid grid-cols-5 gap-1 p-2">
+                                @foreach ($filteredIcons as $iconItem)
+                                    <button wire:click="selectIcon('{{ $iconItem['name'] }}')"
+                                        class="p-2 hover:bg-base-200 rounded flex justify-center transition-colors">
+                                        <x-kompass::icon :name="$iconItem['name']" class="w-6 h-6" />
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <p class="text-center text-gray-500 py-4">
+                            @if ($iconSearch)
+                                {{ __('No icons found for: :search', ['search' => $iconSearch]) }}
+                            @else
+                                {{ __('No icons available') }}
+                            @endif
+                        </p>
+                    @endif
+                         <input type="hidden" wire:model="iconclass" /> 
                 </div>
 
-                <div x-data="{ photoName: null, photoPreview: null }" class="col-span-6 mt-4">
+           
+ 
+                <div x-data="{ photoName: null, photoPreview: null }" class="mt-4">
                     <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Block Icon') }}</label>
                     <input type="file" class="hidden" wire:model="filestoredata" x-ref="photo"
                         x-on:change="
@@ -44,7 +77,7 @@
 
                 <button class="flex btn gap-x-2 justify-center items-center mt-4" wire:click="saveUpdate('{{ $blocktemplatesId }}')">
                     <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
-                </button>
+                </button> 
             </x-slot>
         </x-kompass::offcanvas>
     </div>

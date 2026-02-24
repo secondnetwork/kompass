@@ -22,7 +22,7 @@
                 <x-kompass::form.input type="text" label="{{ __('URL') }}" wire:model="url" />
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Icon') }}</label>
-                    <x-kompass::form.input type="text" name="iconSearch" wire:model="iconSearch" placeholder="{{ __('Search icon...') }}" />
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model.live="iconSearch" placeholder="{{ __('Search icon...') }}" />
                     @if ($selectedIcon)
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
                             <x-icon :name="$selectedIcon" class="w-5 h-5" />
