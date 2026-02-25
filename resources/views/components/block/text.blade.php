@@ -2,6 +2,8 @@
     'itemfield' => '',
 ])
 <div class="w-full">
+
+    <label for="">{{ $itemfield->name }}</label>
     <input 
         type="text" 
         value="{{ $itemfield->data }}" 
@@ -9,4 +11,6 @@
         class="input input-sm input-bordered w-full focus:input-primary"
         placeholder="..."
     />
+
+ 
 </div>

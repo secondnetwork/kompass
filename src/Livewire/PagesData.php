@@ -58,6 +58,7 @@ class PagesData extends Component
         }
         $this->call_emit_reset();
     }
+
     use WithPagination;
 
     /**
@@ -125,7 +126,21 @@ class PagesData extends Component
 
     public $cssClassname;
 
-    protected $listeners = ['reload-pages-data' => 'reloadMount', 'component:refresh' => '$refresh'];
+    public $filteredIcons = [];
+
+    public $iconSearch = '';
+
+    public $selectedIcon = '';
+
+    public $FormIconPicker = false;
+
+    public $iconPickerFieldId = null;
+
+    protected $listeners = [
+        'reload-pages-data' => 'reloadMount',
+        'component:refresh' => '$refresh',
+        'open-icon-picker' => 'openIconPicker',
+    ];
 
     protected $rules = [
 
@@ -240,28 +255,28 @@ class PagesData extends Component
             'order' => '999',
         ]);
 
-        $this->initializeDataFields($block->id, $type ,$blocktemplatesID);
+        $this->initializeDataFields($block->id, $type, $blocktemplatesID);
 
         $this->FormBlocks = false;
         $this->resetPageComponent();
     }
 
-    private function initializeDataFields($blockId, string $type,$blocktemplatesID): void
+    private function initializeDataFields($blockId, string $type, $blocktemplatesID): void
     {
         $fieldDefinitions = match ($type) {
             'wysiwyg' => [['type' => 'wysiwyg', 'order' => '1']],
             'anchormenu' => [['name' => 'Name Anchormenu', 'type' => 'text', 'order' => '1']],
-            'button' => [
-                ['name' => 'Text', 'type' => 'text', 'order' => '1'],
-                ['name' => 'URL', 'type' => 'text_url', 'order' => '1'],
-                ['name' => 'iconclass', 'type' => 'icon', 'order' => '1'],
-            ],
+            // 'button' => [
+            //     ['name' => 'Text', 'type' => 'text', 'order' => '1'],
+            //     ['name' => 'URL', 'type' => 'text_url', 'order' => '1'],
+            //     ['name' => 'iconclass', 'type' => 'icon', 'order' => '1'],
+            // ],
             default => [],
         };
 
-        if(empty($fieldDefinitions)){
-            $fielddate = Blockfields::where('blocktemplate_id',$blocktemplatesID)->get();
-            
+        if (empty($fieldDefinitions)) {
+            $fielddate = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
+
             $fieldDefinitions = [];
 
             // Iteriere durch die abgerufenen Felder
@@ -342,6 +357,71 @@ class PagesData extends Component
         $data[$key] = $value;
         $datafield->update(['data' => $data]);
         $this->resetPageComponent();
+    }
+
+    public function openIconPicker($fieldId)
+    {
+        $this->iconPickerFieldId = $fieldId;
+        $this->FormIconPicker = true;
+        $this->loadIcons();
+    }
+
+    public function loadIcons()
+    {
+        try {
+            $svgPaths = [
+                base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
+                dirname(base_path()).'/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            ];
+
+            $icons = collect([]);
+            foreach ($svgPaths as $path) {
+                if (is_dir($path)) {
+                    $icons = $icons->merge(
+                        collect(\Illuminate\Support\Facades\File::files($path))
+                            ->map(fn ($file) => str_replace('.svg', '', $file->getFilename()))
+                    );
+                }
+            }
+            $icons = $icons->sort()->unique();
+
+            if ($this->iconSearch) {
+                $search = strtolower($this->iconSearch);
+                $icons = $icons->filter(fn ($name) => str_contains(strtolower($name), $search));
+            }
+
+            $this->filteredIcons = $icons->take(100)->map(fn ($name) => [
+                'id' => 'tabler-'.$name,
+                'name' => $name,
+                'full_name' => 'tabler-'.$name,
+            ])->values()->toArray();
+        } catch (\Exception $e) {
+            $this->filteredIcons = [];
+        }
+    }
+
+    public function updatedIconSearch()
+    {
+        $this->loadIcons();
+    }
+
+    public function selectIcon($name)
+    {
+        $iconName = 'tabler-'.$name;
+        if ($this->iconPickerFieldId) {
+            $this->updateDatafieldArray($this->iconPickerFieldId, 'iconclass', $iconName);
+        }
+        $this->FormIconPicker = false;
+        $this->iconSearch = '';
+        $this->filteredIcons = [];
+    }
+
+    public function resetIconPicker()
+    {
+        $this->FormIconPicker = false;
+        $this->iconSearch = '';
+        $this->filteredIcons = [];
+        $this->iconPickerFieldId = null;
     }
 
     public function savename($blockId)
@@ -463,7 +543,7 @@ class PagesData extends Component
         $page = Page::findOrFail($pageId);
         $this->dispatch('saveTheDatafield');
         $this->dispatch('savedatajs');
-        
+
         $oldSlug = $page->slug;
         $slugNameURL = genSlug($page->title, $page->slug, Page::class);
 
@@ -479,7 +559,7 @@ class PagesData extends Component
         // NUR wenn Slug sich ändert: Menuitems aktualisieren
         if ($slugNameURL !== $oldSlug) {
             Menuitem::where('page_id', $pageId)->update([
-                'url' => '/' . $slugNameURL,
+                'url' => '/'.$slugNameURL,
             ]);
         }
 
@@ -495,7 +575,7 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function delete() //delete block
+    public function delete() // delete block
     {
         Datafield::where('block_id', $this->getId)->delete();
         block::destroy($this->getId);

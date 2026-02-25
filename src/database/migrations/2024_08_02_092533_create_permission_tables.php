@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -58,13 +58,12 @@ return new class extends Migration
             ['name' => 'editor', 'display_name' => 'Editor', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'user', 'display_name' => 'User', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
         ]);
-    
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams): void {
             $table->unsignedBigInteger($pivotPermission);
 
             $table->string('model_type');
-            $table->uuid($columnNames['model_morph_key']);
+            $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_id_model_type_index');
 
             $table->foreign($pivotPermission)
@@ -88,7 +87,7 @@ return new class extends Migration
             $table->unsignedBigInteger($pivotRole);
 
             $table->string('model_type');
-            $table->uuid($columnNames['model_morph_key']);
+            $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_id_model_type_index');
 
             $table->foreign($pivotRole)

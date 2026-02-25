@@ -86,6 +86,7 @@
 
     <x-kompass::action-message class="" on="status" />
     <x-kompass::modal data="FormDelete" />
+    <x-kompass::icon-picker />
 
     <div class="grid-3-2 items-center">
 
