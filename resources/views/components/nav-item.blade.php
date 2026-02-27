@@ -50,8 +50,6 @@
         @endif
     </span>
 
-
-
 </nav-item>
 @endif
 
@@ -170,6 +168,13 @@
             @endif
         </span>
 
+          <livewire:editable-meta
+                label="Link:"
+                meta-key="link-url"
+                :itemblocks="$itemblocks"
+                wire-action="updateMeta"
+                :key="'link-url-'.$itemblocks->id"
+            />
     </nav-item>
 @endif
 @if ($itemblocks->type == 'gallery')
@@ -231,4 +236,5 @@
             @endif
         </span>
     </nav-item>
+
 @endif
