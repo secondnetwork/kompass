@@ -28,7 +28,7 @@
     <a class="{{ $active }}" @if ($groups) @click="expanded = ! expanded" @else href="{{ $item->url }}" target="{{ $item->target }}" @endif
         rel="noopener noreferrer" class="flex gap-2 text-sm font-semibold cursor-pointer">
         @if ($item->iconclass)
-            @svg('tabler-' . $item->iconclass)
+            @svg(str_starts_with($item->iconclass, 'tabler-') ? $item->iconclass : 'tabler-' . $item->iconclass)
         @else
             @svg('tabler-pencil')
         @endif
