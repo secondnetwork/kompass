@@ -96,6 +96,13 @@
       wire-action="updateMeta"
       :key="'id-anchor-'.$itemblocks->id"
   />
+  <livewire:editable-meta
+      label="Link:"
+      meta-key="link-url"
+      :itemblocks="$itemblocks"
+      wire-action="updateMeta"
+      :key="'link-url-'.$itemblocks->id"
+  />
 
 {{-- 
     <div class="w-full p-4 bg-white border rounded-md shadow-sm border-gray-300">
