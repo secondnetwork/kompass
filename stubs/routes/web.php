@@ -2,22 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes naffd
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 require __DIR__.'/auth.php';
 
-Route::group(['middleware' => ['web']], function (): void {
+$locales = ['de', 'en', 'tr'];
+$defaultLocale = $locales[0] ?? 'de';
+$otherLocales = array_slice($locales, 1);
+$localePattern = implode('|', $otherLocales);
+
+Route::group(['middleware' => ['web']], function () use ($localePattern): void {
     Route::livewire('/', 'pages::page');
     Route::livewire('/blog', 'pages::blog.index');
     Route::livewire('/blog/{slug}', 'pages::blog.single');
+    
+    Route::livewire('/{locale}/{slug}', 'pages::page')->where('locale', $localePattern);
+    Route::livewire('/{locale}', 'pages::page')->where('locale', $localePattern);
+    
     Route::livewire('/{slug}', 'pages::page');
 });
