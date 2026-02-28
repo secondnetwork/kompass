@@ -19,7 +19,10 @@
                 <div>
                     <strong class="text-gray-600">{{ __('Page Attributes') }}</strong></br>
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $page->updated_at }}</br>
-  
+
+                    <x-kompass::form.select wire:model="land" label="{{ __('Language') }}" :option="collect($available_locales)->map(fn($l) => (object)['name' => strtoupper($l), 'data' => $l])">
+                    </x-kompass::form.select>
+
                     <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
@@ -63,14 +66,14 @@
                 <div class="col-span-6">
 
                 </div>
+                @php
+                    $defaultLocale = config('app.locale', 'de');
+                    $langPrefix = ($land == $defaultLocale) ? '' : '/' . $land;
+                    $permalink = ($layout == 'is_front_page') ? url($langPrefix ?: '/') : url($langPrefix . '/' . $page->slug);
+                @endphp
                 <strong class="text-gray-400 text-xs">Permalink: </strong>
-                @if ($layout == 'is_front_page' || $layout == 'is_front_page')
-                    <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/') }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/') }}</a>
-                @else
-                    <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/' . $page->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/' . $page->slug) }}</a>
-                @endif
+                <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ $permalink }}"
+                    target="_blank" rel="noopener noreferrer">{{ $permalink }}</a>
             </div>
 
 

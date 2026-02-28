@@ -76,6 +76,10 @@ class PagesData extends Component
 
     public $title;
 
+    public $land;
+
+    public $available_locales;
+
     public $status;
 
     public $description;
@@ -154,7 +158,7 @@ class PagesData extends Component
 
     public function mount($id)
     {
-        $this->page = Page::with(['blocks.datafield', 'blocks.children'])->findOrFail($id); // Eager load related data
+        $this->page = Page::with(['blocks.datafield', 'blocks.children'])->findOrFail($id);
         $this->blocks = $this->page->blocks
             ->where('blockable_type', 'page')
             ->where('subgroup', null)
@@ -163,6 +167,16 @@ class PagesData extends Component
         $this->description = $this->page->meta_description;
         $this->layout = $this->page->layout;
         $this->status = $this->page->status;
+        
+        $locales = ['de', 'en', 'tr'];
+        $appLocale = config('app.locale', 'de');
+        if (($key = array_search($appLocale, $locales)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $appLocale);
+        }
+        
+        $this->land = $this->page->land ?? $appLocale;
+        $this->available_locales = $locales;
 
         $this->cssClassname = Meta::published()
             ->where('key', 'css-classname')
@@ -553,6 +567,7 @@ class PagesData extends Component
             'layout' => $this->layout,
             'status' => $this->status,
             'slug' => $slugNameURL,
+            'land' => $this->land,
             'updated_at' => Carbon::now(),
         ]);
 

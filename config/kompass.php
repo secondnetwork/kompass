@@ -22,7 +22,9 @@ return [
     ],
 
     'available_locales' => [
+        'de',
         'en',
+        'tr',
     ],
 
     /*
