@@ -102,7 +102,9 @@
       <div class="flex flex-col h-full">
         <!-- Header with close button -->
         <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-      
+          
+          <x-kompass::elements.language-switcher />
+
           <button @click="mobileMenuOpen = false" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
             <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           </button>
@@ -133,7 +135,10 @@
     <div class="hidden md:flex md:items-center md:gap-2 ml-auto">
       <livewire:menus name="main" />
 
-      {{-- <div class="flex items-center gap-2 pl-4 border-l border-gray-200 dark:border-gray-700">
+      <div class="flex items-center gap-2 pl-4 border-l border-gray-200 dark:border-gray-700">
+        
+        <x-kompass::elements.language-switcher />
+
         <button @click="darkMode = !darkMode" class="btn btn-ghost btn-circle btn-sm">
             <x-tabler-sun x-show="darkMode" class="size-5" />
             <x-tabler-moon x-show="!darkMode" class="size-5" />
