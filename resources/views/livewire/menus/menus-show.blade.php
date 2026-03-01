@@ -1,9 +1,41 @@
 <div>
-    <div class="flex items-center gap-4 mb-4">
-        <h1 class="text-2xl font-bold">{{ $menu->name }}</h1>
-        @if (setting('global.multilingual') && $menu->land)
-            <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
-        @endif
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-4">
+            <h1 class="text-2xl font-bold">{{ $menu->name }}</h1>
+            @if (setting('global.multilingual') && $menu->land)
+                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
+            @endif
+        </div>
+        <div class="flex gap-2">
+            <button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')">
+                <x-tabler-text-plus stroke-width="1.5" />{{ __('Add Menu') }}
+            </button>
+            <button class="btn btn-primary" wire:click="$set('FormAdjustments', true)">
+                <x-tabler-adjustments class="icon-lg" />
+            </button>
+        </div>
+    </div>
+
+    <div x-cloak x-data="{ open: @entangle('FormAdjustments') }">
+        <x-kompass::offcanvas :w="'w-1/3'">
+            <x-slot name="body">
+                <h3 class="text-lg font-bold mb-4">{{ __('Menu Settings') }}</h3>
+
+                <x-kompass::form.input type="text" label="{{ __('Name') }}" wire:model="menuName" />
+
+                @if (setting('global.multilingual'))
+                <div class="mt-4">
+                    <x-kompass::select wire:model="menuLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                </div>
+                @endif
+
+                <button wire:click="updateMenu" class="btn btn-primary mt-6">
+                    <x-tabler-device-floppy class="icon-lg" />
+                    {{ __('Save Settings') }}
+                </button>
+            </x-slot>
+        </x-kompass::offcanvas>
     </div>
     
     <x-kompass::action-message class="" on="status" />
@@ -90,11 +122,6 @@
 
             </x-slot>
         </x-kompass::offcanvas>
-    </div>
-
-    <div class="flex justify-end my-4">
-        <button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus
-                stroke-width="1.5" />{{ __('Add Menu') }}</button>
     </div>
 
 
