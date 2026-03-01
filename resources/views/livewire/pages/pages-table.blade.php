@@ -99,15 +99,9 @@
                                                     {{ __($page->title) }}
                                                 </a>
 
-                                                @if (setting('global.multilingual'))
-                                                    @if ($page->land)
-                                                        <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($page->land) }}</span>
-                                                    @endif
-                                                @endif
-
                                                 @if ($page->layout == 'is_front_page')
                                                     <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-amber-500 text-white">
-                                                        <x-tabler-home class="w-3 h-3" /> {{ __('Home') }}
+                                                        <x-tabler-home class="w-3 h-3" />
                                                     </span>
                                                 @endif
 
@@ -142,7 +136,9 @@
                                                         </span>
                                                 @endswitch
                                             @elseif ($column == 'land')
-                                                 <span class="text-xs font-medium uppercase">{{ $page->land }}</span>
+                                                @if ($page->land)
+                                                    <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($page->land) }}</span>
+                                                @endif
                                             @else
                                                 {{ $page->$column }}
                                             @endif

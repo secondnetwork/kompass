@@ -109,11 +109,6 @@
                                         <a wire:navigate href="/admin/posts/show/{{ $post->id }}">
                                             {{ __($post->title) }}
                                         </a>
-                                        @if (setting('global.multilingual'))
-                                            @if ($post->land)
-                                                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($post->land) }}</span>
-                                            @endif
-                                        @endif
                                     @elseif ($column == 'status')
                                         @switch($post->status)
                                             @case('published')
@@ -145,7 +140,9 @@
                                                 </span>
                                         @endswitch
                                     @elseif ($column == 'land')
-                                        <span class="text-xs font-medium uppercase">{{ $post->land }}</span>
+                                        @if ($post->land)
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($post->land) }}</span>
+                                        @endif
                                     @elseif ($column == 'updated_at')
                                         {{ $post->updated_at }}
                                     @else

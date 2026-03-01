@@ -104,11 +104,7 @@
                                                         <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
                                                             <span class="text-sm font-semibold">{{  $menu->name }}</span>
                                                         </a>
-                                                        @if (setting('global.multilingual'))
-                                                            @if ($menu->land)
-                                                                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
-                                                            @endif
-                                                        @endif
+                                                        
                                                         <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->name }}'}">
                                                             <input
                                                                 type="text"
@@ -129,7 +125,9 @@
                                                         </div>
                                                     </div>
                                                 @elseif ($column == 'land')
-                                                    <span class="text-xs font-medium uppercase">{{ $menu->land }}</span>
+                                                    @if ($menu->land)
+                                                        <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
+                                                    @endif
                                                 @else
                                                     {{ $menu->$column }}
                                                 @endif
