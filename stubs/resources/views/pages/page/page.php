@@ -26,7 +26,12 @@ new class extends Component
     public function mount(Request $request, $locale = null, $slug = null)
     {
         try {
-            $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+            $localesData = setting('global.available_locales');
+            if ($localesData) {
+                $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+            } else {
+                $availableLocales = ['de', 'en', 'tr'];
+            }
             $defaultLocale = $availableLocales[0] ?? 'de';
             
             if (setting('global.multilingual')) {
@@ -67,7 +72,12 @@ new class extends Component
 
     private function resolvePageAndRedirect($land, $slug): void
     {
-        $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $availableLocales = ['de', 'en', 'tr'];
+        }
         $defaultLocale = $availableLocales[0] ?? 'de';
         
         $isMultilingual = setting('global.multilingual');

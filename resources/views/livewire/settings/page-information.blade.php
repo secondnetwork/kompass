@@ -17,10 +17,6 @@
         <x-kompass::form.textarea wire:model.live="description" label="{{ __('Description') }}"
             placeholder="{{ __('Enter website description for SEO') }}" rows="3" />
 
-        <div class="mt-4">
-            <x-kompass::form.switch wire:model.live="multilingual" label="{{ __('Enable Multilingual Support') }}" />
-        </div>
-
 
     </div>
     <hr class="h-px w-full border-none bg-base-300">

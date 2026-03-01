@@ -28,7 +28,13 @@ class Pageview extends Component
     public function mount(Request $request, $locale = null, $slug = null)
     {
         try {
-            $availableLocales = ['de', 'en', 'tr'];
+            $localesData = setting('global.available_locales');
+            if ($localesData) {
+                $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+            } else {
+                $availableLocales = ['de', 'en', 'tr'];
+            }
+            
             $defaultLocale = $availableLocales[0] ?? 'de';
             
             if (setting('global.multilingual')) {
@@ -67,7 +73,12 @@ class Pageview extends Component
 
     private function resolvePageAndRedirect($land, $slug): void
     {
-        $availableLocales = ['de', 'en', 'tr'];
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $availableLocales = ['de', 'en', 'tr'];
+        }
         $defaultLocale = $availableLocales[0] ?? 'de';
         
         $isMultilingual = setting('global.multilingual');

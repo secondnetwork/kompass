@@ -91,7 +91,13 @@ class PostsTable extends Component
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
 
-        $locales = ['de', 'en', 'tr'];
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $locales = ['de', 'en', 'tr'];
+        }
+
         $appLocale = config('app.locale', 'de');
 
         // Move app locale to front

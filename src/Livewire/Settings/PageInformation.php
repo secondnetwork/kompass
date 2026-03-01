@@ -20,7 +20,6 @@ class PageInformation extends Component
     public $email_address;
     public $phone;
     public $copyright;
-    public $multilingual;
 
     private $imageKey = 'ogimage_src';
 
@@ -37,7 +36,6 @@ class PageInformation extends Component
         $this->email_address = optional($globalSettings->get('email_address'))->data ?? '';
         $this->phone = optional($globalSettings->get('phone'))->data ?? '';
         $this->copyright = optional($globalSettings->get('copyright'))->data ?? '';
-        $this->multilingual = (bool) optional($globalSettings->get('multilingual'))->data ?? false;
 
         $this->image = optional($globalSettings->get($this->imageKey))->data ?? '';
     }

@@ -169,7 +169,13 @@ class PagesData extends Component
         $this->status = $this->page->status;
         
         if (setting('global.multilingual')) {
-            $locales = ['de', 'en', 'tr'];
+            $localesData = setting('global.available_locales');
+            if ($localesData) {
+                $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+            } else {
+                $locales = ['de', 'en', 'tr'];
+            }
+            
             $appLocale = config('app.locale', 'de');
             if (($key = array_search($appLocale, $locales)) !== false) {
                 unset($locales[$key]);

@@ -23,7 +23,13 @@ new #[Layout('layouts.main')] class extends Component
 
     public function mount($locale = null)
     {
-        $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $availableLocales = ['de', 'en', 'tr'];
+        }
+        
         $defaultLocale = $availableLocales[0] ?? 'de';
         $land = in_array($locale, $availableLocales) ? $locale : $defaultLocale;
         app()->setLocale($land);
@@ -39,7 +45,13 @@ new #[Layout('layouts.main')] class extends Component
     #[Computed]
     public function posts()
     {
-        $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $availableLocales = ['de', 'en', 'tr'];
+        }
+        
         $defaultLocale = $availableLocales[0] ?? 'de';
         $land = app()->getLocale() ?: $defaultLocale;
 

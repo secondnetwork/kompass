@@ -1,0 +1,91 @@
+<?php
+
+namespace Secondnetwork\Kompass\Livewire\Settings;
+
+use Livewire\Component;
+use Secondnetwork\Kompass\Models\Setting;
+use Illuminate\Support\Facades\Cache;
+
+class Multilingual extends Component
+{
+    public $multilingual;
+    public $available_locales = [];
+    public $new_locale;
+
+    public function mount()
+    {
+        $globalSettings = Setting::global()->get()->keyBy('key');
+
+        $this->multilingual = (bool) optional($globalSettings->get('multilingual'))->data ?? false;
+        
+        $localesData = optional($globalSettings->get('available_locales'))->data;
+        if ($localesData) {
+            $this->available_locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            // Default locales if none set
+            $this->available_locales = ['de', 'en', 'tr'];
+        }
+    }
+
+    public function updatedMultilingual($value)
+    {
+        $this->updateSettingInDatabase('multilingual', $value);
+    }
+
+    public function addLocale()
+    {
+        $this->validate();
+
+        $locale = strtolower($this->new_locale);
+        $this->available_locales[] = $locale;
+        $this->saveLocales();
+        $this->new_locale = '';
+    }
+
+    public function removeLocale($locale)
+    {
+        $this->available_locales = array_values(array_filter($this->available_locales, fn($l) => $l !== $locale));
+        $this->saveLocales();
+    }
+
+    private function saveLocales()
+    {
+        $this->updateSettingInDatabase('available_locales', json_encode($this->available_locales));
+    }
+
+    private function updateSettingInDatabase($key, $value)
+    {
+        Setting::updateOrCreate(
+            [
+                'key' => $key,
+                'group' => 'global',
+            ],
+            [
+                'data' => $value,
+                'name' => ucwords(str_replace('_', ' ', $key)),
+            ]
+        );
+        Cache::forget('settings');
+    }
+
+    protected function rules()
+    {
+        return [
+            'new_locale' => [
+                'required',
+                'string',
+                'size:2',
+                function ($attribute, $value, $fail) {
+                    if (in_array(strtolower($value), $this->available_locales)) {
+                        $fail(__('This language is already added.'));
+                    }
+                },
+            ],
+        ];
+    }
+
+    public function render()
+    {
+        return view('kompass::livewire.settings.multilingual');
+    }
+}
