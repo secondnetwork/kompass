@@ -5,11 +5,11 @@
             <div x-data="click_to_edit()">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
                     class="flex items-center gap-2 select-none cursor-pointer">
-                    <h1 class="text-2xl font-bold">{{ $menu->name }}</h1>
+                    <h4 class="text-gray-600 font-bold">{{ $menu->name }}</h4>
                     <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
                 </a>
                 <div x-show="isEditing" class="flex items-center">
-                    <input type="text" class="text-2xl font-bold border border-gray-400 px-2 py-1"
+                    <input type="text" class="text-gray-600 font-bold border border-gray-400 px-2 py-1"
                         wire:model.live="menuName" x-ref="input" @keydown.enter="isEditing = false; $wire.renameMenu()"
                         @keydown.window.escape="isEditing = false" @click.away="isEditing = false; $wire.renameMenu()">
                 </div>
