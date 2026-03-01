@@ -95,15 +95,14 @@
                                     @foreach ($data as $column)
                                         <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                             @if ($column == 'title')
-                                                <a wire:navigate href="/admin/pages/show/{{ $page->id }}">
-                                                    {{ __($page->title) }}
-                                                </a>
-
-                                                @if ($page->layout == 'is_front_page')
-                                                    <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-amber-500 text-white">
-                                                        <x-tabler-home class="w-3 h-3" />
-                                                    </span>
-                                                @endif
+                                                <div class="flex items-center gap-2">
+                                                    @if ($page->layout == 'is_front_page')
+                                                        <x-tabler-home class="w-4 h-4 text-amber-500" />
+                                                    @endif
+                                                    <a wire:navigate href="/admin/pages/show/{{ $page->id }}">
+                                                        {{ __($page->title) }}
+                                                    </a>
+                                                </div>
 
                                             @elseif ($column == 'status')
                                                 @switch($page->status)
@@ -137,7 +136,10 @@
                                                 @endswitch
                                             @elseif ($column == 'land')
                                                 @if ($page->land)
-                                                    <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($page->land) }}</span>
+                                                    <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                                        {{ strtoupper($page->land) }}
+                                                    </span>
                                                 @endif
                                             @else
                                                 {{ $page->$column }}

@@ -260,6 +260,15 @@ class MenuData extends Component
         $this->mount($this->menu->id);
     }
 
+    public function renameMenu()
+    {
+        if ($this->menuName != null) {
+            $this->menu->update(['name' => $this->menuName]);
+        }
+        $this->dispatch('status');
+        $this->mount($this->menu->id);
+    }
+
     public function addNew()
     {
         $validate = $this->validate();

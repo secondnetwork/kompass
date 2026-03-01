@@ -132,7 +132,12 @@
         </div>
         <div class="flex gap-4 justify-end items-center">
 
-
+            @if (setting('global.multilingual') && $post->land)
+                <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    {{ strtoupper($post->land) }}
+                </span>
+            @endif
 
             <span x-data="{ open: false }" class="relative transition-all flex gap-4">
 

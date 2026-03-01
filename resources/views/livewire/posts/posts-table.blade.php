@@ -141,7 +141,10 @@
                                         @endswitch
                                     @elseif ($column == 'land')
                                         @if ($post->land)
-                                            <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($post->land) }}</span>
+                                            <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                                                <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                                {{ strtoupper($post->land) }}
+                                            </span>
                                         @endif
                                     @elseif ($column == 'updated_at')
                                         {{ $post->updated_at }}

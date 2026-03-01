@@ -54,8 +54,11 @@
                 <div x-data="click_to_edit()">
                     <a 
                     @click.prevent @click="toggleEditingState" x-show="!isEditing" 
-                    class="flex items-center"
+                    class="flex items-center gap-2"
                         class="select-none cursor-pointer">
+                        @if ($page->layout == 'is_front_page')
+                            <x-tabler-home class="w-5 h-5 text-amber-500" />
+                        @endif
                         <h4 class="text-gray-600">{{ $title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
                         </span>
@@ -85,7 +88,12 @@
 
         <div class="flex gap-4 justify-end items-center">
 
-
+            @if (setting('global.multilingual') && $page->land)
+                <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    {{ strtoupper($page->land) }}
+                </span>
+            @endif
 
             <span x-data="{ open: false }" class="relative transition-all flex gap-4">
 

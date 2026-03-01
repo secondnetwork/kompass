@@ -1,9 +1,25 @@
 <div>
     <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-4">
-            <h1 class="text-2xl font-bold">{{ $menu->name }}</h1>
+            
+            <div x-data="click_to_edit()">
+                <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
+                    class="flex items-center gap-2 select-none cursor-pointer">
+                    <h1 class="text-2xl font-bold">{{ $menu->name }}</h1>
+                    <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                </a>
+                <div x-show="isEditing" class="flex items-center">
+                    <input type="text" class="text-2xl font-bold border border-gray-400 px-2 py-1"
+                        wire:model.live="menuName" x-ref="input" @keydown.enter="isEditing = false; $wire.renameMenu()"
+                        @keydown.window.escape="isEditing = false" @click.away="isEditing = false; $wire.renameMenu()">
+                </div>
+            </div>
+
             @if (setting('global.multilingual') && $menu->land)
-                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
+                <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    {{ strtoupper($menu->land) }}
+                </span>
             @endif
         </div>
         <div class="flex gap-2">
