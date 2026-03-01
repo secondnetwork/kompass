@@ -191,4 +191,18 @@ class AccountForm extends Component
             'roles' => Role::all(),
         ]);
     }
+
+    public function sortBy($field)
+    {
+        $allowedFields = ['name', 'status', 'created_at'];
+        if (!in_array($field, $allowedFields)) {
+            return;
+        }
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
+        }
+    }
 }

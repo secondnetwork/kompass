@@ -5,10 +5,32 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-base-300">
                 <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Action</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
+                        <button wire:click="sortBy('description')" class="flex items-center gap-1 uppercase font-medium">
+                            Action
+                            @if($orderBy === 'description')
+                                @if($orderAsc)
+                                    <x-tabler-chevron-up class="w-4 h-4" />
+                                @else
+                                    <x-tabler-chevron-down class="w-4 h-4" />
+                                @endif
+                            @endif
+                        </button>
+                    </th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">User</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Subject Type</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">Created At</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
+                        <button wire:click="sortBy('updated_at')" class="flex items-center gap-1 uppercase font-medium">
+                            Created At
+                            @if($orderBy === 'updated_at')
+                                @if($orderAsc)
+                                    <x-tabler-chevron-up class="w-4 h-4" />
+                                @else
+                                    <x-tabler-chevron-down class="w-4 h-4" />
+                                @endif
+                            @endif
+                        </button>
+                    </th>
                 </tr>
             </thead>
             <tbody class="bg-base-100 divide-y divide-gray-200">

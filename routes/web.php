@@ -20,26 +20,17 @@ use Secondnetwork\Kompass\Livewire\PostsTable;
 use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 use Secondnetwork\Kompass\Livewire\Settings\Profile;
+use Secondnetwork\Kompass\Livewire\UserDashboard;
 
 // Asset Routes
 Route::get('assets/{path?}', [KompassController::class, 'assets'])->name('kompass_asset');
 
-// Route::get('/password/create/{id}', [AccountForm::class, 'create'])
-//     ->middleware(['signed'])
-//     ->name('password.create');
-
-// Route::post('/password', [AccountForm::class, 'store'])
-//     ->middleware(['signed'])
-//     ->name('password.store');
-
-View::composer('*', function ($view): void {
-    $vi = str_replace('.', '_', $view->getName());
-    $vn = str_replace('::', '-', $vi);
-    View::share('viewName', $vn);
-    // dump($view->getName());
+// User Dashboard Route (for 'user' role - no admin access)
+Route::group(['middleware' => ['web', 'auth', 'role:user'], 'prefix' => 'profile', 'as' => 'profile.'], function (): void {
+    Route::get('/', UserDashboard::class)->name('dashboard');
 });
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {
+Route::group(['middleware' => ['web', 'auth', 'role:admin|manager|editor'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {
     Route::get('/', Dashboard::class)->name('dashboard-root');
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('profile', Profile::class)->name('profile');
@@ -54,10 +45,9 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'adm
 
     Route::get('medialibrary', Medialibrary::class)->name('medialibrary');
 
-    Route::get('menus', MenuTable::class)->name('menus');
-    Route::get('menus/{action}/{id}', MenuData::class)->name('menus.show');
-
-    Route::group(['middleware' => ['role:manager|admin']], function (): void {
+    Route::group(['middleware' => ['role:admin|manager']], function (): void {
+        Route::get('menus', MenuTable::class)->name('menus');
+        Route::get('menus/{action}/{id}', MenuData::class)->name('menus.show');
         Route::get('blocks', BlocksTable::class)->name('blocks');
         Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
         Route::get('settings', Settings::class)->name('settings');
@@ -70,8 +60,6 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'admin', 'as' => 'adm
 
     Route::view('about', 'kompass::admin.about')->name('about');
     Route::view('cd', 'kompass::admin.cd')->name('cd');
-
-    // Route::get('settings/profile', Profile::class)->name('profile');
 });
 
 // include_once __DIR__.'/auth.php';

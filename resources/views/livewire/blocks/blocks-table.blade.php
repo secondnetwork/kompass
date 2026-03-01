@@ -28,13 +28,26 @@
         <div class=" align-middle inline-block min-w-full ">
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                  @if ($pages->count())
+                      @if ($pages->count())
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
-                                    {{ __($value) }}
+                                    @if($value == 'name' || $value == 'type')
+                                        <button wire:click="sortBy('{{ $value }}')" class="flex items-center gap-1 uppercase font-medium">
+                                            {{ __($value) }}
+                                            @if($orderBy === $value)
+                                                @if($orderAsc)
+                                                    <x-tabler-chevron-up class="w-4 h-4" />
+                                                @else
+                                                    <x-tabler-chevron-down class="w-4 h-4" />
+                                                @endif
+                                            @endif
+                                        </button>
+                                    @else
+                                        {{ __($value) }}
+                                    @endif
                                 </th>
                             @endforeach
 

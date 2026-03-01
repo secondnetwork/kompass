@@ -68,18 +68,22 @@
 
           <li><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
 
+          @role(['admin','manager','editor'])
           <li><a wire:navigate @if(Route::is('admin.posts*')) class="active" @endif href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.categories*')) class="active" @endif href="/admin/categories"><x-tabler-tags class="icon-lg"/><span>{{ __('Categories') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
-
           <li><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo-video class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
+          @endrole
+
           <livewire:menu name="admin_aside" />
-         
+
+          @role(['admin','manager'])
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('Theme') }}</div>
 
           <li><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-blocks class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
+          @endrole
           
           @role(['super_admin','admin'])
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('User management') }}</div>

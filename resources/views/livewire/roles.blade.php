@@ -44,7 +44,20 @@
                   @foreach ($headers as $key => $value)
                       <th scope="col"
                           class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
-                          {{ __($value) }}
+                          @if($key == 'name')
+                              <button wire:click="sortBy('{{ $key }}')" class="flex items-center gap-1 uppercase font-medium">
+                                  {{ __($value) }}
+                                  @if($orderBy === $key)
+                                      @if($orderAsc)
+                                          <x-tabler-chevron-up class="w-4 h-4" />
+                                      @else
+                                          <x-tabler-chevron-down class="w-4 h-4" />
+                                      @endif
+                                  @endif
+                              </button>
+                          @else
+                              {{ __($value) }}
+                          @endif
                       </th>
                   @endforeach
 

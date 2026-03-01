@@ -113,8 +113,8 @@ class PostsTable extends Component
 
         $this->available_locales = $locales;
         
-        if ($this->land === null) {
-            $this->land = session('kompass_last_land', $appLocale);
+        if (empty($this->land) && session()->has('kompass_last_land')) {
+            $this->land = session('kompass_last_land');
         }
     }
 
@@ -313,5 +313,15 @@ class PostsTable extends Component
         return view('kompass::livewire.posts.posts-table', [
             'posts' => $this->resultDate(),
         ])->layout('kompass::admin.layouts.app');
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
+        }
     }
 }

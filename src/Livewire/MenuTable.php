@@ -21,6 +21,8 @@ class MenuTable extends Component
     public $FormClone = false;
     public $FormEdit = false;
     public $cloneLand = '';
+    public $orderBy = 'order';
+    public $orderAsc = true;
 
     protected $rules = ['name' => ''];
 
@@ -75,8 +77,8 @@ class MenuTable extends Component
         
         $this->available_locales = $locales;
         
-        if ($this->land === null || $this->land === '') {
-            $this->land = session('kompass_last_land', $appLocale);
+        if (empty($this->land) && session()->has('kompass_last_land')) {
+            $this->land = session('kompass_last_land');
         }
     }
 
@@ -148,7 +150,7 @@ class MenuTable extends Component
             $query->where('land', $this->land);
         }
 
-        return $query->orderBy('order', 'ASC')->get();
+        return $query->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')->get();
     }
 
     public function rename($id)
@@ -181,6 +183,16 @@ class MenuTable extends Component
     {
         foreach ($list as $item) {
             Menu::whereId($item['value'])->update(['order' => $item['order']]);
+        }
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
         }
     }
 }

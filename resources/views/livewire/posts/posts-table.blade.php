@@ -23,14 +23,10 @@
 
     <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
         <x-kompass::offcanvas :w="'w-2/6'">
-            <x-slot name="body">
-                <h3 class="text-lg font-bold mb-4">{{ __('Clone Post') }}</h3>
-                
+            <x-slot name="body">               
                 @if (setting('global.multilingual'))
-                <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned post.') }}</p>
-
                 <div class="mt-4">
-                    <x-kompass::select wire:model="cloneLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="cloneLand" label="{{ __('Select the target language for the cloned post.') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                 </div>
                 @else
@@ -81,7 +77,7 @@
                                     <th scope="col"
                                         class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                                         
-                                        @if($value == 'title' || $value == 'updated_at')
+                                        @if($value == 'title' || $value == 'updated_at' || $value == 'status' || $value == 'land')
                                             <button wire:click="sortBy('{{ $value }}')" class="flex items-center gap-1 uppercase font-medium">
                                                 {{ __($value) }}
                                                 @if($orderBy === $value)

@@ -99,8 +99,8 @@ class PagesTable extends Component
         
         $this->available_locales = $locales;
         
-        if ($this->land === null) {
-            $this->land = session('kompass_last_land', $appLocale);
+        if (empty($this->land) && session()->has('kompass_last_land')) {
+            $this->land = session('kompass_last_land');
         }
     }
 
@@ -235,5 +235,15 @@ class PagesTable extends Component
             if ($page->order !== $index) $page->update(['order' => $index]);
         }
         $this->call_emit_reset();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
+        }
     }
 }

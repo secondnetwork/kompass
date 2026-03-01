@@ -25,6 +25,10 @@ class Roles extends Component
 
     protected $queryString = ['search'];
 
+    public $orderBy = 'name';
+
+    public $orderAsc = true;
+
     #[Validate('required|regex:/^[\pL\s\-]+$/u|min:3|max:255')]
     public $name;
 
@@ -54,12 +58,23 @@ class Roles extends Component
     {
         $this->headers = $this->headerConfig();
 
-        $this->Roles = Role::all();
+        $this->Roles = Role::orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')->get();
     }
 
     private function resultDate()
     {
-        return Role::where('name', 'like', '%'.$this->search.'%');
+        return Role::where('name', 'like', '%'.$this->search.'%')
+            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
+        }
     }
 
     public function selectItem($itemId, $action)
@@ -114,7 +129,7 @@ class Roles extends Component
         Role::destroy($this->selectedItem);
         $this->FormDelete = false;
 
-        $this->mount();
+        $this->Roles = Role::orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')->get();
     }
 
     public function render()

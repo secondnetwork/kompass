@@ -24,13 +24,10 @@
     <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
-                <h3 class="text-lg font-bold mb-4">{{ __('Clone Page') }}</h3>
                 
                 @if (setting('global.multilingual'))
-                <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned page.') }}</p>
-
                 <div class="mt-4">
-                    <x-kompass::select wire:model="cloneLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="cloneLand" label="{{ __('Select the target language for the cloned page.') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                 </div>
                 @else
@@ -47,8 +44,12 @@
 
     <div class="flex flex-col">
    
-        <div class="w-full border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+        <div class="w-full border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
             
+            <div class="w-full">
+                <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search pages...') }}" />
+            </div>
+
             <div class="flex justify-end gap-4 items-center">
                 @if (setting('global.multilingual'))
                 <div class="w-44">
@@ -61,7 +62,7 @@
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New page') }}
                 </button>
           </div>
-       
+        
 
         </div>
 
@@ -78,7 +79,20 @@
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
-                                    {{ __($value) }}
+                                    @if($value == 'title' || $value == 'slug' || $value == 'updated_at' || $value == 'status' || $value == 'land')
+                                        <button wire:click="sortBy('{{ $value }}')" class="flex items-center gap-1 uppercase font-medium">
+                                            {{ __($value) }}
+                                            @if($orderBy === $value)
+                                                @if($orderAsc)
+                                                    <x-tabler-chevron-up class="w-4 h-4" />
+                                                @else
+                                                    <x-tabler-chevron-down class="w-4 h-4" />
+                                                @endif
+                                            @endif
+                                        </button>
+                                    @else
+                                        {{ __($value) }}
+                                    @endif
                                 </th>
                             @endforeach
 

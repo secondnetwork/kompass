@@ -15,6 +15,16 @@ class Redirection extends Component
 
     protected $queryString = ['search'];
 
+    public $orderBy = 'updated_at';
+
+    public $orderAsc = false;
+
+    public $selectedItem;
+
+    public $FormDelete = false;
+
+    public $FormAdd = false;
+
     protected function headerTable(): array
     {
         return [
@@ -77,9 +87,19 @@ class Redirection extends Component
 
     private function resultDate()
     {
-        return Redirect::where('old_url', 'like', '%'.$this->search.'%')->Paginate(100);
+        return Redirect::where('old_url', 'like', '%'.$this->search.'%')
+            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
+            ->paginate(100);
+    }
 
-        // return file::whereLike(['name', 'description'], '%' . $this->search . '%')->Paginate(100);
+    public function sortBy($field)
+    {
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
+        }
     }
 
     public function render()

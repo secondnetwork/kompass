@@ -115,5 +115,15 @@ class BlocksTable extends Component
         $this->call_emit_reset();
     }
 
+    public function sortBy($field)
+    {
+        if ($this->orderBy === $field) {
+            $this->orderAsc = !$this->orderAsc;
+        } else {
+            $this->orderBy = $field;
+            $this->orderAsc = true;
+        }
+    }
+
     public function toJSON(): string { return '{}'; }
 }
