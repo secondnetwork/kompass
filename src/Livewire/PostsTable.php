@@ -25,9 +25,9 @@ class PostsTable extends Component
 
     public $perPost = 1000;
 
-    public $orderBy = 'order';
+    public $orderBy = 'created_at';
 
-    public $orderAsc = true;
+    public $orderAsc = false;
 
     public $tasks;
 
