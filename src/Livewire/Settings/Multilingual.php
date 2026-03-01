@@ -24,6 +24,29 @@ class Multilingual extends Component
         ['name' => 'Russian', 'id' => 'ru'],
         ['name' => 'Chinese', 'id' => 'zh'],
         ['name' => 'Japanese', 'id' => 'ja'],
+        ['name' => 'Bulgarian', 'id' => 'bg'],
+        ['name' => 'Czech', 'id' => 'cs'],
+        ['name' => 'Danish', 'id' => 'da'],
+        ['name' => 'Greek', 'id' => 'el'],
+        ['name' => 'Estonian', 'id' => 'et'],
+        ['name' => 'Finnish', 'id' => 'fi'],
+        ['name' => 'Irish', 'id' => 'ga'],
+        ['name' => 'Croatian', 'id' => 'hr'],
+        ['name' => 'Hungarian', 'id' => 'hu'],
+        ['name' => 'Lithuanian', 'id' => 'lt'],
+        ['name' => 'Latvian', 'id' => 'lv'],
+        ['name' => 'Maltese', 'id' => 'mt'],
+        ['name' => 'Romanian', 'id' => 'ro'],
+        ['name' => 'Slovak', 'id' => 'sk'],
+        ['name' => 'Slovenian', 'id' => 'sl'],
+        ['name' => 'Swedish', 'id' => 'sv'],
+        ['name' => 'Norwegian', 'id' => 'no'],
+        ['name' => 'Icelandic', 'id' => 'is'],
+        ['name' => 'Serbian', 'id' => 'sr'],
+        ['name' => 'Bosnian', 'id' => 'bs'],
+        ['name' => 'Albanian', 'id' => 'sq'],
+        ['name' => 'Macedonian', 'id' => 'mk'],
+        ['name' => 'Ukrainian', 'id' => 'uk'],
     ];
 
     public function mount()
@@ -88,7 +111,8 @@ class Multilingual extends Component
             'new_locale' => [
                 'required',
                 'string',
-                'size:2',
+                'min:2',
+                'max:5',
                 function ($attribute, $value, $fail) {
                     if (in_array(strtolower($value), $this->available_locales)) {
                         $fail(__('This language is already added.'));

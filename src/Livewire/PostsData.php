@@ -467,6 +467,14 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
+    public function updateTitle(): void
+    {
+        $this->post->update([
+            'title' => $this->title,
+            'slug' => Str::slug($this->title, '-', 'de'),
+        ]);
+    }
+
     public function removemediaThumbnails($id)
     {
         Post::whereId($id)->update(['thumbnails' => null]);

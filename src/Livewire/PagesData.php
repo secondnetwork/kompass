@@ -562,6 +562,14 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function updateTitle(): void
+    {
+        $this->page->update([
+            'title' => $this->title,
+            'slug' => genSlug($this->title, $this->page->slug, Page::class),
+        ]);
+    }
+
     private function handlePageUpdate($pageId, $publishIfNeeded)
     {
         $page = Page::findOrFail($pageId);

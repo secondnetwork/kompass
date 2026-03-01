@@ -1,7 +1,9 @@
-export default () => {
+export default (wireMethod = null) => {
     return {
 
         isEditing: false,
+        wireMethod: wireMethod,
+        
         toggleEditingState() {
             this.isEditing = !this.isEditing;
 
@@ -11,10 +13,19 @@ export default () => {
                 });
             }
         },
-        disableEditing() {
         
+        disableEditing() {
+            if (this.isEditing && this.wireMethod) {
+                this.$wire.call(this.wireMethod);
+            }
             this.isEditing = false;
         },
- 
+        
+        handleClickAway() {
+            if (this.isEditing) {
+                this.disableEditing();
+            }
+        },
+
     };
 };
