@@ -146,7 +146,7 @@
             </div>
 
             {{-- Optionen Liste --}}
-            <div class="overflow-y-auto py-1.5 max-h-60 flex flex-col">
+            <div class="overflow-y-auto py-1.5 max-h-60 flex flex-col bg-white">
                 <template x-if="filteredOptions.length === 0">
                     <div class="px-4 py-3 text-sm text-slate-500 text-center">
                         {{ __('No results found') }}
@@ -157,7 +157,7 @@
                     <li
                         class="combobox-option group flex w-full cursor-pointer items-center justify-between gap-6 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:text-black focus-visible:outline-none"
                         role="option"
-                        :class="{ 'bg-slate-100': selectedOption == item.id }"
+                        :class="{ 'bg-slate-200': selectedOption == item.id }"
                         :aria-selected="selectedOption == item.id"
                         x-on:click="setSelectedOption(item)"
                         x-on:keydown.enter.prevent="setSelectedOption(item)"

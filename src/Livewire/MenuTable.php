@@ -18,7 +18,9 @@ class MenuTable extends Component
     public $timestamps = false;
     public $FormDelete = false;
     public $FormAdd = false;
+    public $FormClone = false;
     public $FormEdit = false;
+    public $cloneLand = '';
 
     protected $rules = ['name' => ''];
 
@@ -83,6 +85,41 @@ class MenuTable extends Component
         $this->selectedItem = $itemId;
         if ($action == 'add') $this->FormAdd = true;
         if ($action == 'delete') $this->FormDelete = true;
+        if ($action == 'clone') {
+            $this->FormClone = true;
+            $this->cloneLand = Menu::find($itemId)->land ?? config('app.locale', 'de');
+        }
+    }
+
+    public function cloneMenu()
+    {
+        $id = $this->selectedItem;
+        $originalMenu = Menu::findOrFail($id);
+        
+        $newMenu = $originalMenu->replicate();
+        $newMenu->name = $originalMenu->name . ' (copy)';
+        $newMenu->land = $this->cloneLand;
+        $newMenu->push();
+
+        $items = \Secondnetwork\Kompass\Models\Menuitem::where('menu_id', $id)->whereNull('subgroup')->get();
+        
+        foreach ($items as $item) {
+            $newItem = $item->replicate();
+            $newItem->menu_id = $newMenu->id;
+            $newItem->push();
+
+            // Handle children
+            $children = \Secondnetwork\Kompass\Models\Menuitem::where('subgroup', $item->id)->get();
+            foreach ($children as $child) {
+                $newChild = $child->replicate();
+                $newChild->menu_id = $newMenu->id;
+                $newChild->subgroup = $newItem->id;
+                $newChild->push();
+            }
+        }
+
+        $this->FormClone = false;
+        return redirect()->to('/admin/menus/show/'.$newMenu->id);
     }
 
     public function addMenu()

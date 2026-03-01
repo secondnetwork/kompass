@@ -11,6 +11,20 @@ class Multilingual extends Component
     public $multilingual;
     public $available_locales = [];
     public $new_locale;
+    public $all_locales = [
+        ['name' => 'German', 'id' => 'de'],
+        ['name' => 'English', 'id' => 'en'],
+        ['name' => 'Turkish', 'id' => 'tr'],
+        ['name' => 'French', 'id' => 'fr'],
+        ['name' => 'Spanish', 'id' => 'es'],
+        ['name' => 'Italian', 'id' => 'it'],
+        ['name' => 'Portuguese', 'id' => 'pt'],
+        ['name' => 'Dutch', 'id' => 'nl'],
+        ['name' => 'Polish', 'id' => 'pl'],
+        ['name' => 'Russian', 'id' => 'ru'],
+        ['name' => 'Chinese', 'id' => 'zh'],
+        ['name' => 'Japanese', 'id' => 'ja'],
+    ];
 
     public function mount()
     {

@@ -25,6 +25,27 @@
         </x-kompass::offcanvas>
     </div>
 
+    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
+        <x-kompass::offcanvas :w="'w-2/6'">
+            <x-slot name="body">
+                <h3 class="text-lg font-bold mb-4">{{ __('Clone Menu') }}</h3>
+                
+                @if (setting('global.multilingual'))
+                <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned menu.') }}</p>
+
+                <div class="mt-4">
+                    <x-kompass::select wire:model="cloneLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                </div>
+                @else
+                <p class="mb-4 text-sm text-base-content/70">{{ __('Are you sure you want to clone this menu?') }}</p>
+                @endif
+
+                <button wire:click="cloneMenu" class="btn btn-primary mt-4">{{ __('Clone') }}</button>
+            </x-slot>
+        </x-kompass::offcanvas>
+    </div>
+
     <x-kompass::modal data="FormDelete" />
 
 
@@ -121,6 +142,10 @@
                                                     class="flex justify-center">
                                                     <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                                 </a>
+
+                                                <span wire:click="selectItem({{ $menu->id }}, 'clone')" class="flex justify-center">
+                                                    <x-tabler-copy class="cursor-pointer stroke-violet-500" />
+                                                </span>
 
                                                 <span wire:click="selectItem({{ $menu->id }}, 'delete')"
                                                     class="flex justify-center">
