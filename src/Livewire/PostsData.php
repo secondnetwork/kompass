@@ -175,15 +175,19 @@ class PostsData extends Component
         $this->layout = $this->post->layout;
         $this->status = $this->post->status;
         
-        $locales = ['de', 'en', 'tr'];
-        $appLocale = config('app.locale', 'de');
-        if (($key = array_search($appLocale, $locales)) !== false) {
-            unset($locales[$key]);
-            array_unshift($locales, $appLocale);
+        if (setting('global.multilingual')) {
+            $locales = ['de', 'en', 'tr'];
+            $appLocale = config('app.locale', 'de');
+            if (($key = array_search($appLocale, $locales)) !== false) {
+                unset($locales[$key]);
+                array_unshift($locales, $appLocale);
+            }
+            
+            $this->land = $this->post->land ?? $appLocale;
+            $this->available_locales = $locales;
+        } else {
+            $this->land = $this->post->land ?? config('app.locale', 'de');
         }
-        
-        $this->land = $this->post->land ?? $appLocale;
-        $this->available_locales = $locales;
 
         $this->category_id = $this->post->category_id;
 

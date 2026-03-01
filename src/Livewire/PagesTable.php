@@ -51,12 +51,25 @@ class PagesTable extends Component
 
     protected function headerTable(): array
     {
-        return ['', 'title', 'slug', 'status', 'Updated', ''];
+        $headers = ['', 'title', 'slug'];
+        if (setting('global.multilingual')) {
+            $headers[] = 'land';
+        }
+        $headers[] = 'status';
+        $headers[] = 'Updated';
+        $headers[] = '';
+        return $headers;
     }
 
     protected function dataTable(): array
     {
-        return ['title', 'slug', 'status', 'updated_at'];
+        $data = ['title', 'slug'];
+        if (setting('global.multilingual')) {
+            $data[] = 'land';
+        }
+        $data[] = 'status';
+        $data[] = 'updated_at';
+        return $data;
     }
 
     public function mount()
@@ -85,7 +98,7 @@ class PagesTable extends Component
             $query->where('title', 'like', '%'.$this->search.'%');
         }
 
-        if ($this->land) {
+        if (setting('global.multilingual') && $this->land) {
             $query->where('land', $this->land);
         }
 

@@ -15,7 +15,7 @@ Route::group(['middleware' => ['web']], function () use ($localePattern): void {
     Route::livewire('/blog', 'pages::blog.index');
     Route::livewire('/blog/{slug}', 'pages::blog.single');
     
-    if ($localePattern) {
+    if (setting('global.multilingual') && $localePattern) {
         Route::livewire('/{locale}/blog', 'pages::blog.index')->where('locale', $localePattern);
         Route::livewire('/{locale}/blog/{slug}', 'pages::blog.single')->where('locale', $localePattern);
         Route::livewire('/{locale}/{slug}', 'pages::page')->where('locale', $localePattern);

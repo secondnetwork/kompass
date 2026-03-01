@@ -168,15 +168,19 @@ class PagesData extends Component
         $this->layout = $this->page->layout;
         $this->status = $this->page->status;
         
-        $locales = ['de', 'en', 'tr'];
-        $appLocale = config('app.locale', 'de');
-        if (($key = array_search($appLocale, $locales)) !== false) {
-            unset($locales[$key]);
-            array_unshift($locales, $appLocale);
+        if (setting('global.multilingual')) {
+            $locales = ['de', 'en', 'tr'];
+            $appLocale = config('app.locale', 'de');
+            if (($key = array_search($appLocale, $locales)) !== false) {
+                unset($locales[$key]);
+                array_unshift($locales, $appLocale);
+            }
+            
+            $this->land = $this->page->land ?? $appLocale;
+            $this->available_locales = $locales;
+        } else {
+            $this->land = $this->page->land ?? config('app.locale', 'de');
         }
-        
-        $this->land = $this->page->land ?? $appLocale;
-        $this->available_locales = $locales;
 
         $this->cssClassname = Meta::published()
             ->where('key', 'css-classname')

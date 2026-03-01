@@ -8,6 +8,7 @@
                 <x-kompass::form.textarea wire:model="meta_description" id="name" name="Description"
                     label="{{ __('Description') }}" type="text" class="mt-1 block w-full h-[15rem]" />
 
+                @if (setting('global.multilingual'))
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Language') }}</label>
                     <select wire:model="land" class="select select-bordered w-full">
@@ -16,6 +17,7 @@
                         @endforeach
                     </select>
                 </div>
+                @endif
 
                 <button wire:click="addPage" class="btn btn-primary mt-4">{{ __('Save') }}</button>
 
@@ -27,6 +29,8 @@
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
                 <h3 class="text-lg font-bold mb-4">{{ __('Clone Page') }}</h3>
+                
+                @if (setting('global.multilingual'))
                 <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned page.') }}</p>
 
                 <div class="mt-4">
@@ -37,6 +41,9 @@
                         @endforeach
                     </select>
                 </div>
+                @else
+                <p class="mb-4 text-sm text-base-content/70">{{ __('Are you sure you want to clone this page?') }}</p>
+                @endif
 
                 <button wire:click="clonePage" class="btn btn-primary mt-4">{{ __('Clone') }}</button>
             </x-slot>
@@ -51,12 +58,14 @@
         <div class="w-full border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             
             <div class="flex justify-end gap-4 items-center">
+                @if (setting('global.multilingual'))
                 <select wire:model.live="land" class="select select-sm select-bordered">
                     <option value="">{{ __('All Languages') }}</option>
                     @foreach($available_locales as $locale)
                         <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
                     @endforeach
                 </select>
+                @endif
 
                 <button class="btn btn-primary" wire:click="$set('FormAdd', true)">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New page') }}
@@ -100,8 +109,10 @@
                                                     {{ __($page->title) }}
                                                 </a>
 
-                                                @if ($page->land)
-                                                    <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($page->land) }}</span>
+                                                @if (setting('global.multilingual'))
+                                                    @if ($page->land)
+                                                        <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($page->land) }}</span>
+                                                    @endif
                                                 @endif
 
                                                 @if ($page->layout == 'is_front_page')

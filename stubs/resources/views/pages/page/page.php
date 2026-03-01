@@ -29,15 +29,22 @@ new class extends Component
             $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
             $defaultLocale = $availableLocales[0] ?? 'de';
             
-            // Handle routes like /{slug} where only one param is passed
-            if ($slug === null && $locale !== null) {
-                if (!in_array($locale, $availableLocales)) {
-                    $slug = $locale;
-                    $locale = $defaultLocale;
+            if (setting('global.multilingual')) {
+                // Handle routes like /{slug} where only one param is passed
+                if ($slug === null && $locale !== null) {
+                    if (!in_array($locale, $availableLocales)) {
+                        $slug = $locale;
+                        $locale = $defaultLocale;
+                    }
                 }
+                $land = $locale ?? $defaultLocale;
+            } else {
+                if ($slug === null && $locale !== null) {
+                    $slug = $locale;
+                }
+                $land = $defaultLocale;
             }
-            
-            $land = $locale ?? $defaultLocale;
+
             app()->setLocale($land);
             
             $this->resolvePageAndRedirect($land, $slug);
@@ -63,18 +70,23 @@ new class extends Component
         $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
         $defaultLocale = $availableLocales[0] ?? 'de';
         
-        $landurl = in_array($land, $availableLocales) ? $land : $defaultLocale;
+        $isMultilingual = setting('global.multilingual');
+        $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
         
         if ($slug === null) {
             $this->page = Page::query()
-                ->where(function ($query) use ($landurl) {
-                    $query->where('land', $landurl)
-                          ->orWhere('land', '')
-                          ->orWhereNull('land');
+                ->where(function ($query) use ($landurl, $isMultilingual) {
+                    if ($isMultilingual) {
+                        $query->where('land', $landurl)
+                              ->orWhere('land', '')
+                              ->orWhereNull('land');
+                    }
                 })
                 ->where('layout', 'is_front_page')
                 ->where('status', 'published')
-                ->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl])
+                ->when($isMultilingual, function ($query) use ($landurl) {
+                    $query->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl]);
+                })
                 ->first();
                 
             if (!$this->page) {
