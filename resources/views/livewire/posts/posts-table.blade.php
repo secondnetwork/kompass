@@ -1,6 +1,6 @@
-<div>
+<div class="flex flex-col">
 
-    <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd') }">
+    <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd').live }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
@@ -8,23 +8,43 @@
                 <x-kompass::form.textarea wire:model="meta_description" id="name" name="Description"
                     label="{{ __('Description') }}" type="text" class="mt-1 block w-full h-[15rem]" />
 
-                <button wire:click="addPost" class="btn btn-primary">
-                    <div wire:loading>
-                        <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </div>
-                    <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
-                    {{ __('Save') }}    
-                </button>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Language') }}</label>
+                    <select wire:model="land" class="select select-bordered w-full">
+                        @foreach($available_locales as $locale)
+                            <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button wire:click="addPost" class="btn btn-primary mt-4">{{ __('Save') }}</button>
 
             </x-slot>
         </x-kompass::offcanvas>
     </div>
 
+    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
+        <x-kompass::offcanvas :w="'w-2/6'">
+            <x-slot name="body">
+                <h3 class="text-lg font-bold mb-4">{{ __('Clone Post') }}</h3>
+                <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned post.') }}</p>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Language') }}</label>
+                    <select wire:model="cloneLand" class="select select-bordered w-full">
+                        @foreach($available_locales as $locale)
+                            <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button wire:click="clonePage" class="btn btn-primary mt-4">{{ __('Clone') }}</button>
+            </x-slot>
+        </x-kompass::offcanvas>
+    </div>
+
     <x-kompass::modal data="FormDelete" />
-<x-kompass::action-message class="" on="status" />
+    <x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
         <div class=" border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
@@ -33,9 +53,15 @@
                 <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search posts...') }}" />
             </div>
 
-            <div x-data="{ open: @entangle('FormAdd').live  }" class="flex justify-end gap-4">
+            <div class="flex justify-end gap-4 items-center">
+                <select wire:model.live="land" class="select select-sm select-bordered">
+                    <option value="">{{ __('All Languages') }}</option>
+                    @foreach($available_locales as $locale)
+                        <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
+                    @endforeach
+                </select>
 
-                <button class="btn btn-primary" @click="open = true">
+                <button class="btn btn-primary" wire:click="$set('FormAdd', true)">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New post') }}
                 </button>
           </div>
@@ -77,98 +103,90 @@
 
                 <tbody class="bg-base-100 divide-y divide-gray-200">
                     @foreach ($posts as $key => $post)
-                        <tr>
-                            @foreach ($data as $key => $value)
-                                        <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
-                                            @if ($key == 0)
-                                                <a wire:navigate href="/admin/posts/show/{{ $post->id }}">
-                                            @endif
-                                            @if ($key == 1)
-                                                @switch($post->$value)
-                                                    @case('published')
-                                                        <span
-                                                            class="badge badge-sm border-green-200 bg-green-100 text-green-800">
-                                                            <span class="relative flex h-2 w-2">
-                                                                <span
-                                                                    class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
-                                                                <span
-                                                                    class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
-                                                            </span>
-                                                        @break
-
-                                                        @case('password')
-                                                            <span
-                                                                class="badge badge-sm border-violet-200 bg-violet-100 text-violet-800">
-                                                                <span class="relative flex h-2 w-2">
-                                                                    <span
-                                                                        class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
-                                                                    <span
-                                                                        class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
-                                                                </span>
-                                                        @break
-
-                                                        @default
-                                                            <span
-                                                                class="badge badge-sm border-gray-300 bg-gray-100 text-gray-800">
-                                                                <span class="relative flex h-2 w-2">
-
-                                                                    <span
-                                                                        class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
-                                                                </span>
-                                                            @endswitch
-                                            @endif
-                                            
-                                            @if($value == 'updated_at')
-                                                {{ $post->updated_at }}
-                                            @else
-                                                {{ __($post->$value) }}
-                                            @endif
-
-                                            @if ($key == 0)
-                                                </a>
-                                            @endif
-                                            @if ($key == 1)
+                        <tr wire:key="post-{{ $post->id }}">
+                            @foreach ($data as $column)
+                                <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
+                                    @if ($column == 'title')
+                                        <a wire:navigate href="/admin/posts/show/{{ $post->id }}">
+                                            {{ __($post->title) }}
+                                        </a>
+                                        @if ($post->land)
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($post->land) }}</span>
+                                        @endif
+                                    @elseif ($column == 'status')
+                                        @switch($post->status)
+                                            @case('published')
+                                                <span class="badge badge-sm border-green-200 bg-green-100 text-green-800">
+                                                    <span class="relative flex h-2 w-2">
+                                                        <span class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
+                                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                                                    </span>
+                                                    {{ __('published') }}
                                                 </span>
-                                            @endif
-                                        </td>
-                                    @endforeach
+                                                @break
 
-                                    <td class="px-4 py-3 whitespace-nowrap bg-base-100">
-                                        <div class="flex justify-end items-center gap-1">
-
-                                            <a wire:navigate href="/admin/posts/show/{{ $post->id }}" class="flex justify-center">
-                                                <x-tabler-edit class="cursor-pointer stroke-blue-500" />
-                                            </a>
-
-                                            @if ($post->status == 'published')
-                                                <span wire:click="status({{ $post->id }}, 'draft')">
-                                                    <x-tabler-eye class="cursor-pointer stroke-gray-400" />
+                                            @case('password')
+                                                <span class="badge badge-sm border-violet-200 bg-violet-100 text-violet-800">
+                                                    <span class="relative flex h-2 w-2">
+                                                        <span class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
+                                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                                                    </span>
+                                                    {{ __('password') }}
                                                 </span>
-                                            @else
-                                                <span wire:click="status({{ $post->id }}, 'published')">
-                                                    <x-tabler-eye-off class="cursor-pointer stroke-red-500" />
+                                                @break
+
+                                            @default
+                                                <span class="badge badge-sm border-gray-300 bg-gray-100 text-gray-800">
+                                                    <span class="relative flex h-2 w-2">
+                                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
+                                                    </span>
+                                                    {{ __('draft') }}
                                                 </span>
-                                            @endif
-
-                                            <a target="_blank" href="/blog/{{ $post->slug }}" class="flex justify-center">
-                                                <x-tabler-external-link class="cursor-pointer stroke-gray-400" />
-                                            </a>
-
-                                            <span wire:click="clone({{ $post->id }})" class="flex justify-center">
-                                                <x-tabler-copy class="cursor-pointer    stroke-violet-500" />
-                                            </span>
-
-                                            <span wire:click="selectItem({{ $post->id }}, 'delete')"
-                                                class="flex justify-center">
-                                                <x-tabler-trash class="cursor-pointer stroke-red-500" />
-                                            </span>
-                                        </div>
-                                    </td>
+                                        @endswitch
+                                    @elseif ($column == 'land')
+                                        <span class="text-xs font-medium uppercase">{{ $post->land }}</span>
+                                    @elseif ($column == 'updated_at')
+                                        {{ $post->updated_at }}
+                                    @else
+                                        {{ $post->$column }}
+                                    @endif
+                                </td>
                             @endforeach
-                            </tr>
 
+                            <td class="px-4 py-3 whitespace-nowrap bg-base-100">
+                                <div class="flex justify-end items-center gap-1">
 
-                        </tbody>
+                                    <a wire:navigate href="/admin/posts/show/{{ $post->id }}" class="flex justify-center">
+                                        <x-tabler-edit class="cursor-pointer stroke-blue-500" />
+                                    </a>
+
+                                    @if ($post->status == 'published')
+                                        <span wire:click="status({{ $post->id }}, 'draft')">
+                                            <x-tabler-eye class="cursor-pointer stroke-gray-400" />
+                                        </span>
+                                    @else
+                                        <span wire:click="status({{ $post->id }}, 'published')">
+                                            <x-tabler-eye-off class="cursor-pointer stroke-red-500" />
+                                        </span>
+                                    @endif
+
+                                    <a target="_blank" href="/blog/{{ $post->slug }}" class="flex justify-center">
+                                        <x-tabler-external-link class="cursor-pointer stroke-gray-400" />
+                                    </a>
+
+                                    <span wire:click="selectItem({{ $post->id }}, 'clone')" class="flex justify-center">
+                                        <x-tabler-copy class="cursor-pointer    stroke-violet-500" />
+                                    </span>
+
+                                    <span wire:click="selectItem({{ $post->id }}, 'delete')"
+                                        class="flex justify-center">
+                                        <x-tabler-trash class="cursor-pointer stroke-red-500" />
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
                     </table>
                 @else
                     <div class="min-h-[60vh] flex flex-col items-center justify-center">

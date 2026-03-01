@@ -93,11 +93,11 @@
                                             class="cursor-move stroke-current  text-gray-400" />
                                     </td>
 
-                                    @foreach ($data as $key => $value)
+                                    @foreach ($data as $column)
                                         <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
-                                            @if ($key == 0)
+                                            @if ($column == 'title')
                                                 <a wire:navigate href="/admin/pages/show/{{ $page->id }}">
-                                                    {{ __($page->$value) }}
+                                                    {{ __($page->title) }}
                                                 </a>
 
                                                 @if ($page->land)
@@ -109,15 +109,16 @@
                                                         <x-tabler-home class="w-3 h-3" /> {{ __('Home') }}
                                                     </span>
                                                 @endif
-                                            @elseif ($key == 2)
-                                                @switch($page->$value)
+
+                                            @elseif ($column == 'status')
+                                                @switch($page->status)
                                                     @case('published')
                                                         <span class="badge badge-sm border-green-200 bg-green-100 text-green-800">
                                                             <span class="relative flex h-2 w-2">
                                                                 <span class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
                                                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
                                                             </span>
-                                                            {{ __($page->$value) }}
+                                                            {{ __('published') }}
                                                         </span>
                                                         @break
 
@@ -127,7 +128,7 @@
                                                                 <span class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
                                                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
                                                             </span>
-                                                            {{ __($page->$value) }}
+                                                            {{ __('password') }}
                                                         </span>
                                                         @break
 
@@ -136,11 +137,13 @@
                                                             <span class="relative flex h-2 w-2">
                                                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
                                                             </span>
-                                                            {{ __($page->$value) }}
+                                                            {{ __('draft') }}
                                                         </span>
                                                 @endswitch
+                                            @elseif ($column == 'land')
+                                                 <span class="text-xs font-medium uppercase">{{ $page->land }}</span>
                                             @else
-                                                {{ __($page->$value) }}
+                                                {{ $page->$column }}
                                             @endif
                                         </td>
                                     @endforeach

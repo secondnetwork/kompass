@@ -21,10 +21,14 @@ new #[Layout('layouts.main')] class extends Component
     #[Locked]
     public $route_prefix = 'blog';
 
-    public function mount()
+    public function mount($locale = null)
     {
-        // Performance: Zähle nur veröffentlichte Posts
-        $this->total = Post::where('status', 'published')->count();
+        $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+        $defaultLocale = $availableLocales[0] ?? 'de';
+        $land = in_array($locale, $availableLocales) ? $locale : $defaultLocale;
+        app()->setLocale($land);
+        
+        $this->total = Post::where('status', 'published')->where('land', $land)->count();
     }
 
     public function loadMore()
@@ -35,11 +39,15 @@ new #[Layout('layouts.main')] class extends Component
     #[Computed]
     public function posts()
     {
-        // Computed Property wird gecached für diesen Request
+        $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+        $defaultLocale = $availableLocales[0] ?? 'de';
+        $land = app()->getLocale() ?: $defaultLocale;
+
         return Post::query()
             ->where('status', 'published')
-            ->orderBy('created_at', 'desc') // Sortierung direkt hier
-            ->take($this->amount) // 'take' statt 'paginate' für Load More Button Logik
+            ->where('land', $land)
+            ->orderBy('created_at', 'desc')
+            ->take($this->amount)
             ->get();
     }
 

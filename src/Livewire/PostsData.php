@@ -76,6 +76,10 @@ class PostsData extends Component
 
     public $layout;
 
+    public $land;
+
+    public $available_locales;
+
     public $blocks = [];
 
     public $blockgroupId;
@@ -170,6 +174,17 @@ class PostsData extends Component
         $this->description = $this->post->meta_description;
         $this->layout = $this->post->layout;
         $this->status = $this->post->status;
+        
+        $locales = ['de', 'en', 'tr'];
+        $appLocale = config('app.locale', 'de');
+        if (($key = array_search($appLocale, $locales)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $appLocale);
+        }
+        
+        $this->land = $this->post->land ?? $appLocale;
+        $this->available_locales = $locales;
+
         $this->category_id = $this->post->category_id;
 
         $this->availableCategories = Category::orderBy('name', 'asc')->get();
@@ -412,6 +427,7 @@ class PostsData extends Component
             'meta_description' => $this->description,
             'status' => $this->status,
             'slug' => $slugNameURL,
+            'land' => $this->land,
             'category_id' => $this->category_id ?: null,
             'updated_at' => Carbon::now(),
         ]);

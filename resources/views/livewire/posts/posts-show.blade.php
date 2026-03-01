@@ -22,14 +22,17 @@
                 <div>
                     <strong class="text-gray-600">{{ __('Post Attributes') }}</strong></br>
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $post->updated_at }}</br>
-  
+
+                    <x-kompass::form.select wire:model="land" label="{{ __('Language') }}" :option="collect($available_locales)->map(fn($l) => (object)['name' => strtoupper($l), 'data' => $l])">
+                    </x-kompass::form.select>
+
                     <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
                     </x-kompass::select>
 
-                        <x-kompass::select wire:model="category_id" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
+                    <x-kompass::select wire:model="category_id" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
 
                 </div>
 
@@ -112,9 +115,14 @@
 
                 </div>
 
+                    @php
+                        $defaultLocale = config('app.locale', 'de');
+                        $langPrefix = ($land == $defaultLocale) ? '' : '/' . $land;
+                        $permalink = url($langPrefix . '/blog/' . $post->slug);
+                    @endphp
                     <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/blog/' . $post->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/blog/' . $post->slug) }}</a>
+                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ $permalink }}"
+                        target="_blank" rel="noopener noreferrer">{{ $permalink }}</a>
 
             </div>
 

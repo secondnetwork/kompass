@@ -51,12 +51,12 @@ class PagesTable extends Component
 
     protected function headerTable(): array
     {
-        return ['', 'title', 'slug', 'land', 'status', 'Updated', ''];
+        return ['', 'title', 'slug', 'status', 'Updated', ''];
     }
 
     protected function dataTable(): array
     {
-        return ['title', 'slug', 'land', 'status', 'updated_at'];
+        return ['title', 'slug', 'status', 'updated_at'];
     }
 
     public function mount()
@@ -107,8 +107,7 @@ class PagesTable extends Component
 
     public function status($id, $status)
     {
-        if ($status == 'draft') Page::where('id', $id)->update(['status' => 'draft']);
-        if ($status == 'published') Page::where('id', $id)->update(['status' => 'published']);
+        Page::where('id', $id)->update(['status' => $status]);
     }
 
     public function delete()
