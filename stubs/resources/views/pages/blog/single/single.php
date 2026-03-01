@@ -29,33 +29,52 @@ new #[Layout('layouts.main')] class extends Component
 
     public $blocks_collapse;
 
-    public function mount(Request $request, $slug = null)
+    public function mount(Request $request, $locale = null, $slug = null)
     {
         try {
-        $this->ResolvePath($slug);
-        if ($this->post instanceof Redirect) {
-            return redirect($this->post->to_url, $this->post->status_code);
+            $localesData = setting('global.available_locales');
+            if ($localesData) {
+                $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+            } else {
+                $availableLocales = ['de', 'en', 'tr'];
+            }
+            
+            $defaultLocale = $availableLocales[0] ?? 'de';
+            
+            if ($slug === null && $locale !== null) {
+                if (!in_array($locale, $availableLocales)) {
+                    $slug = $locale;
+                    $locale = $defaultLocale;
+                }
+            }
+            
+            $land = $locale ?? $defaultLocale;
+            app()->setLocale($land);
+            
+            $this->ResolvePath($slug, $land);
+            if ($this->post instanceof Redirect) {
+                return redirect($this->post->to_url, $this->post->status_code);
+            }
+            //blockable_type
+            $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+
+            if ($blocks->isNotEmpty()) {
+                $this->blocks = $blocks;
+                $blocks_id = Block::where('blockable_id', $this->post->id)->orderBy('order', 'asc')->pluck('id');
+
+                Arr::collapse($blocks_id);
+
+                $this->fields = Datafield::whereIn('block_id', $blocks_id)->get();
+            }
+
+        } catch (NotFoundHttpException $e) {
+            $this->log404Error($request->path(), $e);
+            throw $e;
         }
-        //blockable_type
-        $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
-        if ($blocks->isNotEmpty()) {
-            $this->blocks = $blocks;
-            $blocks_id = Block::where('blockable_id', $this->post->id)->orderBy('order', 'asc')->pluck('id');
-
-            Arr::collapse($blocks_id);
-
-            $this->fields = Datafield::whereIn('block_id', $blocks_id)->get();
-        }
-
-    } catch (NotFoundHttpException $e) {
-        $this->log404Error($request->path(), $e);
-        throw $e;
     }
 
-    }
-
-    public function ResolvePath($slug)
+    public function ResolvePath($slug, $land = null)
     {
         $user = auth()->user();
 
@@ -63,6 +82,10 @@ new #[Layout('layouts.main')] class extends Component
         $canSeeDrafts = $user && $user->hasAnyRole($privilegedRoles);
 
         $query = Post::where('slug', $slug);
+        
+        if ($land) {
+            $query->where('land', $land);
+        }
 
         if (!$canSeeDrafts) {
             $query->whereNot('status', 'draft');

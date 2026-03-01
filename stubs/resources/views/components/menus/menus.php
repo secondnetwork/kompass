@@ -17,11 +17,27 @@ new class extends Component
     public function mount($name = null)
     {
         $this->name = $name;
-        $this->menu = Cache::rememberForever('kompass_menu_'.$name, function () {
-            return Menus::where('slug', $this->name)->first();
+        $locale = app()->getLocale();
+        $cacheKey = 'kompass_menu_'.$name.'_'.$locale;
+
+        $this->menu = Cache::rememberForever($cacheKey, function () use ($locale) {
+            $isMultilingual = setting('global.multilingual');
+            
+            $menu = null;
+            if ($isMultilingual) {
+                $menu = Menus::where('slug', $this->name)->where('land', $locale)->first();
+            }
+            
+            // Fallback to non-language specific menu or first matching slug
+            if (!$menu) {
+                $menu = Menus::where('slug', $this->name)->first();
+            }
+            
+            return $menu;
         });
+
         if ($this->menu) {
-            $this->menuitem = Cache::rememberForever('kompass_menuitem_'.$name, function () {
+            $this->menuitem = Cache::rememberForever('kompass_menuitem_'.$this->menu['id'], function () {
                 return Menuitem::where('menu_id', $this->menu['id'])->orderBy('order')->where('subgroup', null)->with('children')->get();
             });
         }

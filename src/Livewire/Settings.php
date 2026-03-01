@@ -114,6 +114,11 @@ class Settings extends Component
                 'icon' => 'tabler-palette',
             ],
             [
+                'slug' => 'multilingual',
+                'name' => __('Multilingual'),
+                'icon' => 'tabler-language',
+            ],
+            [
                 'slug' => '',
                 'name' => __('Settings'),
             ],

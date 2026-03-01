@@ -48,15 +48,25 @@ class Menu extends Model
 
         $placeObj = new Page;
 
-        $checkSlug = static::whereSlug($businessNameURL)->exists();
+        $query = static::whereSlug($businessNameURL);
+        if ($this->land) {
+            $query->where('land', $this->land);
+        }
+        
+        $checkSlug = $query->exists();
 
         if ($checkSlug) {
             $numericalPrefix = 1;
             while (1) {
                 $newSlug = $businessNameURL.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
-                $checkSlug = $placeObj->whereSlug($newSlug)->exists();
-                if (! $checkSlug) {
+                
+                $query = static::whereSlug($newSlug);
+                if ($this->land) {
+                    $query->where('land', $this->land);
+                }
+                
+                if (! $query->exists()) {
                     return $newSlug; //New Slug
                 }
             }

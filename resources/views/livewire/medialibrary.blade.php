@@ -71,18 +71,11 @@
                     <x-kompass::form.input wire:model="description" label="{{ __('Description') }}" type="text" class="form-control" />
                     <label>{{ __('Url') }}:</label>
                     <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
-                    <label>{{ __('Move to Folder') }}</label>
-                    <div class="flex gap-2">
-                        <select wire:model="newFolderLocation" class="form-control input">
-                            <option value="media">{{ __('Base') }}</option>
-                            @foreach ($dirgroup as $folder)
-                                @php
-                                    $full_path = ($folder->path ? rtrim($folder->path, '/') . '/' : '') . $folder->slug;
-                                @endphp
-                                <option value="{{ $full_path }}">{{ $full_path }}</option>
-                            @endforeach
-                        </select>
-                        <button wire:click="moveItem" class="btn btn-primary">{{ __('Move') }}</button>
+                    <div class="flex gap-2 items-end">
+                        <div class="flex-1">
+                            <x-kompass::select wire:model="newFolderLocation" label="{{ __('Move to Folder') }}" :options="collect($dirgroup)->map(fn($f) => ['name' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug, 'id' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug])->prepend(['name' => __('Base'), 'id' => 'media'])" />
+                        </div>
+                        <button wire:click="moveItem" class="btn btn-primary h-10">{{ __('Move') }}</button>
                     </div>
                 </div>
                 <div class="modal-footer mt-4 flex gap-4">

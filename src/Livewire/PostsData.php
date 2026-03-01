@@ -76,6 +76,10 @@ class PostsData extends Component
 
     public $layout;
 
+    public $land;
+
+    public $available_locales;
+
     public $blocks = [];
 
     public $blockgroupId;
@@ -170,6 +174,27 @@ class PostsData extends Component
         $this->description = $this->post->meta_description;
         $this->layout = $this->post->layout;
         $this->status = $this->post->status;
+        
+        if (setting('global.multilingual')) {
+            $localesData = setting('global.available_locales');
+            if ($localesData) {
+                $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+            } else {
+                $locales = ['de', 'en', 'tr'];
+            }
+
+            $appLocale = config('app.locale', 'de');
+            if (($key = array_search($appLocale, $locales)) !== false) {
+                unset($locales[$key]);
+                array_unshift($locales, $appLocale);
+            }
+            
+            $this->land = $this->post->land ?? $appLocale;
+            $this->available_locales = $locales;
+        } else {
+            $this->land = $this->post->land ?? config('app.locale', 'de');
+        }
+
         $this->category_id = $this->post->category_id;
 
         $this->availableCategories = Category::orderBy('name', 'asc')->get();
@@ -412,6 +437,7 @@ class PostsData extends Component
             'meta_description' => $this->description,
             'status' => $this->status,
             'slug' => $slugNameURL,
+            'land' => $this->land,
             'category_id' => $this->category_id ?: null,
             'updated_at' => Carbon::now(),
         ]);
@@ -439,6 +465,14 @@ class PostsData extends Component
         }
 
         $this->resetPageComponent();
+    }
+
+    public function updateTitle(): void
+    {
+        $this->post->update([
+            'title' => $this->title,
+            'slug' => Str::slug($this->title, '-', 'de'),
+        ]);
     }
 
     public function removemediaThumbnails($id)

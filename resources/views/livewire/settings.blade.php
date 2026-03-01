@@ -86,6 +86,15 @@
                     </div>
 
                 </div>
+                <div x-show="asidenav === 'multilingual'" x-cloak>
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Multilingual') }}</h3>
+                        <p class="text-base-content/60 text-sm">{{ __('Manage multiple languages for your website.') }}</p>
+                    </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
+                    <livewire:settings.multilingual />
+                </div>
                 <div x-show="asidenav === 'backend'" x-cloak>
                     <div class="my-3">
                         <h3 class="text-lg font-bold">Login {{ __('Page') }}</h3>

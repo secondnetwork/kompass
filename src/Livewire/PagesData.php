@@ -76,6 +76,10 @@ class PagesData extends Component
 
     public $title;
 
+    public $land;
+
+    public $available_locales;
+
     public $status;
 
     public $description;
@@ -154,7 +158,7 @@ class PagesData extends Component
 
     public function mount($id)
     {
-        $this->page = Page::with(['blocks.datafield', 'blocks.children'])->findOrFail($id); // Eager load related data
+        $this->page = Page::with(['blocks.datafield', 'blocks.children'])->findOrFail($id);
         $this->blocks = $this->page->blocks
             ->where('blockable_type', 'page')
             ->where('subgroup', null)
@@ -163,6 +167,26 @@ class PagesData extends Component
         $this->description = $this->page->meta_description;
         $this->layout = $this->page->layout;
         $this->status = $this->page->status;
+        
+        if (setting('global.multilingual')) {
+            $localesData = setting('global.available_locales');
+            if ($localesData) {
+                $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+            } else {
+                $locales = ['de', 'en', 'tr'];
+            }
+            
+            $appLocale = config('app.locale', 'de');
+            if (($key = array_search($appLocale, $locales)) !== false) {
+                unset($locales[$key]);
+                array_unshift($locales, $appLocale);
+            }
+            
+            $this->land = $this->page->land ?? $appLocale;
+            $this->available_locales = $locales;
+        } else {
+            $this->land = $this->page->land ?? config('app.locale', 'de');
+        }
 
         $this->cssClassname = Meta::published()
             ->where('key', 'css-classname')
@@ -538,6 +562,14 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    public function updateTitle(): void
+    {
+        $this->page->update([
+            'title' => $this->title,
+            'slug' => genSlug($this->title, $this->page->slug, Page::class),
+        ]);
+    }
+
     private function handlePageUpdate($pageId, $publishIfNeeded)
     {
         $page = Page::findOrFail($pageId);
@@ -553,6 +585,7 @@ class PagesData extends Component
             'layout' => $this->layout,
             'status' => $this->status,
             'slug' => $slugNameURL,
+            'land' => $this->land,
             'updated_at' => Carbon::now(),
         ]);
 

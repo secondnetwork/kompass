@@ -12,8 +12,36 @@
                         ]">
                 </x-kompass::select>
 
-                <button wire:click="addMenu" class="btn btn-primary">{{ __('Save') }}</button>
+                @if (setting('global.multilingual'))
+                <div class="mt-4">
+                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                </div>
+                @endif
 
+                <button wire:click="addMenu" class="btn btn-primary mt-4">{{ __('Save') }}</button>
+
+            </x-slot>
+        </x-kompass::offcanvas>
+    </div>
+
+    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
+        <x-kompass::offcanvas :w="'w-2/6'">
+            <x-slot name="body">
+                <h3 class="text-lg font-bold mb-4">{{ __('Clone Menu') }}</h3>
+                
+                @if (setting('global.multilingual'))
+                <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned menu.') }}</p>
+
+                <div class="mt-4">
+                    <x-kompass::select wire:model="cloneLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                </div>
+                @else
+                <p class="mb-4 text-sm text-base-content/70">{{ __('Are you sure you want to clone this menu?') }}</p>
+                @endif
+
+                <button wire:click="cloneMenu" class="btn btn-primary mt-4">{{ __('Clone') }}</button>
             </x-slot>
         </x-kompass::offcanvas>
     </div>
@@ -23,13 +51,20 @@
 
     <div class="flex flex-col">
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-            <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
+            
+            <div class="flex justify-end gap-4 items-center">
+                @if (setting('global.multilingual'))
+                <div class="w-44">
+                    <x-kompass::select wire:model.live="land" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
+                    </x-kompass::select>
+                </div>
+                @endif
 
-                <button class="btn btn-primary" @click="open = true">
+                <button class="btn btn-primary" wire:click="$set('FormAdd', true)">
                     <x-tabler-list-details stroke-width="1.5" />{{ __('New menu') }}
                 </button>
+          </div>
 
-            </div>
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
@@ -62,39 +97,43 @@
                                         </td>
 
 
-                                        @foreach ($data as $key => $value)
+                                        @foreach ($data as $column)
                                             <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
-                                                    {{-- {{ $menu->$value }} --}}
-                                                    <div x-data="click_to_edit()" class="w-11/12 flex items-center">
-                                                    <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
-                          
-                                                        <span class="text-sm font-semibold">{{  $menu->$value }}</span>
+                                                @if ($column == 'name')
+                                                    <div x-data="click_to_edit()" class="w-11/12 flex items-center gap-2">
+                                                        <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
+                                                            <span class="text-sm font-semibold">{{  $menu->name }}</span>
+                                                        </a>
                                                         
-                                                        
-                                                        {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
-                                                    </a>  
-                                                    <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->$value }}'}">
-                                
-                                                        <input
-                                                            type="text"
-                                                            class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
-                                                            x-model="name"
-                                                            wire:model.lazy="newName" x-ref="input"
-                                                            x-on:keydown.enter="isEditing = false"
-                                                            x-on:keydown.escape="isEditing = false"
-                                                            {{-- @keydown.window.escape="disableEditing"  --}}
-                                                            x-on:click.away="isEditing = false"
-                                                            wire:keydown.enter="rename({{$menu->id }})"
-                                                        >
-                                                        <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
-                                                            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
-                                                        </span>
-                                                        <span x-on:click="isEditing = false">
-                                                            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
-                                                        </span>
-                                             
-                                                </div>
+                                                        <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->name }}'}">
+                                                            <input
+                                                                type="text"
+                                                                class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
+                                                                x-model="name"
+                                                                wire:model.lazy="newName" x-ref="input"
+                                                                x-on:keydown.enter="isEditing = false"
+                                                                x-on:keydown.escape="isEditing = false"
+                                                                x-on:click.away="isEditing = false"
+                                                                wire:keydown.enter="rename({{$menu->id }})"
+                                                            >
+                                                            <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
+                                                                <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+                                                            </span>
+                                                            <span x-on:click="isEditing = false">
+                                                                <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+                                                            </span>
+                                                        </div>
                                                     </div>
+                                                @elseif ($column == 'land')
+                                                    @if ($menu->land)
+                                                        <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                                            {{ strtoupper($menu->land) }}
+                                                        </span>
+                                                    @endif
+                                                @else
+                                                    {{ $menu->$column }}
+                                                @endif
                                             </td>
                                         @endforeach
 
@@ -104,6 +143,10 @@
                                                     class="flex justify-center">
                                                     <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                                 </a>
+
+                                                <span wire:click="selectItem({{ $menu->id }}, 'clone')" class="flex justify-center">
+                                                    <x-tabler-copy class="cursor-pointer stroke-violet-500" />
+                                                </span>
 
                                                 <span wire:click="selectItem({{ $menu->id }}, 'delete')"
                                                     class="flex justify-center">

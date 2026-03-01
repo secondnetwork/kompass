@@ -64,6 +64,12 @@ class MenuData extends Component
 
     public $menu;
 
+    public $menuName;
+
+    public $menuLand;
+
+    public $available_locales;
+
     public $url;
 
     public $color;
@@ -86,6 +92,8 @@ class MenuData extends Component
 
     public $FormEdit = false;
 
+    public $FormAdjustments = false;
+
     public $timestamps = false;
 
     protected $listeners = [
@@ -105,7 +113,31 @@ class MenuData extends Component
     {
         $this->menu = Menu::findOrFail($id);
         $this->menuitem = Menuitem::where('menu_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-        $this->pages = Page::orderBy('order', 'asc')->get()->map(fn($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
+        
+        $this->menuName = $this->menu->name;
+        $this->menuLand = $this->menu->land;
+
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $locales = ['de', 'en', 'tr'];
+        }
+
+        $appLocale = config('app.locale', 'de');
+        if (($key = array_search($appLocale, $locales)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $appLocale);
+        }
+        $this->available_locales = $locales;
+
+        $pagesQuery = Page::orderBy('order', 'asc');
+        
+        if (setting('global.multilingual') && $this->menu->land) {
+            $pagesQuery->where('land', $this->menu->land);
+        }
+        
+        $this->pages = $pagesQuery->get()->map(fn($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
         
         $this->loadIcons();
     }
@@ -215,6 +247,26 @@ class MenuData extends Component
         if ($action == 'deleteblock') {
             $this->FormDelete = true;
         }
+    }
+
+    public function updateMenu()
+    {
+        $this->menu->update([
+            'name' => $this->menuName,
+            'land' => $this->menuLand,
+        ]);
+        $this->FormAdjustments = false;
+        $this->dispatch('status');
+        $this->mount($this->menu->id);
+    }
+
+    public function renameMenu()
+    {
+        if ($this->menuName != null) {
+            $this->menu->update(['name' => $this->menuName]);
+        }
+        $this->dispatch('status');
+        $this->mount($this->menu->id);
     }
 
     public function addNew()

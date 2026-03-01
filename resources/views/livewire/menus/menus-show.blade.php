@@ -1,8 +1,61 @@
 <div>
-    {{-- @dump($menu->toArray()) --}}
-    {{-- @dump($menuitem->toArray()) --}}
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-4">
+            
+            <div x-data="click_to_edit('renameMenu')">
+                <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
+                    class="flex items-center gap-2 select-none cursor-pointer">
+                    <h4 class="text-gray-600 font-bold">{{ $menu->name }}</h4>
+                    <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                </a>
+                <div x-show="isEditing" class="flex items-center" x-cloak>
+                    <x-kompass::form.input type="text" wire:model.live="menuName" x-ref="input" 
+                        class="text-gray-600 font-bold border-0 border-b-2 border-blue-500 focus:ring-0 px-0 py-0 bg-transparent w-auto"
+                        @keydown.enter="disableEditing"
+                        @keydown.window.escape="disableEditing" 
+                        @click.away="handleClickAway" />
+                </div>
+            </div>
 
+            @if (setting('global.multilingual') && $menu->land)
+                <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    {{ strtoupper($menu->land) }}
+                </span>
+            @endif
+        </div>
+        <div class="flex gap-2">
+            <button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')">
+                <x-tabler-text-plus stroke-width="1.5" />{{ __('Add Menu') }}
+            </button>
+            <button class="btn btn-primary" wire:click="$set('FormAdjustments', true)">
+                <x-tabler-adjustments class="icon-lg" />
+            </button>
+        </div>
+    </div>
 
+    <div x-cloak x-data="{ open: @entangle('FormAdjustments') }">
+        <x-kompass::offcanvas :w="'w-1/3'">
+            <x-slot name="body">
+                <h3 class="text-lg font-bold mb-4">{{ __('Menu Settings') }}</h3>
+
+                <x-kompass::form.input type="text" label="{{ __('Name') }}" wire:model="menuName" />
+
+                @if (setting('global.multilingual'))
+                <div class="mt-4">
+                    <x-kompass::select wire:model="menuLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                </div>
+                @endif
+
+                <button wire:click="updateMenu" class="btn btn-primary mt-6">
+                    <x-tabler-device-floppy class="icon-lg" />
+                    {{ __('Save Settings') }}
+                </button>
+            </x-slot>
+        </x-kompass::offcanvas>
+    </div>
+    
     <x-kompass::action-message class="" on="status" />
 
     <x-kompass::modal data="FormDelete" />
@@ -87,11 +140,6 @@
 
             </x-slot>
         </x-kompass::offcanvas>
-    </div>
-
-    <div class="flex justify-end my-4">
-        <button class="btn btn-primary" wire:click="selectItem({{ $menu->id }}, 'additem')"><x-tabler-text-plus
-                stroke-width="1.5" />{{ __('Add Menu') }}</button>
     </div>
 
 

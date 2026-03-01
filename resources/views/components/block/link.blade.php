@@ -32,16 +32,16 @@
             />
         </div>
         
-        <div class="join w-32">
-            <div class="join-item border border-base-300 flex items-center px-2 bg-base-200/50">
-            </div>
-            <select 
+        <div class="w-32">
+            <x-kompass::select 
+                wire:model="data.target"
                 wire:change="updateDatafieldArray({{ $itemfield->id }}, 'target', $event.target.value)"
-                class="select select-xs select-bordered join-item w-full focus:select-primary text-[10px]"
-            >
-                <option value="_self" @if(($data['target'] ?? '_self') == '_self') selected @endif>Same Tab</option>
-                <option value="_blank" @if(($data['target'] ?? '') == '_blank') selected @endif>New Tab</option>
-            </select>
+                label=" "
+                :options="[
+                    ['name' => 'Same Tab', 'id' => '_self'],
+                    ['name' => 'New Tab', 'id' => '_blank'],
+                ]"
+            />
         </div>
     </div>
 
@@ -64,12 +64,16 @@
                 <x-tabler-x class="h-3 w-3" />
             </button>
         @endif
-        <select 
-            wire:change="updateDatafieldArray({{ $itemfield->id }}, 'iconposition', $event.target.value)"
-            class="select select-xs select-bordered"
-        >
-            <option value="left" @if(($data['iconposition'] ?? 'left') == 'left') selected @endif>Links</option>
-            <option value="right" @if(($data['iconposition'] ?? '') == 'right') selected @endif>Rechts</option>
-        </select>
+        <div class="w-28">
+            <x-kompass::select 
+                wire:model="data.iconposition"
+                wire:change="updateDatafieldArray({{ $itemfield->id }}, 'iconposition', $event.target.value)"
+                label=" "
+                :options="[
+                    ['name' => 'Links', 'id' => 'left'],
+                    ['name' => 'Rechts', 'id' => 'right'],
+                ]"
+            />
+        </div>
     </div>
 </div>

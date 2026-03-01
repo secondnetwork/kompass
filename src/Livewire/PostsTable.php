@@ -21,13 +21,13 @@ class PostsTable extends Component
 
     public $search;
 
-    protected $queryString = ['search'];
+    protected $queryString = ['search', 'land'];
 
     public $perPost = 1000;
 
-    public $orderBy = 'order';
+    public $orderBy = 'created_at';
 
-    public $orderAsc = true;
+    public $orderAsc = false;
 
     public $tasks;
 
@@ -39,6 +39,10 @@ class PostsTable extends Component
 
     public $meta_description;
 
+    public $land = '';
+
+    public $available_locales;
+
     #[Locked]
     public $selectedItem;
 
@@ -46,7 +50,11 @@ class PostsTable extends Component
 
     public $FormAdd = false;
 
+    public $FormClone = false;
+
     public $FormEdit = false;
+
+    public $cloneLand = '';
 
     protected $rules = [
 
@@ -57,37 +65,57 @@ class PostsTable extends Component
 
     protected function headerTable(): array
     {
-        return [
-
-            'title',
-            // 'thumbnails',
-            // 'description',
-
-            'status',
-            'Updated',
-
-            '',
-        ];
+        $headers = ['title'];
+        if (setting('global.multilingual')) {
+            $headers[] = 'land';
+        }
+        $headers[] = 'status';
+        $headers[] = 'Updated';
+        $headers[] = '';
+        return $headers;
     }
 
     protected function dataTable(): array
     {
-        return [
-            'title',
-            // 'thumbnails',
-            // 'meta_description',
+        $data = ['title'];
+        if (setting('global.multilingual')) {
+            $data[] = 'land';
+        }
+        $data[] = 'status';
+        $data[] = 'updated_at';
+        return $data;
+    }
 
-            'status',
-            'updated_at',
-
-        ];
+    public function updatedLand($value)
+    {
+        session(['kompass_last_land' => $value]);
     }
 
     public function mount()
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
-        // $this->form->fill();
+
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $locales = ['de', 'en', 'tr'];
+        }
+
+        $appLocale = config('app.locale', 'de');
+
+        // Move app locale to front
+        if (($key = array_search($appLocale, $locales)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $appLocale);
+        }
+
+        $this->available_locales = $locales;
+        
+        if ($this->land === null) {
+            $this->land = session('kompass_last_land', $appLocale);
+        }
     }
 
     public function resetpost()
@@ -97,42 +125,38 @@ class PostsTable extends Component
 
     private function resultDate()
     {
+        $query = Post::query();
 
-        $results = Post::query();
-
-        if ($results->count() > 0) {
-            return $results->orderBy('created_at', 'DESC')->get();
+        if ($this->search) {
+            $query->where('title', 'like', '%'.$this->search.'%');
         }
 
-        return $results;
+        if (setting('global.multilingual') && $this->land) {
+            $query->where('land', $this->land);
+        }
+
+        return $query->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
+            ->simplePaginate($this->perPost);
     }
 
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
         if ($action == 'add') {
-            // This will show the modal on the frontend
-            // $this->reset(['name', 'email', 'password', 'role']);
             $this->FormAdd = true;
         }
-        if ($action == 'update') {
-        }
-
         if ($action == 'delete') {
             $this->FormDelete = true;
+        }
+        if ($action == 'clone') {
+            $this->FormClone = true;
+            $this->cloneLand = Post::find($itemId)->land ?? config('app.locale', 'de');
         }
     }
 
     public function status($id, $status)
     {
-        if ($status == 'draft') {
-            Post::where('id', $id)->update(['status' => 'draft']);
-        }
-        if ($status == 'published') {
-            Post::where('id', $id)->update(['status' => 'published']);
-        }
-
-        // $this->resetpost();
+        Post::where('id', $id)->update(['status' => $status]);
     }
 
     public function addPost()
@@ -162,21 +186,20 @@ class PostsTable extends Component
         }
 
         $post = Post::create([
-
             'title' => $this->title,
             'status' => 'draft',
             'meta_description' => $this->meta_description,
             'slug' => $newpostslug,
-            // 'slug' => generateSlug($this->title)
-
+            'land' => $this->land ?: 'de',
         ]);
         $this->FormAdd = false;
 
         return redirect()->to('/admin/posts/show/'.$post->id);
     }
 
-    public function clone($id)
+    public function clonePage()
     {
+        $id = $this->selectedItem;
         $post = Post::find($id);
 
         $newpost = $post->replicate();
@@ -204,6 +227,7 @@ class PostsTable extends Component
         }
         $newpost->status = 'draft';
         $newpost->created_at = Carbon::now();
+        $newpost->land = $this->cloneLand;
 
         $newpost->push();
 
@@ -235,8 +259,8 @@ class PostsTable extends Component
             $children = $blocksclone->where('subgroup', $item->id);
             $this->cloneTree($children, $blocksclone, $newpost->id, $blockcopy->id);
         }
-
-        $this->resetpage();
+        $this->FormClone = false;
+        return redirect()->to('/admin/posts/show/'.$newpost->id);
     }
 
     public function cloneTree($categories, $allCategories, $cloneid, $parentId)

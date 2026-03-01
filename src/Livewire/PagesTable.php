@@ -16,7 +16,7 @@ class PagesTable extends Component
     use WithPagination;
 
     public $search;
-    protected $queryString = ['search'];
+    protected $queryString = ['search', 'land'];
     public $perPage = 1000;
     public $orderBy = 'order';
     public $orderAsc = true;
@@ -26,6 +26,8 @@ class PagesTable extends Component
     public $headers;
     public $meta_description;
     public $datafield = [];
+    public $land = '';
+    public $available_locales;
 
     #[Locked]
     public $selectedItem;
@@ -33,7 +35,9 @@ class PagesTable extends Component
     public $timestamps = false;
     public $FormDelete = false;
     public $FormAdd = false;
+    public $FormClone = false;
     public $FormEdit = false;
+    public $cloneLand = '';
 
     protected $rules = [
         'title' => 'unique:pages|required|string|min:3',
@@ -47,23 +51,72 @@ class PagesTable extends Component
 
     protected function headerTable(): array
     {
-        return ['', 'title', 'slug', 'status', 'Updated', ''];
+        $headers = ['', 'title', 'slug'];
+        if (setting('global.multilingual')) {
+            $headers[] = 'land';
+        }
+        $headers[] = 'status';
+        $headers[] = 'Updated';
+        $headers[] = '';
+        return $headers;
     }
 
     protected function dataTable(): array
     {
-        return ['title', 'slug', 'status', 'updated_at'];
+        $data = ['title', 'slug'];
+        if (setting('global.multilingual')) {
+            $data[] = 'land';
+        }
+        $data[] = 'status';
+        $data[] = 'updated_at';
+        return $data;
+    }
+
+    public function updatedLand($value)
+    {
+        session(['kompass_last_land' => $value]);
     }
 
     public function mount()
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
+        
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $locales = ['de', 'en', 'tr'];
+        }
+
+        $appLocale = config('app.locale', 'de');
+        
+        // Move app locale to front
+        if (($key = array_search($appLocale, $locales)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $appLocale);
+        }
+        
+        $this->available_locales = $locales;
+        
+        if ($this->land === null) {
+            $this->land = session('kompass_last_land', $appLocale);
+        }
     }
 
     private function resultDate()
     {
-        return Page::where('title', 'like', '%'.$this->search.'%')
+        $query = Page::query();
+
+        if ($this->search) {
+            $query->where('title', 'like', '%'.$this->search.'%');
+        }
+
+        if (setting('global.multilingual') && $this->land) {
+            $query->where('land', $this->land);
+        }
+
+        return $query
             ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
             ->simplePaginate($this->perPage);
     }
@@ -73,12 +126,15 @@ class PagesTable extends Component
         $this->selectedItem = $itemId;
         if ($action == 'add') $this->FormAdd = true;
         if ($action == 'delete') $this->FormDelete = true;
+        if ($action == 'clone') {
+            $this->FormClone = true;
+            $this->cloneLand = Page::find($itemId)->land ?? config('app.locale', 'de');
+        }
     }
 
     public function status($id, $status)
     {
-        if ($status == 'draft') Page::where('id', $id)->update(['status' => 'draft']);
-        if ($status == 'published') Page::where('id', $id)->update(['status' => 'published']);
+        Page::where('id', $id)->update(['status' => $status]);
     }
 
     public function delete()
@@ -87,8 +143,9 @@ class PagesTable extends Component
         $this->FormDelete = false;
     }
 
-    public function clone($id)
+    public function clonePage()
     {
+        $id = $this->selectedItem;
         $originalPage = Page::findOrFail($id);
         
         $newTitle = $originalPage->title . ' (copy)';
@@ -106,6 +163,7 @@ class PagesTable extends Component
         $newPage->slug = $newSlug;
         $newPage->order = 999;
         $newPage->status = 'draft';
+        $newPage->land = $this->cloneLand;
         $newPage->push();
 
         $blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->get();
@@ -126,6 +184,8 @@ class PagesTable extends Component
                 $newDatafield->save();
             }
         }
+        $this->FormClone = false;
+        return redirect()->to('/admin/pages/show/'.$newPage->id);
     }
 
     public function addPage()
@@ -147,7 +207,14 @@ class PagesTable extends Component
             $newpageslug = $slugNameURL;
         }
 
-        $page = Page::create(['title' => $this->title, 'status' => 'draft', 'meta_description' => $this->meta_description, 'order' => '999', 'slug' => $newpageslug]);
+        $page = Page::create([
+            'title' => $this->title,
+            'status' => 'draft',
+            'meta_description' => $this->meta_description,
+            'order' => '999',
+            'slug' => $newpageslug,
+            'land' => $this->land ?: 'de',
+        ]);
         $this->FormAdd = false;
         return redirect()->to('/admin/pages/show/'.$page->id);
     }

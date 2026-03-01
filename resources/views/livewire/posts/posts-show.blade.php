@@ -22,14 +22,19 @@
                 <div>
                     <strong class="text-gray-600">{{ __('Post Attributes') }}</strong></br>
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $post->updated_at }}</br>
-  
+
+                    @if (setting('global.multilingual'))
+                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                    @endif
+
                     <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
                     </x-kompass::select>
 
-                        <x-kompass::select wire:model="category_id" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
+                    <x-kompass::select wire:model="category_id" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
 
                 </div>
 
@@ -88,33 +93,33 @@
     <x-kompass::modal data="FormDelete" />
     <x-kompass::icon-picker />
 
-    <div class="grid-3-2 items-center">
+    <div class="grid-3-2 gap-y-0! items-center">
 
         <div class="relative flex items-center">
 
             <div class=" flex-auto">
 
-                <div x-data="click_to_edit()">
+                <div x-data="click_to_edit('updateTitle')">
                     <a 
                     @click.prevent @click="toggleEditingState" x-show="!isEditing" 
-                    class="flex items-center"
+                    class="flex items-center gap-2 select-none cursor-pointer"
                         class="select-none cursor-pointer">
-                        <h4 class="text-gray-600">{{ $post->title }} </h4><span>
+                        <h4 class="text-gray-600 font-bold">{{ $post->title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
                         </span>
                     </a>
 
-                    <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model="title" x-show="isEditing" @click.away="toggleEditingState"
-                        @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
+                    <div x-show="isEditing" x-cloak>
+                        <x-kompass::form.input type="text" wire:model.live="title" x-ref="input"
+                            class="font-bold border-0 border-b-2 border-blue-500 focus:ring-0 px-0 py-0 bg-transparent text-gray-600 w-auto"
+                            @click.away="handleClickAway"
+                            @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" />
+                    </div>
                 </div>
                 <div class="col-span-6">
 
                 </div>
 
-                    <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ url('/blog/' . $post->slug) }}"
-                        target="_blank" rel="noopener noreferrer">{{ url('/blog/' . $post->slug) }}</a>
 
             </div>
 
@@ -122,9 +127,14 @@
         </div>
         <div class="flex gap-4 justify-end items-center">
 
+            <span x-data="{ open: false }" class="relative transition-all flex gap-4 items-center">
 
-
-            <span x-data="{ open: false }" class="relative transition-all flex gap-4">
+                @if (setting('global.multilingual') && $post->land)
+                    <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        {{ strtoupper($post->land) }}
+                    </span>
+                @endif
 
                 @switch($post->status)
                     @case('published')
@@ -185,7 +195,16 @@
             </span>
 
         </div>
-
+                <div>
+                    @php
+                        $defaultLocale = config('app.locale', 'de');
+                        $langPrefix = ($land == $defaultLocale) ? '' : '/' . $land;
+                        $permalink = url($langPrefix . '/blog/' . $post->slug);
+                    @endphp
+                    <strong class="text-gray-400 text-xs">Permalink: </strong><a
+                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ $permalink }}"
+                        target="_blank" rel="noopener noreferrer">{{ $permalink }}</a>
+                </div>
     </div>
     <div class="">
         <div class="divider"></div>
