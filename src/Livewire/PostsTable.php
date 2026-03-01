@@ -21,7 +21,7 @@ class PostsTable extends Component
 
     public $search;
 
-    protected $queryString = ['search'];
+    protected $queryString = ['search', 'land'];
 
     public $perPost = 1000;
 
@@ -86,6 +86,11 @@ class PostsTable extends Component
         return $data;
     }
 
+    public function updatedLand($value)
+    {
+        session(['kompass_last_land' => $value]);
+    }
+
     public function mount()
     {
         $this->headers = $this->headerTable();
@@ -107,7 +112,10 @@ class PostsTable extends Component
         }
 
         $this->available_locales = $locales;
-        $this->land = $appLocale;
+        
+        if ($this->land === null) {
+            $this->land = session('kompass_last_land', $appLocale);
+        }
     }
 
     public function resetpost()

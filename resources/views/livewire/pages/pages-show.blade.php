@@ -21,8 +21,8 @@
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $page->updated_at }}</br>
 
                     @if (setting('global.multilingual'))
-                    <x-kompass::form.select wire:model="land" label="{{ __('Language') }}" :option="collect($available_locales)->map(fn($l) => (object)['name' => strtoupper($l), 'data' => $l])">
-                    </x-kompass::form.select>
+                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
                     @endif
 
                     <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[

@@ -10,12 +10,8 @@
 
                 @if (setting('global.multilingual'))
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Language') }}</label>
-                    <select wire:model="land" class="select select-bordered w-full">
-                        @foreach($available_locales as $locale)
-                            <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
-                        @endforeach
-                    </select>
+                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
                 </div>
                 @endif
 
@@ -34,12 +30,8 @@
                 <p class="mb-4 text-sm text-base-content/70">{{ __('Select the target language for the cloned post.') }}</p>
 
                 <div class="mt-4">
-                    <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Language') }}</label>
-                    <select wire:model="cloneLand" class="select select-bordered w-full">
-                        @foreach($available_locales as $locale)
-                            <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
-                        @endforeach
-                    </select>
+                    <x-kompass::select wire:model="cloneLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
                 </div>
                 @else
                 <p class="mb-4 text-sm text-base-content/70">{{ __('Are you sure you want to clone this post?') }}</p>
@@ -62,12 +54,10 @@
 
             <div class="flex justify-end gap-4 items-center">
                 @if (setting('global.multilingual'))
-                <select wire:model.live="land" class="select select-sm select-bordered">
-                    <option value="">{{ __('All Languages') }}</option>
-                    @foreach($available_locales as $locale)
-                        <option value="{{ $locale }}">{{ strtoupper($locale) }}</option>
-                    @endforeach
-                </select>
+                <div class="w-44">
+                    <x-kompass::select wire:model.live="land" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
+                    </x-kompass::select>
+                </div>
                 @endif
 
                 <button class="btn btn-primary" wire:click="$set('FormAdd', true)">

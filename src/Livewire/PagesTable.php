@@ -16,7 +16,7 @@ class PagesTable extends Component
     use WithPagination;
 
     public $search;
-    protected $queryString = ['search'];
+    protected $queryString = ['search', 'land'];
     public $perPage = 1000;
     public $orderBy = 'order';
     public $orderAsc = true;
@@ -72,6 +72,11 @@ class PagesTable extends Component
         return $data;
     }
 
+    public function updatedLand($value)
+    {
+        session(['kompass_last_land' => $value]);
+    }
+
     public function mount()
     {
         $this->headers = $this->headerTable();
@@ -93,7 +98,10 @@ class PagesTable extends Component
         }
         
         $this->available_locales = $locales;
-        $this->land = $appLocale;
+        
+        if ($this->land === null) {
+            $this->land = session('kompass_last_land', $appLocale);
+        }
     }
 
     private function resultDate()

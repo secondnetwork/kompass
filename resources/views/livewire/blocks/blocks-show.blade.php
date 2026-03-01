@@ -117,13 +117,9 @@
             </nav-item>
 
             <nav-item class="flex items-center gap-2">
-                <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">{{ __('Grid') }}</span>
-                <select class="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-20"
-                    wire:model.live="grid">
-                    @for($i = 1; $i <= 5; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
-                </select>
+                <div class="w-24">
+                    <x-kompass::select wire:model.live="grid" label="{{ __('Grid') }}" :options="collect(range(1, 5))->map(fn($i) => ['name' => (string)$i, 'id' => (string)$i])" />
+                </div>
             </nav-item>
 
             <nav-item class="flex items-center gap-2">

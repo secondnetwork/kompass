@@ -29,12 +29,6 @@
                 @error('anrede') <span class="text-danger">{{ $message }}</span> @enderror
 
         </div>
-
-        </div>
-        <select name="" id="">
-            <option value="sad">asdad</option>
-            <option value="sad">asdad</option>
-        </select>
     <div class="grid-2 gap">
         <div class="form-group">
             <label for="exampleInputName">Vorname</label>
