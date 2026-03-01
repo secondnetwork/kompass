@@ -12,6 +12,8 @@ class MenuTable extends Component
     public $headers;
     public $data;
     public $newName;
+    public $land = '';
+    public $available_locales;
     public $selectedItem;
     public $timestamps = false;
     public $FormDelete = false;
@@ -20,6 +22,11 @@ class MenuTable extends Component
 
     protected $rules = ['name' => ''];
 
+    public function updatedLand($value)
+    {
+        session(['kompass_last_land' => $value]);
+    }
+
     public function call_emit_reset()
     {
         $this->dispatch('status');
@@ -27,18 +34,48 @@ class MenuTable extends Component
 
     protected function headerTable(): array
     {
-        return ['', 'Name', ''];
+        $headers = ['', 'Name'];
+        if (setting('global.multilingual')) {
+            $headers[] = 'land';
+        }
+        $headers[] = '';
+        return $headers;
     }
 
     protected function dataTable(): array
     {
-        return ['name'];
+        $data = ['name'];
+        if (setting('global.multilingual')) {
+            $data[] = 'land';
+        }
+        return $data;
     }
 
     public function mount()
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
+
+        $localesData = setting('global.available_locales');
+        if ($localesData) {
+            $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
+        } else {
+            $locales = ['de', 'en', 'tr'];
+        }
+
+        $appLocale = config('app.locale', 'de');
+        
+        // Move app locale to front
+        if (($key = array_search($appLocale, $locales)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $appLocale);
+        }
+        
+        $this->available_locales = $locales;
+        
+        if ($this->land === null || $this->land === '') {
+            $this->land = session('kompass_last_land', $appLocale);
+        }
     }
 
     public function selectItem($itemId, $action)
@@ -51,7 +88,11 @@ class MenuTable extends Component
     public function addMenu()
     {
         $this->validate();
-        $menu = Menu::create(['name' => $this->name, 'group' => $this->group]);
+        $menu = Menu::create([
+            'name' => $this->name, 
+            'group' => $this->group,
+            'land' => $this->land ?: config('app.locale', 'de'),
+        ]);
         $this->FormAdd = false;
         return redirect()->to('/admin/menus/show/'.$menu->id);
     }
@@ -64,7 +105,13 @@ class MenuTable extends Component
 
     private function resultDate()
     {
-        return Menu::orderBy('order', 'ASC')->get();
+        $query = Menu::query();
+
+        if (setting('global.multilingual') && $this->land) {
+            $query->where('land', $this->land);
+        }
+
+        return $query->orderBy('order', 'ASC')->get();
     }
 
     public function rename($id)

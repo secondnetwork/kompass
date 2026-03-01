@@ -105,7 +105,14 @@ class MenuData extends Component
     {
         $this->menu = Menu::findOrFail($id);
         $this->menuitem = Menuitem::where('menu_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-        $this->pages = Page::orderBy('order', 'asc')->get()->map(fn($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
+        
+        $pagesQuery = Page::orderBy('order', 'asc');
+        
+        if (setting('global.multilingual') && $this->menu->land) {
+            $pagesQuery->where('land', $this->menu->land);
+        }
+        
+        $this->pages = $pagesQuery->get()->map(fn($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
         
         $this->loadIcons();
     }

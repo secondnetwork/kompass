@@ -12,7 +12,14 @@
                         ]">
                 </x-kompass::select>
 
-                <button wire:click="addMenu" class="btn btn-primary">{{ __('Save') }}</button>
+                @if (setting('global.multilingual'))
+                <div class="mt-4">
+                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    </x-kompass::select>
+                </div>
+                @endif
+
+                <button wire:click="addMenu" class="btn btn-primary mt-4">{{ __('Save') }}</button>
 
             </x-slot>
         </x-kompass::offcanvas>
@@ -23,13 +30,20 @@
 
     <div class="flex flex-col">
         <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-            <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
+            
+            <div class="flex justify-end gap-4 items-center">
+                @if (setting('global.multilingual'))
+                <div class="w-44">
+                    <x-kompass::select wire:model.live="land" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
+                    </x-kompass::select>
+                </div>
+                @endif
 
-                <button class="btn btn-primary" @click="open = true">
+                <button class="btn btn-primary" wire:click="$set('FormAdd', true)">
                     <x-tabler-list-details stroke-width="1.5" />{{ __('New menu') }}
                 </button>
+          </div>
 
-            </div>
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
@@ -62,39 +76,42 @@
                                         </td>
 
 
-                                        @foreach ($data as $key => $value)
+                                        @foreach ($data as $column)
                                             <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
-                                                    {{-- {{ $menu->$value }} --}}
-                                                    <div x-data="click_to_edit()" class="w-11/12 flex items-center">
-                                                    <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
-                          
-                                                        <span class="text-sm font-semibold">{{  $menu->$value }}</span>
-                                                        
-                                                        
-                                                        {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
-                                                    </a>  
-                                                    <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->$value }}'}">
-                                
-                                                        <input
-                                                            type="text"
-                                                            class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
-                                                            x-model="name"
-                                                            wire:model.lazy="newName" x-ref="input"
-                                                            x-on:keydown.enter="isEditing = false"
-                                                            x-on:keydown.escape="isEditing = false"
-                                                            {{-- @keydown.window.escape="disableEditing"  --}}
-                                                            x-on:click.away="isEditing = false"
-                                                            wire:keydown.enter="rename({{$menu->id }})"
-                                                        >
-                                                        <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
-                                                            <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
-                                                        </span>
-                                                        <span x-on:click="isEditing = false">
-                                                            <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
-                                                        </span>
-                                             
-                                                </div>
+                                                @if ($column == 'name')
+                                                    <div x-data="click_to_edit()" class="w-11/12 flex items-center gap-2">
+                                                        <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
+                                                            <span class="text-sm font-semibold">{{  $menu->name }}</span>
+                                                        </a>
+                                                        @if (setting('global.multilingual'))
+                                                            @if ($menu->land)
+                                                                <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
+                                                            @endif
+                                                        @endif
+                                                        <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->name }}'}">
+                                                            <input
+                                                                type="text"
+                                                                class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
+                                                                x-model="name"
+                                                                wire:model.lazy="newName" x-ref="input"
+                                                                x-on:keydown.enter="isEditing = false"
+                                                                x-on:keydown.escape="isEditing = false"
+                                                                x-on:click.away="isEditing = false"
+                                                                wire:keydown.enter="rename({{$menu->id }})"
+                                                            >
+                                                            <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
+                                                                <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+                                                            </span>
+                                                            <span x-on:click="isEditing = false">
+                                                                <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+                                                            </span>
+                                                        </div>
                                                     </div>
+                                                @elseif ($column == 'land')
+                                                    <span class="text-xs font-medium uppercase">{{ $menu->land }}</span>
+                                                @else
+                                                    {{ $menu->$column }}
+                                                @endif
                                             </td>
                                         @endforeach
 

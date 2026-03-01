@@ -1,8 +1,11 @@
 <div>
-    {{-- @dump($menu->toArray()) --}}
-    {{-- @dump($menuitem->toArray()) --}}
-
-
+    <div class="flex items-center gap-4 mb-4">
+        <h1 class="text-2xl font-bold">{{ $menu->name }}</h1>
+        @if (setting('global.multilingual') && $menu->land)
+            <span class="inline-flex items-center gap-1.5 py-1 px-2 rounded text-xs font-medium bg-blue-600 text-white">{{ strtoupper($menu->land) }}</span>
+        @endif
+    </div>
+    
     <x-kompass::action-message class="" on="status" />
 
     <x-kompass::modal data="FormDelete" />
