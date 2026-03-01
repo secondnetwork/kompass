@@ -37,7 +37,7 @@ class PageInformation extends Component
         $this->email_address = optional($globalSettings->get('email_address'))->data ?? '';
         $this->phone = optional($globalSettings->get('phone'))->data ?? '';
         $this->copyright = optional($globalSettings->get('copyright'))->data ?? '';
-        $this->multilingual = optional($globalSettings->get('multilingual'))->data ?? false;
+        $this->multilingual = (bool) optional($globalSettings->get('multilingual'))->data ?? false;
 
         $this->image = optional($globalSettings->get($this->imageKey))->data ?? '';
     }

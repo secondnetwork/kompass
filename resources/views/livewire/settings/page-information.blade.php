@@ -18,7 +18,7 @@
             placeholder="{{ __('Enter website description for SEO') }}" rows="3" />
 
         <div class="mt-4">
-            <x-kompass::form.checkbox wire:model.live="multilingual" name="multilingual" label="{{ __('Enable Multilingual Support') }}" />
+            <x-kompass::form.switch wire:model.live="multilingual" label="{{ __('Enable Multilingual Support') }}" />
         </div>
 
 
