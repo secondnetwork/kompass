@@ -54,19 +54,21 @@
                 <div x-data="click_to_edit()">
                     <a 
                     @click.prevent @click="toggleEditingState" x-show="!isEditing" 
-                    class="flex items-center gap-2"
+                    class="flex items-center gap-2 select-none cursor-pointer"
                         class="select-none cursor-pointer">
                         @if ($page->layout == 'is_front_page')
                             <x-tabler-home class="w-5 h-5 text-amber-500" />
                         @endif
-                        <h4 class="text-gray-600">{{ $title }} </h4><span>
+                        <h4 class="text-gray-600 font-bold">{{ $title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
                         </span>
                     </a>
 
-                    <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                        wire:model.live="title" x-show="isEditing" @click.away="toggleEditingState"
-                        @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
+                    <div x-show="isEditing" x-cloak>
+                        <input type="text" class="text-2xl font-bold border-0 border-b-2 border-blue-500 focus:ring-0 px-0 py-0 bg-transparent text-gray-600"
+                            wire:model.live="title" x-ref="input" @click.away="toggleEditingState"
+                            @keydown.enter="disableEditing" @keydown.window.escape="disableEditing">
+                    </div>
                 </div>
                 <div class="col-span-6">
 

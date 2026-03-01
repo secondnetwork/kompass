@@ -8,8 +8,8 @@
                     <h4 class="text-gray-600 font-bold">{{ $menu->name }}</h4>
                     <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
                 </a>
-                <div x-show="isEditing" class="flex items-center">
-                    <input type="text" class="text-gray-600 font-bold border border-gray-400 px-2 py-1"
+                <div x-show="isEditing" class="flex items-center" x-cloak>
+                    <input type="text" class="text-2xl font-bold border-0 border-b-2 border-blue-500 focus:ring-0 px-0 py-0 bg-transparent text-gray-600"
                         wire:model.live="menuName" x-ref="input" @keydown.enter="isEditing = false; $wire.renameMenu()"
                         @keydown.window.escape="isEditing = false" @click.away="isEditing = false; $wire.renameMenu()">
                 </div>
