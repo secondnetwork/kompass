@@ -66,8 +66,8 @@
 </head>
 
 <body class="{{ str_replace('.', '-', Route::currentRouteName()) }}">
-
-<header class="navbar relative" x-data="{ mobileMenuOpen: false }" @keydown.escape="mobileMenuOpen = false">
+<!-- ========== HEADER ========== -->
+<header class="navbar relative z-[100]" x-data="{ mobileMenuOpen: false }" @keydown.escape="mobileMenuOpen = false">
   <nav class="relative w-full mx-auto md:flex md:items-center md:justify-between md:gap-3">
     <div class="flex justify-between items-center gap-x-1">
       {{-- <a class="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80" href="#" aria-label="Brand">Brand</a> --}}
