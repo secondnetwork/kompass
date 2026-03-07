@@ -299,12 +299,14 @@
                     <div class="border-gray-400 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}','{{ $itemblock['iconclass'] }}')">
                         @if ($itemblock['icon_img_path'])
-                            <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
+                            <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover "
                                 src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
                         @elseif($itemblock['iconclass'])
-                            <div class="flex items-center justify-center h-16">
-                                @svg(str_starts_with($itemblock['iconclass'], 'tabler-') ? $itemblock['iconclass'] : 'tabler-' . $itemblock['iconclass'], 'w-10 h-10 text-blue-600')
+                            <div class="relative">
+                                @svg(str_starts_with($itemblock['iconclass'], 'tabler-') ? $itemblock['iconclass'] : 'tabler-' . $itemblock['iconclass'], 'w-10 h-10 text-blue-600 absolute z-10  bottom-3 flex justify-center items-end w-full')
+                                <img class="rounded" src="{{ kompass_asset('icons-blocks/black.png') }}" alt="">
                             </div>
+                            
                         @else
                             <img class="rounded" src="{{ kompass_asset('icons-blocks/contact.png') }}" alt="">
                         @endif

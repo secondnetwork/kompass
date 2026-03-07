@@ -3,16 +3,24 @@
         @if ($file->type == 'folder') wire:click="goToFolder" @endif>
         <figure class="relative aspect-video overflow-hidden">
             @if ($file->type == 'folder')
-                <div class="flex items-center justify-center w-full h-full bg-base-200">
-                    <x-tabler-folder
+                <div class="flex items-center justify-center w-full h-full bg-base-300">
+                    <x-tabler-folder stroke-width="1.5"
                         class="w-16 h-16 opacity-40 group-hover:scale-110 transition-transform duration-300" />
                 </div>
             @elseif ($file->type == 'video')
-                <div class="flex items-center justify-center w-full h-full bg-base-200">
-                    <x-tabler-video
+                <div class="flex items-center justify-center w-full h-full bg-base-300">
+                    <x-tabler-video stroke-width="1.5"
                         class="w-16 h-16 opacity-40 group-hover:scale-110 transition-transform duration-300" />
                 </div>
-            @else
+            @elseif ($file->type == 'document')
+                <div class="flex items-center justify-center w-full h-full bg-base-300">
+                    <x-tabler-file-text stroke-width="1.5"
+                        class="w-16 h-16 opacity-40 group-hover:scale-110 transition-transform duration-300" />
+                </div>    
+
+            @elseif ($file->type == 'image')
+
+                
                 @php
                     $imgpath = Storage::url(
                         ($file->path ? $file->path . '/' : '') . $file->slug . '.' . $file->extension,
@@ -26,6 +34,11 @@
                         class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                         loading="lazy">
                 </picture>
+            @else
+                <div class="flex items-center justify-center w-full h-full bg-base-300">
+                    <x-tabler-file stroke-width="1.5"
+                        class="w-16 h-16 opacity-40 group-hover:scale-110 transition-transform duration-300" />
+                </div>
             @endif
 
             <div class="absolute top-2 right-2 flex gap-1">
