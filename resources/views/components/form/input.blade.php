@@ -3,6 +3,7 @@
     'name' => '',
     'label' => '',
     'value' => '',
+    'class' => '',
 ])
 
 {{-- @if ($label === '')
@@ -20,7 +21,7 @@
 
 <div>
     @if ($label !== '')<label for='{{ $name }}' class="text-md mb-1 block">{{ $label }}</label>@endif
-    <input type='{{ $type }}' name='{{ $name }}' id='{{ $name }}' value='{{ $value }}'  {{ $attributes->merge(['class' => 'input']) }}>
+    <input type='{{ $type }}' name='{{ $name }}' id='{{ $name }}' value='{{ $value }}' {{ $attributes->merge(['class' => 'input ' . $class]) }}>
     @error($attributes->wire('model')->value() ?? $name)
         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
     @enderror

@@ -5,6 +5,7 @@
     'value' => '',
     'options' => [],
     'placeholder' => '',
+    'searchable' => true,
 ])
 
 
@@ -125,6 +126,7 @@
             x-cloak x-show="isOpen || openedWithKeyboard"
             id="industriesList"
             class="absolute z-10 left-0 top-11 max-h-80 w-full flex flex-col rounded-md border-2 border-slate-300 bg-white shadow-lg"
+            :class="{ '!top-11 !border-t-0': !{{ $searchable }} }"
             role="listbox"
             aria-label="{{ $label }} list"
             x-on:click.outside="isOpen = false; openedWithKeyboard = false"
@@ -132,7 +134,7 @@
             x-trap.noscroll="openedWithKeyboard">
 
             {{-- Suchfeld --}}
-            <div class="sticky top-0 bg-white border-b border-slate-200 p-2">
+            <div class="sticky top-0 bg-white border-b border-slate-200 p-2" x-show="{{ var_export($searchable, true) }}">
                 <div class="relative">
                     <x-tabler-search class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
                     <input
@@ -142,7 +144,7 @@
                         placeholder="{{ __('Search...') }}"
                         class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     />
-                </div>
+            </div>
             </div>
 
             {{-- Optionen Liste --}}

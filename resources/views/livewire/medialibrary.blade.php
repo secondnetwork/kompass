@@ -29,12 +29,12 @@
 
             </div>
 
-  
+
 
 
         </div>
 
-                    {{-- Filter UI --}}
+        {{-- Filter UI --}}
 
 
         <div class="overflow-x-auto p-4" x-cloak x-data="{ dir: @entangle('dir') }">
@@ -48,7 +48,8 @@
     <div x-data="{ open: @entangle('FormFolder') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="body">
-                <x-kompass::form.input type="text" name="name" label="{{ __('Folder Name') }}" wire:model="foldername" />
+                <x-kompass::form.input type="text" name="name" label="{{ __('Folder Name') }}"
+                    wire:model="foldername" />
                 <button wire:click="newFolder" class="btn btn-primary">{{ __('Save') }}</button>
             </x-slot>
         </x-kompass::offcanvas>
@@ -61,19 +62,51 @@
                     @if ($file)
                         @if ($type == 'video')
                             <video controls src="{{ asset($file) }}"></video>
+                        @elseif ($type == 'document')
+                            <div class="flex items-center justify-center w-full py-16 bg-base-300 rounded-lg">
+                                <x-tabler-file-text stroke-width="1.5" class="w-24 h-24 opacity-40 group-hover:scale-110 transition-transform duration-300" />
+                            </div>
+
+                        @elseif ($type == 'image')
+                            @php
+                                $imgpath = Storage::url(
+                                    ($file->path ? $file->path . '/' : '') . $file->slug . '.' . $file->extension,
+                                );
+                            @endphp
+
+                            <picture>
+                                <source srcset="{{ imageToAvif($imgpath, 500) }}" type="image/avif">
+                                <source srcset="{{ imageToWebp($imgpath, 500) }}" type="image/webp">
+                                <img src="{{ asset($imgpath) }}"
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                                    loading="lazy">
+                            </picture>
                         @else
-                            <img class="relative text-sm rounded-lg shadow w-full aspect-[4/3] object-cover bg-cover bg-center bg-gray-300"
-                                src="{{ asset($file) }}" alt="">
+                            <div class="flex items-center justify-center w-full py-16 bg-base-300 rounded-lg">
+                                <x-tabler-file stroke-width="1.5"
+                                    class="w-24 h-24 opacity-40 group-hover:scale-110 transition-transform duration-300" />
+                            </div>
                         @endif
                     @endif
-                    <x-kompass::form.input wire:model="name" label="{{ __('Name') }}" type="text" class="form-control" />
-                    <x-kompass::form.input wire:model="alt" label="{{ __('Alt') }}" type="text" class="form-control" />
-                    <x-kompass::form.input wire:model="description" label="{{ __('Description') }}" type="text" class="form-control" />
+                    <x-kompass::form.input wire:model="name" label="{{ __('Name') }}" type="text"
+                        class="form-control" />
+                    <x-kompass::form.input wire:model="alt" label="{{ __('Alt') }}" type="text"
+                        class="form-control" />
+                    <x-kompass::form.input wire:model="description" label="{{ __('Description') }}" type="text"
+                        class="form-control" />
                     <label>{{ __('Url') }}:</label>
                     <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
                     <div class="flex gap-2 items-end">
                         <div class="flex-1">
-                            <x-kompass::select wire:model="newFolderLocation" label="{{ __('Move to Folder') }}" :options="collect($dirgroup)->map(fn($f) => ['name' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug, 'id' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug])->prepend(['name' => __('Base'), 'id' => 'media'])" />
+                            <x-kompass::select wire:model="newFolderLocation" label="{{ __('Move to Folder') }}"
+                                :options="collect($dirgroup)
+                                    ->map(
+                                        fn($f) => [
+                                            'name' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug,
+                                            'id' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug,
+                                        ],
+                                    )
+                                    ->prepend(['name' => __('Base'), 'id' => 'media'])" />
                         </div>
                         <button wire:click="moveItem" class="btn btn-primary h-10">{{ __('Move') }}</button>
                     </div>

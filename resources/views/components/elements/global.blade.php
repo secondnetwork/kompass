@@ -72,7 +72,7 @@
                                 <x-kompass::form.input type="text" name="key" label="{{ __('Key') }}" wire:model="key" />
                             </div>
                         </div>
-                        <x-kompass::select wire:model.live="type" name="type" label="{{ __('Type') }}" :options="[['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'], ['name' => __('Rich Textbox'), 'id' => 'rich_text_box', 'icon' => 'tabler-blockquote'], ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'], ['name' => __('true or false'), 'id' => 'switch', 'icon' => 'tabler-toggle-left'], ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip']]" />
+                        <x-kompass::select wire:model.live="type" name="type" label="{{ __('Type') }}" :options="[['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'], ['name' => __('Rich Textbox'), 'id' => 'rich_text_box', 'icon' => 'tabler-blockquote'], ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'], ['name' => __('Link'), 'id' => 'link', 'icon' => 'tabler-link'], ['name' => __('true or false'), 'id' => 'switch', 'icon' => 'tabler-toggle-left'], ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip']]" />
                         <div class="">
                             @switch($type)
                                 @case('image')
@@ -95,6 +95,9 @@
                                             <span class="mt-2 text-sm">Bild hinzufügen</span>
                                         </button>
                                     @endif
+                                @break
+                                @case('link')
+                                    <x-kompass::form.input type="text" name="valuedata" label="{{ __('URL') }}" wire:model="valuedata" placeholder="https://..." />
                                 @break
                                 @case('switch') <input @if($valuedata) checked="" @endif wire:change="update('{{ $selectedItem }}', $el.checked)" type="checkbox" class="toggle toggle-primary"> @break
                                 @case('rich_text_box') @livewire('editorjs', ['editorId' => $selectedItem, 'value' => is_array($valuedata) ? $valuedata : json_decode($valuedata, true)], key('editor-'.$selectedItem)) @break

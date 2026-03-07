@@ -8,7 +8,7 @@
 
 @php $wireModel = $attributes->get('wire:model'); @endphp
 
-<div>
+<div class="w-full">
     @if($label)
         <label for="{{ $id ?? '' }}" class="block text-sm font-medium leading-6 text-gray-900">{{ $label  }}</label>
     @endif
