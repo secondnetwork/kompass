@@ -68,17 +68,11 @@
                             </div>
 
                         @elseif ($type == 'image')
-                            @php
-                                $imgpath = Storage::url(
-                                    ($file->path ? $file->path . '/' : '') . $file->slug . '.' . $file->extension,
-                                );
-                            @endphp
-
                             <picture>
-                                <source srcset="{{ imageToAvif($imgpath, 500) }}" type="image/avif">
-                                <source srcset="{{ imageToWebp($imgpath, 500) }}" type="image/webp">
-                                <img src="{{ asset($imgpath) }}"
-                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                                <source srcset="{{ imageToAvif($file, 500) }}" type="image/avif">
+                                <source srcset="{{ imageToWebp($file, 500) }}" type="image/webp">
+                                <img src="{{ asset($file) }}"
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300 rounded-lg"
                                     loading="lazy">
                             </picture>
                         @else

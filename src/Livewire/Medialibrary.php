@@ -94,7 +94,7 @@ class Medialibrary extends Component
             $this->description = $model->description;
             $this->type = $model->type;
             $this->newFolderLocation = $model->path;
-            $this->file = $model->path ? 'storage/' . $model->path . '/' . $model->slug . '.' . $model->extension : 'storage/' . $model->slug . '.' . $model->extension;
+            $this->file = Storage::url(($model->path ? $model->path . '/' : '') . $model->slug . '.' . $model->extension);
             if ($model->type == 'folder') {
                 $this->file = null;
             }
