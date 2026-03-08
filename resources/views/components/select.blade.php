@@ -91,7 +91,7 @@
             this.$watch('searchQuery', () => this.filterOptions());
         }
     }" class="w-full flex flex-col" x-on:keydown.esc.window="isOpen = false; openedWithKeyboard = false">
-    <label class="w-fit pl-0.5 text-sm text-slate-700 ">{{ $label }}</label>
+    <label class="block text-sm font-medium leading-6 text-gray-900">{{ $label }}</label>
    <div class="relative">
         {{-- Trigger Button --}}
         <button
@@ -126,7 +126,7 @@
             x-cloak x-show="isOpen || openedWithKeyboard"
             id="industriesList"
             class="absolute z-10 left-0 top-11 max-h-80 w-full flex flex-col rounded-md border-2 border-slate-300 bg-white shadow-lg"
-            :class="{ '!top-11 !border-t-0': !{{ $searchable }} }"
+            :class="{ '!top-11 !border-t-0': @js(!$searchable) }"
             role="listbox"
             aria-label="{{ $label }} list"
             x-on:click.outside="isOpen = false; openedWithKeyboard = false"

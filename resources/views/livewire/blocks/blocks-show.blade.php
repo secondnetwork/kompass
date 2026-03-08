@@ -4,10 +4,11 @@
 
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/6'">
-             <x-slot name="body">
+            <x-slot name="body">
                 <div>
-  
-                    <x-kompass::form.input type="text" name="iconSearch" wire:model.live="iconSearch" placeholder="{{ __('Search icon...') }}" />
+
+                    <x-kompass::form.input type="text" name="iconSearch" wire:model.live="iconSearch"
+                        placeholder="{{ __('Search icon...') }}" />
                     @if ($selectedIcon)
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
                             <x-icon :name="$selectedIcon" class="w-5 h-5" />
@@ -38,11 +39,11 @@
                             @endif
                         </p>
                     @endif
-                         <input type="hidden" wire:model="iconclass" /> 
+                    <input type="hidden" wire:model="iconclass" />
                 </div>
 
-           
- 
+
+
                 <div x-data="{ photoName: null, photoPreview: null }" class="mt-4">
                     <label class="block text-sm font-medium text-base-content/70 mb-1">{{ __('Block Icon') }}</label>
                     <input type="file" class="hidden" wire:model="filestoredata" x-ref="photo"
@@ -56,33 +57,38 @@
                         " />
 
                     <div class="mb-4 h-[10rem] aspect-[4/3] relative" x-show="photoPreview">
-                        <span class="block border-gray-200 border-solid border-2 rounded h-[10rem] aspect-[4/3] bg-cover bg-no-repeat bg-center"
+                        <span
+                            class="block border-gray-200 border-solid border-2 rounded h-[10rem] aspect-[4/3] bg-cover bg-no-repeat bg-center"
                             x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                         </span>
                     </div>
-                    
+
                     @if ($icon_img_path)
                         <div class="mb-4 h-[10rem] aspect-[4/3] relative" x-show="! photoPreview">
-                            <span class="absolute top-1 left-2 z-10 bg-white p-2 rounded-full cursor-pointer" wire:click="removemedia({{ $blocktemplatesId }})">
+                            <span class="absolute top-1 left-2 z-10 bg-white p-2 rounded-full cursor-pointer"
+                                wire:click="removemedia({{ $blocktemplatesId }})">
                                 <x-tabler-trash class="cursor-pointer stroke-current text-red-500" />
                             </span>
-                            <img class="border-gray-200 border-solid border-2 rounded object-cover" src="{{ asset('storage/' . $icon_img_path) }}" alt="">
+                            <img class="border-gray-200 border-solid border-2 rounded object-cover"
+                                src="{{ asset('storage/' . $icon_img_path) }}" alt="">
                         </div>
                     @else
-                        <div x-on:click.prevent="$refs.photo.click()" x-show="! photoPreview" class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 text-gray-400 rounded-2xl h-[10rem] aspect-[4/3]">
+                        <div x-on:click.prevent="$refs.photo.click()" x-show="! photoPreview"
+                            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 text-gray-400 rounded-2xl h-[10rem] aspect-[4/3]">
                             <x-tabler-photo-plus class="h-[3rem] w-[3rem] stroke-[1.5]" />
                         </div>
                     @endif
                 </div>
 
-                <button class="flex btn gap-x-2 justify-center items-center mt-4" wire:click="saveUpdate('{{ $blocktemplatesId }}')">
+                <button class="flex btn btn-primary gap-x-2 justify-center items-center mt-4"
+                    wire:click="saveUpdate('{{ $blocktemplatesId }}')">
                     <x-tabler-device-floppy class="icon-lg" />{{ __('Save') }}
-                </button> 
+                </button>
             </x-slot>
         </x-kompass::offcanvas>
     </div>
 
-   <x-kompass::action-message class="" on="status" />
+    <x-kompass::action-message class="" on="status" />
 
 
     <div class="border-b border-gray-200 py-5 grid-3-2 items-center">
@@ -94,9 +100,8 @@
                     <h3>{{ $name }}</h3>
                 </a>
 
-                <input type="text" class="focus:outline-none focus:shadow-outline leading-normal"
-                    wire:model="name" x-show="isEditing" @click.away="toggleEditingState"
-                    @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" x-ref="input">
+                <x-kompass::input type="text" wire:model="name" x-show="isEditing" @click.away="toggleEditingState"
+                    class="focus:outline-none focus:shadow-outline leading-normal" />
             </div>
         </div>
         <div class="flex justify-end items-center">
@@ -106,36 +111,40 @@
         </div>
     </div>
 
-    <div class="py-8">
-        <nav class="px-4 py-2 bg-gray-200 shadow-inner flex items-center gap-6">
-            <nav-item class="flex items-center gap-2">
-                <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">{{ __('Block Type') }}</span>
-                <div class="flex flex-col">
-                    <input type="text" class="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-32"
-                        wire:model.live="type" placeholder="Type" />
-                </div>
-            </nav-item>
+    <div class="py-2">
+        <nav class=" flex items-center gap-6">
+            <div class="flex items-center gap-2">
 
-            <nav-item class="flex items-center gap-2">
-                <div class="w-24">
-                    <x-kompass::select :searchable="false" wire:model.live="grid" :options="collect(range(1, 5))->map(fn($i) => ['name' => (string)$i, 'id' => (string)$i])" />
-                </div>
-            </nav-item>
 
-            <nav-item class="flex items-center gap-2">
-                <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">{{ __('Block Icon') }}</span>
-                <span class="cursor-pointer" wire:click="selectItem({{ $blocktemplatesId }}, 'addblock')">
-                    <x-tabler-photo-cog/>
-                </span>
-            </nav-item>
+                <x-kompass::input type="text" wire:model.live="type" label="{{ __('Block Type') }}"
+                    placeholder="Type" class=" " />
+
+                <div class="w-36">
+                    <x-kompass::select :searchable="false" wire:model.live="grid" label="Grid" :options="collect(range(1, 5))->map(fn($i) => ['name' => (string) $i, 'id' => (string) $i])" />
+                </div>
+
+                <div class="w-full">
+                    <div class="block text-sm font-medium leading-6 text-gray-900">{{ __('Block Icon') }}</div>
+                    <div class="cursor-pointer btn btn-md btn-primary py-2" wire:click="selectItem({{ $blocktemplatesId }}, 'addblock')">
+                        @if ($iconclass)
+                            <x-icon :name="$iconclass" class="w-6 h-6" />
+                        @else
+                            <x-tabler-photo-cog />
+                        @endif
+                    </div>
+                </div>
+
+            </div>
         </nav>
 
-        <block-ltem wire:sort="handleSort" class="grid gap-4 my-4 p-2 border rounded-md border-dashed border-cyan-400 grid-cols-{{ $grid ?? '1' }}"
+        <block-ltem wire:sort="handleSort"
+            class="grid gap-4 my-4 p-2 border rounded-md border-dashed border-cyan-400 grid-cols-{{ $grid ?? '1' }}"
             wire:sort.options="{ animation: 100, ghostClass: 'sort-ghost', chosenClass: 'sort-chosen', dragClass: 'sort-drag', removeCloneOnHide: true }">
 
             @foreach ($fields as $field)
-                <div wire:sort:item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }}">
-                    @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-'.$field->id))
+                <div wire:sort:item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}"
+                    class="col-span-1 md:col-span-{{ $field->grid ?? '1' }}">
+                    @livewire('field-editor', ['fieldId' => $field->id], key('field-editor-' . $field->id))
                 </div>
             @endforeach
 

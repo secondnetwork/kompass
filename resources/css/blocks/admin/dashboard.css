@@ -1,39 +1,32 @@
 [class*="kompass-admin-"] {
   overflow-y: scroll;
-  .test {
-    background-color: antiquewhite;
-  }
+
   main {
     @apply grid transition-all ease-in-out duration-300;
     grid-template-columns: 15rem 1fr;
-    grid-template-rows:  1fr 4rem;
+    grid-template-rows: 1fr 4rem;
     grid-template-areas: "sidenav main-content" "sidenav footer";
   }
 
   header {
     grid-area: header;
-    @apply flex items-center w-full border-b border-base-300 px-6 ;
+    @apply flex items-center w-full border-b border-base-300 px-6;
   }
 
   footer {
     grid-area: footer;
-    border-top: 0.1rem solid #e9ecef;
     @apply flex items-center justify-between border-t border-base-300 px-6;
   }
 
   .main-content {
     grid-area: main-content;
-    @apply py-4 px-6 relative;
-
+    @apply py-4 px-6 relative bg-base-200;
   }
 
-  .main-content,
   header,
   footer {
     @apply bg-base-200;
   }
-
-
 
   .sidenav {
     @apply block transition-all ease-in-out duration-500 border-r border-base-300;
@@ -46,17 +39,18 @@
 
     .logo {
       padding: 1rem 1.6rem;
+
       .favicon-logo {
         display: none;
       }
     }
   }
+
   .sidenav a {
     display: flex;
     padding: 0.35rem 1.5rem;
     align-items: center;
-    @apply text-sm gap-2;
-    font-weight: 600;
+    @apply text-sm gap-2 my-[1px] font-semibold;
     position: relative;
 
     &.active {
@@ -64,48 +58,46 @@
         @apply stroke-brand-500;
       }
 
-      font-weight: 700;
-      @apply bg-brand-500/20 ;
-
-      /* &::after {
-        content: "";
-        position: absolute;
-        height: 100%;
-        width: 0.3rem;
-        left: 0;
-        @apply bg-brand-500;
-      } */
+      @apply bg-brand-500/20 font-bold;
     }
   }
+
   nav.setting a {
     display: flex;
     align-items: center;
-    @apply text-sm py-1;
-    font-weight: 600;
+    @apply text-sm py-1 font-semibold;
     position: relative;
   }
 }
+
 .sideclose {
   @apply transition-all ease-in-out duration-500;
   grid-template-columns: 4.6rem 1fr !important;
+
   .logo {
     padding: 0.5rem !important;
   }
+
   .big-logo {
     display: none;
   }
+
   .favicon-logo {
     display: block !important;
   }
+
   .sidenav {
     width: 4.6rem;
+
     a span {
       display: none;
     }
   }
+
   .sidebarbutton {
     @apply text-orange-400 rotate-180;
   }
+
   ul div {
     text-indent: -9999px;
   }
