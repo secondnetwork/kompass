@@ -67,7 +67,7 @@
                 <x-kompass::form.input type="text" label="{{ __('Title') }}" wire:model="title" />
 
                 <div>
-                    <x-kompass::select wire:model.live="page_id" :searchable="false" label="{{ __('Page') }}"
+                    <x-kompass::select wire:model.live="page_id" :searchable="true" label="{{ __('Page') }}"
                         placeholder="{{ __('Select a page') }}" :options="$pages" />
                     <p class="text-xs text-gray-500 mt-1">{{ __('Select a page to auto-fill the URL') }}</p>
                 </div>

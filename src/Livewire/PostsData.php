@@ -180,7 +180,7 @@ class PostsData extends Component
             if ($localesData) {
                 $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
             } else {
-                $locales = ['de', 'en', 'tr'];
+                $locales = ['de', 'en'];
             }
 
             $appLocale = config('app.locale', 'de');

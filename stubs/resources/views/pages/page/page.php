@@ -30,7 +30,7 @@ new class extends Component
             if ($localesData) {
                 $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
             } else {
-                $availableLocales = ['de', 'en', 'tr'];
+                $availableLocales = ['de', 'en'];
             }
             $defaultLocale = $availableLocales[0] ?? 'de';
             
@@ -76,7 +76,7 @@ new class extends Component
         if ($localesData) {
             $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
         } else {
-            $availableLocales = ['de', 'en', 'tr'];
+            $availableLocales = ['de', 'en'];
         }
         $defaultLocale = $availableLocales[0] ?? 'de';
         

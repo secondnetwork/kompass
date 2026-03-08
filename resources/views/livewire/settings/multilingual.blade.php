@@ -25,7 +25,7 @@
 
         <div class="flex gap-4 items-end max-w-sm">
             <div class="flex-1">
-                <x-kompass::select wire:model="new_locale" :searchable="false" label="{{ __('Add Language') }}" :options="$all_locales" placeholder="{{ __('Select language...') }}" />
+                <x-kompass::select wire:model="new_locale" :searchable="true" label="{{ __('Add Language') }}" :options="$all_locales" placeholder="{{ __('Select language...') }}" />
             </div>
             <button wire:click="addLocale" class="btn btn-primary h-10 mb-0.5">
                 <x-tabler-plus class="w-5 h-5" /> {{ __('Add') }}
@@ -33,7 +33,6 @@
         </div>
         @error('new_locale') <span class="text-error text-xs mt-1 block">{{ $message }}</span> @enderror
         <p class="text-xs text-base-content/50 mt-2 italic">
-            {{ __('Use 2-letter ISO codes (de, en, tr, fr, etc.)') }}
         </p>
     </div>
     @endif

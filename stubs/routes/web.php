@@ -8,7 +8,7 @@ $localesData = setting('global.available_locales');
 if ($localesData) {
     $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
 } else {
-    $locales = ['de', 'en', 'tr'];
+    $locales = ['de', 'en'];
 }
 
 $defaultLocale = $locales[0] ?? 'de';

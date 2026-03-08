@@ -21,7 +21,7 @@ class Language
         if ($localesData) {
             $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
         } else {
-            $availableLocales = config('kompass.available_locales', ['de', 'en', 'tr']);
+            $availableLocales = config('kompass.available_locales', ['de', 'en']);
         }
 
         if (in_array($request->segment(1), $availableLocales)) {

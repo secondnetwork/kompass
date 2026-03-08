@@ -4,7 +4,7 @@
         if ($localesData) {
             $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
         } else {
-            $availableLocales = ['de', 'en', 'tr'];
+            $availableLocales = ['de', 'en'];
         }
         
         $currentLocale = app()->getLocale();

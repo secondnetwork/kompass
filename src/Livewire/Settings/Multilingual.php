@@ -60,7 +60,7 @@ class Multilingual extends Component
             $this->available_locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
         } else {
             // Default locales if none set
-            $this->available_locales = ['de', 'en', 'tr'];
+            $this->available_locales = ['de', 'en'];
         }
     }
 

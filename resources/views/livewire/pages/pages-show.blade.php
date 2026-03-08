@@ -33,7 +33,7 @@
 
                 </div>
 
-                    <x-kompass::select wire:model="layout" :searchable="false" label="{{ __('Page Template') }}" :options="[
+                    <x-kompass::select wire:model="layout" label="{{ __('Page Template') }}" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />
