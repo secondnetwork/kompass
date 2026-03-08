@@ -10,7 +10,7 @@
         </div>
         <div class="flex items-center gap-4 py-2 w-full justify-end">
             <div class="w-48">
-                <x-kompass::select id="filter-type" wire:model.live="filter" label="{{ __('Filter by Type') }}" :options="[
+                <x-kompass::select id="filter-type" :searchable="false" wire:model.live="filter" label="{{ __('Filter by Type') }}" :options="[
                     ['name' => __('All'), 'id' => ''],
                     ['name' => __('Folders'), 'id' => 'folder'],
                     ['name' => __('Images'), 'id' => 'image'],

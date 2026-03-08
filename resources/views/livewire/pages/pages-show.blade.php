@@ -21,11 +21,11 @@
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $page->updated_at }}</br>
 
                     @if (setting('global.multilingual'))
-                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="land" :searchable="false" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                     @endif
 
-                    <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
+                    <x-kompass::select wire:model="status" :searchable="false" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
@@ -33,7 +33,7 @@
 
                 </div>
 
-                    <x-kompass::select wire:model="layout" label="{{ __('Page Template') }}" :options="[
+                    <x-kompass::select wire:model="layout" :searchable="false" label="{{ __('Page Template') }}" :options="[
                         ['name' => __('Page'), 'id' => 'page'],
                         ['name' => __('Front Page'), 'id' => 'is_front_page'],
                     ]"  />

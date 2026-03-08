@@ -43,7 +43,7 @@
 
                 @if (setting('global.multilingual'))
                 <div class="mt-4">
-                    <x-kompass::select wire:model="menuLand" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="menuLand" :searchable="false" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                 </div>
                 @endif
@@ -67,7 +67,7 @@
                 <x-kompass::form.input type="text" label="{{ __('Title') }}" wire:model="title" />
 
                 <div>
-                    <x-kompass::select wire:model.live="page_id" label="{{ __('Page') }}"
+                    <x-kompass::select wire:model.live="page_id" :searchable="false" label="{{ __('Page') }}"
                         placeholder="{{ __('Select a page') }}" :options="$pages" />
                     <p class="text-xs text-gray-500 mt-1">{{ __('Select a page to auto-fill the URL') }}</p>
                 </div>
@@ -115,7 +115,7 @@
                 <input type="hidden" wire:model="iconclass" />
 
                 <div>
-                    <x-kompass::select wire:model="target" label="{{ __('Open target') }}" :options="[
+                    <x-kompass::select wire:model="target" :searchable="false" label="{{ __('Open target') }}" :options="[
                         ['name' => __('Same tab'), 'id' => '_self'],
                         ['name' => __('New tab'), 'id' => '_blank'],
                     ]">

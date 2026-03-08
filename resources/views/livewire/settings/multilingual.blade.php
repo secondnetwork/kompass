@@ -25,7 +25,7 @@
 
         <div class="flex gap-4 items-end max-w-sm">
             <div class="flex-1">
-                <x-kompass::select wire:model="new_locale" label="{{ __('Add Language') }}" :options="$all_locales" placeholder="{{ __('Select language...') }}" />
+                <x-kompass::select wire:model="new_locale" :searchable="false" label="{{ __('Add Language') }}" :options="$all_locales" placeholder="{{ __('Select language...') }}" />
             </div>
             <button wire:click="addLocale" class="btn btn-primary h-10 mb-0.5">
                 <x-tabler-plus class="w-5 h-5" /> {{ __('Add') }}

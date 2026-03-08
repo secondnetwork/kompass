@@ -118,7 +118,7 @@
 
             <nav-item class="flex items-center gap-2">
                 <div class="w-24">
-                    <x-kompass::select wire:model.live="grid" label="{{ __('Grid') }}" :options="collect(range(1, 5))->map(fn($i) => ['name' => (string)$i, 'id' => (string)$i])" />
+                    <x-kompass::select :searchable="false" wire:model.live="grid" :options="collect(range(1, 5))->map(fn($i) => ['name' => (string)$i, 'id' => (string)$i])" />
                 </div>
             </nav-item>
 

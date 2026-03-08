@@ -98,7 +98,7 @@
                     <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
                     <div class="flex gap-2 items-end">
                         <div class="flex-1">
-                            <x-kompass::select wire:model="newFolderLocation" label="{{ __('Move to Folder') }}"
+                            <x-kompass::select wire:model="newFolderLocation" :searchable="false" label="{{ __('Move to Folder') }}"
                                 :options="collect($dirgroup)
                                     ->map(
                                         fn($f) => [

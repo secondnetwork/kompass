@@ -15,7 +15,7 @@
 
                     <div wire:ignore>
 
-                        <x-kompass::select wire:model="role" label="{{ __('Role') }}" placeholder="{{ __('Select') }}" :options="$roles" />
+                        <x-kompass::select wire:model="role" :searchable="false" label="{{ __('Role') }}" placeholder="{{ __('Select') }}" :options="$roles" />
 
                     </div>
             

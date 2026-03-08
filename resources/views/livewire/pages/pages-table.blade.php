@@ -10,7 +10,7 @@
 
                 @if (setting('global.multilingual'))
                 <div class="mt-4">
-                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="land" :searchable="false" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                 </div>
                 @endif
@@ -27,7 +27,7 @@
                 
                 @if (setting('global.multilingual'))
                 <div class="mt-4">
-                    <x-kompass::select wire:model="cloneLand" label="{{ __('Select the target language for the cloned page.') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="cloneLand" :searchable="false" label="{{ __('Select the target language for the cloned page.') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                 </div>
                 @else
@@ -53,7 +53,7 @@
             <div class="flex justify-end gap-4 items-center">
                 @if (setting('global.multilingual'))
                 <div class="w-44">
-                    <x-kompass::select wire:model.live="land" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
+                    <x-kompass::select wire:model.live="land" :searchable="false" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
                     </x-kompass::select>
                 </div>
                 @endif

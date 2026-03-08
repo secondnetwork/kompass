@@ -24,17 +24,17 @@
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $post->updated_at }}</br>
 
                     @if (setting('global.multilingual'))
-                    <x-kompass::select wire:model="land" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
+                    <x-kompass::select wire:model="land" :searchable="false" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
                     </x-kompass::select>
                     @endif
 
-                    <x-kompass::select wire:model="status" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
+                    <x-kompass::select wire:model="status" :searchable="false" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
                         ['name' => __('published'), 'id' => 'published'],
                         ['name' => __('draft'), 'id' => 'draft'],
                     ]">
                     </x-kompass::select>
 
-                    <x-kompass::select wire:model="category_id" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
+                    <x-kompass::select wire:model="category_id" :searchable="false" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
 
                 </div>
 

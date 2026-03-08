@@ -58,7 +58,7 @@
                     <div class="step-1 grid gap-4">
                         <x-kompass::form.input type="text" name="name" label="{{ __('Name') }}" wire:model="name" />
                         <x-kompass::form.input type="text" name="key" label="{{ __('Key') }}" wire:model="key" />
-                        <x-kompass::select wire:model="group" name="Group" label="{{ __('Group') }}" :options="[['name' => 'Header', 'id' => 'header'], ['name' => 'Main', 'id' => 'main'], ['name' => 'Footer', 'id' => 'footer'], ['name' => 'Admin Panel', 'id' => 'admin'], ['name' => 'Mail', 'id' => 'mail'], ['name' => 'Form', 'id' => 'form']]" />
+                        <x-kompass::select wire:model="group" :searchable="false" name="Group" label="{{ __('Group') }}" :options="[['name' => 'Header', 'id' => 'header'], ['name' => 'Main', 'id' => 'main'], ['name' => 'Footer', 'id' => 'footer'], ['name' => 'Admin Panel', 'id' => 'admin'], ['name' => 'Mail', 'id' => 'mail'], ['name' => 'Form', 'id' => 'form']]" />
                         <button wire:click="saveStepOne" class="btn btn-primary mt-4 w-full"><span>{{ __('Next to Type & Content') }}</span></button>
                     </div>
                 @else
@@ -72,7 +72,7 @@
                                 <x-kompass::form.input type="text" name="key" label="{{ __('Key') }}" wire:model="key" />
                             </div>
                         </div>
-                        <x-kompass::select wire:model.live="type" name="type" label="{{ __('Type') }}" :options="[['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'], ['name' => __('Rich Textbox'), 'id' => 'rich_text_box', 'icon' => 'tabler-blockquote'], ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'], ['name' => __('Link'), 'id' => 'link', 'icon' => 'tabler-link'], ['name' => __('true or false'), 'id' => 'switch', 'icon' => 'tabler-toggle-left'], ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip']]" />
+                        <x-kompass::select wire:model.live="type" :searchable="false" name="type" label="{{ __('Type') }}" :options="[['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'], ['name' => __('Rich Textbox'), 'id' => 'rich_text_box', 'icon' => 'tabler-blockquote'], ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'], ['name' => __('Link'), 'id' => 'link', 'icon' => 'tabler-link'], ['name' => __('true or false'), 'id' => 'switch', 'icon' => 'tabler-toggle-left'], ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip']]" />
                         <div class="">
                             @switch($type)
                                 @case('image')

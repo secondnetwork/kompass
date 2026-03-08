@@ -23,7 +23,7 @@
       <x-kompass::form.input  type="text" wire:model="name" label="{{ __('Name') }}" placeholder="{{ __('Name') }}" />
        @error('field.name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-       <x-kompass::select label="{{ __('Grid') }}" :options="[
+       <x-kompass::select :searchable="false" label="{{ __('Grid') }}" :options="[
         ['name' => '', 'id' => '1', 'icon' => 'tabler-square-number-1'],
         ['name' => '', 'id' => '2', 'icon' => 'tabler-square-number-2'],
         ['name' => '', 'id' => '3', 'icon' => 'tabler-square-number-3'],
@@ -34,7 +34,7 @@
 
        @error('grid') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-      <x-kompass::select label="{{ __('Type') }}" :options="[
+      <x-kompass::select :searchable="false" label="{{ __('Type') }}" :options="[
         ['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'],
         ['name' => __('WYSIWYG Editor'), 'id' => 'wysiwyg', 'icon' => 'tabler-blockquote'],
         ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'],

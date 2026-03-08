@@ -5,18 +5,18 @@
     'value' => '',
     'options' => [],
     'placeholder' => '',
-    'searchable' => true,
+    'searchable' => false,
 ])
 
 
     @php
         //remove underscores from name
     $name = $attributes->wire('model')->value();
-    if ($label === '') {
-        $label = str_replace('_', ' ', $name);
-        $label = preg_replace('/(?=[A-Z])/', ' $0', $label);
-        $label = ucwords(strtolower(trim($label)));
-    }
+    // if ($label === '') {
+    //     $label = str_replace('_', ' ', $name);
+    //     $label = preg_replace('/(?=[A-Z])/', ' $0', $label);
+    //     $label = ucwords(strtolower(trim($label)));
+    // }
 
         $icons = collect($options)
         ->filter(fn($option) => !empty($option['icon'])) // Nur Optionen mit einem 'icon'-Schlüssel
