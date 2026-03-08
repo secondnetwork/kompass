@@ -15,15 +15,20 @@
 
 Kompass is a modern content management system (CMS) built on the [Laravel](http://laravel.com/) framework, utilizing the TALL stack (Tailwind CSS, Alpine.js, Laravel, and Livewire). This powerful combination allows for a seamless and dynamic user experience, making content management easier and more efficient.
 
-[Development Roadmap status](https://kompass.secondnetwork.de/roadmap/)
+## Key Features
 
+- **Modern Tech Stack**: Built with Laravel 12, PHP 8.2+, Livewire 4, and Tailwind CSS 4
+- **Multilingual Support**: Full multilingual content management for multiple languages
+- **Block-Based Content**: Flexible block system for creating dynamic page layouts
+- **Media Library**: Full-featured media management with folder support
+- **User Management**: Role-based access control with Laravel Permission
 
 ## Requirements
 
 Additionally Kompass requires you to use
 - PHP 8.2 or newer 
-- Laravel 11.30 or newer
-- Livewire 3.6 or newer
+- Laravel 12 or newer
+- Livewire 4.0 or newer
 - Tailwindcss 4.0 or newer
 
 ## Installation

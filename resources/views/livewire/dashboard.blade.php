@@ -40,7 +40,7 @@
                 link="/admin/pages"
                 chartId="chartPagesSparkline"
             >
-                <div class="mt-4">
+                {{-- <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-sm text-gray-600">{{ __('Published ratio') }}</span>
                         <span class="text-sm font-semibold text-primary">
@@ -54,7 +54,7 @@
                     <div class="flex w-full h-1.5 bg-base-200 rounded-full overflow-hidden">
                         <div class="flex flex-col justify-center bg-primary transition duration-500" style="width: @if($pagesCount > 0){{ ($publishedPagesCount / $pagesCount) * 100 }}@else 0 @endif%"></div>
                     </div>
-                </div>
+                </div> --}}
             </x-kompass::dashboard.cart>
 
             <!-- Posts Card -->
@@ -67,7 +67,7 @@
                 color="success"
                 chartId="chartPostsSparkline"
             >
-                <div class="mt-4">
+                {{-- <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-sm text-gray-600">{{ __('Published ratio') }}</span>
                         <span class="text-sm font-semibold text-success">
@@ -81,7 +81,7 @@
                     <div class="flex w-full h-1.5 bg-base-200 rounded-full overflow-hidden">
                         <div class="flex flex-col justify-center bg-success transition duration-500" style="width: @if($postsCount > 0){{ ($publishedPostsCount / $postsCount) * 100 }}@else 0 @endif%"></div>
                     </div>
-                </div>
+                </div> --}}
             </x-kompass::dashboard.cart>
 
             <!-- Media Card -->
