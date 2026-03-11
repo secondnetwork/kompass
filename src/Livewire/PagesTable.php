@@ -2,13 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 
 class PagesTable extends Component
@@ -16,27 +14,44 @@ class PagesTable extends Component
     use WithPagination;
 
     public $search;
+
     protected $queryString = ['search', 'land'];
+
     public $perPage = 1000;
+
     public $orderBy = 'order';
+
     public $orderAsc = true;
+
     public $tasks;
+
     public $data;
+
     public $title;
+
     public $headers;
+
     public $meta_description;
+
     public $datafield = [];
+
     public $land = '';
+
     public $available_locales;
 
     #[Locked]
     public $selectedItem;
 
     public $timestamps = false;
+
     public $FormDelete = false;
+
     public $FormAdd = false;
+
     public $FormClone = false;
+
     public $FormEdit = false;
+
     public $cloneLand = '';
 
     protected $rules = [
@@ -58,6 +73,7 @@ class PagesTable extends Component
         $headers[] = 'status';
         $headers[] = 'Updated';
         $headers[] = '';
+
         return $headers;
     }
 
@@ -69,6 +85,7 @@ class PagesTable extends Component
         }
         $data[] = 'status';
         $data[] = 'updated_at';
+
         return $data;
     }
 
@@ -81,7 +98,7 @@ class PagesTable extends Component
     {
         $this->headers = $this->headerTable();
         $this->data = $this->dataTable();
-        
+
         $localesData = setting('global.available_locales');
         if ($localesData) {
             $locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
@@ -90,15 +107,15 @@ class PagesTable extends Component
         }
 
         $appLocale = config('app.locale', 'de');
-        
+
         // Move app locale to front
         if (($key = array_search($appLocale, $locales)) !== false) {
             unset($locales[$key]);
             array_unshift($locales, $appLocale);
         }
-        
+
         $this->available_locales = $locales;
-        
+
         if (empty($this->land) && session()->has('kompass_last_land')) {
             $this->land = session('kompass_last_land');
         }
@@ -124,8 +141,12 @@ class PagesTable extends Component
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
-        if ($action == 'add') $this->FormAdd = true;
-        if ($action == 'delete') $this->FormDelete = true;
+        if ($action == 'add') {
+            $this->FormAdd = true;
+        }
+        if ($action == 'delete') {
+            $this->FormDelete = true;
+        }
         if ($action == 'clone') {
             $this->FormClone = true;
             $this->cloneLand = Page::find($itemId)->land ?? config('app.locale', 'de');
@@ -147,15 +168,15 @@ class PagesTable extends Component
     {
         $id = $this->selectedItem;
         $originalPage = Page::findOrFail($id);
-        
-        $newTitle = $originalPage->title . ' (copy)';
+
+        $newTitle = $originalPage->title.' (copy)';
         $slugNameURL = Str::slug($originalPage->title, '-', 'de');
-        $newSlug = $slugNameURL . '-copy';
-        
+        $newSlug = $slugNameURL.'-copy';
+
         $pageObj = new Page;
         $numericalPrefix = 1;
         while ($pageObj->whereSlug($newSlug)->exists()) {
-            $newSlug = $slugNameURL . '-copy-' . $numericalPrefix++;
+            $newSlug = $slugNameURL.'-copy-'.$numericalPrefix++;
         }
 
         $newPage = $originalPage->replicate();
@@ -166,26 +187,68 @@ class PagesTable extends Component
         $newPage->land = $this->cloneLand;
         $newPage->push();
 
-        $blocks = Block::where('blockable_type', 'page')->where('blockable_id', $id)->get();
-        
-        foreach ($blocks as $block) {
-            $newBlock = $block->replicate();
-            $newBlock->blockable_id = $newPage->id;
-            $newBlock->created_at = Carbon::now();
-            $newBlock->updated_at = Carbon::now();
-            $newBlock->push();
+        $relationships = ['datafield', 'meta', 'children'];
+        $blocksclone = Block::where('blockable_id', $id)->where('blockable_type', 'page')->with($relationships)->get();
 
-            $datafields = Datafield::where('block_id', $block->id)->get();
-            foreach ($datafields as $datafield) {
-                $newDatafield = $datafield->replicate();
-                $newDatafield->block_id = $newBlock->id;
-                $newDatafield->created_at = Carbon::now();
-                $newDatafield->updated_at = Carbon::now();
-                $newDatafield->save();
+        $rootblock = $blocksclone->whereNull('subgroup');
+
+        foreach ($rootblock as $item) {
+            $blockcopy = $item->replicate();
+            $blockcopy->blockable_id = $newPage->id;
+            $blockcopy->push();
+
+            if ($itemMeta = $item->allMeta) {
+                $mod = Block::find($blockcopy->id);
+                foreach ($itemMeta as $value) {
+                    $mod->saveMeta([
+                        $value->key => $value->value,
+                    ]);
+                }
             }
+
+            foreach ($item->datafield as $itemdata) {
+                $copydatablock = $itemdata->replicate();
+                $copydatablock->block_id = $blockcopy->id;
+                $copydatablock->push();
+            }
+
+            $children = $blocksclone->where('subgroup', (string) $item->id);
+            $this->cloneTree($children, $blocksclone, $newPage->id, $blockcopy->id);
         }
         $this->FormClone = false;
+
         return redirect()->to('/admin/pages/show/'.$newPage->id);
+    }
+
+    public function cloneTree($categories, $allCategories, $cloneid, $parentId)
+    {
+        foreach ($categories as $item) {
+            $copy = $item->replicate();
+            $copy->blockable_id = $cloneid;
+            $copy->subgroup = $parentId;
+            $copy->push();
+
+            if ($itemMeta = $item->allMeta) {
+                $mod = Block::find($copy->id);
+
+                foreach ($itemMeta as $value) {
+                    $mod->saveMeta([
+                        $value->key => $value->value,
+                    ]);
+                }
+            }
+
+            foreach ($item->datafield as $itemdata) {
+                $copydatablock = $itemdata->replicate();
+                $copydatablock->block_id = $copy->id;
+                $copydatablock->push();
+            }
+
+            $children = $allCategories->where('subgroup', (string) $item->id);
+            if ($children->isNotEmpty()) {
+                $this->cloneTree($children, $allCategories, $cloneid, $copy->id);
+            }
+        }
     }
 
     public function addPage()
@@ -198,7 +261,7 @@ class PagesTable extends Component
             while (1) {
                 $newSlug = $slugNameURL.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
-                if (!$placeObj->whereSlug($newSlug)->exists()) {
+                if (! $placeObj->whereSlug($newSlug)->exists()) {
                     $newpageslug = $newSlug;
                     break;
                 }
@@ -216,6 +279,7 @@ class PagesTable extends Component
             'land' => $this->land ?: 'de',
         ]);
         $this->FormAdd = false;
+
         return redirect()->to('/admin/pages/show/'.$page->id);
     }
 
@@ -228,11 +292,15 @@ class PagesTable extends Component
     {
         $pages = Page::orderBy('order', 'ASC')->get();
         $movedItemIndex = $pages->search(fn ($page) => $page->id == $item);
-        if ($movedItemIndex === false) return;
+        if ($movedItemIndex === false) {
+            return;
+        }
         $movedItem = $pages->pull($movedItemIndex);
         $pages->splice($position, 0, [$movedItem]);
         foreach ($pages->values() as $index => $page) {
-            if ($page->order !== $index) $page->update(['order' => $index]);
+            if ($page->order !== $index) {
+                $page->update(['order' => $index]);
+            }
         }
         $this->call_emit_reset();
     }
@@ -240,7 +308,7 @@ class PagesTable extends Component
     public function sortBy($field)
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;

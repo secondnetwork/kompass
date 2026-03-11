@@ -333,10 +333,8 @@ class MenuData extends Component
 
     public function updateItemsOrder($list)
     {
-
         foreach ($list as $itemgroup) {
-
-            // Menuitem::whereId($itemgroup['value'])->update(['order' => $itemgroup['order']]);
+            Menuitem::whereId($itemgroup['value'])->update(['order' => $itemgroup['order'], 'subgroup' => null]);
 
             if ($itemgroup['items']) {
                 foreach ($itemgroup['items'] as $item) {
