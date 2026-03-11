@@ -76,35 +76,23 @@ class BladeDirectives
 
             $content = file_get_contents($manifestPath);
             $manifest = json_decode($content, true);
-            $output = '';
+            $entry = 'resources/js/main.js';
 
-            // Alpine.js Entry (needs to be loaded before main.js)
-            $alpineEntry = 'resources/js/alpine.js';
-            if (! empty($manifest[$alpineEntry]['file'])) {
-                $alpineFile = $manifest[$alpineEntry]['file'];
-                $basePath = str_contains($manifestPath, 'vendor/kompass')
-                    ? asset('vendor/kompass/assets/build/js/'.basename($alpineFile))
-                    : asset('assets/build/'.$alpineFile);
-                $output .= '<script type="module" defer src="'.$basePath.'"></script>';
-            }
-
-            $mainEntry = 'resources/js/main.js';
-            if (! empty($manifest[$mainEntry]['file'])) {
-                $jsFile = $manifest[$mainEntry]['file'];
+            if (! empty($manifest[$entry]['file'])) {
+                $jsFile = $manifest[$entry]['file'];
 
                 // Relativer Pfad vom Manifest-Verzeichnis
                 $basePath = str_contains($manifestPath, 'vendor/kompass')
                     ? asset('vendor/kompass/assets/build/js/'.basename($jsFile))
                     : asset('assets/build/'.$jsFile);
 
-                $output .= '<script type="module" defer src="'.$basePath.'"></script>';
+                return '<script type="module" defer src="'.$basePath.'"></script>';
             }
 
-            return $output ?: '<!-- Kompass JS: No JS file in manifest -->';
+            return '<!-- Kompass JS: No JS file in manifest -->';
 
         } else {
-            return '<script type="module" defer src="http://localhost:'.env('VITE_PORT_KOMPASS', '5088').'/resources/js/alpine.js"></script>' .
-                   '<script type="module" defer src="'.$url.'"></script>';
+            return '<script type="module" defer src="'.$url.'"></script>';
         }
     }
 }

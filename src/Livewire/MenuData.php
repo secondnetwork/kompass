@@ -34,10 +34,15 @@ class MenuData extends Component
         $movedItemModel = Menuitem::findOrFail($item);
         $subgroup = $movedItemModel->subgroup;
 
-        $items = Menuitem::where('menu_id', $this->menu->id)
-            ->where('subgroup', $subgroup)
-            ->orderBy('order', 'asc')
-            ->get();
+        $query = Menuitem::where('menu_id', $this->menu->id);
+
+        if (is_null($subgroup)) {
+            $query->whereNull('subgroup');
+        } else {
+            $query->where('subgroup', $subgroup);
+        }
+
+        $items = $query->orderBy('order', 'asc')->get();
 
         $movedItemIndex = $items->search(function ($menuItem) use ($item) {
             return $menuItem->id == $item;
