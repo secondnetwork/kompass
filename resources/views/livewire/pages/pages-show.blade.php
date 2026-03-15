@@ -154,7 +154,7 @@
         <div>
       @php
                     $defaultLocale = config('app.locale', 'de');
-                    $langPrefix = ($land == $defaultLocale) ? '' : '/' . $land;
+                    $langPrefix = (empty($land) || $land == $defaultLocale) ? '' : '/' . $land;
                     $permalink = ($layout == 'is_front_page') ? url($langPrefix ?: '/') : url($langPrefix . '/' . $page->slug);
                 @endphp
                 <strong class="text-gray-400 text-xs">Permalink: </strong>

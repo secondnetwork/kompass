@@ -182,7 +182,7 @@
 
                                             @php
                                                 $defaultLocale = config('app.locale', 'de');
-                                                $langPrefix = ($page->land == $defaultLocale) ? '' : '/' . $page->land;
+                                                $langPrefix = (empty($page->land) || $page->land == $defaultLocale) ? '' : '/' . $page->land;
                                                 $pageUrl = ($page->layout == 'is_front_page') ? url($langPrefix ?: '/') : url($langPrefix . '/' . $page->slug);
                                             @endphp
                                             <a target="_blank" href="{{ $pageUrl }}" class="flex justify-center">
