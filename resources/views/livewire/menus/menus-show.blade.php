@@ -143,7 +143,7 @@
     </div>
 
 
-    <div wire:sort="handleSort" {{-- wire:sortable-group="updateOrder" --}}>
+    <div wire:sort="handleSort" wire:sort:group="menuitems" wire:sort:group-id="">
 
 
         @forelse ($menuitem as $key => $item)

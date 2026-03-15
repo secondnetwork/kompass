@@ -24,23 +24,57 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
-    public function handleSort($item, $position)
+    public function handleSort($item, $position, $groupId = null)
     {
         $movedBlock = Block::findOrFail($item);
-        $subgroup = $movedBlock->subgroup;
+        $currentSubgroup = $movedBlock->subgroup;
 
-        $blocks = Block::where('blockable_type', 'post')
-            ->where('blockable_id', $this->post->id)
-            ->where('subgroup', $subgroup)
-            ->orderBy('order', 'asc')
-            ->get();
+        $targetSubgroup = $groupId;
+
+        if ($targetSubgroup === '' || $targetSubgroup === 'null') {
+            $targetSubgroup = null;
+        }
+
+        if ($currentSubgroup !== $targetSubgroup) {
+            $movedBlock->update(['subgroup' => $targetSubgroup]);
+        }
+
+        $blocksQuery = Block::where('blockable_type', 'post')
+            ->where('blockable_id', $this->post->id);
+
+        if (is_null($targetSubgroup)) {
+            $blocksQuery->whereNull('subgroup');
+        } else {
+            $blocksQuery->where('subgroup', $targetSubgroup);
+        }
+
+        $blocks = $blocksQuery->orderBy('order', 'asc')->get();
 
         $movedItemIndex = $blocks->search(function ($block) use ($item) {
             return $block->id == $item;
         });
 
         if ($movedItemIndex === false) {
-            return;
+            $movedBlock->update(['subgroup' => $targetSubgroup, 'order' => $position]);
+
+            $blocksQuery = Block::where('blockable_type', 'post')
+                ->where('blockable_id', $this->post->id);
+
+            if (is_null($targetSubgroup)) {
+                $blocksQuery->whereNull('subgroup');
+            } else {
+                $blocksQuery->where('subgroup', $targetSubgroup);
+            }
+
+            $blocks = $blocksQuery->orderBy('order', 'asc')->get();
+
+            $movedItemIndex = $blocks->search(function ($block) use ($item) {
+                return $block->id == $item;
+            });
+
+            if ($movedItemIndex === false) {
+                return;
+            }
         }
 
         $movedItem = $blocks->pull($movedItemIndex);
@@ -54,6 +88,7 @@ class PostsData extends Component
         }
         $this->call_emit_reset();
     }
+
     // use WithPagination;
     /**
      * The component's listeners.
@@ -174,7 +209,7 @@ class PostsData extends Component
         $this->description = $this->post->meta_description;
         $this->layout = $this->post->layout;
         $this->status = $this->post->status;
-        
+
         if (setting('global.multilingual')) {
             $localesData = setting('global.available_locales');
             if ($localesData) {
@@ -188,7 +223,7 @@ class PostsData extends Component
                 unset($locales[$key]);
                 array_unshift($locales, $appLocale);
             }
-            
+
             $this->land = $this->post->land ?? $appLocale;
             $this->available_locales = $locales;
         } else {
@@ -418,12 +453,12 @@ class PostsData extends Component
                 $newSlug = Str::slug($newSlug, '-', 'de');
                 $checkSlug = $placeObj->whereSlug($newSlug)->exists();
                 if (! $checkSlug) {
-                    $slugNameURL = $newSlug; //New Slug
+                    $slugNameURL = $newSlug; // New Slug
                     break;
                 }
             }
         } else {
-            //Slug do not exists. Just use the selected Slug.
+            // Slug do not exists. Just use the selected Slug.
             $slugNameURL = $titlePost;
         }
 
@@ -487,7 +522,7 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
-    public function delete() //delete block
+    public function delete() // delete block
     {
         block::destroy($this->getId);
         $this->FormDelete = false;

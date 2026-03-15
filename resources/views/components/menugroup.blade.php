@@ -88,6 +88,6 @@
 
 </div>
 
-<div wire:sort="handleSort" wire:sort:item-group="{{ $item->id }}" class="pl-8 bg-purple-600">
+<div wire:sort="handleSort" wire:sort:group="menuitems" wire:sort:group-id="{{ $item->id }}" class="pl-8 bg-purple-600">
     <x-kompass::menugroupsub :childrensub="$item['children']->sortBy('order')"/>
 </div>

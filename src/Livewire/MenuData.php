@@ -2,11 +2,11 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Menu;
 use Secondnetwork\Kompass\Models\Menuitem;
 use Secondnetwork\Kompass\Models\Page;
-use Illuminate\Support\Facades\File;
 
 class MenuData extends Component
 {
@@ -29,17 +29,27 @@ class MenuData extends Component
         $this->dispatch('status');
     }
 
-    public function handleSort($item, $position)
+    public function handleSort($item, $position, $groupId = null)
     {
         $movedItemModel = Menuitem::findOrFail($item);
-        $subgroup = $movedItemModel->subgroup;
+        $currentSubgroup = $movedItemModel->subgroup;
+
+        $targetSubgroup = $groupId;
+
+        if ($targetSubgroup === '' || $targetSubgroup === 'null') {
+            $targetSubgroup = null;
+        }
+
+        if ($targetSubgroup !== $currentSubgroup) {
+            $movedItemModel->update(['subgroup' => $targetSubgroup]);
+        }
 
         $query = Menuitem::where('menu_id', $this->menu->id);
 
-        if (is_null($subgroup)) {
+        if (is_null($targetSubgroup)) {
             $query->whereNull('subgroup');
         } else {
-            $query->where('subgroup', $subgroup);
+            $query->where('subgroup', $targetSubgroup);
         }
 
         $items = $query->orderBy('order', 'asc')->get();
@@ -49,7 +59,25 @@ class MenuData extends Component
         });
 
         if ($movedItemIndex === false) {
-            return;
+            $movedItemModel->update(['subgroup' => $targetSubgroup, 'order' => $position]);
+
+            $query = Menuitem::where('menu_id', $this->menu->id);
+
+            if (is_null($targetSubgroup)) {
+                $query->whereNull('subgroup');
+            } else {
+                $query->where('subgroup', $targetSubgroup);
+            }
+
+            $items = $query->orderBy('order', 'asc')->get();
+
+            $movedItemIndex = $items->search(function ($menuItem) use ($item) {
+                return $menuItem->id == $item;
+            });
+
+            if ($movedItemIndex === false) {
+                return;
+            }
         }
 
         $movedItem = $items->pull($movedItemIndex);
@@ -63,6 +91,7 @@ class MenuData extends Component
         }
         $this->call_emit_reset();
     }
+
     public $title;
 
     public $newName;
@@ -118,7 +147,7 @@ class MenuData extends Component
     {
         $this->menu = Menu::findOrFail($id);
         $this->menuitem = Menuitem::where('menu_id', $id)->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
-        
+
         $this->menuName = $this->menu->name;
         $this->menuLand = $this->menu->land;
 
@@ -137,13 +166,13 @@ class MenuData extends Component
         $this->available_locales = $locales;
 
         $pagesQuery = Page::orderBy('order', 'asc');
-        
+
         if (setting('global.multilingual') && $this->menu->land) {
             $pagesQuery->where('land', $this->menu->land);
         }
-        
-        $this->pages = $pagesQuery->get()->map(fn($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
-        
+
+        $this->pages = $pagesQuery->get()->map(fn ($page) => ['id' => $page->id, 'name' => $page->title])->toArray();
+
         $this->loadIcons();
     }
 
@@ -151,7 +180,7 @@ class MenuData extends Component
     {
         $possiblePaths = [
             base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
-            dirname(base_path()) . '/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            dirname(base_path()).'/vendor/secondnetwork/blade-tabler-icons/resources/svg',
             public_path('vendor/blade-tabler-icons'),
         ];
 
@@ -169,36 +198,35 @@ class MenuData extends Component
         $this->filteredIcons = [];
 
         $iconPath = $this->getIconPath();
-        
-        if (empty($iconPath) || !is_dir($iconPath)) {
+
+        if (empty($iconPath) || ! is_dir($iconPath)) {
             return;
         }
 
         try {
             $files = File::files($iconPath);
-            
+
             if (empty($files)) {
                 return;
             }
-            
+
             $icons = collect($files)
-                ->map(fn($file) => str_replace('.svg', '', $file->getFilename()))
+                ->map(fn ($file) => str_replace('.svg', '', $file->getFilename()))
                 ->sort()
                 ->values();
 
             if ($this->iconSearch) {
                 $search = strtolower(trim($this->iconSearch));
-                if (!empty($search)) {
-                    $icons = $icons->filter(fn($name) =>
-                        str_contains(strtolower($name), $search)
+                if (! empty($search)) {
+                    $icons = $icons->filter(fn ($name) => str_contains(strtolower($name), $search)
                     );
                 }
             }
 
-            $this->filteredIcons = $icons->take(100)->map(fn($name) => [
-                'id' => 'tabler-' . $name,
+            $this->filteredIcons = $icons->take(100)->map(fn ($name) => [
+                'id' => 'tabler-'.$name,
                 'name' => $name,
-                'full_name' => 'tabler-' . $name,
+                'full_name' => 'tabler-'.$name,
             ])->values()->toArray();
         } catch (\Exception $e) {
             $this->filteredIcons = [];
@@ -212,8 +240,8 @@ class MenuData extends Component
 
     public function selectIcon($name)
     {
-        $this->selectedIcon = 'tabler-' . $name;
-        $this->iconclass = 'tabler-' . $name;
+        $this->selectedIcon = 'tabler-'.$name;
+        $this->iconclass = 'tabler-'.$name;
     }
 
     public function resetIcon()
@@ -314,11 +342,10 @@ class MenuData extends Component
         if ($value) {
             $page = Page::find($value);
             if ($page && $page->slug) {
-                $this->url = '/' . $page->slug;
+                $this->url = '/'.$page->slug;
             }
         }
     }
-
 
     public function delete()
     {

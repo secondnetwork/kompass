@@ -210,7 +210,7 @@
         <div class="divider"></div>
         <div class="ordre-1">
 
-            <div wire:sort="handleSort" class="">
+            <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="" class="">
                 
             @forelse ($blocks as $itemblocks)
             <div wire:sort:item="{{ $itemblocks->id }}">

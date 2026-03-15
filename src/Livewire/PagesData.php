@@ -28,23 +28,57 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
-    public function handleSort($item, $position)
+    public function handleSort($item, $position, $groupId = null)
     {
         $movedBlock = Block::findOrFail($item);
-        $subgroup = $movedBlock->subgroup;
+        $currentSubgroup = $movedBlock->subgroup;
 
-        $blocks = Block::where('blockable_type', 'page')
-            ->where('blockable_id', $this->page->id)
-            ->where('subgroup', $subgroup)
-            ->orderBy('order', 'ASC')
-            ->get();
+        $targetSubgroup = $groupId;
+
+        if ($targetSubgroup === '' || $targetSubgroup === 'null') {
+            $targetSubgroup = null;
+        }
+
+        if ($currentSubgroup !== $targetSubgroup) {
+            $movedBlock->update(['subgroup' => $targetSubgroup]);
+        }
+
+        $blocksQuery = Block::where('blockable_type', 'page')
+            ->where('blockable_id', $this->page->id);
+
+        if (is_null($targetSubgroup)) {
+            $blocksQuery->whereNull('subgroup');
+        } else {
+            $blocksQuery->where('subgroup', $targetSubgroup);
+        }
+
+        $blocks = $blocksQuery->orderBy('order', 'ASC')->get();
 
         $movedItemIndex = $blocks->search(function ($block) use ($item) {
             return $block->id == $item;
         });
 
         if ($movedItemIndex === false) {
-            return;
+            $movedBlock->update(['subgroup' => $targetSubgroup, 'order' => $position]);
+
+            $blocksQuery = Block::where('blockable_type', 'page')
+                ->where('blockable_id', $this->page->id);
+
+            if (is_null($targetSubgroup)) {
+                $blocksQuery->whereNull('subgroup');
+            } else {
+                $blocksQuery->where('subgroup', $targetSubgroup);
+            }
+
+            $blocks = $blocksQuery->orderBy('order', 'ASC')->get();
+
+            $movedItemIndex = $blocks->search(function ($block) use ($item) {
+                return $block->id == $item;
+            });
+
+            if ($movedItemIndex === false) {
+                return;
+            }
         }
 
         $movedItem = $blocks->pull($movedItemIndex);
@@ -167,7 +201,7 @@ class PagesData extends Component
         $this->description = $this->page->meta_description;
         $this->layout = $this->page->layout;
         $this->status = $this->page->status;
-        
+
         if (setting('global.multilingual')) {
             $localesData = setting('global.available_locales');
             if ($localesData) {
@@ -175,13 +209,13 @@ class PagesData extends Component
             } else {
                 $locales = ['de', 'en'];
             }
-            
+
             $appLocale = config('app.locale', 'de');
             if (($key = array_search($appLocale, $locales)) !== false) {
                 unset($locales[$key]);
                 array_unshift($locales, $appLocale);
             }
-            
+
             $this->land = $this->page->land ?? $appLocale;
             $this->available_locales = $locales;
         } else {
