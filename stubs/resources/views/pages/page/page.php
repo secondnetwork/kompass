@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
@@ -11,7 +11,7 @@ use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-new class extends Component
+new #[Layout('layouts.main')] class extends Component
 {
     public $page;
 
@@ -23,105 +23,62 @@ new class extends Component
 
     public $settings;
 
-    public function mount(Request $request, $locale = null, $slug = null)
+    public function mount($slug = null)
     {
+        // try-catch block is important
         try {
-            $localesData = setting('global.available_locales');
-            if ($localesData) {
-                $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
-            } else {
-                $availableLocales = ['de', 'en'];
-            }
-            $defaultLocale = $availableLocales[0] ?? 'de';
-            
-            if (setting('global.multilingual')) {
-                // Handle routes like /{slug} where only one param is passed
-                if ($slug === null && $locale !== null) {
-                    if (!in_array($locale, $availableLocales)) {
-                        $slug = $locale;
-                        $locale = $defaultLocale;
-                    }
-                }
-                $land = $locale ?? $defaultLocale;
-            } else {
-                if ($slug === null && $locale !== null) {
-                    $slug = $locale;
-                }
-                $land = $defaultLocale;
-            }
-
-            app()->setLocale($land);
-            
-            $this->resolvePageAndRedirect($land, $slug);
-            
+            $this->resolvePageAndRedirect(request()->segment(1), $slug);
             if ($this->page instanceof Redirect) {
                 return redirect($this->page->to_url, $this->page->status_code);
             }
             if (! empty($this->page->new_url)) {
                 return redirect($this->page->new_url, $this->page->status_code);
             }
-            if ($this->page && !$this->page_frontNotFound) {
-                $this->loadBlocks($this->page->slug);
+            if ($this->page && ! $this->page_frontNotFound) {
+                $this->loadBlocks($slug);
             }
+            // $this->loadFields($slug);
 
         } catch (NotFoundHttpException $e) {
-            $this->log404Error($request->path(), $e);
+            $this->log404Error(request()->path(), $e);
             throw $e;
         }
     }
 
     private function resolvePageAndRedirect($land, $slug): void
     {
-        $localesData = setting('global.available_locales');
-        if ($localesData) {
-            $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
-        } else {
-            $availableLocales = ['de', 'en'];
-        }
-        $defaultLocale = $availableLocales[0] ?? 'de';
-        
-        $isMultilingual = setting('global.multilingual');
-        $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
-        
+        $locales = config('kompass.available_locales', ['de']);
+        $isLocale = in_array($land, $locales);
+        $landurl = $isLocale ? $land : null;
+
         if ($slug === null) {
-            $this->page = Page::query()
-                ->where(function ($query) use ($landurl, $isMultilingual) {
-                    if ($isMultilingual) {
-                        $query->where('land', $landurl)
-                              ->orWhere('land', '')
-                              ->orWhereNull('land');
-                    }
-                })
+            $query = Page::query()
                 ->where('layout', 'is_front_page')
-                ->where('status', 'published')
-                ->when($isMultilingual, function ($query) use ($landurl) {
-                    $query->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl]);
-                })
-                ->first();
-                
-            if (!$this->page) {
-                // Fallback to any front page if specific language not found
-                $this->page = Page::query()
-                    ->where('layout', 'is_front_page')
-                    ->where('status', 'published')
-                    ->first();
+                ->where('status', 'published');
+
+            if ($isLocale) {
+                $query->where('land', $landurl);
+            } else {
+                $query->whereNull('land');
             }
-            
-            if (!$this->page) {
+
+            $this->page = $query->first();
+
+            if (! $this->page) {
                 $this->page_frontNotFound = true;
+
                 return;
             }
         } else {
-            $this->page = Page::query()
-                ->where(function ($query) use ($landurl) {
-                    $query->where('land', $landurl)
-                          ->orWhere('land', '')
-                          ->orWhereNull('land');
-                })
+            $query = Page::query()
                 ->where('slug', $slug)
-                ->whereNot('status', 'draft')
-                ->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl])
-                ->first();
+                ->whereNot('status', 'draft');
+
+            if ($isLocale) {
+                $query->where('land', $landurl);
+            }
+
+            $this->page = $query->first();
         }
 
         if (! $this->page) {

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
+use Secondnetwork\Kompass\Seo\SeoService;
 
 if (! function_exists('getImageID')) {
     /**
@@ -267,5 +268,17 @@ if (! function_exists('videoEmbed')) {
         }
 
         return false;
+    }
+}
+
+if (! function_exists('seo')) {
+    /**
+     * Get or configure the SEO service.
+     *
+     * @return SeoService
+     */
+    function seo(): SeoService
+    {
+        return app('seo');
     }
 }

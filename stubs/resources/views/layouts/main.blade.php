@@ -14,8 +14,8 @@
         document.documentElement.setAttribute('data-theme', 'blaiq');
     }
 </script>
-{{-- Assuming x-seo::meta uses settings internally or doesn't need direct changes here --}}
-<x-seo::meta />
+{{-- SEO Meta Tags --}}
+<x-kompass::seo-meta />
 @if (setting('global.favicon_light_image_path'))
 <link href="{{ url(setting('global.favicon_light_image_path')) }}" rel="icon" media="(prefers-color-scheme: light)" />
 <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }} ">
@@ -154,7 +154,7 @@
                 @endif
             @endauth
         @endif
-      </div> --}}
+      </div>
     </div>
   </nav>
 </header>

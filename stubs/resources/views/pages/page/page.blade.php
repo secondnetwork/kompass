@@ -6,14 +6,9 @@
         @else
             @php
                 seo()->title(
-                    default: setting('global.webtitle' ?? 'Kompass') .
+                    setting('global.webtitle' ?? 'Kompass') .
                         ' | ' .
-                        setting('global.supline' ?? 'A Laravel CMS'),
-                    modify: fn(string $title) => $title .
-                        ' | ' .
-                        setting('global.webtitle' ?? 'Kompass') .
-                        ' | ' .
-                        setting('global.supline' ?? 'A Laravel CMS'),
+                        setting('global.supline' ?? 'A Laravel CMS')
                 );
             @endphp
         @endif
@@ -23,8 +18,7 @@
                 ->description($page->meta_description ?? setting('global.description' ?? ''))
                 ->locale(str_replace('_', '-', app()->getLocale()))
                 ->twitter()
-                ->tag('og:image', asset(setting('global.ogimage_src')))
-                ->twitter();
+                ->tag('og:image', asset(setting('global.ogimage_src')));
         @endphp
     @endif
     @if ($page_frontNotFound)

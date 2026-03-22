@@ -5,13 +5,12 @@
 <section class="grid-set">
 
     @seo(['title' => 'Blog' . ' | ' . setting('global.webtitle' ?? 'Kompass')])
-    {{-- @php
+    @php
         seo()
-            ->description($page->meta_description ?? setting('global.description' ?? ''))
+            ->description(setting('global.description' ?? ''))
             ->locale(str_replace('_', '-', app()->getLocale()))
-            ->twitter()
-            ->tag('og:image', asset(setting('global.ogimage_src')))
-    @endphp --}}
+            ->image(asset(setting('global.ogimage_src')));
+    @endphp
 
     <div class="fullpage">
 

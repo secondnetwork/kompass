@@ -9,10 +9,9 @@
         @php
             seo()
                 ->description($post->meta_description ?? setting('global.description' ?? ''))
-                // ->locale(str_replace('_', '-', app()->getLocale()))
-                // ->twitter()
-                // ->tag('og:image', asset(setting('global.ogimage_src')))
-                // ->twitter();
+                ->locale(str_replace('_', '-', app()->getLocale()))
+                ->twitter()
+                ->image(asset(setting('global.ogimage_src')));
         @endphp
     @endif
 

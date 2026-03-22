@@ -12,6 +12,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
 use Intervention\Image\ImageManager;
 use Livewire\Livewire;
+use Secondnetwork\Kompass\BladeDirectives\SeoDirective;
 use Secondnetwork\Kompass\Commands\CreateUserCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
@@ -20,6 +21,8 @@ use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
+use Secondnetwork\Kompass\Seo\SeoFacade;
+use Secondnetwork\Kompass\Seo\SeoService;
 
 class KompassServiceProvider extends ServiceProvider
 {
@@ -75,6 +78,8 @@ class KompassServiceProvider extends ServiceProvider
             Blade::directive('getImageUrl', function ($expression) {
                 return "<?php echo \Secondnetwork\Kompass\Helpers\ImageFactory::getImageUrl({$expression}); ?>";
             });
+
+            Blade::directive('seo', [SeoDirective::class, 'handle']);
         }
     }
 
@@ -93,6 +98,7 @@ class KompassServiceProvider extends ServiceProvider
     {
         $this->mergeConfigurations();
         $this->registerSingletons();
+        $this->registerSeo();
 
         try {
             if (Schema::hasTable('settings')) {
@@ -113,6 +119,15 @@ class KompassServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             // Database not available yet, skip settings initialization
         }
+    }
+
+    private function registerSeo(): void
+    {
+        $this->app->singleton('seo', function () {
+            return new SeoService;
+        });
+
+        $this->app->alias('seo', SeoService::class);
     }
 
     private function mergeConfigurations(): void
