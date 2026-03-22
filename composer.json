@@ -19,14 +19,13 @@
     ],
     "require": {
         "php": "^8.2|^8.3|^8.4",
-        "archtechx/laravel-seo": "^0.10.2",
-        "blade-ui-kit/blade-icons": "^1.7.2",
+        "blade-ui-kit/blade-icons": "^1.9.0",
         "intervention/image": "^3.9.1",
         "kolossal-io/laravel-multiplex": "^1.5.2",
-        "livewire/livewire": "^4.0",
-        "secondnetwork/blade-tabler-icons": "^3.22.0",
-        "spatie/laravel-permission": "^6.10.1",
-        "spatie/laravel-activitylog": "^4.9.1",
+        "livewire/livewire": "^4.2.1",
+        "secondnetwork/blade-tabler-icons": "^3.40.1",
+        "spatie/laravel-permission": "^7.2.4",
+        "spatie/laravel-activitylog": "^4.12.1",
         "log1x/laravel-webfonts": "^2.0"
     },
     "autoload": {
