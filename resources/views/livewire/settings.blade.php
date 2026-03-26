@@ -107,6 +107,14 @@
                     <livewire:setup.background lazy />
 
                 </div>
+                <div x-show="asidenav === 'backendmenu'" x-cloak>
+                    <div class="my-3">
+                        <h3 class="text-lg font-semibold mt-4">{{ __('Menu Visibility') }}</h3>
+                        <p class="text-sm text-base-content/70 mb-4">{{ __('Toggle visibility of menu items in the admin sidebar') }}</p>
+                    </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
+                    <livewire:settings.backendmenu lazy />
+                </div>
                 {{-- <div x-show="asidenav === 'admin_panel'" x-cloak>
 
                     <div class="my-3">

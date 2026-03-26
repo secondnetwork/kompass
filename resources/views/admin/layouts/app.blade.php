@@ -69,10 +69,18 @@
           <li><a wire:navigate @if(Route::is('admin.dashboard')) class="active" @endif href="/admin/dashboard"><x-tabler-chalkboard class="icon-lg"/><span >Dashboard</span></a></li>
 
           @role(['admin','manager','editor'])
+          @if(setting('global.show_posts', true))
           <li><a wire:navigate @if(Route::is('admin.posts*')) class="active" @endif href="/admin/posts"><x-tabler-news class="icon-lg"/><span>{{ __('Posts') }}</span></a></li>
+          @endif
+          @if(setting('global.show_categories', true))
           <li><a wire:navigate @if(Route::is('admin.categories*')) class="active" @endif href="/admin/categories"><x-tabler-tags class="icon-lg"/><span>{{ __('Categories') }}</span></a></li>
+          @endif
+          @if(setting('global.show_pages', true))
           <li><a wire:navigate @if(Route::is('admin.pages*')) class="active" @endif href="/admin/pages"><x-tabler-file-text class="icon-lg"/><span>{{ __('Pages') }}</span></a></li>
+          @endif
+          @if(setting('global.show_medialibrary', true))
           <li><a wire:navigate @if(Route::is('admin.medialibrary')) class="active" @endif href="/admin/medialibrary"><x-tabler-photo-video class="icon-lg"/><span>{{ __('Media library') }}</span></a></li>
+          @endif
           @endrole
 
           <livewire:menu name="admin_aside" />

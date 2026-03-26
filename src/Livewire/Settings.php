@@ -127,6 +127,11 @@ class Settings extends Component
                 'name' => 'Login ' . __('Page'),
                 'icon' => 'tabler-login',
             ],
+            [
+                'slug' => 'backendmenu',
+                'name' => __('Menu Visibility'),
+                'icon' => 'tabler-menu-2',
+            ],
             // [
             //     'slug' => 'admin_panel',
             //     'name' => __('Admin Panel'),
