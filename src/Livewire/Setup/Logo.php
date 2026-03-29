@@ -33,47 +33,40 @@ class Logo extends Component
         $this->logo_height = optional($globalSettings->get($this->dbKeyLogoHeight))->data ?? '8';
     }
 
-    public function updateSvg($value)
+    public function saveSvg()
     {
-        // Speichere den SVG-String in der Datenbank
-        $this->updateSettingInDatabase($this->dbKeyLogoSvgString, $value);
-        // Aktualisiere die Component-Eigenschaft
-        $this->logo_svg_string = $value;
-
-        // Setze den Logotyp auf 'svg' und speichere ihn
+        \Illuminate\Support\Facades\Log::info('saveSvg called, string: ' . $this->logo_svg_string);
+        $this->updateSettingInDatabase($this->dbKeyLogoSvgString, $this->logo_svg_string);
         $this->logo_type = 'svg';
         $this->updateSettingInDatabase($this->dbKeyLogoType, 'svg');
-
+        
+        session()->flash('message', 'SVG erfolgreich gespeichert.');
     }
 
-    // Updating Hook für einfache Felder und Dateiupload-Eigenschaft
-    public function updating($property, $value)
+    public function updatedLogoImage()
     {
-        if ($property === 'logo_image') {
-            if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                $this->deleteLogoImageFile($this->logo_image_src);
+        if ($this->logo_image instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+            $this->deleteLogoImageFile($this->logo_image_src);
 
-                $filename = $value->getClientOriginalName();
-                $extension = $value->getClientOriginalExtension();
-                $newFilename = 'logo.' . $extension;
+            $extension = $this->logo_image->getClientOriginalExtension();
+            $newFilename = 'logo.' . $extension;
 
-                $path = $value->storeAs('images/logo', $newFilename, 'public');
+            $path = $this->logo_image->storeAs('images/logo', $newFilename, 'public');
+            $publicPath = Storage::disk('public')->url($path);
 
-                $publicPath = Storage::disk('public')->url($path);
-
-                $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, $publicPath);
-
-                $this->logo_image_src = $publicPath;
-
-                 $this->logo_type = 'image';
-                 $this->updateSettingInDatabase($this->dbKeyLogoType, 'image');
-            }
-            return;
+            $this->logo_image_src = $publicPath;
+            $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, $publicPath);
+            
+            $this->logo_type = 'image';
+            $this->updateSettingInDatabase($this->dbKeyLogoType, 'image');
         }
+    }
 
+    // Hook für einfache Felder
+    public function updated($property, $value)
+    {
         if ($property === 'logo_type') {
             $this->updateSettingInDatabase($this->dbKeyLogoType, $value);
-
         } elseif ($property === 'logo_height') {
             $this->updateSettingInDatabase($this->dbKeyLogoHeight, $value);
         }

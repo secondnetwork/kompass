@@ -1,11 +1,11 @@
-@props(['image', 'deleteAction', 'label' => null])
+@props(['image', 'deleteAction', 'label' => null, 'class' => ''])
 
 <div x-data="{ isDropping: false, isUploading: false, progress: 0 }"
     x-on:livewire-upload-start="isUploading = true"
     x-on:livewire-upload-finish="isUploading = false"
     x-on:livewire-upload-error="isUploading = false"
     x-on:livewire-upload-progress="progress = $event.detail.progress"
-    class="w-full">
+    class="w-full {{ $class }}">
     
     @if($label)
         <label class="text-base-content font-bold text-sm block mb-2">{{ $label }}</label>
@@ -27,10 +27,10 @@
                 @dragover.prevent="isDropping = true" @dragleave.prevent="isDropping = false"
                 @drop.prevent="isDropping = false; $refs.fileInput.files = $event.dataTransfer.files; $refs.fileInput.dispatchEvent(new Event('change'))">
                 <label 
-                    class="relative flex justify-center items-center cursor-pointer rounded-lg aspect-video border border-dashed border-base-content/20 hover:border-primary px-6 py-10 transition-colors duration-200">
+                    class="relative flex justify-center items-center cursor-pointer rounded-lg aspect-video border border-dashed bg-base-300 border-base-content/20 hover:border-primary px-6 py-10 transition-colors duration-200">
 
                     <div class="text-center ">
-                        <x-tabler-cloud-upload stroke-width="1.5" class="mx-auto size-12 text-base-300" />
+                        <x-tabler-cloud-upload stroke-width="1.5" class="mx-auto size-12 text-gray-400" />
                         <div class="mt-4 flex text-sm leading-6 text-gray-600 justify-center">
                             <input x-ref="fileInput" type="file" class="sr-only" accept="image/*" {{ $attributes }}>
                             <p class="pl-1">{{ __('Upload a file or drag and drop') }}</p>

@@ -941,5 +941,7 @@
   "Key-value pairs for general application configuration.": "Schlüssel-Wert-Paare für die allgemeine Anwendungskonfiguration.",
   "No settings found": "Keine Einstellungen gefunden",
   "Monitor all changes and actions within the system.": "Überwache alle Änderungen und Aktionen im System.",
-  "Review 404 errors and other system exceptions.": "Überprüfe 404-Fehler und andere Systemausnahmen."
+  "Upload a file or drag and drop": "Datei hochladen oder per Drag-and-Drop hier ablegen",
+  "Review 404 errors and other system exceptions.": "Überprüfe 404-Fehler und andere Systemausnahmen.",
+  "Link URL": "Link-URL"
 }
