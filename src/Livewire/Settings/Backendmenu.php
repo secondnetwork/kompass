@@ -16,10 +16,10 @@ class Backendmenu extends Component
     {
         $globalSettings = Setting::global()->get()->keyBy('key');
 
-        $this->show_posts = (bool) optional($globalSettings->get('show_posts'))->data ?? true;
-        $this->show_categories = (bool) optional($globalSettings->get('show_categories'))->data ?? true;
-        $this->show_pages = (bool) optional($globalSettings->get('show_pages'))->data ?? true;
-        $this->show_medialibrary = (bool) optional($globalSettings->get('show_medialibrary'))->data ?? true;
+        $this->show_posts = (bool) (optional($globalSettings->get('show_posts'))->data ?? 'true');
+        $this->show_categories = (bool) (optional($globalSettings->get('show_categories'))->data ?? 'true');
+        $this->show_pages = (bool) (optional($globalSettings->get('show_pages'))->data ?? 'true');
+        $this->show_medialibrary = (bool) (optional($globalSettings->get('show_medialibrary'))->data ?? 'true');
     }
 
     public function updating($property, $value)
