@@ -29,7 +29,7 @@
 
             @endforeach
         </ul>
-        @else    
+        @elseif ($metaKey == 'id-anchor')    
         <x-tabler-list @click="listcssId = !listcssId" 
         class="cursor-pointer" stroke-width="2" />
         <ul x-show="listcssId" class="absolute z-10 left-0 top-11 flex max-h-44 w-full flex-col overflow-hidden overflow-y-auto border-slate-300 bg-white py-1.5 dark:border-slate-700 dark:bg-slate-800 rounded-md border-2" >

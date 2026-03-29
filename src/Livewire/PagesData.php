@@ -6,7 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-use Kolossal\Multiplex\Meta;
+use Secondnetwork\Kompass\Models\Meta;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -222,8 +222,7 @@ class PagesData extends Component
             $this->land = $this->page->land ?? config('app.locale', 'de');
         }
 
-        $this->cssClassname = Meta::published()
-            ->where('key', 'css-classname')
+        $this->cssClassname = Meta::where('key', 'css-classname')
             ->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order')->get();

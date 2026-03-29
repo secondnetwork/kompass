@@ -349,7 +349,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
     protected function runShellCommands(array $commands): void
     {
-        Process::forever()->run(implode(' && ', $commands), function (string $type, string $output) {
+        Process::forever()->run(implode(' && ', $commands), function (string $type, string $output): void {
             $this->output->write('    '.$output);
         });
     }

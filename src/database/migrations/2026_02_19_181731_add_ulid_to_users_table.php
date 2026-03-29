@@ -13,18 +13,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->ulid('ulid')->nullable()->after('id');
         });
 
         // Generate ULIDs for all existing users
-        DB::table('users')->whereNull('ulid')->get()->each(function ($user) {
+        DB::table('users')->whereNull('ulid')->get()->each(function ($user): void {
             DB::table('users')->where('id', $user->id)->update([
                 'ulid' => (string) Str::ulid(),
             ]);
         });
 
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->ulid('ulid')->nullable(false)->unique()->change();
         });
     }
@@ -34,7 +34,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->dropColumn('ulid');
         });
     }

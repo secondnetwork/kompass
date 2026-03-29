@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Kolossal\Multiplex\HasMeta;
+use Secondnetwork\Kompass\Traits\HasMeta;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -50,6 +50,16 @@ class Page extends Model
     {
         return $this->morphMany(Block::class, 'blockable');
         // return $this->hasOne('Rote');
+    }
+
+    public function meta()
+    {
+        return $this->morphMany(Meta::class, 'metable');
+    }
+
+    public function metas()
+    {
+        return $this->meta();
     }
 
     public function menuitems()

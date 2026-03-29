@@ -2,7 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Kolossal\Multiplex\Meta;
+use Secondnetwork\Kompass\Models\Meta;
 use Livewire\Component;
 
 class EditableMeta extends Component
@@ -28,33 +28,39 @@ class EditableMeta extends Component
         $this->itemblocks = $itemblocks;
         $this->wireAction = $wireAction;
         $this->newName = $this->itemblocks->getMeta($this->metaKey);
-        $this->cssClasses = Meta::published()
-            ->where('key', 'css-classname')
-            ->get()
-            ->pluck('value')
-            ->unique()
-            ->map(function ($className) {
-                return ['name' => $className, 'id' => $className];
-            })
-            ->sort(function ($a, $b) {
-                return strcmp($a['name'], $b['name']);
-            })
-            ->values()
-            ->toArray();
 
-        $this->idAnchor = Meta::published()
-            ->where('key', 'id-anchor')
-            ->get()
-            ->pluck('value')
-            ->unique()
-            ->map(function ($idAnchor) {
-                return ['name' => $idAnchor, 'id' => $idAnchor];
-            })
-            ->sort(function ($a, $b) {
-                return strcmp($a['name'], $b['name']);
-            })
-            ->values()
-            ->toArray();
+        $this->cssClasses = [];
+        $this->idAnchor = [];
+
+        if ($this->metaKey === 'css-classname') {
+            $this->cssClasses = Meta::where('key', 'css-classname')
+                ->get()
+                ->pluck('value')
+                ->unique()
+                ->map(function ($className) {
+                    return ['name' => $className, 'id' => $className];
+                })
+                ->sort(function ($a, $b) {
+                    return strcmp($a['name'], $b['name']);
+                })
+                ->values()
+                ->toArray();
+        }
+
+        if ($this->metaKey === 'id-anchor') {
+            $this->idAnchor = Meta::where('key', 'id-anchor')
+                ->get()
+                ->pluck('value')
+                ->unique()
+                ->map(function ($idAnchor) {
+                    return ['name' => $idAnchor, 'id' => $idAnchor];
+                })
+                ->sort(function ($a, $b) {
+                    return strcmp($a['name'], $b['name']);
+                })
+                ->values()
+                ->toArray();
+        }
     }
 
     public function updateMeta($id, $newValue)

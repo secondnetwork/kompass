@@ -35,7 +35,7 @@ return new class extends Migration
     public function up(): void
     {
         if (!Schema::hasTable('meta')) {
-            Schema::create('meta', function (Blueprint $table) {
+            Schema::create('meta', function (Blueprint $table): void {
                 $this->addKeys($table);
 
                 $table->string('key');

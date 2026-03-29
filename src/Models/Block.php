@@ -4,7 +4,7 @@ namespace Secondnetwork\Kompass\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Kolossal\Multiplex\HasMeta;
+use Secondnetwork\Kompass\Traits\HasMeta;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -34,6 +34,16 @@ class Block extends Model
     public function blockable()
     {
         return $this->morphTo();
+    }
+
+    public function meta()
+    {
+        return $this->morphMany(Meta::class, 'metable');
+    }
+
+    public function metas()
+    {
+        return $this->meta();
     }
 
     public function datafield()

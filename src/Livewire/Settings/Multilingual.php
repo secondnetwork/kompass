@@ -113,7 +113,7 @@ class Multilingual extends Component
                 'string',
                 'min:2',
                 'max:5',
-                function ($attribute, $value, $fail) {
+                function ($attribute, $value, $fail): void {
                     if (in_array(strtolower($value), $this->available_locales)) {
                         $fail(__('This language is already added.'));
                     }

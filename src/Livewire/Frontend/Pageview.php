@@ -2,6 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
@@ -27,6 +28,7 @@ class Pageview extends Component
 
     public function mount(Request $request, $locale = null, $slug = null)
     {
+        dd('Pageview mount reached');
         try {
             $localesData = setting('global.available_locales');
             if ($localesData) {
@@ -82,46 +84,26 @@ class Pageview extends Component
         $defaultLocale = $availableLocales[0] ?? 'de';
         
         $isMultilingual = setting('global.multilingual');
+        Log::info('Multilingual: ' . var_export($isMultilingual, true));
         $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
+        Log::info('Landurl: ' . $landurl);
         
         if ($slug === null) {
             $this->page = Page::query()
-                ->where(function ($query) use ($landurl, $isMultilingual) {
-                    if ($isMultilingual) {
-                        $query->where('land', $landurl)
-                              ->orWhere('land', '')
-                              ->orWhereNull('land');
-                    }
-                })
-                ->where('layout', 'is_front_page')
+                // ->where('layout', 'is_front_page')
                 ->where('status', 'published')
-                ->when($isMultilingual, function ($query) use ($landurl) {
-                    $query->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl]);
-                })
                 ->first();
-                
-            if (!$this->page) {
-                // Fallback to any front page if specific language not found
-                $this->page = Page::query()
-                    ->where('layout', 'is_front_page')
-                    ->where('status', 'published')
-                    ->first();
-            }
+            
+            dd($this->page);
             
             if (!$this->page) {
-                // LAST CHANCE: maybe it's not status published?
-                $this->page = Page::query()
-                    ->where('layout', 'is_front_page')
-                    ->first();
-            }
-
-            if (!$this->page) {
+                Log::error('Frontpage not found in database.');
                 $this->page_frontNotFound = true;
                 return;
             }
         } else {
             $this->page = Page::query()
-                ->where(function ($query) use ($landurl) {
+                ->where(function ($query) use ($landurl): void {
                     $query->where('land', $landurl)
                           ->orWhere('land', '')
                           ->orWhereNull('land');

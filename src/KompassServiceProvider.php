@@ -92,6 +92,8 @@ class KompassServiceProvider extends ServiceProvider
         Livewire::addLocation(
             classNamespace: 'Secondnetwork\\Kompass\\Livewire'
         );
+        
+        Livewire::component('pages::page', \Secondnetwork\Kompass\Livewire\Frontend\Pageview::class);
     }
 
     public function register(): void
