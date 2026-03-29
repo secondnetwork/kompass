@@ -36,7 +36,7 @@ new #[Layout('layouts.main')] class extends Component
             if ($localesData) {
                 $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
             } else {
-                $availableLocales = ['de', 'en'];
+                $availableLocales = ['de', 'en', 'tr'];
             }
             
             $defaultLocale = $availableLocales[0] ?? 'de';

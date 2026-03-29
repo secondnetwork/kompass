@@ -44,76 +44,33 @@ License URI: http://opensource.org/licenses/mit-license.php
 @theme {
     --font-sans: 'inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
-
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
-
-    --animate-spin: spin 3s linear infinite;
 }
-
-@layer theme {
-    .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
-    }
-}
-
-@layer base {
-
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
-
-    img {
-    /* Verhindert, dass der Alt-Text hässlich über dem Placeholder liegt, während es lädt */
-    color: transparent; 
-}
-}
-
-
 
 @plugin "daisyui/theme" {
-  name: "blaiq";
+  name: "light";
   default: true;
-  prefersdark: true;
-  color-scheme: "dark";
+  prefersdark: false;
+  color-scheme: "light";
   --color-base-100: oklch(100% 0 0);
-  --color-base-200: oklch(98% 0 0);
-  --color-base-300: oklch(87% 0 0);
-  --color-base-content: oklch(21% 0.034 264.665);
-  --color-primary: oklch(51% 0.262 276.966);
-  --color-primary-content: oklch(98% 0.003 247.858);
-  --color-secondary: #f6319a;
-  --color-secondary-content: oklch(21% 0.034 264.665);
-  --color-accent: #b4fa4b;
-  --color-accent-content: oklch(38% 0.063 188.416);
-  --color-neutral: oklch(87% 0.006 286.286);
-  --color-neutral-content: oklch(21% 0.034 264.665);
-  --color-info: #5bf1ff;
-  --color-info-content: oklch(21% 0.034 264.665);
-  --color-success: #26C486;
-  --color-success-content: oklch(37% 0.077 168.94);
-  --color-warning: #FFD500;
-  --color-warning-content: oklch(41% 0.112 45.904);
-  --color-error: oklch(50% 0.213 27.518);
-  --color-error-content: oklch(98% 0.003 247.858);
+  --color-base-200: oklch(100% 0 0);
+  --color-base-300: oklch(87% 0.01 258.338);
+  --color-base-content: oklch(37% 0.034 259.733);
+  --color-primary: oklch(54% 0.245 262.881);
+  --color-primary-content: oklch(98% 0.001 106.423);
+  --color-secondary: oklch(55% 0.046 257.417);
+  --color-secondary-content: oklch(98% 0.001 106.423);
+  --color-accent: oklch(49% 0.27 292.581);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(74% 0.16 232.661);
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(76% 0.233 130.85);
+  --color-success-content: oklch(27% 0.033 256.848);
+  --color-warning: oklch(75% 0.183 55.934);
+  --color-warning-content: oklch(27% 0.033 256.848);
+  --color-error: oklch(64% 0.246 16.439);
+  --color-error-content: oklch(96% 0.015 12.422);
   --radius-selector: 0.5rem;
   --radius-field: 0.25rem;
   --radius-box: 0.5rem;

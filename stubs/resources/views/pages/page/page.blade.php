@@ -1,4 +1,4 @@
-<div>
+<div class=grid>
     @if (!empty($page->slug))
         @if ('is_front_page' !== str_replace('.', '-', Route::currentRouteName()))
             @section('slug', $page->slug)
@@ -6,9 +6,14 @@
         @else
             @php
                 seo()->title(
-                    setting('global.webtitle' ?? 'Kompass') .
+                    default: setting('global.webtitle' ?? 'Kompass') .
                         ' | ' .
-                        setting('global.supline' ?? 'A Laravel CMS')
+                        setting('global.supline' ?? 'A Laravel CMS'),
+                    modify: fn(string $title) => $title .
+                        ' | ' .
+                        setting('global.webtitle' ?? 'Kompass') .
+                        ' | ' .
+                        setting('global.supline' ?? 'A Laravel CMS'),
                 );
             @endphp
         @endif
@@ -18,7 +23,8 @@
                 ->description($page->meta_description ?? setting('global.description' ?? ''))
                 ->locale(str_replace('_', '-', app()->getLocale()))
                 ->twitter()
-                ->tag('og:image', asset(setting('global.ogimage_src')));
+                ->tag('og:image', asset(setting('global.ogimage_src')))
+                ->twitter();
         @endphp
     @endif
     @if ($page_frontNotFound)
@@ -34,6 +40,7 @@
             @php
                 // Der Name der Komponente, z.B. "blocks.hero"
                 $componentName = 'blocks.' . $item->type;
+                $isFirstBlock = $key === 0;
 
                 // Der Pfad zur View, z.B. "components.blocks.hero"
                 $viewName = 'components.' . $componentName;
@@ -41,9 +48,9 @@
 
             @if (view()->exists($viewName))
                 {{-- Komponente existiert -> Rendern --}}
-                <section class="{{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('css-classname') }}"
+                <section class="{{ $item->getMeta('layout') ?? ($isFirstBlock ? 'fullpage' : '') }} {{ $item->getMeta('css-classname') }}"
                     id="{{ $item->getMeta('id-anchor') }}">
-                    <x-dynamic-component :component="$componentName" :item="$item" />
+                    <x-dynamic-component :component="$componentName" :item="$item" :is-first="$isFirstBlock" />
                 </section>
             @elseif (app()->hasDebugModeEnabled())
                 {{-- Komponente fehlt & wir sind im Dev-Modus -> Fehler anzeigen --}}

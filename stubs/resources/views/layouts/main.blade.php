@@ -96,7 +96,7 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="translate-x-0 opacity-100"
          x-transition:leave-end="-translate-x-full opacity-0"
-         class="fixed inset-y-0 left-0 z-50 w-full max-w-sm bg-white dark:bg-gray-900 shadow-2xl md:hidden overflow-y-auto"
+         class="fixed inset-y-0 left-0 z-50 w-full max-w-sm bg-white shadow-2xl md:hidden overflow-y-auto"
          x-cloak>
        
       <div class="flex flex-col h-full">
@@ -115,19 +115,6 @@
           <livewire:menus name="main" />
         </div>
         
-        <!-- Auth buttons -->
-        {{-- <div class="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
-          @if (Route::has('login'))
-              @auth
-                  <a href="{{ url('/admin/dashboard') }}" class="btn btn-primary w-full justify-center"><x-tabler-settings-2/>Dashboard</a>
-              @else
-                  <a href="{{ route('login') }}" class="btn btn-primary w-full justify-center"><x-tabler-lock/>Login</a>
-                  @if (Route::has('register') && setting('global.registration_can_user'))
-                      <a href="{{ route('register') }}" class="btn btn-outline w-full justify-center">Register</a>
-                  @endif
-              @endauth
-          @endif
-        </div> --}}
       </div>
     </div>
 
@@ -139,7 +126,7 @@
         
         <x-kompass::elements.language-switcher />
 
-        <button @click="darkMode = !darkMode" class="btn btn-ghost btn-circle btn-sm">
+        {{-- <button @click="darkMode = !darkMode" class="btn btn-ghost btn-circle btn-sm">
             <x-tabler-sun x-show="darkMode" class="size-5" />
             <x-tabler-moon x-show="!darkMode" class="size-5" />
         </button>
@@ -153,7 +140,7 @@
                     <a href="{{ route('register') }}" class="btn btn-ghost btn-sm">Register</a>
                 @endif
             @endauth
-        @endif
+        @endif --}}
       </div>
     </div>
   </nav>
@@ -201,7 +188,7 @@
              
 
             </div>
-            <div class="border-t border-y-violet-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-200">
+            <div class="border-t border-y-base-300 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-200">
                 @if (!empty(setting('global.copyright')))
                 <div> © {{ date('Y') }} {{ setting('global.copyright') }}</div>
                 @endif

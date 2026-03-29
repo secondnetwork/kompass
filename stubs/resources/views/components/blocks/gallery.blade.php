@@ -7,7 +7,7 @@
 @if ('gallery' == $item->type)
 
 <div {{ $attributes }} >
-    <div  class="md:grid gap-4 transition-all ease-in-out duration-500 grid-cols-{{ $item->grid }}  one-image {{ $item->getMeta('css-classname') }}">
+    <div  class="grid gap-4 transition-all ease-in-out duration-500 md:grid-cols-{{ $item->grid }}  one-image {{ $item->getMeta('css-classname') }}">
 
         @foreach ($item->datafield as $image)
 

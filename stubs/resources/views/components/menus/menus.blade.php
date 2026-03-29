@@ -12,13 +12,13 @@
             @keydown.escape.window="open = false"
             class="relative flex items-center {{ $level > 0 ? 'py-1' : '' }}">
 
-            <a @if ($item->iconclass) class="{{ 'tabler-'.$item->iconclass }} flex items-center gap-1  group relative" @else class="flex items-center gap-1 group relative" @endif 
+            <a @if ($item->iconclass) class="{{ $item->iconclass }} flex items-center gap-1  group relative" @else class="flex items-center gap-1 group relative" @endif 
                @click="{{ $item['children']->count() ? 'open = !open; $event.preventDefault();' : 'true' }}"
                href="{{$item->url}}" target="{{$item->target}}"
                rel="noopener noreferrer">
 
                 @if ($item->iconclass)
-                @svg('tabler-'.$item->iconclass)
+                @svg($item->iconclass)
                 @endif
                 <span class="absolute bottom-0 w-full transition duration-150 ease-out transform border-b border-black/50 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1"></span>
                 <span>{{$item->title}}</span>
@@ -41,14 +41,14 @@
                          x-transition:leave="transition ease-in duration-150"
                          x-transition:leave-start="opacity-100 translate-y-0"
                          x-transition:leave-end="opacity-0 translate-y-1"
-                         class="absolute max-md:left-0 md:right-0 top-full z-50 mt-1 w-2xs max-w-3xl bg-violet-900 shadow-xl rounded-xl  overflow-hidden"
+                         class="absolute max-md:left-0 md:right-0 top-full z-50 mt-1 w-sm max-w-4xl bg-violet-900 shadow-xl rounded-xl  overflow-hidden"
                          style="display: none;">
 
                         <div class="p-6">
                              <div class="">
                                 @foreach($item['children']->sortBy('order') as $child)
-                                    <a href="{{ $child->url }}" target="{{ $child->target }}" class="group block p-3 rounded-lg hover:bg-violet-800 transition-colors">
-                                        <div class="font-bold text-white group-hover:text-primary transition-colors">
+                                    <a href="{{ $child->url }}" target="{{ $child->target }}" class="group block p-3 rounded-lg hover:bg-violet-800  transition-colors">
+                                        <div class="font-bold text-white group-hover:text-white transition-colors">
                                             {{ $child->title }}
                                         </div>
                                         @if($child->description)

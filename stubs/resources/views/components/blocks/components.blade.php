@@ -1,9 +1,7 @@
 @props([
-    'item' => ''
+    'item' => '',
+    'isFirst' => false
 ])
-{{-- @dump($item->toArray())
-
-       {{ $item->type }} --}}
             @php
                 // Der Name der Komponente, z.B. "blocks.hero"
                 $componentName = 'blocks.' . $item->type;
@@ -14,8 +12,8 @@
 
             @if (view()->exists($viewName))
                 {{-- Komponente existiert -> Rendern --}}
-                    <x-dynamic-component :component="$componentName" :item="$item" />
-      
+                    <x-dynamic-component :component="$componentName" :item="$item" :is-first="$isFirst" />
+  
             @elseif (app()->hasDebugModeEnabled())
                 {{-- Komponente fehlt & wir sind im Dev-Modus -> Fehler anzeigen --}}
                 <section class="fullpage border border-dashed border-red-500 bg-red-50 p-4 text-red-600 rounded">
