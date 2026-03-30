@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
@@ -11,7 +12,7 @@ use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-new class extends Component
+new #[Layout('layouts::Main')] class extends Component
 {
     public $page;
 

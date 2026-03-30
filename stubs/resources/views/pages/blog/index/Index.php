@@ -10,12 +10,11 @@ use Secondnetwork\Kompass\Models\File;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
-// Optional: Setzt den Seitentitel
 new #[Layout('layouts.main')] class extends Component
 {
-    public $amount = 6; // Anzahl der anzuzeigenden Posts
+    public $amount = 6; 
 
-    #[Locked] // Sicherheit: Verhindert, dass Frontend-User diesen Wert manipulieren
+    #[Locked]
     public $total;
 
     #[Locked]
