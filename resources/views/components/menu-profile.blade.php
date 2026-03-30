@@ -3,7 +3,7 @@
     <button @click="dropdownOpen=true"
         class="flex gap-1 text-sm font-medium w-full overflow-hidden">
 
-        <div class="text-left w-38 ml-2">
+        <div class="text-left w-34 ml-2">
             <span class="truncate block ">{{ auth()->user()->name }}</span>
             <span class="text-xs font-light text-neutral-400 truncate block ">{{ auth()->user()->email }}</span>
         </div>
@@ -50,3 +50,4 @@
         </div>
     </div>
 </div>
+<bdi></bdi>
