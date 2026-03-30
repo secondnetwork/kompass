@@ -1,10 +1,10 @@
 <div x-data="{dropdownOpen: false}" class="relative border-neutral-200 border p-1 rounded-md">
 
-    <button @click="dropdownOpen=true" class="inline-flex items-center justify-between text-sm font-medium w-full ">
+    <button @click="dropdownOpen=true" class="inline-flex items-center justify-between text-sm font-medium w-full overflow-hidden">
                         
-        <span class="flex flex-col items-start flex-shrink-0 h-full mx-2 leading-none translate-y-px">
-            <span class="truncate">{{ auth()->user()->name }}</span>
-            <span class="text-xs font-light text-neutral-400">{{auth()->user()->email}}</span>
+        <span class="flex flex-col items-start flex-shrink-0 h-full mx-2 leading-none translate-y-px w-2">
+            <span class="truncate block w-36">{{ auth()->user()->name }}</span>
+            <span class="text-xs font-light text-neutral-400 truncate block w-36">{{auth()->user()->email}}</span>
         </span>
         <div class="relative rounded-full h-10 w-10 flex items-center justify-center object-cover">
           <span class="absolute inset-0 z-0 flex items-center justify-center text-[#36424A] bg-[#FFA700] rounded-full text-base">
