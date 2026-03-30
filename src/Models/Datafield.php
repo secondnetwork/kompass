@@ -4,8 +4,8 @@ namespace Secondnetwork\Kompass\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Datafield extends Model
 {
@@ -20,7 +20,7 @@ class Datafield extends Model
     //     'id','status', 'name', 'blocktemplate_id', 'slug', 'type', 'grid', 'layout','content'
     // ];
     protected $casts = [
-        "data" => "array",
+        'data' => 'array',
     ];
 
     protected $guarded = [];
