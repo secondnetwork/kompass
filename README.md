@@ -65,8 +65,8 @@ To keep assets up-to-date and avoid issues in future updates, we strongly recomm
 Documentation is available at https://kompass.secondnetwork.de
 
 ## Screenshots
-![screenshot-1](https://github.com/secondnetwork/kompass/blob/main/public/assets/screenshot-1.png?raw=true)
-![screenshot-2](https://github.com/secondnetwork/kompass/blob/main/public/assets/screenshot-2.png?raw=true)
+
+at https://kompass.secondnetwork.de/docs/screenshots
 
 ## Security
 
