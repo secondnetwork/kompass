@@ -56,7 +56,7 @@ class Profile extends Component
 
         Auth::user()->updateProfilePhoto($this->photo);
 
-        $this->dispatch('profile-updated');
+        $this->dispatch('profile-updated')->to('menu-profile');
     }
 
     /**
@@ -127,7 +127,7 @@ class Profile extends Component
 
         $this->reset('photo');
 
-        $this->dispatch('profile-updated');
+        $this->dispatch('profile-updated')->to('menu-profile');
     }
 
     /**

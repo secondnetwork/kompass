@@ -44,7 +44,7 @@ class UserDashboard extends Component
 
         Auth::user()->updateProfilePhoto($this->photo);
 
-        $this->dispatch('profile-updated');
+        $this->dispatch('profile-updated')->to('menu-profile');
     }
 
     public function updatePassword(): void
@@ -102,7 +102,7 @@ class UserDashboard extends Component
 
         $this->reset('photo');
 
-        $this->dispatch('profile-updated');
+        $this->dispatch('profile-updated')->to('menu-profile');
     }
 
     public function render()

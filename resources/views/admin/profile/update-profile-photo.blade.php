@@ -27,11 +27,8 @@
 
 
                 <!-- Current Profile Photo -->
-                <div class="relative rounded-full w-20 h-20 flex items-center justify-center object-cover"" x-show="! photoPreview" x-on:click.prevent="$refs.photo.click()">
-                    <span class="absolute inset-0 z-0 flex items-center justify-center text-[#36424A] bg-[#FFA700] rounded-full text-base">
-                    {{ nameWithLastInitial(auth()->user()->name) }}
-                  </span>
-                    <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ $this->user->name }}" class="absolute rounded-full h-20 w-20 z-10 items-center justify-center flex">
+                <div x-show="! photoPreview">
+                    <x-kompass::elements.avatar :user="auth()->user()" size="w-20" clickable wire:model="photo" />
                 </div>
 
                 <!-- New Profile Photo Preview -->

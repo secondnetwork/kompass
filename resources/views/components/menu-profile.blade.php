@@ -8,17 +8,9 @@
             <span class="text-xs font-light text-neutral-400 truncate block ">{{ auth()->user()->email }}</span>
         </div>
       
-            <div class="w-28"><img class="absolute rounded-full h-10 w-10 z-10 items-center justify-center flex"
-                    src="{{ Auth::user()->profile_photo_url }}" alt="">
-       
-            <div class="relative rounded-full h-10 w-10 flex items-center justify-center object-cover">
-                <span
-                    class="absolute inset-0 z-0 flex items-center justify-center text-[#36424A] bg-[#FFA700] rounded-full text-base">
-                    {{ nameWithLastInitial(auth()->user()->name) }}
-                </span>
-
-            </div>
-            </div>
+        <div class="w-28">
+            <x-kompass::elements.avatar :user="auth()->user()" size="w-10" />
+        </div>
     
     </button>
 
@@ -27,8 +19,6 @@
         x-transition:leave="ease-in duration-100" x-transition:leave-start="-translate-y-0"
         x-transition:leave-end="-translate-y-2" class="absolute bottom-14 z-50 w-full mt-12 left-0" x-cloak>
         <div class="p-1  bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
-            {{-- <div class="px-2 py-1.5 text-sm font-semibold">{{ __('Account Settings') }}</div> --}}
-            {{-- <div class="h-px my-1 -mx-1 bg-neutral-200"></div> --}}
             <a href="/admin/profile"
                 class="relative flex gap-x-2 cursor-default select-none hover:bg-neutral-100 items-center rounded !px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
                 <x-tabler-user class="icon-lg" />
@@ -50,4 +40,3 @@
         </div>
     </div>
 </div>
-<bdi></bdi>

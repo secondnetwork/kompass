@@ -104,7 +104,7 @@
 
     
         <div class="mt-auto m-3">
-          <x-kompass::menu-profile />
+          @livewire(\Secondnetwork\Kompass\Livewire\MenuProfile::class)
           {{-- <button x-data @click="$store.showside.toggle()">
             <x-tabler-layout-sidebar-left-collapse class="base-content-400 sidebarbutton  transition delay-150 duration-300 ease-in-out"/>
           </button> --}}

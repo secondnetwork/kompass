@@ -21,20 +21,32 @@
 
         <!-- Avatar Section -->
         <div class="rounded-lg p-6 mb-6 flex items-center gap-6 border border-base-300">
-            <div class="avatar">
-   
-                <div class="relative rounded-full w-20 h-20 flex items-center justify-center object-cover""  x-on:click.prevent="$refs.photo.click()">
-                  <span class="absolute inset-0 z-0 flex items-center justify-center text-[#36424A] bg-[#FFA700] rounded-full text-3xl">
-                    {{ nameWithLastInitial(auth()->user()->name) }}
-                  </span>
+            <x-kompass::elements.avatar 
+                :user="auth()->user()" 
+                size="w-24" 
+                clickable 
+                wire:model.live="photo" />
 
-                    @if ($photo)
-                        <img class="absolute rounded-full h-20 w-20 z-10 items-center justify-center flex" src="{{ $photo->temporaryUrl() }}" />
-                    @else
-                        <img class="absolute rounded-full h-20 w-20 z-10 items-center justify-center flex" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" />
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <label for="photo" class="btn btn-primary btn-sm">
+                        <x-tabler-upload class="size-4 mr-1" />
+                        {{ __('Upload photo') }}
+                    </label>
+
+                    @if (auth()->user()->profile_photo_path)
+                        <button type="button" class="btn btn-error btn-outline btn-sm" wire:click="deleteProfilePhoto" wire:confirm="{{ __('Are you sure you want to delete your profile photo?') }}">
+                            {{ __('Delete') }}
+                        </button>
                     @endif
-                    {{-- <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ $this->user->name }}" class="absolute rounded-full h-20 w-20 z-10 items-center justify-center flex"> --}}
                 </div>
+                <p class="text-xs text-base-content/60">{{ __('Allowed JPG, GIF or PNG. Max size of 1MB') }}</p>
+                <div wire:loading wire:target="photo" class="text-xs text-primary font-semibold">
+                    {{ __('Uploading...') }}
+                </div>
+                @error('photo') <span class="text-error text-xs">{{ $message }}</span> @enderror
+            </div>
+        </div>
 
 
             </div>

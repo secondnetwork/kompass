@@ -35,9 +35,7 @@
             <div class="flex-none">
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                            <img alt="{{ auth()->user()->name }}" src="{{ auth()->user()->profile_photo_url }}" />
-                        </div>
+                        <x-kompass::elements.avatar :user="auth()->user()" size="w-10" />
                     </div>
                     <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow">
                         <li><a href="{{ route('profile.dashboard') }}">{{ __('My Profile') }}</a></li>

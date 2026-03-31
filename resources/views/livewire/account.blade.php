@@ -73,16 +73,7 @@
                                     <td class="px-4 py-2 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10">
-                                                <div class="relative block">
-                                                    <span
-                                                        class="absolute inset-0 z-0 flex items-center justify-center text-[#36424A] bg-[#FFA700] rounded-full h-10 w-10 text-base">
-                                                        {{ nameWithLastInitial($user->name) }}
-                                                    </span>
-                                                    <img class="absolute rounded-full h-10 w-10 z-10 items-center justify-center flex"
-                                                        src="{{ $user->profile_photo_url }}" alt="">
-                                                </div>
-
-
+                                                <x-kompass::elements.avatar :user="$user" size="w-10" />
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900">
