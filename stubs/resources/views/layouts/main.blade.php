@@ -122,25 +122,25 @@
     <div class="hidden md:flex md:items-center md:gap-2 ml-auto">
       <livewire:menus name="main" />
 
-      <div class="flex items-center gap-2 pl-4 border-l border-gray-200 dark:border-gray-700">
+      <div class="flex items-center gap-2 pl-4 border-l border-gray-200">
         
         <x-kompass::elements.language-switcher />
 
-        {{-- <button @click="darkMode = !darkMode" class="btn btn-ghost btn-circle btn-sm">
+        <button @click="darkMode = !darkMode" class="btn btn-ghost btn-circle">
             <x-tabler-sun x-show="darkMode" class="size-5" />
             <x-tabler-moon x-show="!darkMode" class="size-5" />
         </button>
 
         @if (Route::has('login'))
             @auth
-                <a href="{{ url('/admin/dashboard') }}" class="btn btn-primary btn-sm"><x-tabler-settings-2/>Admin</a>
+                <a href="{{ url('/admin/dashboard') }}" class="btn btn-primary "><x-tabler-settings-2/>Admin</a>
             @else
-                <a href="{{ route('login') }}" class="btn btn-primary btn-sm"><x-tabler-lock/>Login</a>
+                <a href="{{ route('login') }}" class="btn btn-primary"><x-tabler-lock/>Login</a>
                 @if (Route::has('register') && setting('global.registration_can_user'))
-                    <a href="{{ route('register') }}" class="btn btn-ghost btn-sm">Register</a>
+                    <a href="{{ route('register') }}" class="btn btn-ghost">Register</a>
                 @endif
             @endauth
-        @endif --}}
+        @endif
       </div>
     </div>
   </nav>
@@ -148,7 +148,7 @@
 <!-- ========== END HEADER ========== -->
 
 
-    <main>
+    <main class="prose max-w-none">
         @isset($slot)
             {{ $slot }}
         @endisset
@@ -157,12 +157,12 @@
 
     <div class="divider"></div>
     <footer>
-        <div class="py-16">
+        <div class="py-16 prose max-w-none prose-a:text-inherit prose-a:no-underline prose-a:font-normal">
 
 
               
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="">
                     <a href="index.html" class="flex items-center mb-4">
                            <x-kompass::elements.logo
                     :height="setting('global.logo_height', '2')" {{-- Default height if not set --}}
@@ -188,15 +188,13 @@
              
 
             </div>
-            <div class="border-t border-y-base-300 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-200">
+            <div class="border-t border-y-base-300 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
                 @if (!empty(setting('global.copyright')))
                 <div> © {{ date('Y') }} {{ setting('global.copyright') }}</div>
                 @endif
             </div>
         </div>
     </footer>
-
-
 
 
     <div @click="window.scrollTo({top: 0, behavior: 'smooth'})" x-data="{ gotop: false }" class="bg-gray-900/50 p-2 h-10 w-10 rounded shadow fixed cursor-pointer right-8 transition-all"

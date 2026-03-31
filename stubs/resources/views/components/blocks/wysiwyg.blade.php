@@ -17,6 +17,7 @@
 @php
     $linkUrl = (is_object($item) && method_exists($item, 'getMeta')) ? $item->getMeta('link-url') : null;
     $alignment = (is_object($item) && method_exists($item, 'getMeta')) ? $item->getMeta('alignment') : null;
+    $cssclassname = $item->getMeta('css-classname') ?? '' ;
     $alignmentClass = match($alignment) {
         'align-left' => 'text-left ',
         'align-center' => 'text-center ',
@@ -27,11 +28,11 @@
     $gridCols = 'md:grid-cols-' . $layoutgrid;
     $colSpan = is_object($item) && $item->layoutgrid ? 'md:col-span-' . $item->layoutgrid : '';
 @endphp
-    <div {{ $attributes->merge(['class' => 'relative group ' . $alignmentClass . ' ' . $gridCols . ' ' . $colSpan]) }}>
+    <div {{ $attributes->merge(['class' => 'relative group ' . $cssclassname . ' ' . $alignmentClass . ' ' . $gridCols . ' ' . $colSpan]) }}>
         @if($linkUrl)
 
             <a href="{{ $linkUrl }}" class=" block absolute inset-0 z-10"></a>
-            <div class="transition block absolute inset-0 rounded-2xl -z-10"></div>
+            <div class="group-hover:bg-violet-900/60 transition block absolute inset-0 rounded-2xl -z-10"></div>
 
         @endif
         @if($data)

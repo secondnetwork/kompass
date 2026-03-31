@@ -6,7 +6,7 @@
         // Debug toggle: allow debugging from meta or query param
         $debugStatbar = (bool) ($item->getMeta('debug_statbar') ?? request()->query('debug_statbar') ?? false);
         $gridCols = 'grid-cols-' . $layoutgrid;
-        $colSpan = $item->layoutgrid ? 'md:col-span-' . $item->layoutgrid : '';
+        $colSpan = $item->layoutgrid ? 'col-span-' . $item->layoutgrid : '';
     @endphp
 
     <div class="statbar py-6 {{ $gridCols }} {{ $colSpan }}">
@@ -28,7 +28,7 @@
                     $hasNumber = true;
                 }
             @endphp
-            <div class="stat-item text-center">
+            <div class="stat-item">
                 @if($index == 0)
                     <h3>{!! $str !!}</h3>
                 @else

@@ -10,8 +10,7 @@
     @endphp
 
         <div
-            class="grid gap-6 transition-all ease-in-out duration-500  {{ $gridCols }} {{ $colSpan }}  {{ $item->getMeta('alignment') }}"
-            >
+            class="group md:grid gap-6 transition-all ease-in-out duration-500 {{ $gridCols }} {{ $colSpan }} {{ $item->getMeta('css-classname') ?? '' }} {{ $item->getMeta('layout') ?? '' }} {{ $item->getMeta('alignment') }}">
 
             @foreach ($item->children as $item)
                 <x-blocks.components :item="$item" />

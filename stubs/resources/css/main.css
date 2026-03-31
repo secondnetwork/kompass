@@ -19,6 +19,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @source "../views";
 @source "../views/";
 @source "../../app/";
@@ -31,7 +32,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 @import "./base/base.css";
 @import "./base/fonts.css";
-@import "./base/typography.css";
+/* @import "./base/typography.css"; */
 @import "./base/grid_layout.css";
 
 @import "./components/header_hero.css";

@@ -12,6 +12,7 @@ use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 new #[Layout('layouts::Main')] class extends Component
 {
     public $page;
