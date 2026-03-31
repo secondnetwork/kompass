@@ -4,6 +4,12 @@ namespace Secondnetwork\Kompass\Helpers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\AutoEncoder;
+use Intervention\Image\Encoders\AvifEncoder;
+use Intervention\Image\Encoders\JpegEncoder;
+use Intervention\Image\Encoders\PngEncoder;
+use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\ImageManager;
 use Secondnetwork\Kompass\Models\File;
 
@@ -161,11 +167,47 @@ class ImageFactory
     protected static function getManager()
     {
         if (! self::$manager) {
-            $driver = config('kompass.driver', \Intervention\Image\Drivers\Gd\Driver::class);
+            $driver = config('kompass.driver', Driver::class);
             self::$manager = new ImageManager($driver);
         }
 
         return self::$manager;
+    }
+
+    protected static function readImage($content)
+    {
+        $manager = self::getManager();
+
+        if (method_exists($manager, 'decode')) {
+            return $manager->decode($content);
+        }
+
+        return $manager->read($content);
+    }
+
+    protected static function encodeImage($image, string $format, int $quality = 85)
+    {
+        // v4 uses encoders
+        if (method_exists($image, 'encode')) {
+            $encoderClass = match ($format) {
+                'avif' => AvifEncoder::class,
+                'webp' => WebpEncoder::class,
+                'jpeg', 'jpg' => JpegEncoder::class,
+                'png' => PngEncoder::class,
+                default => AutoEncoder::class,
+            };
+
+            return $image->encode(new $encoderClass($quality));
+        }
+
+        // v3 uses direct methods
+        return match ($format) {
+            'avif' => $image->toAvif($quality),
+            'webp' => $image->toWebp($quality),
+            'jpeg', 'jpg' => $image->toJpeg($quality),
+            'png' => $image->toPng(),
+            default => $image->toJpeg($quality),
+        };
     }
 
     protected static function generateHtml($relativePath, $sizeKey, $cssClass, $alt, $attributes = [])
@@ -257,11 +299,19 @@ class ImageFactory
             try {
                 $content = $storage->get($path);
                 $manager = self::getManager();
-                $image = $manager->read($content);
+                $image = self::readImage($content);
                 $image->scale(width: 20);
                 $image->blur(5);
 
-                return $image->toJpeg(quality: 50)->toDataUri();
+                $encoded = self::encodeImage($image, 'jpeg', 50);
+
+                // v4: Encoded object has toDataUri(); v3: returns binary string
+                if (is_object($encoded) && method_exists($encoded, 'toDataUri')) {
+                    return (string) $encoded->toDataUri();
+                }
+
+                // v3: binary string, wrap as data URI
+                return 'data:image/jpeg;base64,'.base64_encode($encoded);
             } catch (\Exception $e) {
                 return null;
             }
@@ -297,8 +347,7 @@ class ImageFactory
 
         try {
             $content = $storage->get($sourcePath);
-            $manager = self::getManager();
-            $image = $manager->read($content);
+            $image = self::readImage($content);
 
             if ($width || $height) {
                 if ($method === 'cover') {
@@ -318,20 +367,21 @@ class ImageFactory
 
             if ($format === 'avif') {
                 try {
-                    $encoded = $image->toAvif($quality);
+                    $encoded = self::encodeImage($image, 'avif', $quality);
                 } catch (\Exception $e) {
-                    // Final fallback
                     $format = 'webp';
                     $newPath = str_replace('.avif', '.webp', $newPath);
-                    $encoded = $image->toWebp($quality);
+                    $encoded = self::encodeImage($image, 'webp', $quality);
                 }
             } elseif ($format === 'webp') {
-                $encoded = $image->toWebp($quality);
+                $encoded = self::encodeImage($image, 'webp', $quality);
             } else {
                 return null;
             }
 
-            $storage->put($newPath, (string) $encoded, 'public');
+            // v4: Encoded object; v3: binary string
+            $imageData = is_object($encoded) ? (string) $encoded : $encoded;
+            $storage->put($newPath, $imageData, 'public');
             $url = $storage->url($newPath);
             Cache::put($cacheKey, $url, now()->addDay());
 

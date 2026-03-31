@@ -79,7 +79,7 @@ class Block extends Model
 
     public function getLayoutgridAttribute()
     {
-        return $this->getMeta('layoutgrid');
+        return $this->getMeta('layoutgrid') ?? $this->attributes['layoutgrid'] ?? null;
     }
 
     public function getStatusAttribute()
