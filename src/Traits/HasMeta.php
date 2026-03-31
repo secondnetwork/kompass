@@ -22,6 +22,7 @@ trait HasMeta
             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                 return $decoded;
             }
+
             return $value;
         }
 

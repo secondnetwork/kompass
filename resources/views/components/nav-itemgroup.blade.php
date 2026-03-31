@@ -11,6 +11,7 @@
     $alignment = $itemblocks->alignment ?? '';
     $slider = $itemblocks->slider ?? '';
 @endphp
+
 <nav-item class="flex items-center gap-2">
 
     <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout</span>

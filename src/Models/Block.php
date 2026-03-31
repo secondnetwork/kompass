@@ -53,13 +53,37 @@ class Block extends Model
 
     public function children()
     {
-        return $this->hasMany(Block::class, 'subgroup')->with('children', 'datafield', 'meta')->orderBy('order', 'asc');
+        return $this->hasMany(Block::class, 'subgroup')->with('children', 'datafield', 'metas')->orderBy('order', 'asc');
     }
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logOnly(['name', 'data']);
-        // Chain fluent methods for configuration options
+    }
+
+    public function getLayoutAttribute()
+    {
+        return $this->getMeta('layout');
+    }
+
+    public function getAlignmentAttribute()
+    {
+        return $this->getMeta('alignment');
+    }
+
+    public function getSliderAttribute()
+    {
+        return $this->getMeta('slider');
+    }
+
+    public function getLayoutgridAttribute()
+    {
+        return $this->getMeta('layoutgrid');
+    }
+
+    public function getStatusAttribute()
+    {
+        return $this->getMeta('status') ?? $this->attributes['status'] ?? null;
     }
 }
