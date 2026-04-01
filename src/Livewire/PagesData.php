@@ -4,8 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
+use Intervention\Image\Encoders\JpegEncoder;
 use Secondnetwork\Kompass\Models\Meta;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
@@ -288,10 +287,13 @@ class PagesData extends Component
             if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
-                    $manager = new ImageManager(new Driver);
-                    $image = $manager->read($thumbnailContents);
+                    $manager = app('image');
+                    $image = method_exists($manager, 'decode') 
+                        ? $manager->decode($thumbnailContents) 
+                        : $manager->read($thumbnailContents);
 
-                    Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, $image->toJpeg(60));
+                    $encoded = $image->encode(new JpegEncoder(quality: 60));
+                    Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, (string) $encoded);
                 }
 
             }
