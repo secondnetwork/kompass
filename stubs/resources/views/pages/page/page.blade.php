@@ -1,23 +1,20 @@
 <div class=grid>
     @if (!empty($page->slug))
-        @if ('is_front_page' !== str_replace('.', '-', Route::currentRouteName()))
-            @section('slug', $page->slug)
-            @seo(['title' => $page->title . ' | ' . setting('global.webtitle' ?? 'Kompass')])
+        @php
+            $webtitle = setting('global.webtitle', 'Kompass');
+            $supline = setting('global.supline', 'A Laravel CMS');
+            $title = $page->title ?? $webtitle;
+            $fullTitle = $webtitle . ' | ' . $supline;
+        @endphp
+
+        @if ($page->layout !== 'is_front_page')
+
+            @seo(['title' => $title . ' | ' . $webtitle])
         @else
             @php
-                seo()->title(
-                    default: setting('global.webtitle' ?? 'Kompass') .
-                        ' | ' .
-                        setting('global.supline' ?? 'A Laravel CMS'),
-                    modify: fn(string $title) => $title .
-                        ' | ' .
-                        setting('global.webtitle' ?? 'Kompass') .
-                        ' | ' .
-                        setting('global.supline' ?? 'A Laravel CMS'),
-                );
+                seo()->title($fullTitle);
             @endphp
         @endif
-
         @php
             seo()
                 ->description($page->meta_description ?? setting('global.description' ?? ''))
