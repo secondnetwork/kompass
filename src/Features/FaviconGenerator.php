@@ -2,7 +2,6 @@
 
 namespace Secondnetwork\Kompass\Features;
 
-use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
 class FaviconGenerator
@@ -21,17 +20,16 @@ class FaviconGenerator
 
     public function generateFaviconsFromImagePath()
     {
-        $manager = new ImageManager(new Driver);
-        // create an image manager instance with imagick driver
-        // Image::configure(['driver' => 'imagick']);
-
-        $image = $manager->read($this->filePath);
+        $manager = app('image');
+        $image = method_exists($manager, 'decode') 
+            ? $manager->decode(file_get_contents($this->filePath)) 
+            : $manager->read($this->filePath);
         $image->resize(512, 512)->save($this->distPath.'/android-chrome-512x512.png', 100, 'png');
         $image->resize(192, 192)->save($this->distPath.'/android-chrome-192x192.png', 100, 'png');
         $image->resize(192, 192)->save($this->distPath.'/apple-touch-icon.png', 100, 'png');
         $image->resize(150, 150)->save($this->distPath.'/mstile-150x150.png', 100, 'png');
         $image->resize(32, 32)->save($this->distPath.'/favicon-32x32.png', 100, 'png');
-        $image->resize(32, 32)->save($this->distPath.'/favicon.ico', 100, 'ico');
+        $image->resize(32, 32)->save($this->distPath.'/favicon.png', 100, 'png');
         $image->resize(16, 16)->save($this->distPath.'/favicon-16x16.png', 100, 'png');
 
         $this->saveBrowserConfigXml();

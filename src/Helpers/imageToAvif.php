@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Encoders\AvifEncoder;
 
 function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = null, array $config = []): ?string
 {
@@ -50,7 +51,11 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
     }
 
     try {
-        $image = \Secondnetwork\Kompass\Facades\Image::read($storage->get($diskPathImages));
+        $manager = app('image');
+        $content = $storage->get($diskPathImages);
+        $image = method_exists($manager, 'decode') 
+            ? $manager->decode($content) 
+            : $manager->read($content);
 
         if ($crop) {
             $image->cover($width, $height);
@@ -58,7 +63,7 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
             $image->scaleDown($width, $height);
         }
 
-        $encoded = $image->toAvif($quality);
+        $encoded = $image->encode(new AvifEncoder(quality: $quality));
         $storage->put($resizedImagePath, (string) $encoded, 'public');
         $fullUrl = $storage->url($resizedImagePath);
         Cache::put($cacheKey, $fullUrl, now()->addDay());

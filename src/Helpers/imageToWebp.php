@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use Secondnetwork\Kompass\Facades\Image;
+use Intervention\Image\Encoders\WebpEncoder;
 
 function imageToWebp(string $imageUrl = '', ?int $width = null, ?int $height = null, array $config = []): ?string
 {
@@ -32,13 +32,18 @@ function imageToWebp(string $imageUrl = '', ?int $width = null, ?int $height = n
         if ($storage->exists($resizedImagePath)) return $storage->url($resizedImagePath);
 
         try {
-            $image = Image::read($storage->get($diskPathImages));
+            $manager = app('image');
+            $content = $storage->get($diskPathImages);
+            $image = method_exists($manager, 'decode') 
+                ? $manager->decode($content) 
+                : $manager->read($content);
+            
             if ($crop) {
                 $image->cover($width, $height);
             } else {
                 $image->scaleDown($width, $height);
             }
-            $encoded = $image->toWebp($quality);
+            $encoded = $image->encode(new WebpEncoder(quality: $quality));
             $storage->put($resizedImagePath, (string) $encoded, 'public');
             return $storage->url($resizedImagePath);
         } catch (\Exception $e) {

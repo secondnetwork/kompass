@@ -167,8 +167,12 @@ class ImageFactory
     protected static function getManager()
     {
         if (! self::$manager) {
-            $driver = config('kompass.driver', Driver::class);
-            self::$manager = new ImageManager($driver);
+            $driverName = config('kompass.driver', 'gd');
+            $driverClass = match ($driverName) {
+                'imagick' => \Intervention\Image\Drivers\Imagick\Driver::class,
+                default => \Intervention\Image\Drivers\Gd\Driver::class,
+            };
+            self::$manager = new ImageManager(driver: new $driverClass);
         }
 
         return self::$manager;
@@ -188,26 +192,15 @@ class ImageFactory
     protected static function encodeImage($image, string $format, int $quality = 85)
     {
         // v4 uses encoders
-        if (method_exists($image, 'encode')) {
-            $encoderClass = match ($format) {
-                'avif' => AvifEncoder::class,
-                'webp' => WebpEncoder::class,
-                'jpeg', 'jpg' => JpegEncoder::class,
-                'png' => PngEncoder::class,
-                default => AutoEncoder::class,
-            };
-
-            return $image->encode(new $encoderClass($quality));
-        }
-
-        // v3 uses direct methods
-        return match ($format) {
-            'avif' => $image->toAvif($quality),
-            'webp' => $image->toWebp($quality),
-            'jpeg', 'jpg' => $image->toJpeg($quality),
-            'png' => $image->toPng(),
-            default => $image->toJpeg($quality),
+        $encoderClass = match ($format) {
+            'avif' => AvifEncoder::class,
+            'webp' => WebpEncoder::class,
+            'jpeg', 'jpg' => JpegEncoder::class,
+            'png' => PngEncoder::class,
+            default => AutoEncoder::class,
         };
+
+        return $image->encode(new $encoderClass($quality));
     }
 
     protected static function generateHtml($relativePath, $sizeKey, $cssClass, $alt, $attributes = [])
