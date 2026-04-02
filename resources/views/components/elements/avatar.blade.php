@@ -12,7 +12,7 @@
     $alt = $user?->name ?? 'Avatar';
 @endphp
 
-<div class="avatar {{ $clickable ? 'avatar-pointer' : '' }} {{ !$photoSrc ? 'avatar-placeholder' : '' }}">
+<div class="avatar shrink-0 {{ $clickable ? 'cursor-pointer' : '' }} {{ !$photoSrc ? 'avatar-placeholder' : '' }}">
     <div class="rounded-full relative overflow-hidden {{ !$photoSrc ? 'bg-[#FFA700] text-[#36424A]' : '' }} {{ match($size) {
         'w-6' => 'w-6 h-6 text-[10px]',
         'w-8' => 'w-8 h-8 text-xs',
