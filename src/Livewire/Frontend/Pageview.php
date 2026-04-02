@@ -2,9 +2,9 @@
 
 namespace Secondnetwork\Kompass\Livewire\Frontend;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
@@ -28,7 +28,6 @@ class Pageview extends Component
 
     public function mount(Request $request, $locale = null, $slug = null)
     {
-        dd('Pageview mount reached');
         try {
             $localesData = setting('global.available_locales');
             if ($localesData) {
@@ -36,13 +35,13 @@ class Pageview extends Component
             } else {
                 $availableLocales = ['de', 'en'];
             }
-            
+
             $defaultLocale = $availableLocales[0] ?? 'de';
-            
+
             if (setting('global.multilingual')) {
                 // Handle routes like /{slug} where only one param is passed
                 if ($slug === null && $locale !== null) {
-                    if (!in_array($locale, $availableLocales)) {
+                    if (! in_array($locale, $availableLocales)) {
                         $slug = $locale;
                         $locale = $defaultLocale;
                     }
@@ -54,16 +53,16 @@ class Pageview extends Component
                 }
                 $land = $defaultLocale;
             }
-            
+
             $this->resolvePageAndRedirect($land, $slug);
-            
+
             if ($this->page instanceof Redirect) {
                 return redirect($this->page->to_url, $this->page->status_code);
             }
             if (! empty($this->page->new_url)) {
                 return redirect($this->page->new_url, $this->page->status_code);
             }
-            if ($this->page && !$this->page_frontNotFound) {
+            if ($this->page && ! $this->page_frontNotFound) {
                 $this->loadBlocks($this->page->slug);
             }
 
@@ -82,35 +81,34 @@ class Pageview extends Component
             $availableLocales = ['de', 'en'];
         }
         $defaultLocale = $availableLocales[0] ?? 'de';
-        
+
         $isMultilingual = setting('global.multilingual');
-        Log::info('Multilingual: ' . var_export($isMultilingual, true));
+        Log::info('Multilingual: '.var_export($isMultilingual, true));
         $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
-        Log::info('Landurl: ' . $landurl);
-        
+        Log::info('Landurl: '.$landurl);
+
         if ($slug === null) {
             $this->page = Page::query()
                 // ->where('layout', 'is_front_page')
                 ->where('status', 'published')
                 ->first();
-            
-            dd($this->page);
-            
-            if (!$this->page) {
+
+            if (! $this->page) {
                 Log::error('Frontpage not found in database.');
                 $this->page_frontNotFound = true;
+
                 return;
             }
         } else {
             $this->page = Page::query()
                 ->where(function ($query) use ($landurl): void {
                     $query->where('land', $landurl)
-                          ->orWhere('land', '')
-                          ->orWhereNull('land');
+                        ->orWhere('land', '')
+                        ->orWhereNull('land');
                 })
                 ->where('slug', $slug)
                 ->whereNot('status', 'draft')
-                ->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl])
+                ->orderByRaw('CASE WHEN land = ? THEN 0 ELSE 1 END', [$landurl])
                 ->first();
         }
 

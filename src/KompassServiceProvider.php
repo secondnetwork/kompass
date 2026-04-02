@@ -17,12 +17,15 @@ use Secondnetwork\Kompass\Commands\CreateUserCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
 use Secondnetwork\Kompass\DataWriter\Repository;
+use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
-use Secondnetwork\Kompass\Seo\SeoFacade;
 use Secondnetwork\Kompass\Seo\SeoService;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 class KompassServiceProvider extends ServiceProvider
 {
@@ -61,6 +64,8 @@ class KompassServiceProvider extends ServiceProvider
                 $componentClass = is_string($component) ? $component : $component['class'];
                 $blade->component($componentClass, $alias, $prefix);
             }
+
+            $blade->component('kompass::components.field', 'field', $prefix);
         });
     }
 
@@ -92,8 +97,8 @@ class KompassServiceProvider extends ServiceProvider
         Livewire::addLocation(
             classNamespace: 'Secondnetwork\\Kompass\\Livewire'
         );
-        
-        Livewire::component('pages::page', \Secondnetwork\Kompass\Livewire\Frontend\Pageview::class);
+
+        Livewire::component('pages::page', Pageview::class);
     }
 
     public function register(): void
@@ -195,9 +200,9 @@ class KompassServiceProvider extends ServiceProvider
     {
         $router = $this->app['router'];
         $middlewareMappings = [
-            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
         ];
 
         foreach ($middlewareMappings as $alias => $middleware) {

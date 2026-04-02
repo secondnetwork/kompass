@@ -52,7 +52,7 @@ if (! function_exists('get_thumbnails')) {
 }
 
 if (! function_exists('get_field')) {
-    function get_field($type, $data, $class = null, $size = null)
+    function get_field($type, $data, $class = null, $size = null, $default = null)
     {
         foreach ($data as $value) {
             if ($value->type === $type && $value->data) {
@@ -75,6 +75,75 @@ if (! function_exists('get_field')) {
                 return $value->data;
             }
         }
+
+        return $default;
+    }
+}
+
+if (! function_exists('get_fields')) {
+    /**
+     * Get all fields of a given type from datafield collection.
+     *
+     * @param  string  $type
+     * @param  Collection|array  $data
+     */
+    function get_fields($type, $data): array
+    {
+        $results = [];
+
+        foreach ($data as $value) {
+            if ($value->type === $type && $value->data) {
+                $results[] = $value->data;
+            }
+        }
+
+        return $results;
+    }
+}
+
+if (! function_exists('get_meta')) {
+    /**
+     * Get a meta value from a block item with an optional default.
+     *
+     * @param  object  $item
+     * @param  string  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function get_meta($item, $key, $default = null)
+    {
+        if (is_object($item) && method_exists($item, 'getMeta')) {
+            return $item->getMeta($key) ?? $default;
+        }
+
+        return $default;
+    }
+}
+
+if (! function_exists('get_field_as')) {
+    /**
+     * Get a field value with type casting.
+     *
+     * @param  string  $type
+     * @param  Collection|array  $data
+     * @param  string  $cast  int, string, bool, array
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function get_field_as($type, $data, $cast = 'string', $default = null)
+    {
+        $value = get_field($type, $data, null, null, $default);
+
+        if ($value === $default) {
+            return $default;
+        }
+
+        return match ($cast) {
+            'int', 'integer' => (int) $value,
+            'bool', 'boolean' => (bool) $value,
+            'array' => (array) $value,
+            default => (string) $value,
+        };
     }
 }
 
@@ -149,7 +218,7 @@ if (! function_exists('get_file_name')) {
         preg_match('/(_)([0-9])+$/', $name, $matches);
 
         return count($matches) === 3
-            ? Illuminate\Support\Str::replaceLast($matches[0], '', $name).'_'.(intval($matches[2]) + 1)
+            ? Str::replaceLast($matches[0], '', $name).'_'.(intval($matches[2]) + 1)
             : $name.'_1';
     }
 }
@@ -274,8 +343,6 @@ if (! function_exists('videoEmbed')) {
 if (! function_exists('seo')) {
     /**
      * Get or configure the SEO service.
-     *
-     * @return SeoService
      */
     function seo(): SeoService
     {

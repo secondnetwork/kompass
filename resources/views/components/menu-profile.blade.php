@@ -1,18 +1,14 @@
 <div x-data="{ dropdownOpen: false }" class="relative border-neutral-200 border p-2 rounded-md">
 
-    <button @click="dropdownOpen=true"
-        class="flex items-center gap-2 text-sm font-medium w-full overflow-hidden">
+    <button @click="dropdownOpen=true" class="flex items-center gap-2 text-sm font-medium w-full overflow-hidden">
 
         <div class="text-left w-36">
             <span class="truncate block ">{{ auth()->user()->name }}</span>
             <span class="text-xs font-light text-neutral-400 truncate block ">{{ auth()->user()->email }}</span>
         </div>
-      
-<x-kompass::elements.avatar :user="auth()->user()" size="w-10" />
-       
-        
 
-    
+        <x-kompass::elements.avatar :user="auth()->user()" size="w-10" />
+
     </button>
 
     <div x-show="dropdownOpen" @click.away="dropdownOpen=false" x-transition:enter="ease-out duration-200"
