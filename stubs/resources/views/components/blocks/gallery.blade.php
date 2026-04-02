@@ -10,19 +10,10 @@
     $gridCols = 'md:grid-cols-' . $layoutgrid;
     $colSpan = is_object($item) && $item->layoutgrid ? 'md:col-span-' . $item->layoutgrid : '';
 @endphp
-<div {{ $attributes->merge(['class' => 'relative group ' . $gridCols . ' ' . $colSpan]) }} >
-    <div  class="md:grid gap-4 transition-all ease-in-out duration-500 grid-cols-{{ $item->grid }}  one-image {{ $item->getMeta('css-classname') }}">
-
+<div {{ $attributes->merge(['class' => 'relative group ' . $gridCols . ' ' . $colSpan]) }}>
+    <div class="md:grid gap-4 transition-all ease-in-out duration-500 grid-cols-{{ $item->grid }} one-image {{ get_meta($item, 'css-classname') }}">
         @foreach ($item->datafield as $image)
-
-                @php
-                    $imageId = $image['data'];
-                @endphp
-                
-            <x-image :id="$imageId" class="w-full h-full rounded-lg " />
-
-
-
+            <x-image :id="$image['data']" wire:key="gallery-{{ $item->id }}-{{ $loop->index }}" class="w-full h-full rounded-lg" />
         @endforeach
     </div>
 </div>

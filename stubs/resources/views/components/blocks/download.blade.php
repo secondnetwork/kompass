@@ -1,48 +1,21 @@
 @props(['item' => ''])
 
+@if($item->type == 'download')
 @php
-    // Normalizing item to object access for consistency if passed as array
-    $item = (object) $item;
-    $fieldData = collect($item->datafield);
-
-    // Find image ID (from 'Bild' field)
-        $imageField = $fieldData->firstWhere('type', 'image');
-        $imageId = null;
-        if ($imageField) {
-            $imageData = is_array($imageField) ? $imageField['data'] ?? null : $imageField->data ?? null;
-            // Image data might be just an ID or an object with id
-            if (is_numeric($imageData)) {
-                $imageId = $imageData;
-            } elseif (is_object($imageData) && isset($imageData->id)) {
-                $imageId = $imageData->id;
-            }
-        }
-    
-    // Find Text content (wysiwyg)
-    $textField = $fieldData->firstWhere('name', 'Text');
-    $textData = null;
-    if ($textField) {
-        $rawData = is_array($textField) ? $textField['data'] : $textField->data;
-        $textData = is_array($rawData) ? (object) $rawData : json_decode($rawData);
-    }
-    
-    // Find link (button)
-    $linkField = $fieldData->firstWhere('type', 'link');
-    $link = null;
-    if ($linkField) {
-        $rawData = is_array($linkField) ? $linkField['data'] : $linkField->data;
-        $link = is_array($rawData) ? (object) $rawData : json_decode($rawData);
-    }
+    $image = get_field('image', $item->datafield);
+    $text = get_field('wysiwyg', $item->datafield);
+    $textData = $text ? (is_string($text) ? json_decode($text) : (is_array($text) ? (object) $text : $text)) : null;
+    $link = get_field('link', $item->datafield);
+    $link = $link ? (is_string($link) ? json_decode($link) : (is_array($link) ? (object) $link : $link)) : null;
 @endphp
 
-@if($item->type == 'download')
 <div class="p-6 rounded-lg shadow-sm flex flex-col items-center justify-between gap-6 text-center mx-5">
-        @if ($imageId)
-                <div class="mt-auto">
-                    <x-image :id="$imageId" class="w-full h-full rounded" />
-                </div>
-            @endif
-    
+    @if ($image)
+        <div class="mt-auto">
+            <x-image :id="$image" class="w-full h-full rounded" />
+        </div>
+    @endif
+
     <div class="">
         @if($textData && isset($textData->blocks))
             <div class="prose max-w-none">

@@ -4,41 +4,41 @@
 
 @if ('accordiongroup' == $item->type)
 
-@if ($item->getMeta('css-classname') == 'hero-page')
-    <h1 class="grid justify-center uppercase fullpage ">@yield('title')</h1>
-@endif
+<div x-data="{ open: null }" class="space-y-4 col-span-4">
+       
+            @foreach ($item->children as $child)
+                @if ($child->type == 'wysiwyg')
+                    <div class="p-6 rounded-lg border border-base-300 bg-base-100">
+                        <div
+                            class="flex justify-between items-center cursor-pointer"
+                            @click="open === {{ $loop->index }} ? open = null : open = {{ $loop->index }}"
+                        >
+                            <span class="font-semibold text-lg">
+                                <span class="hidden md:inline mr-4">{{ sprintf('%02d', $loop->iteration) }}</span>
+                                {{ $child->name }}
+                            </span>
+                            <svg
+                                class="w-6 h-6 text-gray-500 transition-transform duration-300"
+                                :class="open === {{ $loop->index }} ? 'rotate-180' : ''"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
 
+                        <div x-show="open === {{ $loop->index }}" x-collapse x-cloak>
+                            <div class="mt-4 prose max-w-none text-gray-700">
+                                <x-blocks.components :item="$child" />
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
-<div class="accordion">
-@foreach ($item->children as $item)
-
-@if ($item->type == 'wysiwyg')
-<div x-data="accordion({{ $item->id }})" class="bg-white border border-[var(--grey-dark)] mb-4 rounded-lg">
-    <div-nav-action :class="handleAc()"   class="flex items-center justify-between rounded-t-lg px-4 cursor-pointer">
-
-    <span class="flex items-center py-4 w-full text-xl" @click="handleClick()">
-        <strong >{{ $item->name }}</strong>
-    </span>
-
-    <div :class="handleRotate()"  class="transform transition-transform duration-500 ">
-        <x-tabler-circle-plus stroke-width="1.5" @click="handleClick()" class="cursor-pointer stroke-current text-gray-900 " />
-    </div>
-
-    </div-nav-action>
-
-    <div  x-ref="tab" :style="handleToggle()"  class="bg-white rounded-b-xl overflow-hidden max-h-0 duration-500 transition-all">
-    <div class="px-4">
-            <x-blocks.components :item="$item"  />
-    </div>
-    </div>
-</div>
-@endif
-
-@if ($item->type == 'button')
-    <x-blocks.button :item="$item"  />
-@endif
-
-@endforeach
+                @if ($child->type == 'button')
+                    <x-blocks.button :item="$child" />
+                @endif
+            @endforeach
+     
 </div>
 
 @endif

@@ -9,13 +9,9 @@
         $gridCols = 'md:grid-cols-' . $layoutgrid;
     @endphp
 
-        <div
-            class="group md:grid gap-6 transition-all ease-in-out duration-500 {{ $gridCols }} {{ $colSpan }} {{ $item->getMeta('css-classname') ?? '' }} {{ $item->getMeta('layout') ?? '' }} {{ $item->getMeta('alignment') }}">
-
-            @foreach ($item->children as $item)
-                <x-blocks.components :item="$item" />
-            @endforeach
-
-        </div>
-
+    <div class="group md:grid gap-6 transition-all ease-in-out duration-500 {{ $gridCols }} {{ $colSpan }} {{ get_meta($item, 'css-classname', '') }} {{ get_meta($item, 'layout', '') }} {{ get_meta($item, 'alignment', '') }}">
+        @foreach ($item->children as $child)
+            <x-blocks.components :item="$child" />
+        @endforeach
+    </div>
 @endif
