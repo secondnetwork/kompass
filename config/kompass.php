@@ -253,4 +253,18 @@ return [
     'default_img_download_disk' => 'public',
 
     'prefix' => '',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Meta Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the Meta table polymorphic relationships.
+    | Options: integer, uuid, ulid
+    |
+    */
+
+    'meta' => [
+        'morph_type' => 'integer',
+    ],
 ];
