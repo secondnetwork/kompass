@@ -84,4 +84,14 @@ class Features
     {
         return 'account-deletion';
     }
+
+    public static function activityLog()
+    {
+        return 'activity-log';
+    }
+
+    public static function hasActivityLog()
+    {
+        return class_exists(\Spatie\Activitylog\Models\Activity::class);
+    }
 }

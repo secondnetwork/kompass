@@ -144,6 +144,7 @@
 
                 </div>
 
+                @if(class_exists(\Spatie\Activitylog\Models\Activity::class))
                 <div x-show="asidenav === 'activity-log'" x-cloak>
 
                     <div class="my-3">
@@ -155,6 +156,7 @@
                     <livewire:settings.activity-log lazy />
 
                 </div>
+                @endif
 
                 <div x-show="asidenav === 'error-log'" x-cloak>
 

@@ -7,6 +7,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Secondnetwork\Kompass\Features;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Settings extends Component
@@ -146,17 +147,21 @@ class Settings extends Component
                 'slug' => '',
                 'name' => __('Tools'),
             ],
-            [
-                'slug' => 'activity-log',
-                'name' => __('Activity-log'),
-                'icon' => 'tabler-activity',
-            ],
+
             [
                 'slug' => 'error-log',
                 'name' => __('Error-log'),
                 'icon' => 'tabler-alert-triangle',
             ],
         ];
+
+        if (Features::hasActivityLog()) {
+            $this->navigation[] = [
+                'slug' => 'activity-log',
+                'name' => __('Activity-log'),
+                'icon' => 'tabler-activity',
+            ];
+        }
     }
 
     public function saveEditorState($editorJsonData, $id)

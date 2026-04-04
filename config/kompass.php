@@ -95,6 +95,7 @@ return [
     'features' => [
         Features::profilePhotos(),
         Features::accountDeletion(),
+        Features::activityLog(),
     ],
 
     /*
