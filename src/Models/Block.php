@@ -5,8 +5,7 @@ namespace Secondnetwork\Kompass\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Secondnetwork\Kompass\Traits\HasMeta;
-use Spatie\Activitylog\Models\Concerns\LogsActivity;
-use Spatie\Activitylog\Support\LogOptions;
+use Secondnetwork\Kompass\Traits\LogsActivity;
 
 class Block extends Model
 {
@@ -54,12 +53,6 @@ class Block extends Model
     public function children()
     {
         return $this->hasMany(Block::class, 'subgroup')->with('children', 'datafield', 'metas')->orderBy('order', 'asc');
-    }
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['name', 'data']);
     }
 
     public function getLayoutAttribute()
