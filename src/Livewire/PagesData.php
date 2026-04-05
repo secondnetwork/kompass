@@ -511,8 +511,10 @@ class PagesData extends Component
 
     private function updateBlockMeta(int $id, string $metaKey, $metaValue): void
     {
-        if (! empty($metaValue)) {
-            $block = Block::findOrFail($id); // Use findOrFail to handle missing Blocks
+        $block = Block::findOrFail($id);
+        if ($metaValue === '' || $metaValue === null) {
+            $block->deleteMeta($metaKey);
+        } else {
             $block->deleteMeta($metaKey);
             $block->saveMeta([$metaKey => $metaValue]);
         }
@@ -538,13 +540,15 @@ class PagesData extends Component
             'col-span' => 'col-span',
             'alignment' => 'alignment',
             'slider' => 'slider',
+            'order' => 'order',
+            'align' => 'align',
         ];
 
         if (isset($metaKeyMap[$set])) {
             $metaKey = $metaKeyMap[$set];
             $this->updateBlockMeta($id, $metaKey, $status);
         } else {
-            $this->resetPageComponent(); // Or you could handle this as error
+            $this->resetPageComponent();
         }
 
     }

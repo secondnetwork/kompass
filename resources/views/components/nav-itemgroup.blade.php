@@ -36,78 +36,123 @@
             <x-tabler-arrow-autofit-width />
         @endif
     </span>
-   
-  
-    <livewire:editable-meta
-        label="Classname: "
-        meta-key="css-classname"
-        :itemblocks="$itemblocks"
-        wire-action="updateMeta"
-        :key="'css-classname-'.$itemblocks->id"
-    />
-    <livewire:editable-meta
-        label="ID: "
-        meta-key="id-anchor"
-        :itemblocks="$itemblocks"
-        wire-action="updateMeta"
-        :key="'id-anchor-'.$itemblocks->id"
-    />
 
-     
-</nav-item> 
-@if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
-<nav-item class="flex items-center gap-2">
-    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout Grid</span>
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Align</span>
     @php
-        $gridOptions = [1, 2, 3, 4, 5];
+        $alignOptions = [
+            'items-center' => 'tabler-layout-align-middle',
+        ];
+        $currentAlign = $itemblocks->getMeta('align') ?? '';
     @endphp
-    @foreach($gridOptions as $gridNumber)
-        <span class="cursor-pointer" wire:click="updateLayoutGrid({{ $itemblocks->id }}, {{ $gridNumber }})">
-            @if($itemblocks->layoutgrid == $gridNumber)
-                @svg('tabler-square-number-'.$gridNumber, 'stroke-blue-500')
+    <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'align', '')">
+        @if (empty($currentAlign))
+            @svg('tabler-layout-align-top', 'stroke-blue-500')
+        @else
+            @svg('tabler-layout-align-top')
+        @endif
+    </span>
+    @foreach ($alignOptions as $alignValue => $iconName)
+        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'align', '{{ $alignValue }}')">
+            @if ($currentAlign == $alignValue)
+                @svg($iconName, 'stroke-blue-500')
             @else
-                @svg('tabler-square-number-'.$gridNumber)
+                @svg($iconName)
             @endif
         </span>
     @endforeach
+
+
+  
+
+
+    <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Mobile Layout</span>
+
+    @php
+        $orderOptions = [
+            'reverse' => 'tabler-reorder',
+        ];
+        $currentOrder = $itemblocks->getMeta('order') ?? '';
+    @endphp
+
+    <span
+        class="cursor-pointer px-2 py-0.5 rounded 
+        @if (empty($currentOrder)) text-blue-500
+        @else bg-gray-200 hover:bg-gray-300 @endif"
+        wire:click="saveset({{ $itemblocks->id }},'order', '')">
+        @svg('tabler-layout-off')
+    </span>
+    @foreach ($orderOptions as $orderValue => $iconName)
+        <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'order', '{{ $orderValue }}')">
+            @if ($currentOrder == $orderValue)
+                @svg($iconName, 'stroke-blue-500')
+            @else
+                @svg($iconName)
+            @endif
+        </span>
+    @endforeach
+
 </nav-item>
 
-@endif
 <nav-item class="flex items-center gap-2">
-    @if($itemblocks->type == 'wysiwyg')
-        <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>
-        @php
-            $alignments = [
-                'align-left' => 'tabler-align-left',
-                'align-center' => 'tabler-align-center',
-                'align-right' => 'tabler-align-right',
-            ];
-        @endphp
-         @foreach($alignments as $alignmentValue => $iconName)
-            <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'alignment', '{{ $alignmentValue }}')">
-                 @if ($alignment == $alignmentValue)
-                    @svg($iconName, 'stroke-blue-500')
-                @else
-                    @svg($iconName)
-                @endif
-            </span>
-         @endforeach
-    @elseif($itemblocks->type == 'gallery')
-       <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">Slider</span>
-        @php
-            $sliders = [
-                '' => ['icon' => 'tabler-layout-dashboard', 'class' => 'rotate-90'],
-                'true' => ['icon' => 'tabler-carousel-horizontal', 'class' => ''],
-            ];
-        @endphp
-        @foreach($sliders as $sliderValue => $sliderData)
-             <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'slider', '{{ $sliderValue }}')">
-                @if ($slider == $sliderValue)
-                     @svg($sliderData['icon'], 'stroke-blue-500 ' . $sliderData['class'])
-                @else
-                   @svg($sliderData['icon'], $sliderData['class'])
-                @endif
-            </span>
-        @endforeach
+    @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
+        <nav-item class="flex items-center gap-2">
+            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Layout Grid</span>
+            @php
+                $gridOptions = [1, 2, 3, 4, 5];
+            @endphp
+            @foreach ($gridOptions as $gridNumber)
+                <span class="cursor-pointer" wire:click="updateLayoutGrid({{ $itemblocks->id }}, {{ $gridNumber }})">
+                    @if ($itemblocks->layoutgrid == $gridNumber)
+                        @svg('tabler-square-number-' . $gridNumber, 'stroke-blue-500')
+                    @else
+                        @svg('tabler-square-number-' . $gridNumber)
+                    @endif
+                </span>
+            @endforeach
+        </nav-item>
+  <livewire:editable-meta label="Classname: " meta-key="css-classname" :itemblocks="$itemblocks" wire-action="updateMeta"
+        :key="'css-classname-' . $itemblocks->id" />
+    <livewire:editable-meta label="ID: " meta-key="id-anchor" :itemblocks="$itemblocks" wire-action="updateMeta"
+        :key="'id-anchor-' . $itemblocks->id" />
+
     @endif
-</nav-item>
+    <nav-item class="flex items-center gap-2">
+        @if ($itemblocks->type == 'wysiwyg')
+            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">{{ __('Alignment') }}</span>
+            @php
+                $alignments = [
+                    'align-left' => 'tabler-align-left',
+                    'align-center' => 'tabler-align-center',
+                    'align-right' => 'tabler-align-right',
+                ];
+            @endphp
+            @foreach ($alignments as $alignmentValue => $iconName)
+                <span class="cursor-pointer"
+                    wire:click="saveset({{ $itemblocks->id }},'alignment', '{{ $alignmentValue }}')">
+                    @if ($alignment == $alignmentValue)
+                        @svg($iconName, 'stroke-blue-500')
+                    @else
+                        @svg($iconName)
+                    @endif
+                </span>
+            @endforeach
+        @elseif($itemblocks->type == 'gallery')
+            <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">Slider</span>
+            @php
+                $sliders = [
+                    '' => ['icon' => 'tabler-layout-dashboard', 'class' => 'rotate-90'],
+                    'true' => ['icon' => 'tabler-carousel-horizontal', 'class' => ''],
+                ];
+            @endphp
+            @foreach ($sliders as $sliderValue => $sliderData)
+                <span class="cursor-pointer"
+                    wire:click="saveset({{ $itemblocks->id }},'slider', '{{ $sliderValue }}')">
+                    @if ($slider == $sliderValue)
+                        @svg($sliderData['icon'], 'stroke-blue-500 ' . $sliderData['class'])
+                    @else
+                        @svg($sliderData['icon'], $sliderData['class'])
+                    @endif
+                </span>
+            @endforeach
+        @endif
+    </nav-item>

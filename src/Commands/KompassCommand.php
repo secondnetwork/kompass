@@ -219,7 +219,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         info('Installing Frontend Assets...');
 
         // Config Files
-        File::copy(__DIR__.'/../../stubs/livewire/postcss.config.cjs', base_path('postcss.config.cjs'));
+        File::copy(__DIR__.'/../../stubs/livewire/postcss.config.js', base_path('postcss.config.js'));
         File::copy(__DIR__.'/../../stubs/livewire/vite.config.js', base_path('vite.config.js'));
 
         // Directories & Clean up

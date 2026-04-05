@@ -376,19 +376,49 @@ class PostsData extends Component
         $setblock = Block::find($id);
 
         if ($set == 'layout') {
-            $setblock->saveMeta([
-                'layout' => $status,
-            ]);
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('layout');
+            } else {
+                $setblock->saveMeta([
+                    'layout' => $status,
+                ]);
+            }
         }
         if ($set == 'alignment') {
-            $setblock->saveMeta([
-                'alignment' => $status,
-            ]);
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('alignment');
+            } else {
+                $setblock->saveMeta([
+                    'alignment' => $status,
+                ]);
+            }
         }
         if ($set == 'slider') {
-            $setblock->saveMeta([
-                'slider' => $status,
-            ]);
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('slider');
+            } else {
+                $setblock->saveMeta([
+                    'slider' => $status,
+                ]);
+            }
+        }
+        if ($set == 'order') {
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('order');
+            } else {
+                $setblock->saveMeta([
+                    'order' => $status,
+                ]);
+            }
+        }
+        if ($set == 'align') {
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('align');
+            } else {
+                $setblock->saveMeta([
+                    'align' => $status,
+                ]);
+            }
         }
 
         $this->resetPageComponent();

@@ -1,9 +1,9 @@
-<div class="relative" x-data="{ dropbox: false }" x-init="() => {
+<div class="relative text-sm font-medium " x-data="{ dropbox: false }" x-init="() => {
         $el.querySelector('input').value = '{{ $itemblocks->getMeta($metaKey) }}';
     }"
 >
-    <span class="text-sm flex font-bold gap-1">
-        {{ $label }} <x-tabler-circle-dashed-plus class="cursor-pointer" @click="dropbox = !dropbox" /> <p class="text-blue-700">{{ $itemblocks->getMeta($metaKey) }}</p>
+    <span class="text-sm flex items-center font-bold gap-1 px-2.5 py-0.5 rounded bg-gray-300">
+        {{ $label }} <x-tabler-circle-dashed-plus class="cursor-pointer" @click="dropbox = !dropbox" /> <span class="text-blue-700 text-sm ">{{ $itemblocks->getMeta($metaKey) }}</span>
     </span>
 
     <div x-show="dropbox"  @click.outside="listcssClass = false; listcssId = false, dropbox = false" class="absolute z-10 left-0 top-6 flex items-center gap-x-2 bg-gray-100 shadow w-60 p-2 mb-2" x-data="{ listcssClass: false, listcssId: false, value: '{{ $itemblocks->getMeta($metaKey) }}' }">
