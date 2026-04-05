@@ -28,7 +28,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @plugin "daisyui";
 
 @source inline("{,md:,lg:,xl:}grid-cols-{1..6}");
-@source inline("{,md:,lg:,xl:}grid-span-{1..6}");
+@source inline("{,md:,lg:,xl:}col-span-{1..6}");
 
 @import "./base/base.css";
 @import "./base/fonts.css";

@@ -5,7 +5,6 @@
     "": {
       "name": "kompass",
       "dependencies": {
-        "@lehoczky/postcss-fluid": "^1.0.3",
         "@melloware/coloris": "^0.24.2",
         "@rollup/plugin-node-resolve": "^15.3.1",
         "@tailwindcss/forms": "^0.5.10",
@@ -16,6 +15,7 @@
         "caniuse-lite": "^1.0.30001760",
         "dotenv": "^17.2.3",
         "install": "^0.13.0",
+        "postcss-clampwind": "^0.0.13",
         "preline": "^3.2.3",
         "rollup": "^4.59.0",
         "sortablejs": "^1.15.6",
@@ -241,8 +241,6 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ=="],
-
-    "@lehoczky/postcss-fluid": ["@lehoczky/postcss-fluid@1.0.3", "", { "dependencies": { "postcss-value-parser": "^4.2.0" }, "peerDependencies": { "postcss": "^8.3.0" } }, "sha512-UQhBUGDpMA3wWGTWeVArL+dm2lbBM9LAFUg8U+CAt3gFpCDIdZHjq+mpf3OWos39aZQiYyLrZfRM8ynbPewfUA=="],
 
     "@melloware/coloris": ["@melloware/coloris@0.24.2", "", {}, "sha512-6IhdPOBIc922jRMx2p6Sl6mRzqjGF7x67q0ZziA5e4NTqWoSPHBEnSmiUCcsXiNHZJ6zdOQt+6Z/eZxpxcHjDA=="],
 
@@ -521,6 +519,8 @@
     "postcss-attribute-case-insensitive": ["postcss-attribute-case-insensitive@8.0.0", "", { "dependencies": { "postcss-selector-parser": "^7.1.1" }, "peerDependencies": { "postcss": "^8.4" } }, "sha512-fovIPEV35c2JzVXdmP+sp2xirbBMt54J+upU8u6TSj410kUU5+axgEzvBBSAX8KCybze8CFCelzFAw/FfWg2TA=="],
 
     "postcss-clamp": ["postcss-clamp@4.1.0", "", { "dependencies": { "postcss-value-parser": "^4.2.0" }, "peerDependencies": { "postcss": "^8.4.6" } }, "sha512-ry4b1Llo/9zz+PKC+030KUnPITTJAHeOwjfAyyB60eT0AorGLdzp52s31OsPRHRf8NchkgFoG2y6fCfn1IV1Ow=="],
+
+    "postcss-clampwind": ["postcss-clampwind@0.0.13", "", {}, "sha512-PVnOKqA0oZ62C7hubh5cvzzezxnagklFBBpZ81n08pQ0lDDFD7f2wd1ktHJcChRox41zGqLrpfA4r0HGnvxiMQ=="],
 
     "postcss-color-functional-notation": ["postcss-color-functional-notation@8.0.2", "", { "dependencies": { "@csstools/css-color-parser": "^4.0.2", "@csstools/css-parser-algorithms": "^4.0.0", "@csstools/css-tokenizer": "^4.0.0", "@csstools/postcss-progressive-custom-properties": "^5.0.0", "@csstools/utilities": "^3.0.0" }, "peerDependencies": { "postcss": "^8.4" } }, "sha512-tbmkk6teYpJzFcGwPIhN1gkvxqGHvNx2PMb8Y3S5Ktyn7xOlvD98XzQ99MFY5mAyvXWclDG+BgoJKYJXFJOp5Q=="],
 
