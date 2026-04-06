@@ -293,6 +293,10 @@ if (! function_exists('videoEmbed')) {
      */
     function videoEmbed($url)
     {
+        if (empty($url) || ! is_string($url)) {
+            return false;
+        }
+
         // Set blank variables
         $video_type = '';
         $video_id = '';
