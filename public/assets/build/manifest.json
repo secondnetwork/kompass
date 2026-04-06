@@ -12,7 +12,7 @@
     "name": "editorjs"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.DDT8V-nZ.css",
+    "file": "css/kompass.BuH9lVMO.css",
     "src": "resources/css/kompass.css",
     "isEntry": true,
     "name": "kompass",
@@ -39,7 +39,7 @@
     ]
   },
   "resources/js/main.js": {
-    "file": "js/main.CFaVdKEZ.js",
+    "file": "js/main.BW7sTjlm.js",
     "name": "main",
     "src": "resources/js/main.js",
     "isEntry": true,
@@ -53,7 +53,7 @@
       "resources/js/dashboard-charts.js"
     ],
     "css": [
-      "css/kompass.DDT8V-nZ.css"
+      "css/kompass.BuH9lVMO.css"
     ]
   },
   "resources/js/plugins/lite-vimeo-embed.js": {

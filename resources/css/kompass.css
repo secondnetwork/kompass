@@ -14,10 +14,9 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 */
 @import "tailwindcss";
-@plugin "daisyui" {
-    themes: light --default, dark --kpdark;
-}
+
 @source "../../resources/views/**/*.blade.php";
+@plugin "daisyui";
 
 @import "./base/base.css";
 @import "./base/grid_layout.css";

@@ -4,15 +4,15 @@
    ============================================ */
 
 @theme static {
-    
+
     /* Fluid typography - font-size-* with min/max values (rem) */
     --font-size-h1: clamp(2.2rem, 2.8rem);
     --font-size-h2: clamp(2.0rem, 2.5rem);
     --font-size-h3: clamp(1.6rem, 1.875rem);
     --font-size-h4: clamp(1.125rem, 1.75rem);
     --font-size-h5: clamp(1.125rem, 1.75rem);
-    --font-size-h6: clamp(1rem, 1.625rem);
-    --font-size-body: clamp(1rem, 1.25rem);
+    --font-size-h6: clamp(1rem, 1.25rem);
+    --font-size-body: clamp(1rem, 1rem);
     --font-size-small: clamp(0.75rem, 1rem);
     --font-size-preline: clamp(1rem, 1.625rem);
     --font-size-card: clamp(0.75rem, 0.875rem);
@@ -122,17 +122,7 @@ h6 {
     @apply font-normal;
 }
 
-p {
-    font-size: var(--font-size-body);
-    @apply font-medium;
-    line-height: 1.8;
-    letter-spacing: 0.2px;
-}
 
-p.small {
-    font-size: var(--font-size-small);
-    @apply font-normal;
-}
 
 /* card-box component */
 card-box p {
