@@ -1,0 +1,1 @@
+import{t as e}from"./alpine-components.XthLyFLq.js";Alpine.store(`showside`,{on:!1,toggle(){this.on=!this.on}}),Alpine.data(`click_to_edit`,e),Alpine.start();

@@ -1,0 +1,1 @@
+var e=(e=null)=>({isEditing:!1,wireMethod:e,toggleEditingState(){this.isEditing=!this.isEditing,this.isEditing&&this.$nextTick(()=>{this.$refs.input.focus()})},disableEditing(){this.isEditing&&this.wireMethod&&this.$wire.call(this.wireMethod),this.isEditing=!1},handleClickAway(){this.isEditing&&this.disableEditing()}});export{e as t};

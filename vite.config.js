@@ -8,7 +8,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        compact: true,
         entryFileNames: `js/[name].[hash].js`,
         chunkFileNames: `js/[name].[hash].js`,
         assetFileNames: `css/[name].[hash].[ext]`,
