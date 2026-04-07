@@ -7,12 +7,12 @@
     "file": "js/charts.D0q8EgIS.js",
     "name": "charts"
   },
-  "_editorjs.Bh5vDVeD.js": {
-    "file": "js/editorjs.Bh5vDVeD.js",
+  "_editorjs.BkwyCo6K.js": {
+    "file": "js/editorjs.BkwyCo6K.js",
     "name": "editorjs"
   },
   "resources/css/kompass.css": {
-    "file": "css/kompass.BuH9lVMO.css",
+    "file": "css/kompass.UPzO3jdN.css",
     "src": "resources/css/kompass.css",
     "isEntry": true,
     "name": "kompass",
@@ -39,13 +39,13 @@
     ]
   },
   "resources/js/main.js": {
-    "file": "js/main.BW7sTjlm.js",
+    "file": "js/main.I0_bNMU_.js",
     "name": "main",
     "src": "resources/js/main.js",
     "isEntry": true,
     "imports": [
       "_alpine-components.Dv-Fhofl.js",
-      "_editorjs.Bh5vDVeD.js"
+      "_editorjs.BkwyCo6K.js"
     ],
     "dynamicImports": [
       "resources/js/plugins/lite-yt-embed.js",
@@ -53,7 +53,7 @@
       "resources/js/dashboard-charts.js"
     ],
     "css": [
-      "css/kompass.BuH9lVMO.css"
+      "css/kompass.UPzO3jdN.css"
     ]
   },
   "resources/js/plugins/lite-vimeo-embed.js": {

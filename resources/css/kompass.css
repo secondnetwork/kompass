@@ -113,7 +113,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  prefersdark: false;
+  prefersdark: true;
   color-scheme: "light";
   --color-base-100: oklch(100% 0 0);
   --color-base-200: oklch(98% 0.002 247.839);
