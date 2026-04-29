@@ -13,7 +13,7 @@
     $data = is_array($rawData) ? json_decode(json_encode($rawData)) : (is_string($rawData) ? json_decode($rawData) : $rawData);
 @endphp
 
-@if ($field || (is_object($item) && 'wysiwyg' == $item->type))
+@if ($field || is_object($item))
 @php
     $linkUrl = get_meta($item, 'link-url');
     $alignment = get_meta($item, 'alignment');
@@ -24,9 +24,7 @@
         'align-right' => 'text-right ',
         default => '',
     };
-    $layoutgrid = is_object($item) ? ($item->layoutgrid ?? 12) : 12;
-    $gridCols = 'md:grid-cols-' . $layoutgrid;
-    $colSpan = is_object($item) && $item->layoutgrid ? 'md:col-span-' . $item->layoutgrid : '';
+    ['gridCols' => $gridCols, 'colSpan' => $colSpan] = block_grid_classes($item);
 @endphp
     <div {{ $attributes->merge(['class' => 'relative group ' . $cssclassname . ' ' . $alignmentClass . ' ' . $gridCols . ' ' . $colSpan]) }}>
         @if($linkUrl)
@@ -66,7 +64,4 @@
             @endforeach
         @endif
     </div>
-    @if($linkUrl)
-    </a>
-    @endif
 @endif

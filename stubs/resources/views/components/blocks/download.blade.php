@@ -1,6 +1,5 @@
 @props(['item' => ''])
 
-@if($item->type == 'download')
 @php
     $image = get_field('image', $item->datafield);
     $text = get_field('wysiwyg', $item->datafield);
@@ -38,4 +37,3 @@
         </div>
     @endif
 </div>
-@endif

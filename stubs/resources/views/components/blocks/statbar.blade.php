@@ -1,6 +1,5 @@
 @props(['item' => ''])
-@if($item->type == 'statbar')
-    @php
+@php
         $datafields = $item->datafield;
         $layoutgrid = max(1, $item->layoutgrid ?? 12);
         // Debug toggle: allow debugging from meta or query param
@@ -42,7 +41,6 @@
     
         @endforeach
 </div>
-@endif
 
 <script>
 (function(){

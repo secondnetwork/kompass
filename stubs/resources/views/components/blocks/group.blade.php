@@ -2,8 +2,7 @@
     'item' => '',
 ])
 
-@if ('group' == $item->type)
-    @php
+@php
         $layoutgrid = $item->layoutgrid ?? 12;
         $colSpan = $item->layoutgrid ? 'md:col-span-' . $item->layoutgrid : '';
         $gridCols = 'md:grid-cols-' . $layoutgrid;
@@ -19,4 +18,4 @@
             <x-blocks.components :item="$child" />
         @endforeach
     </div>
-@endif
+

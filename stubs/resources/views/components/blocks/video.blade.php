@@ -1,8 +1,7 @@
 @props([
     'item' => '',
 ])
-@if ('video' == $item->type)
-    <div {{ $attributes }}>
+<div {{ $attributes }}>
 
         @if (get_field('video', $item->datafield))
             <x-blocks.videoplayer :videourl="get_field('video', $item->datafield)" :poster="get_field('poster', $item->datafield)" />
@@ -47,4 +46,3 @@
         @endif
 
     </div>
-@endif

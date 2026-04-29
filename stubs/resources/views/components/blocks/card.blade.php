@@ -1,7 +1,6 @@
 @props(['item' => ''])
 
-@if ($item->type == 'card')
-    @php
+@php
         $cssclassname = get_meta($item, 'css-classname', 'bg-white');
         $image = get_field('image', $item->datafield);
         $title = get_field('wysiwyg', $item->datafield);
@@ -53,4 +52,3 @@
             @endif
         </div>
     </div>
-@endif

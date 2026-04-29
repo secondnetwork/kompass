@@ -4,11 +4,8 @@
 
 @use('Secondnetwork\Kompass\Models\File', 'Files')
 
-@if ('gallery' == $item->type)
 @php
-    $layoutgrid = is_object($item) ? ($item->layoutgrid ?? 12) : 12;
-    $gridCols = 'md:grid-cols-' . $layoutgrid;
-    $colSpan = is_object($item) && $item->layoutgrid ? 'md:col-span-' . $item->layoutgrid : '';
+    ['gridCols' => $gridCols, 'colSpan' => $colSpan] = block_grid_classes($item);
 @endphp
 <div {{ $attributes->merge(['class' => 'relative group ' . $gridCols . ' ' . $colSpan]) }}>
     <div class="md:grid gap-4 transition-all ease-in-out duration-500 grid-cols-{{ $item->grid }} one-image {{ get_meta($item, 'css-classname') }}">
@@ -17,4 +14,3 @@
         @endforeach
     </div>
 </div>
-@endif

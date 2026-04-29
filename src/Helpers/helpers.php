@@ -344,6 +344,21 @@ if (! function_exists('videoEmbed')) {
     }
 }
 
+if (! function_exists('block_grid_classes')) {
+    /**
+     * @return array{gridCols: string, colSpan: string}
+     */
+    function block_grid_classes(mixed $item): array
+    {
+        $layoutgrid = is_object($item) ? ($item->layoutgrid ?? 12) : 12;
+
+        return [
+            'gridCols' => 'md:grid-cols-'.$layoutgrid,
+            'colSpan' => is_object($item) && $item->layoutgrid ? 'md:col-span-'.$layoutgrid : '',
+        ];
+    }
+}
+
 if (! function_exists('seo')) {
     /**
      * Get or configure the SEO service.

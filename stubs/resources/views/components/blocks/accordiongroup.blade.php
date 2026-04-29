@@ -2,8 +2,6 @@
     'item' => '',
 ])
 
-@if ('accordiongroup' == $item->type)
-
 <div x-data="{ open: null }" class="space-y-4 col-span-4">
        
             @foreach ($item->children as $child)
@@ -40,5 +38,3 @@
             @endforeach
      
 </div>
-
-@endif
