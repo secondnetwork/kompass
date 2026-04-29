@@ -244,6 +244,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
                 'daisyui' => '^5.5.14',
                 'laravel-vite-plugin' => '^2.0.1',
                 'postcss' => '^8.5.6',
+                'postcss-clampwind' => '^0.0.13',
                 'tailwindcss' => '^4.1.18',
                 'vite' => '^7.3.0',
             ] + $packages;
