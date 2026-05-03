@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' }" x-init="$watch('darkMode', val => { 
-    localStorage.setItem('theme', val ? 'dark' : 'blaiq');
-    document.documentElement.setAttribute('data-theme', val ? 'dark' : 'blaiq');
-})" :data-theme="darkMode ? 'dark' : 'blaiq'">
+    localStorage.setItem('theme', val ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', val ? 'dark' : 'light');
+})" :data-theme="darkMode ? 'dark' : 'light'">
 
 <head>
 <meta charset="utf-8">
@@ -11,7 +11,7 @@
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
     } else {
-        document.documentElement.setAttribute('data-theme', 'blaiq');
+        document.documentElement.setAttribute('data-theme', 'light');
     }
 </script>
 {{-- SEO Meta Tags --}}

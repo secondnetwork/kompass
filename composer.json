@@ -39,8 +39,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Secondnetwork\\Kompass\\KompassServiceProvider",
-                "Secondnetwork\\Kompass\\KompassThemeServiceProvider"
+                "Secondnetwork\\Kompass\\KompassServiceProvider"
             ],
             "aliases": {
                 "Kompass": "Secondnetwork\\Kompass\\KompassFacade"
