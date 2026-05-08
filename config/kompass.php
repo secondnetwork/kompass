@@ -47,8 +47,7 @@ return [
 
     'auth' => [
         'password_login_enabled' => true,
-        'self_registration_enabled' => false,
-        'force_passkey_on_first_login' => true,
+        'force_passkey_on_first_login' => false,
     ],
 
     /*

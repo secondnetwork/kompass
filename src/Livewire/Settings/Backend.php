@@ -32,7 +32,7 @@ class Backend extends Component
         $this->registration_can_user = (bool) optional($globalSettings->get($this->dbKeyRegistration))->data ?? false;
         $this->password_login_enabled = optional($globalSettings->get('password_login_enabled'))->data !== null
             ? (bool) optional($globalSettings->get('password_login_enabled'))->data
-            : true;
+            : config('kompass.auth.password_login_enabled', false);
         $this->admincopyright = optional($globalSettings->get('admincopyright'))->data ?? '';
         $this->adminlogo = optional($globalSettings->get($this->imageKey))->data ?? '';
     }

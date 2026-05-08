@@ -13,7 +13,7 @@
         </div>
 @endif
 
-@if (setting('global.password_login_enabled') !== null ? (bool) setting('global.password_login_enabled') : config('kompass.auth.password_login_enabled', true))
+@if (setting('global.password_login_enabled') !== null ? (bool) setting('global.password_login_enabled') : config('kompass.auth.password_login_enabled', false))
 
 <form wire:submit="login" class="grid gap-y-6">
 
