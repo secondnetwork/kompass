@@ -2,9 +2,12 @@
 
 import '/resources/css/kompass.css'
 import click_to_edit from './alpine/click_to_edit'
+import { passkey_authenticate, passkey_register } from './passkeys'
 
 // Register with Alpine.data
 Alpine.data('click_to_edit', click_to_edit);
+Alpine.data('passkey_authenticate', passkey_authenticate);
+Alpine.data('passkey_register', passkey_register);
 
 // import '@nextapps-be/livewire-sortablejs';
 import * as editorjs from './editorjs';

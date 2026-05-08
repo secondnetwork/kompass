@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "postcss-clampwind": "^0.0.13",
+    "@laravel/passkeys": "^0.1",
     "@melloware/coloris": "^0.24.2",
     "@rollup/plugin-node-resolve": "^15.3.1",
     "@tailwindcss/forms": "^0.5.11",

@@ -1,5 +1,9 @@
 <div class=" grid grid-cols-1 items-center  h-auto gap-4">
 
+    <x-kompass::form.switch wire:model.live="password_login_enabled" label="{{ __('Password login enabled') }}" />
+
+    <hr class="h-px w-full border-none bg-base-300">
+
     <x-kompass::form.switch wire:model.live="registration_can_user" label="{{ __('User can register') }}" />
 
     <hr class="h-px w-full border-none bg-base-300">

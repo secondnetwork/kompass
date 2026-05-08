@@ -131,7 +131,7 @@ class Settings extends Component
             [
                 'slug' => 'backendmenu',
                 'name' => __('Menu Visibility'),
-                'icon' => 'tabler-menu-2',
+                'icon' => 'tabler-layout-list',
             ],
             // [
             //     'slug' => 'admin_panel',

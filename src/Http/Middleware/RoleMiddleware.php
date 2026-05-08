@@ -24,11 +24,14 @@ class RoleMiddleware
         return false;
     }
 
-    public function handle(Request $request, Closure $next, string|array $roles)
+    public function handle(Request $request, Closure $next, string|array $roles): mixed
     {
-
         if (Str::contains($roles, '|')) {
             $roles = explode('|', $roles);
+        }
+
+        if (! $request->user() || ! $request->user()->hasRole($roles)) {
+            abort(403);
         }
 
         return $next($request);

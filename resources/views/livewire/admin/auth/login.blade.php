@@ -13,8 +13,9 @@
         </div>
 @endif
 
-<form wire:submit="login" class="grid gap-y-6">
+@if (setting('global.password_login_enabled') !== null ? (bool) setting('global.password_login_enabled') : config('kompass.auth.password_login_enabled', false))
 
+<form wire:submit="login" class="grid gap-y-6">
 
    <x-kompass::form.input wire:model="email" label="{{ __('E-Mail Address') }}" type="email" value="{{ old('email') }}" name="email" required autocomplete="on" />
 
@@ -38,13 +39,6 @@
   </div>
 
   @if (setting('global.sso') && setting('global.sso-url'))
-
-        {{-- <x-passkeys::authenticate>
-          <div class="btn btn-outline w-full h-14 border-gray-300 hover:border-blue-500">
-              <x-tabler-fingerprint class="w-6 h-6 mr-2" />
-              {{ __('Sign in with Passkey') }}
-          </div>
-      </x-passkeys::authenticate> --}}
 
   <div class="text-center text-sm text-base-content/70">{{ __('or sign in with') }}</div>
   <div class="flex justify-end">
@@ -82,5 +76,28 @@
   @endif
 
 </form>
+
+<div class="divider text-sm text-base-content/50">{{ __('or') }}</div>
+
+@endif {{-- password_login_enabled --}}
+
+{{-- Passkey Login --}}
+<div x-data="passkey_authenticate()">
+    <template x-if="error">
+        <div role="alert" class="alert alert-error alert-soft mb-4">
+            <span x-text="error"></span>
+        </div>
+    </template>
+    <button
+        type="button"
+        class="btn btn-outline w-full h-14 border-gray-300 hover:border-blue-500"
+        :disabled="loading"
+        @click="authenticate()"
+    >
+        <span x-show="loading" class="loading loading-spinner loading-sm"></span>
+        <x-tabler-fingerprint x-show="!loading" class="w-5 h-5" />
+        {{ __('Sign in with Passkey') }}
+    </button>
+</div>
 
 </div>
