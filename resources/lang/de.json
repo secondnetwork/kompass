@@ -943,5 +943,14 @@
   "Monitor all changes and actions within the system.": "Überwache alle Änderungen und Aktionen im System.",
   "Upload a file or drag and drop": "Datei hochladen oder per Drag-and-Drop hier ablegen",
   "Review 404 errors and other system exceptions.": "Überprüfe 404-Fehler und andere Systemausnahmen.",
-  "Link URL": "Link-URL"
+  "Link URL": "Link-URL",
+  "Sign in without a password using your device biometrics or PIN.": "Melden Sie sich ohne Passwort mit den Biometrie-Daten oder der PIN Ihres Geräts an.",
+  "Password login enabled": "Passwort-Login aktiviert",
+  "Manage your profile and account settings": "Verwalten Sie Ihr Profil und Ihre Kontoeinstellungen",
+  "Set up a Passkey": "Passkey einrichten",
+  "Passkeys let you sign in securely with your fingerprint, face, or device PIN — no password needed.": "Mit Passkeys können Sie sich sicher mit Ihrem Fingerabdruck, Gesicht oder der Geräte-PIN anmelden – ganz ohne Passwort.",
+  "Passkey Name": "Passkey-Name",
+  "e.g. MacBook Pro, iPhone": "z. B. MacBook Pro, iPhone",
+  "Register Passkey": "Passkey registrieren",
+  "Skip for now": "Vorerst überspringen"
 }

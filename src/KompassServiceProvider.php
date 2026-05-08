@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
@@ -11,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
 use Intervention\Image\ImageManager;
+use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\BladeDirectives\SeoDirective;
 use Secondnetwork\Kompass\Commands\CreateUserCommand;
@@ -106,6 +108,7 @@ class KompassServiceProvider extends ServiceProvider
         $this->mergeConfigurations();
         $this->registerSingletons();
         $this->registerSeo();
+        $this->registerPasskeyLoginResponse();
 
         try {
             if (Schema::hasTable('settings')) {
@@ -140,6 +143,25 @@ class KompassServiceProvider extends ServiceProvider
     private function mergeConfigurations(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/kompass.php', 'kompass');
+    }
+
+    private function registerPasskeyLoginResponse(): void
+    {
+        $this->app->singleton(PasskeyLoginResponseContract::class, function () {
+            return new class implements PasskeyLoginResponseContract
+            {
+                public function toResponse($request)
+                {
+                    $target = redirect()->intended(route('admin.dashboard'))->getTargetUrl();
+
+                    if ($request->wantsJson()) {
+                        return new JsonResponse(['redirect' => $target], 200);
+                    }
+
+                    return redirect()->intended(route('admin.dashboard'));
+                }
+            };
+        });
     }
 
     private function registerSingletons(): void
@@ -225,6 +247,10 @@ class KompassServiceProvider extends ServiceProvider
                 __DIR__.'/../stubs/app/Models/User.php' => app_path('Models/User.php'),
                 __DIR__.'/../stubs/app/Livewire/Actions/Logout.php' => app_path('Livewire/Actions/Logout.php'),
             ], 'kompass.stubs');
+
+            $this->publishes([
+                __DIR__.'/../stubs/config/passkeys.php' => config_path('passkeys.php'),
+            ], 'kompass.passkeys-config');
 
             $this->publishes([
                 __DIR__.'/database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),

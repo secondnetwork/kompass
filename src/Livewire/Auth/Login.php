@@ -43,6 +43,16 @@ class Login extends Component
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
+        if (
+            config('kompass.auth.force_passkey_on_first_login', true)
+            && method_exists(Auth::user(), 'hasPasskeysEnabled')
+            && ! Auth::user()->hasPasskeysEnabled()
+        ) {
+            $this->redirect(route('admin.passkey-setup'), navigate: true);
+
+            return;
+        }
+
         $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
     }
 

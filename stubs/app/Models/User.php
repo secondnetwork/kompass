@@ -6,21 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Passkeys\Contracts\PasskeyUser;
+use Laravel\Passkeys\PasskeyAuthenticatable;
 use Secondnetwork\Kompass\Features\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements PasskeyUser
 {
-    // use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use HasRoles;
     use Notifiable;
+    use PasskeyAuthenticatable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
@@ -30,17 +30,11 @@ class User extends Authenticatable
         'ulid',
     ];
 
-    /**
-     * Get the route key for the model.
-     */
     public function getRouteKeyName(): string
     {
         return 'ulid';
     }
 
-    /**
-     * The "booted" method of the model.
-     */
     protected static function booted(): void
     {
         static::creating(function (User $user) {
@@ -51,20 +45,19 @@ class User extends Authenticatable
     }
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /*
-        protected $casts = [
-            'email_verified_at' => 'datetime',
-        ];
-    */
+    /**
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'profile_photo_path',
+    ];
 
     public static function search($search)
     {
@@ -73,23 +66,6 @@ class User extends Authenticatable
                 ->orWhere('name', 'like', '%'.$search.'%')
                 ->orWhere('email', 'like', '%'.$search.'%');
     }
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    // protected $casts = [
-    //     'email_verified_at' => 'datetime',
-    // ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'profile_photo_path',
-    ];
 
     public function getProfilePhotoPathAttribute()
     {

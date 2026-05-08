@@ -3,7 +3,8 @@
 namespace Secondnetwork\Kompass\Commands;
 
 use App\Models\User;
-use Illuminate\Console\Command; // Importiert das Setting Model
+use App\Providers\KompassServiceProvider; // Importiert das Setting Model
+use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -235,6 +236,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // NPM Packages Update (Deine neue Liste)
         $this->updateNodePackages(function ($packages) {
             return [
+                '@laravel/passkeys' => '^0.1',
                 '@lehoczky/postcss-fluid' => '^1.0.3',
                 '@tailwindcss/forms' => '^0.5.10',
                 '@tailwindcss/postcss' => '^4.1.18',
@@ -292,6 +294,9 @@ class KompassCommand extends Command implements PromptsForMissingInput
         // Publish Vendor Files & Migrations
         $this->callSilent('vendor:publish', ['--provider' => 'Secondnetwork\Kompass\KompassServiceProvider']);
         $this->callSilent('vendor:publish', ['--tag' => 'migrations', '--force' => true]);
+
+        // Publish Passkeys config
+        $this->callSilent('vendor:publish', ['--tag' => 'kompass.passkeys-config', '--force' => true]);
     }
 
     public function runDatabaseMigrations(bool $fresh = false): void
@@ -313,7 +318,7 @@ class KompassCommand extends Command implements PromptsForMissingInput
         if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
             return;
         }
-        ServiceProvider::addProviderToBootstrapFile(\App\Providers\KompassServiceProvider::class);
+        ServiceProvider::addProviderToBootstrapFile(KompassServiceProvider::class);
     }
 
     protected static function updateNodePackages(callable $callback, bool $dev = true): void

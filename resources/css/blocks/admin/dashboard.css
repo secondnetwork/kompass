@@ -1,4 +1,4 @@
-[class*="kompass-admin-"] {
+[class*="kompass-admin-"]:not(.kompass-admin-passkey-setup) {
   overflow-y: scroll;
 
   main {
