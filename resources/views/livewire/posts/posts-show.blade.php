@@ -276,46 +276,60 @@
     <div x-cloak x-data="{ open: @entangle('FormBlocks') }">
         <x-kompass::offcanvas :w="'w-2/4'">
             <x-slot name="body">
+
                 <div class="grid grid-cols-4">
-                    @foreach ($blocktemplates as $itemblock)
-                        <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                            wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}',{{ $itemblock['grid'] }})">
-                            @if ($itemblock['icon_img_path'])
-                                <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
-                                    src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">
-                            @endif
-                            <span class="text-xs block mt-2">{{ $itemblock['name'] }}</span>
-                        </div>
-                    @endforeach
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
                         <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
                         <span class="text-xs block mt-2">Textblock</span>
                     </div>
 
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                    wire:click="addBlock('','Video','video','video')">
-                    <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
-                    <span class="text-xs block mt-2">Video</span>
-                    </div>
-
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Gallery','gallery','photo')">
-                        <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
-                        <span class="text-xs block mt-2">Gallery</span>
-                    </div>
-
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+                    {{-- <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Layout Block','group')">
                         <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
                         <span class="text-xs block mt-2">Layout Block</span>
-                    </div>
+                    </div> --}}
 
-                    <div class="bg-gray-300 rounded-lg p-2 m-2 cursor-pointer"
+                    <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Accordion Group','accordiongroup')">
                         <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
                         <span class="text-xs block mt-2">Accordion</span>
                     </div>
+
+
+                    {{-- <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click="addBlock('','Button','button','box-model-2')">
+                        <img src="{{ kompass_asset('icons-blocks/button.png') }}" alt="">
+                        <span class="text-xs block mt-2">Button</span>
+                    </div>
+
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click="addBlock('','Download','download','download')">
+                        <img src="{{ kompass_asset('icons-blocks/download.png') }}" alt="">
+                        <span class="text-xs block mt-2">Download</span>
+                    </div> --}}
+
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click="addBlock('','Video','video','video')">
+                        <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
+                        <span class="text-xs block mt-2">Video</span>
+                    </div>
+
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click="addBlock('','Gallery','gallery','photo')">
+                        <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
+                        <span class="text-xs block mt-2">Images and Gallery</span>
+                    </div>
+{{-- 
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                        wire:click="addBlock('','Anchormenu','anchormenu','anchor')">
+                        <img src="{{ kompass_asset('icons-blocks/anchormenu.png') }}" alt="">
+                        <span class="text-xs block mt-2">Anchor menu</span>
+                    </div> --}}
+
+
+
                 </div>
             </x-slot>
         </x-kompass::offcanvas>
