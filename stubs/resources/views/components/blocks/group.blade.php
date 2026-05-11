@@ -14,6 +14,11 @@
 <div
     {{ $attributes->merge(['class' => 'group gap-6 md:grid ' . $align . ' ' . $orderClasses . ' ' . $gridCols . ' ' . $colSpan . ' ' . get_meta($item, 'css-classname', '') . ' ' . get_meta($item, 'layout', '') . ' ' . get_meta($item, 'alignment', '')]) }}>
     @foreach ($item->children as $child)
-        <x-blocks.components :item="$child" />
+        @php
+            ['colSpan' => $childColSpan] = block_grid_classes($child);
+        @endphp
+        <div class="{{ $childColSpan }}">
+            <x-blocks.components :item="$child" />
+        </div>
     @endforeach
 </div>
