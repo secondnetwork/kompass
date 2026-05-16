@@ -9,15 +9,19 @@
 
 ## The development of Kompass
 
-Kompass is a modern content management system (CMS) built on the [Laravel](http://laravel.com/) framework, utilizing the TALL stack (Tailwind CSS, Alpine.js, Laravel, and Livewire). This powerful combination allows for a seamless and dynamic user experience, making content management easier and more efficient.
+Kompass is what a modern Laravel CMS should feel like. Built on Tailwind CSS 4, Livewire 4, and Laravel 13 — with a block builder, media library, drag-and-drop menus builder, multilingual content, passkey login, SEO, and role-based permissions baked in. No workarounds. No compromises. Built for developers who expect more.
+
+Still using WordPress or TYPO3? There's a better way. Kompass combines the power of Laravel with everything you need for modern web projects — without the legacy overhead.
 
 ## Key Features
 
-- **Modern Tech Stack**: Built with Laravel 13, PHP 8.3+, Livewire 4, and Tailwind CSS 4
+- **Modern Tech Stack**: Built with Laravel 13, PHP 8.2+, Livewire 4, and Tailwind CSS 4
+- **Block Builder**: Flexible block system for creating dynamic page layouts.
+- **Media Library**: Full-featured media management.
+- **Menu Builder**: Drag & Drop menu management
+- **User Management**: Role-based access control with Spatie Laravel Permission
+- **Passkey Authentication**: Passwordless login via biometrics or device PIN
 - **Multilingual Support**: Full multilingual content management for multiple languages
-- **Block-Based Content**: Flexible block system for creating dynamic page layouts
-- **Media Library**: Full-featured media management with folder support
-- **User Management**: Role-based access control with Laravel Permission
 
 ## Requirements
 
