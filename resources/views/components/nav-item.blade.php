@@ -172,7 +172,7 @@
     </nav-item>
 @endif
 @if ($itemblocks->type == 'gallery')
-    <nav-item class="flex items-center gap-2">
+    <nav-item class="flex items-center gap-2 py-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300 ">Slider</span>
         <span class="cursor-pointer" wire:click="saveset({{ $itemblocks->id }},'slider', '')">
             @if ($slider == '')
@@ -188,11 +188,7 @@
                 <x-tabler-carousel-horizontal />
             @endif
         </span>
-    </nav-item>
 
-
-
-    <nav-item class="flex items-center gap-2">
         <span class="text-sm font-medium px-2.5 py-0.5 rounded bg-gray-300">Grid</span>
         <span class="cursor-pointer" x-data wire:click="updateGrid({{ $itemblocks->id }}, '1')">
             @if ($itemblocks->grid == '1')

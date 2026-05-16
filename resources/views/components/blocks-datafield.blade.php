@@ -11,7 +11,7 @@
     </nav>
 </div>
 
-<div class="grid grid-cols-{{ $itemblocks->grid }} gap-6">
+<div class="{{ !in_array($itemblocks->type, ['gallery', 'video']) ? 'grid grid-cols-' . $itemblocks->grid . ' gap-6' : '' }}">
     @switch($itemblocks->type)
         @case('video')
             <x-kompass::block.video :itemblocks="$itemblocks" />

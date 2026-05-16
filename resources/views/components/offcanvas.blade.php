@@ -1,6 +1,6 @@
 <div x-show="open" @click="open = false" x-transition.duration.500ms class="fixed top-0 right-0 bottom-0 left-0 backdrop-blur-sm z-40" x-cloak></div>
 
-<div x-show="open"  class="flex flex-col right-0 {{$w ?? 'w-2/4'}}  fixed top-0 py-4 bg-white  h-full overflow-auto z-40 shadow"
+<div x-show="open"  class="flex flex-col right-0 {{$w ?? 'w-3/4'}}  fixed top-0 py-4 bg-white  h-full overflow-auto z-40 shadow"
 x-transition:enter="transform transition-transform duration-300" 
 x-transition:enter-start="translate-x-full" 
 x-transition:enter-end="translate-x-0" 
