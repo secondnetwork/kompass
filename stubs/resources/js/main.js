@@ -1,3 +1,3 @@
 
-const { liteyoutube } = import('./plugins/lite-yt-embed')
-const { litvimeo } = import('./plugins/lite-vimeo-embed')
+import './plugins/lite-yt-embed'
+import './plugins/lite-vimeo-embed'

@@ -1,0 +1,12 @@
+.videoplayer-playbtn-overlay {
+  background-color: color-mix(in oklch, var(--color-playbtn) 20%, transparent);
+}
+
+.videoplayer-playbtn {
+  background-color: var(--color-playbtn);
+  /* opacity: 0.8; */
+}
+
+.videoplayer-playbtn:hover {
+  background-color: color-mix(in oklch, var(--color-playbtn) 70%, black);
+}

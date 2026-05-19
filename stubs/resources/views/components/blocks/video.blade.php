@@ -18,18 +18,22 @@
 
                 if (!empty($poster)) {
                     $assetUrl = $poster;
-                } else {
+                } elseif ($assetExists) {
                     $assetUrl = Storage::disk('public')->url('thumbnails-video/' . $videoEmbed['id'] . '.jpg');
+                } else {
+                    $assetUrl = null;
                 }
             @endphp
 
             @if ($videoEmbed['type'] == 'youtube')
                 <lite-youtube class="aspect-video" videoid="{{ $videoEmbed['id'] }}" params="rel=0"
-                    @if ($assetExists) style="background-image: url('{{ $assetUrl }}');" @endif>
+                    @if ($assetUrl) style="background-image: url('{{ $assetUrl }}');" @endif>
                 </lite-youtube>
             @endif
             @if ($videoEmbed['type'] == 'vimeo')
-                <lite-vimeo class="aspect-video" videoid="{{ $videoEmbed['id'] }}"></lite-vimeo>
+                <lite-vimeo class="aspect-video" videoid="{{ $videoEmbed['id'] }}"
+                    @if ($assetUrl) poster="{{ $assetUrl }}" @endif>
+                </lite-vimeo>
             @endif
 
             @if ($videoEmbed['type'] == 'facebook')

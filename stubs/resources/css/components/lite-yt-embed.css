@@ -6,6 +6,7 @@ lite-youtube {
   background-position: center center;
   background-size: cover;
   cursor: pointer;
+  @apply rounded-box
 }
 
 
@@ -29,7 +30,8 @@ lite-youtube > iframe {
 
 
 lite-youtube > .lty-playbtn::before {
-  @apply block rounded-full bg-red-700 ;
+  @apply block rounded-full;
+  background-color: var(--color-playbtn);
   content: "";
   display: block;    
   height: 70px;
@@ -72,18 +74,16 @@ lite-youtube > .lty-playbtn::after {
   background-color: currentColor;
   transform: scale(1.1);
 }
-lite-youtube:hover > .lty-playbtn::before
-{
-  @apply bg-slate-700 scale-110;
-}
-lite-youtube .lty-playbtn:focus{
-  @apply bg-slate-700;
+lite-youtube:hover > .lty-playbtn::before {
+  @apply scale-110;
+  background-color: color-mix(in oklch, var(--color-playbtn) 70%, black);
 }
 
 /* Post-click styles */
 lite-youtube.lyt-activated {
   cursor: unset;
 }
+
 lite-youtube.lyt-activated::before,
 lite-youtube.lyt-activated > .lty-playbtn {
   opacity: 0;
@@ -98,3 +98,109 @@ lite-youtube.lyt-activated > .lty-playbtn {
   white-space: nowrap;
   width: 1px;
 }
+
+
+
+
+
+  lite-vimeo {
+    background-color: #000;
+    position: relative;
+    display: block;
+    contain: content;
+    background-position: center center;
+    background-size: cover;
+    cursor: pointer;
+    max-width: 720px;
+    @apply rounded-box;
+}
+
+
+
+/* responsive iframe with a 16:9 aspect ratio
+    thanks https://css-tricks.com/responsive-iframes/
+*/
+lite-vimeo::after {
+    content: "";
+    display: block;
+    padding-bottom: calc(100% / (16 / 9));
+}
+lite-vimeo > iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+}
+
+
+lite-vimeo > .ltv-playbtn::before {
+    @apply block rounded-full;
+    background-color: var(--color-playbtn);
+    content: "";
+    display: block;    
+    height: 70px;
+    width: 70px;
+    position: absolute;
+    transition: .4s all;
+}
+
+/* play button */
+lite-vimeo > .ltv-playbtn {
+    
+    @apply rounded-full text-white grid w-full h-full place-items-center;
+    /* Make the button element cover the whole area for a large hover/click target… */
+
+    /* left: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    transform: translateX(-50%); */
+     /* …but visually it's still the same size */
+    background: no-repeat center/24px 24px ;
+    
+    
+    /* YT's actual play button svg */
+    position: absolute;
+    cursor: pointer;
+    z-index: 1;
+    transition: .4s all;
+    
+}
+
+lite-vimeo > .ltv-playbtn::after {
+
+    content: "";
+    display: block;
+    height: 70px;
+    width: 70px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-play-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="currentColor"></path></svg>');
+    background-color: currentColor;
+    transform: scale(1.1);
+}
+lite-vimeo:hover > .ltv-playbtn::before {
+    @apply scale-110;
+    background-color: color-mix(in oklch, var(--color-playbtn) 70%, black);
+}
+
+
+/* Post-click styles */
+lite-vimeo.ltv-activated {
+    cursor: unset;
+}
+lite-vimeo.ltv-activated::before,
+lite-vimeo.ltv-activated > .ltv-playbtn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ltv-visually-hidden {
+
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }

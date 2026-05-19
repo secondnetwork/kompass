@@ -16,7 +16,7 @@
     fullscreen: false,
     ended: false,
     mouseleave: false,
-    autoHideControlsDelay: 3000,
+    autoHideControlsDelay: 1000,
     controlsHideTimeout: null,
     poster: '{{ $poster ?? null }}',
     videoDuration: 0,
@@ -151,7 +151,7 @@ x-init="
 x-ref="videoContainer"
 @mouseleave="mouseleave=true"
 @mousemove="mousemoveVideo"
-class="relative overflow-hidden rounded-md aspect-video">
+class="relative overflow-hidden rounded-md aspect-video not-prose">
 <video
     x-ref="player"
     @loadedmetadata="metaDataLoaded"
@@ -173,18 +173,18 @@ class="relative overflow-hidden rounded-md aspect-video">
             x-transition:enter="transition ease-out duration-1000"
             x-transition:enter-start="scale-50 opacity-100"
             x-transition:enter-end="scale-100 opacity-0"
-            class="absolute z-20 flex items-center justify-center w-24 h-24 bg-blue-600 rounded-full opacity-0 bg-opacity-20"
+            class="absolute z-20 flex items-center justify-center size-10 rounded-full opacity-0 videoplayer-playbtn-overlay"
             x-cloak>
-            <x-tabler-player-play-filled class="w-10 h-10 translate-x-0.5 text-white" />
+            <x-tabler-player-play-filled class="size-16 translate-x-0.5 text-white" />
         </div>
         <div
             x-show="!playing && !ended"
             x-transition:enter="transition ease-out duration-1000"
             x-transition:enter-start="scale-50 opacity-100"
             x-transition:enter-end="scale-100 opacity-0"
-            class="absolute z-20 flex items-center justify-center w-24 h-24 bg-blue-600 rounded-full opacity-0 bg-opacity-20"
+            class="absolute z-20 flex items-center justify-center size-10 rounded-full opacity-0 videoplayer-playbtn-overlay"
             x-cloak>
-            <x-tabler-player-pause-filled class="w-10 h-10 text-white" />
+            <x-tabler-player-pause-filled class="size-16 text-white" />
         </div>
         <div class="absolute z-10 duration-300 ease-out group-hover:scale-110">
             <button
@@ -195,7 +195,7 @@ class="relative overflow-hidden rounded-md aspect-video">
                 x-transition:leave="transition ease-out duration-300"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="flex items-center justify-center w-12 h-12 text-white duration-150 ease-out bg-blue-600 rounded-full cursor-pointer bg-opacity-80" type="button">
+                class="flex items-center justify-center size-16 text-white duration-150 ease-out rounded-full cursor-pointer videoplayer-playbtn" type="button">
                 <x-tabler-player-play-filled class="w-5 h-5 translate-x-px" x-cloak />
             </button>
         </div>
