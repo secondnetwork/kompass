@@ -73,11 +73,13 @@
                 </span>
             @else        
            
-            <x-kompass::nav-item :itemblocks="$itemblocks" />
+            
 
             <span wire:click="edit({{ $itemblocks->id }})" class="flex justify-center">
                 <x-tabler-edit class="cursor-pointer stroke-current text-blue-500" />
             </span>
+
+            <x-kompass::nav-item :itemblocks="$itemblocks" />
 
                 @if ($itemblocks->status == 'published')
                     <button wire:click="updatestatus({{ $itemblocks->id }}, 'draft')">
