@@ -49,7 +49,20 @@
             <x-tabler-square-number-5 />
         @endif
     </span>
-
+  <livewire:editable-meta
+  label="Classname:"
+  meta-key="css-classname"
+  :itemblocks="$itemblocks"
+  wire-action="updateMeta"
+  :key="'css-classname-'.$itemblocks->id"
+  />
+  <livewire:editable-meta
+      label="ID:"
+      meta-key="id-anchor"
+      :itemblocks="$itemblocks"
+      wire-action="updateMeta"
+      :key="'id-anchor-'.$itemblocks->id"
+  />
 </nav-item>
 @endif
 
@@ -79,21 +92,8 @@
           <x-tabler-arrow-autofit-width />
       @endif
   </span>
+@endif
 
-  <livewire:editable-meta
-  label="Classname:"
-  meta-key="css-classname"
-  :itemblocks="$itemblocks"
-  wire-action="updateMeta"
-  :key="'css-classname-'.$itemblocks->id"
-  />
-  <livewire:editable-meta
-      label="ID:"
-      meta-key="id-anchor"
-      :itemblocks="$itemblocks"
-      wire-action="updateMeta"
-      :key="'id-anchor-'.$itemblocks->id"
-  />
 
 
 {{-- 
@@ -130,7 +130,7 @@
       </div>
   </div> --}}
 
-    @endif
+    
 
      
 </nav-item>     
