@@ -111,7 +111,7 @@
     
     @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
     <nav x-show="expanded" x-collapse
-    class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 grid gap-4 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') border-b-4 border-purple-700 @endif">
+    class="px-6 py-2 bg-gray-200 shadow-inner shadow-black/20 gap-4 @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') border-b-4 border-purple-700 @endif">
 
     <x-kompass::nav-itemgroup :itemblocks="$itemblocks" />
 
