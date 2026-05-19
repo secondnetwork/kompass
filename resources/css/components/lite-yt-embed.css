@@ -74,7 +74,7 @@ lite-youtube > .lty-playbtn::after {
     background-color: currentColor;
     transform: scale(1.1);
 }
-lite-youtube:hover > .lty-playbtn::before,lite-youtube .lty-playbtn:focus
+lite-youtube:hover > .lty-playbtn::before
 {
     @apply bg-slate-700 scale-110;
 }
@@ -100,9 +100,6 @@ lite-youtube.lyt-activated > .lty-playbtn {
   }
 
 
-
-
-
   lite-vimeo {
     background-color: #000;
     position: relative;
@@ -114,8 +111,6 @@ lite-youtube.lyt-activated > .lty-playbtn {
     max-width: 720px;
     @apply my-4;
 }
-
-
 
 /* responsive iframe with a 16:9 aspect ratio
     thanks https://css-tricks.com/responsive-iframes/
@@ -179,7 +174,7 @@ lite-vimeo > .ltv-playbtn::after {
     background-color: currentColor;
     transform: scale(1.1);
 }
-lite-vimeo:hover > .ltv-playbtn::before,lite-vimeo .ltv-playbtn:focus
+lite-vimeo:hover > .ltv-playbtn::before
 {
     @apply bg-slate-700 scale-110;
 }

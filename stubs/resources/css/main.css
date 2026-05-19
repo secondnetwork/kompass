@@ -29,21 +29,25 @@ License URI: http://opensource.org/licenses/mit-license.php
 
 @source inline("{,md:,lg:,xl:}grid-cols-{1..6}");
 @source inline("{,md:,lg:,xl:}col-span-{1..6}");
+@source inline("{{,md:,lg:,xl:}items-center,items-end}");
 
 @import "./base/base.css";
 @import "./base/fonts.css";
-/* @import "./base/typography.css"; */
-@import "./base/grid_layout.css";
+@import "./base/typography.css";
+@import "./base/layout.css";
 
 @import "./components/header_hero.css";
 @import "./components/navigation.css";
 @import "./components/form.css";
 @import "./components/lite-yt-embed.css";
 @import "./components/gallery.css";
+@import "./components/videoplayer.css";
 
 
 @theme {
     --font-sans: 'inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-playbtn: oklch(50.5% 0.213 27.5);
 
 }
 

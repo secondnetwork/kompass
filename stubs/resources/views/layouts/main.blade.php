@@ -204,8 +204,8 @@
         class=""><x-tabler-arrow-big-up-lines class="text-white"/></button>
     </div>
 
-    @livewireScripts
     {{ Vite::useBuildDirectory('content')->withEntryPoints(['resources/js/main.js']) }}
+    @livewireScripts
     @stack('scripts')
 </body>
 

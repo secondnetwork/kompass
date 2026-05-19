@@ -1,4 +1,4 @@
-<div class=grid>
+<div>
     @if (!empty($page->slug))
         @php
             $webtitle = setting('global.webtitle', 'Kompass');

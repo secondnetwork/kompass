@@ -1,4 +1,4 @@
-main > div,main > section, footer,header  {
+main > div > section, footer, header, .grid-set{
     --gap: clamp(1rem, 6vw, 3rem);
     --full: minmax(var(--gap), 1fr);
     --content: min(65ch, 100% - var(--gap) * 2);
@@ -16,6 +16,11 @@ footer > * , header > * {
 }
 
 main div > section{
+    @apply py-8;
+
+}
+
+main div > section > div {
     grid-column: content;
 }
 
@@ -46,4 +51,8 @@ main div > section{
 .divider {
     height: 0.1rem;
     background-color: #e6e6e6;
+}
+
+.no-grid{
+    @apply flex;
 }

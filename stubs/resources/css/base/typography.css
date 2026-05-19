@@ -70,6 +70,7 @@ h3,
 h4,
 h5,
 h6 {
+    margin-top: 0;
     font-weight: 700;
     line-height: 1.3;
 }
@@ -124,7 +125,7 @@ h6 {
 
 p {
     font-size: var(--font-size-body);
-    @apply font-medium;
+    /* @apply font-medium; */
     line-height: 1.8;
     letter-spacing: 0.2px;
 }
