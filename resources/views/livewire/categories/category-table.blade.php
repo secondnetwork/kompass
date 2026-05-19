@@ -49,7 +49,7 @@
                             $displayIcon = str_replace('tabler-', '', $selectedIcon);
                         @endphp
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
-                            <x-kompass::icon :name="$displayIcon" class="w-6 h-6" />
+                            <x-kompass::icon :name="$displayIcon" class="size-5 md:size-6" />
                             <span class="text-sm flex-1">{{ $selectedIcon }}</span>
                             <button wire:click="resetIcon" class="btn btn-ghost btn-xs text-error">
                                 <x-tabler-x class="w-4 h-4" />
@@ -140,7 +140,7 @@
                             $displayIcon = str_replace('tabler-', '', $selectedIcon);
                         @endphp
                         <div class="flex items-center gap-2 mt-2 p-2 bg-base-200 rounded">
-                            <x-kompass::icon :name="$displayIcon" class="w-6 h-6" />
+                            <x-kompass::icon :name="$displayIcon" class="size-5 md:size-6" />
                             <span class="text-sm flex-1">{{ $selectedIcon }}</span>
                             <button wire:click="resetIcon" class="btn btn-ghost btn-xs text-error">
                                 <x-tabler-x class="w-4 h-4" />

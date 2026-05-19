@@ -15,7 +15,7 @@
                         <span class="hidden md:inline mr-4">{{ sprintf('%02d', $loop->iteration) }}</span>
                         {{ $child->name }}
                     </span>
-                    <svg class="w-6 h-6 text-gray-500 transition-transform duration-300"
+                    <svg class="size-5 md:size-6 text-gray-500 transition-transform duration-300"
                         :class="open === {{ $loop->index }} ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />

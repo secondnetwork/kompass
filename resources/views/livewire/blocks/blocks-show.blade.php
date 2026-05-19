@@ -25,7 +25,7 @@
                                 @foreach ($filteredIcons as $iconItem)
                                     <button wire:click="selectIcon('{{ $iconItem['name'] }}')"
                                         class="p-2 hover:bg-base-200 rounded flex justify-center transition-colors">
-                                        <x-kompass::icon :name="$iconItem['name']" class="w-6 h-6" />
+                                        <x-kompass::icon :name="$iconItem['name']" class="size-5 md:size-6" />
                                     </button>
                                 @endforeach
                             </div>
@@ -127,7 +127,7 @@
                     <div class="block text-sm font-medium leading-6 text-gray-900">{{ __('Block Icon') }}</div>
                     <div class="cursor-pointer btn btn-md btn-primary py-2" wire:click="selectItem({{ $blocktemplatesId }}, 'addblock')">
                         @if ($iconclass)
-                            <x-icon :name="$iconclass" class="w-6 h-6" />
+                            <x-icon :name="$iconclass" class="size-5 md:size-6" />
                         @else
                             <x-tabler-photo-cog />
                         @endif

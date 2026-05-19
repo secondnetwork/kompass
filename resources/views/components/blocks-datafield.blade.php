@@ -5,11 +5,6 @@
     'class' => '',
     'cssclassname' => '',
 ])
-<div>
-    <nav class="">
-        <x-kompass::nav-item :itemblocks="$itemblocks" />
-    </nav>
-</div>
 
 <div class="{{ !in_array($itemblocks->type, ['gallery', 'video']) ? 'grid grid-cols-' . $itemblocks->grid . ' gap-6' : '' }}">
     @switch($itemblocks->type)

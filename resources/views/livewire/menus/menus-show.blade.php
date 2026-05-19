@@ -93,7 +93,7 @@
                                 @foreach ($filteredIcons as $iconItem)
                                     <button wire:click="selectIcon('{{ $iconItem['name'] }}')"
                                         class="p-2 hover:bg-base-200 rounded flex justify-center transition-colors">
-                                        <x-kompass::icon :name="$iconItem['name']" class="w-6 h-6" />
+                                        <x-kompass::icon :name="$iconItem['name']" class="size-5 md:size-6" />
                                     </button>
                                 @endforeach
                             </div>

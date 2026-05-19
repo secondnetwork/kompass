@@ -7,7 +7,7 @@
             type="color" 
             value="{{ $itemfield->data ?? '#000000' }}" 
             wire:change="updateDatafield({{ $itemfield->id }}, $event.target.value)"
-            class="w-6 h-6 cursor-pointer rounded overflow-hidden border-none p-0 bg-transparent"
+            class="size-5 md:size-6 cursor-pointer rounded overflow-hidden border-none p-0 bg-transparent"
         />
     </div>
     <input 

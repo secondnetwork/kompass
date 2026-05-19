@@ -3,7 +3,7 @@
         <div class="flex items-center gap-3 p-3 rounded-xl border border-base-300 bg-base-100 hover:bg-base-200 hover:border-primary/40 cursor-pointer transition-all group"
             wire:click="goToFolder">
             <div class="shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <x-tabler-folder stroke-width="1.5" class="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-200" />
+                <x-tabler-folder stroke-width="1.5" class="size-5 md:size-6 text-primary group-hover:scale-110 transition-transform duration-200" />
             </div>
             <div class="min-w-0 flex-1">
                 <div class="text-sm font-semibold truncate" title="{{ $file->name }}">{{ $file->name }}</div>

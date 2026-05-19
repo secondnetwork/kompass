@@ -2,7 +2,8 @@
         $el.querySelector('input').value = '{{ $itemblocks->getMeta($metaKey) }}';
     }"
 >
-    <span class="text-sm flex items-center font-bold gap-1 px-2.5 py-0.5 rounded bg-gray-300">
+
+    <span class="text-xs flex items-center gap-1 px-1.5 py-0.5 rounded ">
         {{ $label }} <x-tabler-circle-dashed-plus class="cursor-pointer" @click="dropbox = !dropbox" /> <span class="text-blue-700 text-sm ">{{ $itemblocks->getMeta($metaKey) }}</span>
     </span>
 

@@ -13,10 +13,10 @@
                 x-on:keydown.escape="isEditing = false"
                 x-on:click.away="isEditing = false" wire:keydown.enter="savename">
             <span wire:click="savename" x-on:click="isEditing = false">
-                <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+                <x-tabler-square-check class="cursor-pointer stroke-current size-5 md:size-6 text-green-600" />
             </span>
             <span x-on:click="isEditing = false">
-                <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+                <x-tabler-square-x class="cursor-pointer stroke-current size-5 md:size-6 text-red-600" />
             </span>
         </div>
     

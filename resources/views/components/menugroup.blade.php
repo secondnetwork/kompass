@@ -28,12 +28,12 @@
             <div x-data="click_to_edit()" class="w-11/12 flex items-center">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
                     @if (!$item->subgroup)
-                    <x-tabler-stack class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+                    <x-tabler-stack class="cursor-pointer stroke-current size-5 md:size-6 text-green-600" />
                     @endif
                     <span class="text-sm font-semibold">{{ $item->title }}</span>
                     
                     
-                    {{-- <span><x-tabler-edit class="cursor-pointer stroke-current h-6 w-6 text-gray-400 hover:text-blue-500" /></span> --}}
+                    {{-- <span><x-tabler-edit class="cursor-pointer stroke-current size-5 md:size-6 text-gray-400 hover:text-blue-500" /></span> --}}
                 </a>  
                 <a x-show="!isEditing" class="text-sm ml-4 bg-gray-100 py-1 px-2 rounded" target="_black" href="{{ $item->url }}">{{ $item->url }}</a>
                 {{-- <input titemblock shadow border-r-4 border-b  border-purple-500    group-block  border-purple-600  border-b-2ype="text" value="{{ $item->title }}" x-show="isEditing"
@@ -55,10 +55,10 @@
                                 wire:keydown.enter="savename({{ $item->id }})"
                             >
                             <span wire:click="savename({{ $item->id }})" x-on:click="isEditing = false">
-                                <x-tabler-square-check class="cursor-pointer stroke-current h-6 w-6 text-green-600" />
+                                <x-tabler-square-check class="cursor-pointer stroke-current size-5 md:size-6 text-green-600" />
                             </span>
                             <span x-on:click="isEditing = false">
-                                <x-tabler-square-x class="cursor-pointer stroke-current h-6 w-6 text-red-600" />
+                                <x-tabler-square-x class="cursor-pointer stroke-current size-5 md:size-6 text-red-600" />
                             </span>
                  
                     </div>
@@ -70,14 +70,14 @@
             <span wire:click="selectItem({{ $item->id }}, 'update', {{ $item->subgroup }})" class="flex  justify-center "><x-tabler-edit class="cursor-pointer stroke-blue-500"/></span>
         
             <span wire:click="selectItem({{ $item->menu_id }}, 'additem',{{ $item->id }})">
-                <x-tabler-subtask class="cursor-pointer stroke-current h-6 w-6 text-blue-600" />
+                <x-tabler-subtask class="cursor-pointer stroke-current size-5 md:size-6 text-blue-600" />
             </span>
                 {{-- <span wire:click="clone({{ $item->id }})" class="flex justify-center">
-                    <x-tabler-copy class="cursor-pointer  h-6 w-6  stroke-violet-500" />
+                    <x-tabler-copy class="cursor-pointer  size-5 md:size-6  stroke-violet-500" />
                 </span> --}}
             
             <span wire:click="selectItem({{ $item->id }}, 'deleteblock')" class="flex justify-center">
-                <x-tabler-trash class="cursor-pointer stroke-current h-6 w-6 text-red-500" />
+                <x-tabler-trash class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
             </span>
 
      
