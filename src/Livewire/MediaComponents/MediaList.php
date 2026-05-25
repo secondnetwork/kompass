@@ -17,7 +17,7 @@ class MediaList extends Component
     public $dir = 'media';
 
   
-    public $filter = ''; // Add filter property
+    public $filter = null;
 
     public $search = '';
     protected $queryString = ['search', 'dir', 'filter']; // Add filter to query string

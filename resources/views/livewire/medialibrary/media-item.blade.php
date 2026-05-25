@@ -16,7 +16,7 @@
             </button>
         </div>
     @else
-    <div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow group border border-base-300">
+    <div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow group">
         <figure class="relative aspect-video overflow-hidden">
             @if ($file->type == 'video')
                 <div class="flex items-center justify-center w-full h-full bg-base-300">
@@ -78,8 +78,9 @@
                         title="{{ __('Edit Meta') }}">
                         <x-tabler-edit class="w-4 h-4 stroke-current" />
                     </button>
+
                     <input type="checkbox"
-                        class="checkbox checkbox-primary checkbox-sm bg-base-100"
+                        class="checkbox checkbox-primary checkbox-md bg-white checked:text-black"
                         :checked="checked"
                         @click.stop="$dispatch('media-toggle', { id: {{ $file->id }} })" />
                 </div>
