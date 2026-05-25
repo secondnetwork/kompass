@@ -285,6 +285,14 @@ class PostsData extends Component
             ]);
         }
 
+        if ($type == 'button') {
+            Datafield::create([
+                'block_id' => $block->id,
+                'type' => 'link',
+                'order' => '1',
+            ]);
+        }
+
         if ($blocktemplatesID != null) {
             $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
 

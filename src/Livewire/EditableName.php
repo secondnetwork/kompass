@@ -13,16 +13,20 @@ class EditableName extends Component
 
     public $newName;
 
-    public function mount(Block $itemblocks)
+    public $size = 'sm';
+
+    public function mount(Block $itemblocks, $size = 'sm')
     {
         $this->itemblocks = $itemblocks;
         $this->newName = $itemblocks->name;
+        $this->size = $size;
     }
 
     public function toggleEditingState()
     {
         $this->isEditing = ! $this->isEditing;
         $this->dispatch('focus-input');
+        
     }
 
     public function savename()

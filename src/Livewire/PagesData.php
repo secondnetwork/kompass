@@ -325,11 +325,7 @@ class PagesData extends Component
         $fieldDefinitions = match ($type) {
             'wysiwyg' => [['type' => 'wysiwyg', 'order' => '1']],
             'anchormenu' => [['name' => 'Name Anchormenu', 'type' => 'text', 'order' => '1']],
-            // 'button' => [
-            //     ['name' => 'Text', 'type' => 'text', 'order' => '1'],
-            //     ['name' => 'URL', 'type' => 'text_url', 'order' => '1'],
-            //     ['name' => 'iconclass', 'type' => 'icon', 'order' => '1'],
-            // ],
+            'button' => [['type' => 'link', 'order' => '1']],
             default => [],
         };
 

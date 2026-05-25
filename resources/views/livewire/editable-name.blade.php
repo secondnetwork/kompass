@@ -1,14 +1,14 @@
-<div x-data="click_to_edit()" class="w-11/12 flex items-center">
+<div x-data="click_to_edit()" {{ $attributes->merge(['class' => 'w-11/12 flex items-center']) }}>
 
     <div x-data="{ id: '{{ $itemblocks->id }}', name: '{{ $itemblocks->name }}' }">
 
         <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
         class="flex items-center select-none cursor-text" x-on:keydown.escape="isEditing = false">
-        <span class="text-sm font-semibold" x-text="name"></span>
+        <span class="{{ $size == '2xl' ? 'text-2xl font-bold' : 'text-sm font-semibold' }}" x-text="name"></span>
         </a>
-        
+
         <div x-show="isEditing" class="flex items-center"  >
-            <input type="text" class="border border-gray-400 px-1 py-1 text-sm font-semibold" x-model="name"
+            <input type="text" class="border border-gray-400 px-1 py-1 {{ $size == '2xl' ? 'text-2xl font-bold' : 'text-sm font-semibold' }}" :value="name" @input="name = $event.target.value"
                 wire:model.lazy="newName" x-ref="input" x-on:keydown.enter="isEditing = false"
                 x-on:keydown.escape="isEditing = false"
                 x-on:click.away="isEditing = false" wire:keydown.enter="savename">

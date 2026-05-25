@@ -6,9 +6,11 @@
     'cssclassname' => '',
 ])
 
-<div class="{{ !in_array($itemblocks->type, ['gallery', 'video']) ? 'grid grid-cols-' . $itemblocks->grid . ' gap-6' : '' }}">
+<div class="{{ !in_array($itemblocks->type, ['gallery', 'video']) ? 'grid grid-cols-' . $itemblocks->grid . ' gap-6' : 'grid gap-6' }}">
 
-<livewire:editable-name :itemblocks="$itemblocks" :key="'editable-block-name-'.$itemblocks->id" class="text-4xl py-6" />
+    <div>
+        <livewire:editable-name :itemblocks="$itemblocks" size="2xl" :key="'editable-block-name-2xl-'.$itemblocks->id" />
+    </div>
 
     @switch($itemblocks->type)
         @case('video')
@@ -33,6 +35,10 @@
 
                         @case('wysiwyg')
                             <x-kompass::block.wysiwyg :itemfield="$item" />
+                        @break
+
+                        @case('buttom')
+                            <x-kompass::block.link :itemfield="$item" />
                         @break
 
                         @case('link')

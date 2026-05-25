@@ -4,12 +4,15 @@
     <div x-data="{ open: @entangle('FormAdjustments') }">
         <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
             <x-slot name="button">
-                <button class="btn btn-primary"
-                    wire:click="update('{{ $post->id }}')">
+                <button class="btn btn-primary" wire:click="update('{{ $post->id }}')">
                     <div wire:loading>
-                        <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
                         </svg>
                     </div>
                     <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
@@ -24,42 +27,48 @@
                     <strong class="text-gray-600">{{ __('Last update') }}:</strong> {{ $post->updated_at }}</br>
 
                     @if (setting('global.multilingual'))
-                    <x-kompass::select wire:model="land" :searchable="false" label="{{ __('Language') }}" :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])">
-                    </x-kompass::select>
+                        <x-kompass::select wire:model="land" :searchable="false" label="{{ __('Language') }}"
+                            :options="collect($available_locales)->map(
+                                fn($l) => ['name' => strtoupper($l), 'id' => $l],
+                            )">
+                        </x-kompass::select>
                     @endif
 
-                    <x-kompass::select wire:model="status" :searchable="false" label="{{ __('Status') }}" placeholder="{{ __('Select a status') }}" :options="[
-                        ['name' => __('published'), 'id' => 'published'],
-                        ['name' => __('draft'), 'id' => 'draft'],
-                    ]">
+                    <x-kompass::select wire:model="status" :searchable="false" label="{{ __('Status') }}"
+                        placeholder="{{ __('Select a status') }}" :options="[
+                            ['name' => __('published'), 'id' => 'published'],
+                            ['name' => __('draft'), 'id' => 'draft'],
+                        ]">
                     </x-kompass::select>
 
-                    <x-kompass::select wire:model="category_id" :searchable="false" label="{{ __('Category') }}" placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
+                    <x-kompass::select wire:model="category_id" :searchable="false" label="{{ __('Category') }}"
+                        placeholder="{{ __('Select a category') }}" :options="$availableCategories" />
 
                 </div>
 
                 @if ($post->status == 'draft')
-                        <button class="flex btn gap-x-2 items-center text-md"
-                            wire:click="update('{{ $post->id }}','true')">
-                            <x-tabler-send class="icon-lg" />
-                            {{ __('published') }}
-                        </button>
+                    <button class="flex btn gap-x-2 items-center text-md"
+                        wire:click="update('{{ $post->id }}','true')">
+                        <x-tabler-send class="icon-lg" />
+                        {{ __('published') }}
+                    </button>
                 @endif
 
                 <strong class="text-gray-600">SEO:</strong>
-                <x-kompass::form.textarea wire:model="description" id="name" name="title" label="{{ __('Description') }}" type="text" class="block w-full h-[10rem]" />
+                <x-kompass::form.textarea wire:model="description" id="name" name="title"
+                    label="{{ __('Description') }}" type="text" class="block w-full h-[10rem]" />
                 Thumbnails
                 {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
                 @if (!empty($post->thumbnails))
-                @php
-                $file = Secondnetwork\Kompass\Models\File::find($post->thumbnails);
-                @endphp
+                    @php
+                        $file = Secondnetwork\Kompass\Models\File::find($post->thumbnails);
+                    @endphp
 
                     @if ($file)
-                 
                         <div class="relative">
 
-                            <img on="pages.pages-show" alt="logo" class="aspect-[4/3] w-full object-cover rounded-xl"
+                            <img on="pages.pages-show" alt="logo"
+                                class="aspect-[4/3] w-full object-cover rounded-xl"
                                 src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
                             <action-button
                                 class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">
@@ -75,15 +84,14 @@
                             </action-button>
 
                         </div>
-                        @endif
-                    
+                    @endif
                 @else
-                <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
-                    <img-block
-                        class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
-                        <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
-                    </img-block>
-                </span>
+                    <span wire:click="selectitem('addMedia',{{ $post->id }},'thumbnails')">
+                        <img-block
+                            class="cursor-pointer grid place-content-center border-2 border-dashed border-gray-400 rounded-2xl text-gray-400 w-1/2 aspect-[4/3] ">
+                            <x-tabler-photo-plus class="h-[4rem] w-[4rem] stroke-[1.5]" />
+                        </img-block>
+                    </span>
                 @endif
             </x-slot>
         </x-kompass::offcanvas>
@@ -100,10 +108,8 @@
             <div class=" flex-auto">
 
                 <div x-data="click_to_edit('updateTitle')">
-                    <a 
-                    @click.prevent @click="toggleEditingState" x-show="!isEditing" 
-                    class="flex items-center gap-2 select-none cursor-pointer"
-                        class="select-none cursor-pointer">
+                    <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
+                        class="flex items-center gap-2 select-none cursor-pointer" class="select-none cursor-pointer">
                         <h4 class="text-gray-600 font-bold">{{ $post->title }} </h4><span>
                             <x-tabler-edit class="cursor-pointer stroke-current  text-gray-400 hover:text-blue-500" />
                         </span>
@@ -112,8 +118,8 @@
                     <div x-show="isEditing" x-cloak>
                         <x-kompass::form.input type="text" wire:model.live="title" x-ref="input"
                             class="font-bold border-0 border-b-2 border-blue-500 focus:ring-0 px-0 py-0 bg-transparent text-gray-600 w-auto"
-                            @click.away="handleClickAway"
-                            @keydown.enter="disableEditing" @keydown.window.escape="disableEditing" />
+                            @click.away="handleClickAway" @keydown.enter="disableEditing"
+                            @keydown.window.escape="disableEditing" />
                     </div>
                 </div>
                 <div class="col-span-6">
@@ -172,12 +178,15 @@
                 @endswitch
 
 
-                <button class="btn btn-primary"
-                    wire:click="update('{{ $post->id }}')">
+                <button class="btn btn-primary" wire:click="update('{{ $post->id }}')">
                     <div wire:loading>
-                        <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
                         </svg>
                     </div>
                     <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
@@ -185,9 +194,7 @@
                 </button>
 
 
-                <button x-data="{ open: @entangle('FormAdjustments') }"
-                    class="btn btn-primary"
-                    @click="open = true">
+                <button x-data="{ open: @entangle('FormAdjustments') }" class="btn btn-primary" @click="open = true">
                     <x-tabler-adjustments class="icon-lg" />
 
                 </button>
@@ -195,27 +202,28 @@
             </span>
 
         </div>
-                <div>
-                    @php
-                        $defaultLocale = config('app.locale', 'de');
-                        $langPrefix = ($land == $defaultLocale) ? '' : '/' . $land;
-                        $permalink = url($langPrefix . '/blog/' . $post->slug);
-                    @endphp
-                    <strong class="text-gray-400 text-xs">Permalink: </strong><a
-                        class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ $permalink }}"
-                        target="_blank" rel="noopener noreferrer">{{ $permalink }}</a>
-                </div>
+        <div>
+            @php
+                $defaultLocale = config('app.locale', 'de');
+                $langPrefix = $land == $defaultLocale ? '' : '/' . $land;
+                $permalink = url($langPrefix . '/blog/' . $post->slug);
+            @endphp
+            <strong class="text-gray-400 text-xs">Permalink: </strong><a
+                class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ $permalink }}" target="_blank"
+                rel="noopener noreferrer">{{ $permalink }}</a>
+        </div>
     </div>
     <div class="">
         <div class="divider"></div>
         <div class="ordre-1">
 
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="" class="">
-                
-            @forelse ($blocks as $itemblocks)
-            <div wire:sort:item="{{ $itemblocks->id }}">
-                <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :post="$post" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
-            </div>
+
+                @forelse ($blocks as $itemblocks)
+                    <div wire:sort:item="{{ $itemblocks->id }}">
+                        <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :post="$post"
+                            :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                    </div>
 
                 @empty
                     <div
@@ -227,10 +235,10 @@
 
 
             </div>
-                <div class="flex  justify-end my-6">
-                    <button class="btn btn-primary"
-                        wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
-                </div>
+            <div class="flex  justify-end my-6">
+                <button class="btn btn-primary"
+                    wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
+            </div>
         </div>
     </div>
 
@@ -242,34 +250,36 @@
         </x-kompass::offcanvas>
     </div>
 
-    <div class="relative z-40" x-cloak x-data="{ open: @entangle('FormEditBlock')}">
+    <div class="relative z-40" x-cloak x-data="{ open: @entangle('FormEditBlock') }">
         <x-kompass::offcanvas :w="'w-3/4'">
             <x-slot name="body">
 
-                @foreach  ($datafield as $itemblocks)
-
-                <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :cssclassname="$cssClassname" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
-                
+                @foreach ($datafield as $itemblocks)
+                    <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :cssclassname="$cssClassname"
+                        :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
                 @endforeach
 
-        <div>
-            <button class="btn btn-primary"
-            wire:click="update('{{ $post->id }}')">
-            <div wire:loading>
-                <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </div>
-            <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
-            {{ __('Save') }}
-            </button>
-        </div>
+                <div>
+                    <button class="btn btn-primary" wire:click="update('{{ $post->id }}')">
+                        <div wire:loading>
+                            <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </div>
+                        <x-tabler-device-floppy class="icon-lg" wire:loading.remove />
+                        {{ __('Save') }}
+                    </button>
+                </div>
 
-                
+
             </x-slot>
         </x-kompass::offcanvas>
-        
+
     </div>
 
 
@@ -285,30 +295,17 @@
                         <span class="text-xs block mt-2">Textblock</span>
                     </div>
 
-                    {{-- <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Layout Block','group')">
-                        <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
-                        <span class="text-xs block mt-2">Layout Block</span>
-                    </div> --}}
-
                     <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Accordion Group','accordiongroup')">
                         <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
                         <span class="text-xs block mt-2">Accordion</span>
                     </div>
 
-
-                    {{-- <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
+                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Button','button','box-model-2')">
                         <img src="{{ kompass_asset('icons-blocks/button.png') }}" alt="">
                         <span class="text-xs block mt-2">Button</span>
                     </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Download','download','download')">
-                        <img src="{{ kompass_asset('icons-blocks/download.png') }}" alt="">
-                        <span class="text-xs block mt-2">Download</span>
-                    </div> --}}
 
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Video','video','video')">
@@ -321,14 +318,6 @@
                         <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
                         <span class="text-xs block mt-2">Images and Gallery</span>
                     </div>
-{{-- 
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Anchormenu','anchormenu','anchor')">
-                        <img src="{{ kompass_asset('icons-blocks/anchormenu.png') }}" alt="">
-                        <span class="text-xs block mt-2">Anchor menu</span>
-                    </div> --}}
-
-
 
                 </div>
             </x-slot>

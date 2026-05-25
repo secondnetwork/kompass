@@ -41,7 +41,7 @@
             <span class="inline-block border-r border-gray-400 w-px h-5 ml-1 mr-2 shrink-0"></span>
 
             <span class="truncate min-w-0">
-                <livewire:editable-name :itemblocks="$itemblocks" :key="'editable-block-name-'.$itemblocks->id" />
+                <livewire:editable-name :itemblocks="$itemblocks" :key="'editable-block-name-'.$itemblocks->id" :size="'sm'" />
             </span>
         </span>
 
