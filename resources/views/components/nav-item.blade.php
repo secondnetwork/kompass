@@ -89,7 +89,7 @@
             @if(!$itemblocks->subgroup == null)
                 {{-- Layout Grid --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Layout Grid</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Col Span') }}</span>
                     <div class="flex items-center gap-1">
                         @foreach([1,2,3,4,5] as $num)
                             <span class="cursor-pointer rounded p-0.5 transition-colors {{ $itemblocks->layoutgrid == (string)$num ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
