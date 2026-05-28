@@ -54,11 +54,14 @@ class AccountForm extends Component
 
     public $success;
 
-    protected $rules = [
-        'name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:255',
-        'email' => 'required|min:3|max:255|email',
-        'role' => 'required',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:255',
+            'email' => 'required|min:3|max:255|email',
+            'role' => 'required',
+        ];
+    }
 
     private function headerConfig()
     {

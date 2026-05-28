@@ -2,6 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Role;
@@ -21,9 +22,8 @@ class Roles extends Component
 
     public $FormEdit = false;
 
+    #[Url]
     public $search;
-
-    protected $queryString = ['search'];
 
     public $orderBy = 'name';
 

@@ -2,15 +2,15 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 // use Secondnetwork\Kompass\Models\Redirect;
 
 class Brokenlink extends Component
 {
+    #[Url]
     public $search = '';
-
-    protected $queryString = ['search'];
 
     // protected function headerTable(): array
     // {

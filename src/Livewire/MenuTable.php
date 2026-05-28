@@ -24,7 +24,10 @@ class MenuTable extends Component
     public $orderBy = 'order';
     public $orderAsc = true;
 
-    protected $rules = ['name' => ''];
+    protected function rules(): array
+    {
+        return ['name' => ''];
+    }
 
     public function updatedLand($value)
     {

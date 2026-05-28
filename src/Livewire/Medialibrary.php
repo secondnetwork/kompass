@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Datafield;
@@ -15,9 +16,13 @@ class Medialibrary extends Component
 {
     use WithPagination;
 
+    #[Url]
     public $search = '';
-    protected $queryString = ['search', 'dir', 'filter']; // Add filter to query string
+
+    #[Url]
     public $filter = ''; // Add filter property
+
+    #[Url]
     public $dir = 'media';
     public $foldername;
     public $name;

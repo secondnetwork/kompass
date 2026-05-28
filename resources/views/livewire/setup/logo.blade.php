@@ -3,7 +3,7 @@
         logo_image: @entangle('logo_image'),
         logo_image_src: @entangle('logo_image_src'),
         logo_svg_string: @entangle('logo_svg_string'),
-        logo_type: @entangle('logo_type').live
+        logo_type: @entangle('logo_type')
         {{-- image_uploaded: @entangle('image_uploaded') --}}
     }"
     class="flex justify-start gap-4 items-start space-x-7 w-full">

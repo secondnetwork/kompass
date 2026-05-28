@@ -5,6 +5,7 @@ namespace Secondnetwork\Kompass\Livewire;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -19,9 +20,8 @@ class PostsTable extends Component
      */
     use WithPagination;
 
+    #[Url]
     public $search;
-
-    protected $queryString = ['search', 'land'];
 
     public $perPost = 1000;
 
@@ -39,6 +39,7 @@ class PostsTable extends Component
 
     public $meta_description;
 
+    #[Url]
     public $land = '';
 
     public $available_locales;
@@ -56,12 +57,13 @@ class PostsTable extends Component
 
     public $cloneLand = '';
 
-    protected $rules = [
-
-        'title' => 'unique:posts|required|string|min:3',
-        'meta_description' => '',
-
-    ];
+    protected function rules(): array
+    {
+        return [
+            'title' => 'unique:posts|required|string|min:3',
+            'meta_description' => '',
+        ];
+    }
 
     protected function headerTable(): array
     {

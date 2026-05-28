@@ -1,6 +1,6 @@
 <div class="l h-auto grid  gap-4" x-data="{
     {{-- supline: @entangle('supline').live, --}}
-    image: @entangle('image').live,
+    image: @entangle('image'),
 
 }">
 

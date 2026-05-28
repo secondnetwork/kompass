@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Category;
@@ -13,15 +14,14 @@ class CategoryTable extends Component
 {
     use WithPagination;
 
+    #[Url(except: '')]
     public $search;
-    public $orderBy = 'name';
-    public $orderAsc = true;
 
-    protected $queryString = [
-        'search' => ['except' => ''],
-        'orderBy' => ['except' => 'order'],
-        'orderAsc' => ['except' => true],
-    ];
+    #[Url(except: 'order')]
+    public $orderBy = 'name';
+
+    #[Url(except: true)]
+    public $orderAsc = true;
 
     public $name;
     public $slug;
@@ -43,14 +43,17 @@ class CategoryTable extends Component
     public $FormAdd = false;
     public $FormEdit = false;
 
-    protected $rules = [
-        'name' => 'required|string|min:2',
-        'slug' => 'nullable|string|unique:categories,slug',
-        'description' => 'nullable|string',
-        'color' => 'nullable|string',
-        'icon' => 'nullable|string',
-        'order' => 'nullable|integer',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required|string|min:2',
+            'slug' => 'nullable|string|unique:categories,slug',
+            'description' => 'nullable|string',
+            'color' => 'nullable|string',
+            'icon' => 'nullable|string',
+            'order' => 'nullable|integer',
+        ];
+    }
 
     protected function headerTable(): array
     {

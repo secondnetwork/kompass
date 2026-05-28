@@ -2,6 +2,7 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +23,10 @@ class Background extends Component
     private $dbKeyOverlayColor = 'background_image_overlay_color';
     private $dbKeyOverlayOpacity = 'background_image_overlay_opacity'; // Datenbank speichert 0-1
 
-    protected $listeners = ['component:refresh' => '$refresh'];
+    #[On('component:refresh')]
+    public function handleRefresh(): void
+    {
+    }
 
     public function mount()
     {

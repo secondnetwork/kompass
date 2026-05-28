@@ -189,7 +189,7 @@
                     placeholder="{{ __('Search categories...') }}" />
             </div>
 
-            <div x-data="{ open: @entangle('FormAdd').live }" class="flex justify-end gap-4">
+            <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
                 <button class="btn btn-primary" @click="open = true">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New category') }}
                 </button>

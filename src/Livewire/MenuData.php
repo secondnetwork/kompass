@@ -3,6 +3,7 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\File;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Menu;
 use Secondnetwork\Kompass\Models\Menuitem;
@@ -130,18 +131,22 @@ class MenuData extends Component
 
     public $timestamps = false;
 
-    protected $listeners = [
-        'refreshComponentGroup' => '$refresh',
-    ];
+    #[On('refreshComponentGroup')]
+    public function handleRefresh(): void
+    {
+    }
 
-    protected $rules = [
-        'title' => 'required|string|min:3',
-        'url' => 'required_without:page_id|string|min:1',
-        'page_id' => 'nullable|exists:pages,id',
-        'color' => '',
-        'iconclass' => '',
-        'target' => '',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'title' => 'required|string|min:3',
+            'url' => 'required_without:page_id|string|min:1',
+            'page_id' => 'nullable|exists:pages,id',
+            'color' => '',
+            'iconclass' => '',
+            'target' => '',
+        ];
+    }
 
     public function mount($id)
     {

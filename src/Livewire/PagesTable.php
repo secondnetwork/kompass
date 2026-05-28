@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -13,9 +14,8 @@ class PagesTable extends Component
 {
     use WithPagination;
 
+    #[Url]
     public $search;
-
-    protected $queryString = ['search', 'land'];
 
     public $perPage = 1000;
 
@@ -35,6 +35,7 @@ class PagesTable extends Component
 
     public $datafield = [];
 
+    #[Url]
     public $land = '';
 
     public $available_locales;
@@ -54,10 +55,13 @@ class PagesTable extends Component
 
     public $cloneLand = '';
 
-    protected $rules = [
-        'title' => 'unique:pages|required|string|min:3',
-        'meta_description' => '',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'title' => 'unique:pages|required|string|min:3',
+            'meta_description' => '',
+        ];
+    }
 
     public function call_emit_reset()
     {

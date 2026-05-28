@@ -25,7 +25,7 @@
         </x-kompass::offcanvas>
     </div>
 
-    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
+    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone') }">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
                 @if (setting('global.multilingual'))
@@ -119,7 +119,7 @@
                                                                 type="text"
                                                                 class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
                                                                 x-model="name"
-                                                                wire:model.lazy="newName" x-ref="input"
+                                                                wire:model.blur="newName" x-ref="input"
                                                                 x-on:keydown.enter="isEditing = false"
                                                                 x-on:keydown.escape="isEditing = false"
                                                                 x-on:click.away="isEditing = false"

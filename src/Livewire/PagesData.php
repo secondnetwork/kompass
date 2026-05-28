@@ -173,21 +173,16 @@ class PagesData extends Component
 
     public $iconPickerFieldId = null;
 
-    protected $listeners = [
-        'reload-pages-data' => 'reloadMount',
-        'component:refresh' => '$refresh',
-        'open-icon-picker' => 'openIconPicker',
-    ];
-
-    protected $rules = [
-
-        'title' => 'required|string|min:3',
-        'page.meta_description' => 'nullable|string',
-        'page.slug' => 'nullable|string',
-        'page.layout' => 'nullable|string',
-        'page.status' => 'nullable|string',
-
-    ];
+    protected function rules(): array
+    {
+        return [
+            'title' => 'required|string|min:3',
+            'page.meta_description' => 'nullable|string',
+            'page.slug' => 'nullable|string',
+            'page.layout' => 'nullable|string',
+            'page.status' => 'nullable|string',
+        ];
+    }
 
     public function mount($id)
     {
@@ -227,10 +222,16 @@ class PagesData extends Component
         $this->blocktemplates = Blocktemplates::orderBy('order')->get();
     }
 
+    #[On('reload-pages-data')]
     public function reloadMount()
     {
         $this->mount($this->page->id);
         $this->resetPageComponent();
+    }
+
+    #[On('component:refresh')]
+    public function handleRefresh(): void
+    {
     }
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
@@ -414,6 +415,7 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    #[On('open-icon-picker')]
     public function openIconPicker($fieldId)
     {
         $this->iconPickerFieldId = $fieldId;

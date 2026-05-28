@@ -26,10 +26,13 @@ class BlocksTable extends Component
     public $name;
     public $type;
 
-    protected $rules = [
-        'name' => 'required|string|min:1',
-        'type' => 'required|string|min:1|unique:blocktemplates,type',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'name' => 'required|string|min:1',
+            'type' => 'required|string|min:1|unique:blocktemplates,type',
+        ];
+    }
 
     public function call_emit_reset()
     {

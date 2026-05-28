@@ -64,16 +64,6 @@ class Settings extends Component
 
     public $navigation = [];
 
-    protected $rules = [
-
-        'name' => 'required',
-        'value' => '',
-        'key' => 'required',
-        'group' => 'required',
-        'type' => '',
-
-    ];
-
     protected function headerTable(): array
     {
         return [

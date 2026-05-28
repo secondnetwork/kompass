@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -39,10 +40,6 @@ class EditorJS extends Component
 
     /** @var string */
     private $filesystem;
-
-    protected $listeners = [
-        'savedatajs' => 'save',
-    ];
 
     public function mount(
         $editorId = [],
@@ -115,6 +112,7 @@ class EditorJS extends Component
         return Storage::disk($this->downloadDisk)->url($name);
     }
 
+    #[On('savedatajs')]
     public function save()
     {
 

@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
@@ -159,22 +160,22 @@ class PostsData extends Component
 
     public $availableCategories = [];
 
-    protected $rules = [
-
-        'post.title' => 'required|string|min:3',
-        'post.meta_description' => '',
-        'post.slug' => '',
-        'post.layout' => '',
-
-        'post.password' => '',
-        'post.begin_at' => '',
-        'post.end_at' => '',
-        'blocks.*.id' => '',
-        'blocks.*.name' => '',
-        'fields.*.id' => '',
-        'fields.*.data' => '',
-
-    ];
+    protected function rules(): array
+    {
+        return [
+            'post.title' => 'required|string|min:3',
+            'post.meta_description' => '',
+            'post.slug' => '',
+            'post.layout' => '',
+            'post.password' => '',
+            'post.begin_at' => '',
+            'post.end_at' => '',
+            'blocks.*.id' => '',
+            'blocks.*.name' => '',
+            'fields.*.id' => '',
+            'fields.*.data' => '',
+        ];
+    }
 
     // protected $listeners = [
     //     'editorjssave' => 'saveEditorState',
@@ -309,8 +310,11 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
+    #[On('refreshmedia')]
     public function refreshmedia()
     {
+        $this->post = Post::findOrFail($this->post->id);
+        $this->FormMedia = false;
         $this->dispatch('refreshComponent');
         $this->dispatch('status');
     }
@@ -551,7 +555,8 @@ class PostsData extends Component
     public function removemediaThumbnails($id)
     {
         Post::whereId($id)->update(['thumbnails' => null]);
-        $this->resetPageComponent();
+        $this->post = Post::findOrFail($this->post->id);
+        $this->dispatch('status');
     }
 
     public function removemedia($id)

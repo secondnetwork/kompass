@@ -185,8 +185,7 @@ class BlocksData extends Component
         $this->iconclass = '';
     }
 
-    protected $listeners = ['selectItemForAction']; // Event-Name muss passen
-
+    #[On('selectItemForAction')]
     public function selectItemForAction($eventPayload)
     {
         $itemId = $eventPayload['itemId'];

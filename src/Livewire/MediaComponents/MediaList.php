@@ -5,6 +5,7 @@ namespace Secondnetwork\Kompass\Livewire\MediaComponents;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\File;
@@ -14,13 +15,15 @@ class MediaList extends Component
     use WithPagination;
 
     #[Reactive]
+    #[Url]
     public $dir = 'media';
 
   
+    #[Url]
     public $filter = null;
 
+    #[Url]
     public $search = '';
-    protected $queryString = ['search', 'dir', 'filter']; // Add filter to query string
 
     public function updatedDir()
     {

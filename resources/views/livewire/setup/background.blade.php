@@ -1,8 +1,7 @@
 <div
     x-data="{
-        adminBackground: @entangle('adminBackground').live,
-        image_overlay_opacity: @entangle('image_overlay_opacity').live
-    }"
+        adminBackground: @entangle('adminBackground'),
+        image_overlay_opacity: @entangle('image_overlay_opacity')    }"
  class="max-w-2xl">
 
       

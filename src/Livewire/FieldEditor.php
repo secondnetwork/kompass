@@ -19,12 +19,14 @@ class FieldEditor extends Component
     public $FormDelete = false;
 
 
-    protected $rules = [
-
-        'name' => 'nullable|string|max:255',
-        'grid' => 'required|string',
-        'type' => '',
-    ];
+    protected function rules(): array
+    {
+        return [
+            'name' => 'nullable|string|max:255',
+            'grid' => 'required|string',
+            'type' => '',
+        ];
+    }
 
     public function mount($fieldId)
     {

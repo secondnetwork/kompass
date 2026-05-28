@@ -2,18 +2,18 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Redirect;
 
 class Redirection extends Component
 {
+    #[Url]
     public $search = '';
 
     public $data;
 
     public $headers;
-
-    protected $queryString = ['search'];
 
     public $orderBy = 'updated_at';
 

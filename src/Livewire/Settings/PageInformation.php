@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Livewire\Settings;
 
 use Secondnetwork\Kompass\Models\Setting;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str; // Import Str for startsWith
@@ -23,7 +24,10 @@ class PageInformation extends Component
 
     private $imageKey = 'ogimage_src';
 
-    protected $listeners = ['component:refresh' => '$refresh'];
+    #[On('component:refresh')]
+    public function handleRefresh(): void
+    {
+    }
 
     public function mount()
     {

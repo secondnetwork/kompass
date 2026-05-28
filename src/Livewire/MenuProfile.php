@@ -3,11 +3,15 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class MenuProfile extends Component
 {
-    protected $listeners = ['profile-updated' => 'refresh'];
+    #[On('profile-updated')]
+    public function refresh(): void
+    {
+    }
 
     public function render()
     {
