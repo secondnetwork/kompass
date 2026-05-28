@@ -1,6 +1,6 @@
 <div class="flex flex-col">
 
-    <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd').live }">
+    <div x-cloak id="FormAdd" x-data="{ open: @entangle('FormAdd')}">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">
 
@@ -21,7 +21,7 @@
         </x-kompass::offcanvas>
     </div>
 
-    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone').live }">
+    <div x-cloak id="FormClone" x-data="{ open: @entangle('FormClone')}">
         <x-kompass::offcanvas :w="'w-2/6'">
             <x-slot name="body">               
                 @if (setting('global.multilingual'))

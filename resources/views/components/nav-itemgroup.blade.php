@@ -90,7 +90,7 @@
             @if ($itemblocks->subgroup == null)
                 {{-- Layout --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Layout</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Layout') }}</span>
                     <div class="flex items-center gap-1">
                         <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'content' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                             wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
@@ -118,7 +118,7 @@
                         $currentAlign = $itemblocks->getMeta('align') ?? '';
                     @endphp
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-neutral-500 w-24 shrink-0">Align</span>
+                        <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Align') }}</span>
                         <div class="flex items-center gap-1">
                             @foreach ($alignOptions as $alignValue => $alignData)
                                 <span class="cursor-pointer rounded p-0.5 transition-colors {{ $currentAlign == $alignValue ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
@@ -132,7 +132,7 @@
                     {{-- Mobile Layout --}}
                     @php $currentOrder = $itemblocks->getMeta('order') ?? ''; @endphp
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-neutral-500 w-24 shrink-0">Mobile</span>
+                        <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Mobile reverse') }}</span>
                         <div class="flex items-center gap-1">
                             <span class="cursor-pointer rounded p-0.5 transition-colors {{ empty($currentOrder) ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                                 wire:click="saveset({{ $itemblocks->id }},'order', '')">
@@ -150,7 +150,7 @@
             @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
                 {{-- Layout Grid --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Layout Grid</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Layout Grid') }}</span>
                     <div class="flex items-center gap-1">
                         @foreach([1, 2, 3, 4, 5] as $gridNumber)
                             <span class="cursor-pointer rounded p-0.5 transition-colors {{ $itemblocks->layoutgrid == $gridNumber ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
@@ -163,13 +163,13 @@
 
                 {{-- Classname --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Classname</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Classname') }}</span>
                     <livewire:editable-meta label="" meta-key="css-classname" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'css-classname-' . $itemblocks->id" />
                 </div>
 
                 {{-- ID --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">ID</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('ID') }}</span>
                     <livewire:editable-meta label="" meta-key="id-anchor" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'id-anchor-' . $itemblocks->id" />
                 </div>
             @endif
@@ -190,7 +190,7 @@
             @elseif ($itemblocks->type == 'gallery')
                 {{-- Slider --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Slider</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Slider') }}</span>
                     <div class="flex items-center gap-1">
                         <span class="cursor-pointer rounded p-0.5 transition-colors {{ $slider == '' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                             wire:click="saveset({{ $itemblocks->id }},'slider', '')">

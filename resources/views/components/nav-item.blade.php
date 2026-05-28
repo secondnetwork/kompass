@@ -101,11 +101,11 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Classname</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Classname') }}</span>
                     <livewire:editable-meta label="" meta-key="css-classname" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'css-classname-'.$itemblocks->id" />
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">ID</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('ID') }}</span>
                     <livewire:editable-meta label="" meta-key="id-anchor" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'id-anchor-'.$itemblocks->id" />
                 </div>
             @endif
@@ -113,7 +113,7 @@
             @if($itemblocks->subgroup == null)
                 {{-- Layout --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Layout</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Layout') }}</span>
                     <div class="flex items-center gap-1">
                         <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'content' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                             wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
@@ -147,7 +147,7 @@
 
                 {{-- Link --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Link</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Link') }}</span>
                     <livewire:editable-meta label="" meta-key="link-url" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'link-url-'.$itemblocks->id" />
                 </div>
             @endif
@@ -155,7 +155,7 @@
             @if ($itemblocks->type == 'gallery')
                 {{-- Slider --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Slider</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Slider') }}</span>
                     <div class="flex items-center gap-1">
                         <span class="cursor-pointer rounded p-0.5 transition-colors {{ $slider == '' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                             wire:click="saveset({{ $itemblocks->id }},'slider', '')">
@@ -170,7 +170,7 @@
 
                 {{-- Grid --}}
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">Image Grid</span>
+                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Image Grid') }}</span>
                     <div class="flex items-center gap-1">
                         @foreach([1,2,3,4,5] as $num)
                             <span class="cursor-pointer rounded p-0.5 transition-colors {{ $itemblocks->grid == (string)$num ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"

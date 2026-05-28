@@ -57,7 +57,7 @@
                 <strong class="text-gray-600">SEO:</strong>
                 <x-kompass::form.textarea wire:model="description" id="name" name="title"
                     label="{{ __('Description') }}" type="text" class="block w-full h-[10rem]" />
-                Thumbnails
+                {{ __('Thumbnails') }}
                 {{-- <img src="{{ $post->thumbnails }}" alt=""> --}}
                 @if (!empty($post->thumbnails))
                     @php
@@ -151,7 +151,7 @@
                                     class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-teal-500"></span>
                             </span>
-                            Live
+                            {{ __('Live') }}
                         </span>
                     @break
 
@@ -162,7 +162,7 @@
                                     class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
                             </span>
-                            Passwort
+                            {{ __('Password') }}
                         </span>
                     @break
 
@@ -292,31 +292,31 @@
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
                         <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
-                        <span class="text-xs block mt-2">Textblock</span>
+                        <span class="text-xs block mt-2">{{ __('Textblock') }}</span>
                     </div>
 
                     <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Accordion Group','accordiongroup')">
                         <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
-                        <span class="text-xs block mt-2">Accordion</span>
+                        <span class="text-xs block mt-2">{{ __('Accordion') }}</span>
                     </div>
 
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Button','button','box-model-2')">
                         <img src="{{ kompass_asset('icons-blocks/button.png') }}" alt="">
-                        <span class="text-xs block mt-2">Button</span>
+                        <span class="text-xs block mt-2">{{ __('Button') }}</span>
                     </div>
 
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Video','video','video')">
                         <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
-                        <span class="text-xs block mt-2">Video</span>
+                        <span class="text-xs block mt-2">{{ __('Video') }}</span>
                     </div>
 
                     <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
                         wire:click="addBlock('','Gallery','gallery','photo')">
                         <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
-                        <span class="text-xs block mt-2">Images and Gallery</span>
+                        <span class="text-xs block mt-2">{{ __('Images and Gallery') }}</span>
                     </div>
 
                 </div>
