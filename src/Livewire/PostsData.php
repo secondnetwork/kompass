@@ -177,11 +177,6 @@ class PostsData extends Component
         ];
     }
 
-    // protected $listeners = [
-    //     'editorjssave' => 'saveEditorState',
-    //     'refreshmedia' => 'resetPageComponent',
-    // ];
-
     public function saveEditorState($editorJsonData, $id)
     {
 

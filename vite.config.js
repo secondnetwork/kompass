@@ -13,12 +13,7 @@ export default defineConfig({
         assetFileNames: `css/[name].[hash].[ext]`,
         manualChunks(id) {
           // Reihenfolge ist wichtig: Spezifische Module ZUERST prüfen!
-          
-          // EditorJS und Plugins (große Library)
-          if (id.includes('node_modules/@editorjs') || id.includes('editorjs.js')) {
-            return 'editorjs';
-          }
-          
+
           // ApexCharts für Dashboard (nur dort benötigt)
           if (id.includes('node_modules/apexcharts')) {
             return 'charts';

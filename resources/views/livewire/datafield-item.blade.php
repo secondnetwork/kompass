@@ -23,16 +23,13 @@
         @break
 
         @case('wysiwyg')
-            @livewire('editorjs', [
-                'editorId' => $datafield->id,
-                'value' => json_decode($datafield->data, true),
-                'uploadDisk' => 'public',
-                'downloadDisk' => 'public',
-                'class' => 'cdx-input',
-                'style' => '',
-                'readOnly' => false,
-                'placeholder' => __('write something...'),
-            ])
+            <livewire:kompass-editor
+                wire:key="kompass-editor-{{ $datafield->id }}"
+                :editor-id="$datafield->id"
+                :value="$datafield->data"
+                :placeholder="__('write something...')"
+                :read-only="false"
+            />
         @break
 
         @default

@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Secondnetwork\Kompass\Helpers\EditorMigrationHelper;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
 use Secondnetwork\Kompass\Seo\SeoService;
@@ -356,6 +357,28 @@ if (! function_exists('block_grid_classes')) {
             'gridCols' => $layoutgrid > 0 ? 'md:grid-cols-'.$layoutgrid : '',
             'colSpan' => $layoutgrid > 0 ? 'md:col-span-'.$layoutgrid : '',
         ];
+    }
+}
+
+if (! function_exists('wysiwyg_blocks')) {
+    /**
+     * Resolve and normalize wysiwyg editor data into the canonical compiled
+     * render array. Accepts any of:
+     *   - block item (object with ->datafield)        → resolved via get_field('wysiwyg', ...)
+     *   - explicit Datafield-like object              → passed as $field, uses $field->data
+     *   - already-loaded payload (array | string)     → used directly
+     *   - null / empty                                → returns a single empty paragraph seed
+     */
+    function wysiwyg_blocks(mixed $item = null, $field = null): array
+    {
+        $data = match (true) {
+            $field !== null => $field->data ?? null,
+            is_object($item) && isset($item->datafield) => get_field('wysiwyg', $item->datafield),
+            is_array($item) || is_string($item) => $item,
+            default => null,
+        };
+
+        return EditorMigrationHelper::toCompiledArray($data);
     }
 }
 

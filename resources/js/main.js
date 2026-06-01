@@ -10,7 +10,6 @@ Alpine.data('passkey_authenticate', passkey_authenticate);
 Alpine.data('passkey_register', passkey_register);
 
 // import '@nextapps-be/livewire-sortablejs';
-import * as editorjs from './editorjs';
 
 if (document.getElementsByClassName('embed-video')) {
   const { app } = import('./plugins/lite-yt-embed')

@@ -100,7 +100,13 @@
                                     <x-kompass::form.input type="text" name="valuedata" label="{{ __('URL') }}" wire:model="valuedata" placeholder="https://..." />
                                 @break
                                 @case('switch') <input @if($valuedata) checked="" @endif wire:change="update('{{ $selectedItem }}', $el.checked)" type="checkbox" class="toggle toggle-primary"> @break
-                                @case('rich_text_box') @livewire('editorjs', ['editorId' => $selectedItem, 'value' => is_array($valuedata) ? $valuedata : json_decode($valuedata, true)], key('editor-'.$selectedItem)) @break
+                                @case('rich_text_box')
+                                    <livewire:kompass-editor
+                                        wire:key="editor-{{ $selectedItem }}"
+                                        :editor-id="$selectedItem"
+                                        :value="$valuedata"
+                                    />
+                                @break
                                 @default <x-kompass::form.input type="text" name="value" label="{{ __('Value') }}" wire:model="valuedata" />
                             @endswitch
                         </div>
