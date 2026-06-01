@@ -1,26 +1,32 @@
-name: release version
+name: Release version
+
 on:
   workflow_dispatch:
-      
+
 permissions:
   contents: write
   issues: write
   pull-requests: write
-  
+
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Bump version and push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: main
           pre_release_branches: stage
           default_prerelease_bump: false
-          tag_prefix: "v"
+          tag_prefix: v
+
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:

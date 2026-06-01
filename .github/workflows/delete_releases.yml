@@ -1,17 +1,20 @@
-name: Delete Older Releases
+name: Delete older releases
 
 on:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   delete_releases:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: Nats-ji/delete-old-releases@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        keep-count: 5
-        keep-old-minor-releases: true
-        keep-old-minor-releases-by: 'major'
-        remove-tags: true
+      - uses: actions/checkout@v4
+      - uses: Nats-ji/delete-old-releases@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          keep-count: 5
+          keep-old-minor-releases: true
+          keep-old-minor-releases-by: major
+          remove-tags: true
