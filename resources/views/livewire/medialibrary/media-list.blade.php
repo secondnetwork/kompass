@@ -138,7 +138,7 @@
         <div class="@container">
             <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4 pb-1 gap-6">
                 @foreach ($files as $file)
-                    <div :class="isSelected({{ $file->id }}) ? 'ring-2 ring-primary rounded-xl' : ''">
+                    <div :class="isSelected({{ $file->id }}) ? 'ring-2 ring-primary rounded-lg' : ''">
                         <livewire:media-components.media-item :file="$file" :key="$file->id" />
                     </div>
                 @endforeach

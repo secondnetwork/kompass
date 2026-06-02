@@ -14,7 +14,7 @@
     </div>
 
 
-<div class="mt-4 bg-white rounded-2xl border border-gray-100 shadow bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
+<div class="mt-4 bg-base-100 rounded-2xl border border-gray-100 shadow bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
     <div class="p-8">
         <div class="flex items-center">
            <x-tabler-book  />    <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold"><a href="https://kompass.secondnetwork.de" target="_black">Documentation</a></div>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="p-8 border-t border-gray-200 md:border-t-0 md:border-l">
+    <div class="p-8 border-t border-base-300 md:border-t-0 md:border-l">
         <div class="flex items-center">
          <x-tabler-device-tv  /> 
             <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">YouTube tutorials</div>
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div class="p-8 border-t border-gray-200">
+    <div class="p-8 border-t border-base-300">
         <div class="flex items-center">
           <x-tabler-cube-3d-sphere  />
          <div class="ml-4 text-lg text-gray-600 leading-7 font-semibold">Technology</div>
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <div class="p-8 border-t border-gray-200 md:border-l">
+    <div class="p-8 border-t border-base-300 md:border-l">
         <div class="flex items-center">
        
        {{-- <x-tabler-brand-laravel  />

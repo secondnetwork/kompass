@@ -51,6 +51,11 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function thumbnailFile()
+    {
+        return $this->belongsTo(File::class, 'thumbnails');
+    }
+
     public function getCreatedAtAttribute($date)
     {
         $timezone = config('app.timezone');

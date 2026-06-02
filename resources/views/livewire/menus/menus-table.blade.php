@@ -46,7 +46,7 @@
 
 
     <div class="flex flex-col">
-        <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+        <div class=" border-base-300 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             
             <div class="flex justify-end gap-4 items-center">
                 @if (setting('global.multilingual'))
@@ -64,12 +64,12 @@
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
 
 
 
                 @if ($menus->count())
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-50">
                         <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
@@ -97,7 +97,7 @@
 
 
 
-                        <tbody class="bg-base-100 divide-y divide-gray-200" wire:sort="handleSort">
+                        <tbody class="bg-base-100 divide-y divide-gray-50" wire:sort="handleSort">
                                 @foreach ($menus as $key => $menu)
                                     <tr wire:sort:item="{{ $menu->id }}">
                                         <td wire:sort:handle class="pl-4 w-4 bg-base-100">

@@ -2133,7 +2133,7 @@ Applying conditional styles using variant prefixes for hover, focus, and respons
 </div>
 
 <!-- Dark mode support -->
-<div class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+<div class="bg-base-100 dark:bg-gray-800 text-gray-900 dark:text-white">
   Content adapts to color scheme preference
 </div>
 
@@ -2244,7 +2244,7 @@ Working with Tailwind's comprehensive color palette and opacity modifiers.
 </div>
 
 <!-- Dark mode color variants -->
-<div class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+<div class="bg-base-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-base-300 dark:border-gray-700">
   <span class="text-pink-600 dark:text-pink-400">
     Adapts to color scheme
   </span>
@@ -2264,7 +2264,7 @@ Implementing dark mode with CSS media queries or manual toggle.
 
 ```html
 <!-- Using prefers-color-scheme (default) -->
-<div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+<div class="bg-base-100 dark:bg-gray-900 text-gray-900 dark:text-white">
   <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
     Content automatically adapts
   </div>
@@ -2282,7 +2282,7 @@ Implementing dark mode with CSS media queries or manual toggle.
 <!-- Manual dark mode -->
 <html class="dark">
   <body>
-    <div class="bg-white dark:bg-black">
+    <div class="bg-base-100 dark:bg-black">
       Controlled by .dark class
     </div>
   </body>
@@ -2331,7 +2331,7 @@ Styling elements based on pseudo-classes and parent/sibling state.
 
 <!-- List item variants -->
 <ul role="list">
-  <li class="py-4 first:pt-0 last:pb-0 odd:bg-gray-50 even:bg-white">
+  <li class="py-4 first:pt-0 last:pb-0 odd:bg-gray-50 even:bg-base-100">
     Item content
   </li>
 </ul>

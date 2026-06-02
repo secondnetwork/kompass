@@ -1,7 +1,7 @@
 @props(['item' => ''])
 
 @php
-        $cssclassname = get_meta($item, 'css-classname', 'bg-white');
+        $cssclassname = get_meta($item, 'css-classname', 'bg-base-100');
         $image = get_field('image', $item->datafield);
         $title = get_field('wysiwyg', $item->datafield);
         $titleData = $title ? (is_string($title) ? json_decode($title) : (object) $title) : null;

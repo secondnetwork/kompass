@@ -65,7 +65,7 @@
                     {{-- Mobile Accordion List --}}
                     {{-- <div x-show="open"
                          x-cloak
-                         class="md:hidden absolute left-0 top-full z-50 mt-1 w-full bg-white shadow-lg rounded-lg border border-gray-100"
+                         class="md:hidden absolute left-0 top-full z-50 mt-1 w-full bg-base-100 shadow-lg rounded-lg border border-gray-100"
                          style="display: none;">
                         @foreach($item['children']->sortBy('order') as $child)
                             <a href="{{ $child->url }}" target="{{ $child->target }}" class="block py-3 px-4 text-gray-700 hover:bg-gray-50 hover:text-primary border-b border-gray-100 last:border-0">

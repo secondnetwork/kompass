@@ -21,7 +21,6 @@ use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 use Secondnetwork\Kompass\Livewire\Settings\Profile;
 use Secondnetwork\Kompass\Livewire\Auth\PasskeySetup;
-use Secondnetwork\Kompass\Livewire\UserDashboard;
 
 // Asset Routes
 Route::get('assets/{path?}', [KompassController::class, 'assets'])->name('kompass_asset');
@@ -31,9 +30,9 @@ Route::middleware(['web', 'auth'])->group(function (): void {
     Route::get('passkey-setup', PasskeySetup::class)->name('admin.passkey-setup');
 });
 
-// User Dashboard Route (for 'user' role - no admin access)
+// Profile Route (for 'user' role - no admin access)
 Route::group(['middleware' => ['web', 'auth', 'role:user'], 'prefix' => 'profile', 'as' => 'profile.'], function (): void {
-    Route::get('/', UserDashboard::class)->name('dashboard');
+    Route::get('/', Profile::class)->name('dashboard');
 });
 
 Route::group(['middleware' => ['web', 'auth', 'role:admin|manager|editor'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {

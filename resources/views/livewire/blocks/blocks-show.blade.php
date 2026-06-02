@@ -58,18 +58,18 @@
 
                     <div class="mb-4 h-[10rem] aspect-[4/3] relative" x-show="photoPreview">
                         <span
-                            class="block border-gray-200 border-solid border-2 rounded h-[10rem] aspect-[4/3] bg-cover bg-no-repeat bg-center"
+                            class="block border-base-300 border-solid border-2 rounded h-[10rem] aspect-[4/3] bg-cover bg-no-repeat bg-center"
                             x-bind:style="'background-image: url(\'' + photoPreview + '\');'">
                         </span>
                     </div>
 
                     @if ($icon_img_path)
                         <div class="mb-4 h-[10rem] aspect-[4/3] relative" x-show="! photoPreview">
-                            <span class="absolute top-1 left-2 z-10 bg-white p-2 rounded-full cursor-pointer"
+                            <span class="absolute top-1 left-2 z-10 bg-base-100 p-2 rounded-full cursor-pointer"
                                 wire:click="removemedia({{ $blocktemplatesId }})">
                                 <x-tabler-trash class="cursor-pointer stroke-current text-red-500" />
                             </span>
-                            <img class="border-gray-200 border-solid border-2 rounded object-cover"
+                            <img class="border-base-300 border-solid border-2 rounded object-cover"
                                 src="{{ asset('storage/' . $icon_img_path) }}" alt="">
                         </div>
                     @else
@@ -91,7 +91,7 @@
     <x-kompass::action-message class="" on="status" />
 
 
-    <div class="border-b border-gray-200 py-5 grid-3-2 items-center">
+    <div class="border-b border-base-300 py-5 grid-3-2 items-center">
         <div>
             <span class="text-gray-400 text-base">{{ __('Block Title') }}</span>
 

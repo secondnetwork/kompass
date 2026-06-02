@@ -19,46 +19,18 @@ if (document.getElementsByClassName('embed-video')) {
 
 /**
  * =================================================================
- * Theme Manager (Dark/Light/System Mode) mit data-theme
+ * Theme Manager
+ * Light is the system-wide default. Dark is opt-in per user via the
+ * profile settings — the chosen theme is persisted on the User model
+ * and the server renders <html data-theme="..."> on every request.
+ * This script only handles the live in-page switch when the user
+ * toggles the radio in /profile, before the next navigation.
  * =================================================================
  */
-const themeManager = {
-    // Diese Funktion synchronisiert das UI (HTML-Attribut und Buttons)
-    // basierend auf dem aktuellen Zustand im localStorage.
-    sync() {
-        const appearance = localStorage.getItem('appearance') || 'system';
-        
-        // 1. Theme auf dem <html>-Tag anwenden
-        if (appearance === 'system') {
-            const media = window.matchMedia('(prefers-color-scheme: dark)');
-            document.documentElement.setAttribute('data-theme', media.matches ? 'dark' : 'light');
-        } else {
-            document.documentElement.setAttribute('data-theme', appearance);
-        }
-
-        // 2. Zustand der Buttons aktualisieren
-        document.querySelectorAll('button[onclick^="setAppearance"]').forEach((button) => {
-            button.setAttribute('aria-pressed', String(appearance === button.value));
-        });
-    },
-
-    // Diese Funktion wird von den Buttons (onclick) aufgerufen.
-    // Sie ändert nur den Zustand im localStorage und ruft dann sync() auf.
-    set(appearance) {
-        if (appearance === 'system') {
-            localStorage.removeItem('appearance');
-        } else {
-            localStorage.setItem('appearance', appearance);
-        }
-        this.sync();
-    }
+window.setAppearance = (appearance) => {
+    const next = appearance === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
 };
-
-// Die 'set' Funktion global verfügbar machen, damit onclick="setAppearance(...)" funktioniert
-window.setAppearance = (appearance) => themeManager.set(appearance);
-
-// 1. Theme sofort beim ersten Laden des Skripts anwenden
-// themeManager.sync();
 
 
 /**

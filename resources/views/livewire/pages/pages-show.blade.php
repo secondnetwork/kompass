@@ -290,11 +290,11 @@
                             wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}','{{ $itemblock['iconclass'] }}')">
 
                             @if ($itemblock['icon_img_path'])
-                                <img class=" w-full border-gray-200 border-solid border-2 rounded object-cover"
+                                <img class=" w-full border-base-300 border-solid border-2 rounded object-cover"
                                     src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">   
                             @elseif($itemblock['iconclass'])
                                 <div class="bg-gray-100 rounded-t-md w-full aspect-[16/12] relative flex justify-center pt-6 px-4 overflow-hidden">
-                                    <div class="w-full h-full border-t-2 border-l-2 border-r-2 border-blue-500 bg-white rounded-t-md flex justify-center items-center">
+                                    <div class="w-full h-full border-t-2 border-l-2 border-r-2 border-blue-500 bg-base-100 rounded-t-md flex justify-center items-center">
                                         <div class="relative flex justify-center items-center text-blue-500 size-16">
                                             @svg(str_starts_with($itemblock['iconclass'], 'tabler-') ? $itemblock['iconclass'] : 'tabler-' . $itemblock['iconclass'], 'text-blue-500 flex justify-center items-end w-full h-full')
                                         </div>

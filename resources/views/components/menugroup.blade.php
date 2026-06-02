@@ -16,7 +16,7 @@
     @endif
     >
     
-    <div-nav-action class="flex items-center justify-between border-b border-gray-200 px-4">
+    <div-nav-action class="flex items-center justify-between border-b border-base-300 px-4">
         <span class="flex items-center py-2 w-full ">
             @if ($item->subgroup)
             <x-tabler-grip-vertical wire:sort:handle class="cursor-move stroke-current h-4 w-4 text-gray-900" />

@@ -2,7 +2,7 @@
 
     <grid-side class="flex gap-6" x-data="{}">
 
-        <aside class="pr-4 w-52  border-r border-gray-200 h-full ">
+        <aside class="pr-4 w-52  border-r border-base-300 h-full ">
 
             <nav class="flex flex-col" aria-label="asidenav">
                 @foreach ($navigation as $tab)
@@ -47,7 +47,7 @@
                         <p class="text-base-content/60 text-sm">{{ __('Change how your dashboard looks and feels.') }}</p>
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
-                    <div class="border-b border-gray-200">
+                    <div class="border-b border-base-300">
                         @php
                             $tabs = [
                                 'logo' => 'Logo',
@@ -126,7 +126,7 @@
                 </div> --}}
                 <div x-show="asidenav === 'global'" x-cloak>
 
-                    <div class="border-gray-200 whitespace-nowrap flex gap-8 justify-between items-center mb-4">
+                    <div class="border-base-300 whitespace-nowrap flex gap-8 justify-between items-center mb-4">
 
                         <div class="my-3">
                             <h3 class="text-2xl font-bold">{{ __('Global Settings') }}</h3>

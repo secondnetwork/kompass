@@ -5,20 +5,20 @@
     'class' => '',
 ])
 
-<div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 border-2 @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-gray-200 shadow-inner'"
+<div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 border-2 @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-base-300 shadow-inner'"
 
     @if ($itemblocks->subgroup) wire:sort:item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else
  wire:key="group-{{ $itemblocks->id }}" @endif
     x-data="{ expanded: false, dropdownOpen: false }">
 
-    <div-nav-action class="@container flex items-center justify-between border-b border-gray-200 px-4"
-        @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-slate-200 border-slate-600'" @endif>
+    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4"
+        @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-base-300 border-slate-600'" @endif>
 
         {{-- Left: drag + icon + name --}}
         <span class="flex items-center py-2 min-w-0 flex-1 overflow-hidden">
             <span wire:sort:handle class="shrink-0">
-                <x-tabler-grip-vertical class="cursor-move stroke-current size-5 md:size-6 mr-1 text-gray-900" />
+                <x-tabler-grip-vertical class="cursor-move stroke-current size-5 md:size-6 mr-1" />
             </span>
 
             <span class="text-xs inline-flex items-center gap-1.5 py-1 px-1 capitalize rounded font-semibold text-gray-400 cursor-pointer shrink-0">
@@ -87,7 +87,7 @@
                         x-transition:leave="transition ease-in duration-75"
                         x-transition:leave-start="opacity-100 scale-100"
                         x-transition:leave-end="opacity-0 scale-95"
-                        class="absolute right-0 top-7 z-50 w-44 bg-white border border-neutral-200 rounded-md shadow-md py-1"
+                        class="absolute right-0 top-7 z-50 w-44 bg-base-100 border border-neutral-200 rounded-md shadow-md py-1"
                         x-cloak>
                         <button wire:click="selectitem('addBlock', {{ $itemblocks->id }},'page',{{ $itemblocks->id }})" @click="dropdownOpen = false"
                             class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
@@ -159,7 +159,7 @@
                         x-transition:leave="transition ease-in duration-75"
                         x-transition:leave-start="opacity-100 scale-100"
                         x-transition:leave-end="opacity-0 scale-95"
-                        class="absolute right-0 top-7 z-50 w-44 bg-white border border-neutral-200 rounded-md shadow-md py-1"
+                        class="absolute right-0 top-7 z-50 w-44 bg-base-100 border border-neutral-200 rounded-md shadow-md py-1"
                         x-cloak>
                         <button wire:click="edit({{ $itemblocks->id }})" @click="dropdownOpen = false"
                             class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">

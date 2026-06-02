@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ auth()->user()?->theme ?? 'light' }}">
 <head>
 <!--
 *   Kompass A Laravel CMS
@@ -53,9 +53,9 @@
 
 
 
-<div class="grid grid-cols-11 h-screen items-center justify-center bg-gray-100" style="background-color:{{ setting('global.background_color') }};">
+<div class="grid grid-cols-11 h-screen items-center justify-center bg-base-100">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
-    <div class="logo w-[14rem]">
+    <div class="logo w-50">
         @if (!empty(setting('global.adminlogo')))
         <img src="{{ setting('global.adminlogo') }}" alt="">
         @else

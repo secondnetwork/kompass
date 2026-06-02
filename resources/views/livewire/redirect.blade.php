@@ -1,5 +1,5 @@
     <div class="flex flex-col">
-        <div class=" border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
+        <div class=" border-base-300 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
             <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
 
                 <button class="btn btn-primary" @click="open = true">
@@ -10,10 +10,10 @@
         </div>
 
         <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
 
                 @if ($pages->count())
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-50">
                         <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
@@ -37,7 +37,7 @@
 
                         </thead>
 
-                        <tbody class="bg-base-100 divide-y divide-gray-200 ">
+                        <tbody class="bg-base-100 divide-y divide-gray-50 ">
                             @foreach ($pages as $key => $page)
 
                                     @foreach ($data as $key => $value)

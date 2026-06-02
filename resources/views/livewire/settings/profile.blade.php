@@ -30,6 +30,15 @@
                 <x-tabler-lock class="size-4" />
                 {{ __('Password') }}
             </a>
+            <a href="#_" @click.prevent="tab = 'appearance'"
+                :class="{
+                    'border-indigo-500 text-indigo-600': tab === 'appearance',
+                    'border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700': tab !== 'appearance'
+                }"
+                class="px-1 py-4 text-sm font-medium whitespace-nowrap border-b-2 flex items-center gap-2">
+                <x-tabler-palette class="size-4" />
+                {{ __('Appearance') }}
+            </a>
             @if (method_exists(auth()->user(), 'hasPasskeysEnabled'))
             <a href="#_" @click.prevent="tab = 'passkeys'"
                 :class="{
@@ -127,6 +136,58 @@
                 <button variant="primary" type="submit" class="btn btn-primary">{{ __('Save') }}</button>
             </div>
             <x-kompass::action-message class="me-3" on="password-updated">
+                {{ __('Saved.') }}
+            </x-kompass::action-message>
+        </form>
+    </div>
+
+    {{-- Appearance Tab --}}
+    <div x-show="tab === 'appearance'" x-cloak class="max-w-lg">
+        <div class="w-full pb-6">
+            <span class="text-xl font-semibold">{{ __('Appearance') }}</span>
+            <p class="text-base-content/70">{{ __('Choose how Kompass looks for you. Light is the default — switch to dark for low-light environments.') }}</p>
+        </div>
+
+        <form wire:submit="updateAppearance"
+              x-data="{ theme: @entangle('theme') }"
+              x-init="$watch('theme', v => document.documentElement.setAttribute('data-theme', v))"
+              class="space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <label class="cursor-pointer">
+                    <input type="radio" value="light" wire:model.live="theme" class="peer sr-only">
+                    <div class="border-2 border-base-300 peer-checked:border-primary rounded-xl p-4 hover:border-base-content/40 transition">
+                        <div class="aspect-[4/3] rounded-lg bg-white border border-base-300 flex flex-col p-2 gap-1 mb-3">
+                            <div class="h-1.5 w-8 bg-slate-300 rounded"></div>
+                            <div class="h-1 w-10 bg-slate-200 rounded"></div>
+                            <div class="mt-auto h-2 w-6 bg-slate-400 rounded"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold">{{ __('Light') }}</span>
+                            <x-tabler-sun class="size-4 text-base-content/60" />
+                        </div>
+                    </div>
+                </label>
+
+                <label class="cursor-pointer">
+                    <input type="radio" value="dark" wire:model.live="theme" class="peer sr-only">
+                    <div class="border-2 border-base-300 peer-checked:border-primary rounded-xl p-4 hover:border-base-content/40 transition">
+                        <div class="aspect-[4/3] rounded-lg bg-slate-900 border border-slate-700 flex flex-col p-2 gap-1 mb-3">
+                            <div class="h-1.5 w-8 bg-slate-600 rounded"></div>
+                            <div class="h-1 w-10 bg-slate-700 rounded"></div>
+                            <div class="mt-auto h-2 w-6 bg-slate-400 rounded"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold">{{ __('Dark') }}</span>
+                            <x-tabler-moon class="size-4 text-base-content/60" />
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="flex items-center">
+                <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+            </div>
+            <x-kompass::action-message class="me-3" on="appearance-updated">
                 {{ __('Saved.') }}
             </x-kompass::action-message>
         </form>

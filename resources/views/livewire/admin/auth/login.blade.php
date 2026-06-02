@@ -43,7 +43,7 @@
   <div class="text-center text-sm text-base-content/70">{{ __('or sign in with') }}</div>
   <div class="flex justify-end">
       <a href="/saml2/{{ setting('global.sso-url') }}/login"
-          class="btn flex justify-center items-center w-full h-14 border-1 border-gray-300 hover:border-blue-500 hover:bg-white px-4 py-2 bg-white text-gray-900">
+          class="btn flex justify-center items-center w-full h-14 border-1 border-gray-300 hover:border-blue-500 hover:bg-base-100 px-4 py-2 bg-base-100 text-gray-900">
 
           <svg class="h-8 w-8 pr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
               viewBox="0 0 47 48">

@@ -146,7 +146,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 }
 
 
-/* @plugin "daisyui/theme" {
+@plugin "daisyui/theme" {
   name: "dark";
   default: false;
   prefersdark: true;
@@ -187,4 +187,8 @@ License URI: http://opensource.org/licenses/mit-license.php
   --border: 1px;
   --depth: 0;
   --noise: 0;
-} */
+}
+
+.divide-gray-50{
+  @apply  divide-gray-500/30;
+}

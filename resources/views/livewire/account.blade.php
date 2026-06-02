@@ -3,137 +3,121 @@
     <x-kompass::modal data="FormDelete" />
 
     <div x-cloak x-data="{ open: @entangle('FormEdit') }">
-
-
-        <div x-cloak x-data="{ open: @entangle('FormEdit') }">
-            <x-kompass::offcanvas :w="'w-2/6'">
-              <x-slot name="body">
-                    <div class="grid gap-4">
+        <x-kompass::offcanvas :w="'w-2/6'">
+            <x-slot name="body">
+                <div class="grid gap-4">
                     <x-kompass::input wire:model="name" label="{{ __('Name') }}" />
-
                     <x-kompass::input wire:model="email" label="{{ __('E-Mail Address') }}" />
-
                     <div wire:ignore>
-
-                        <x-kompass::select wire:model="role" :searchable="false" label="{{ __('Role') }}" placeholder="{{ __('Select') }}" :options="$roles" />
-
+                        <x-kompass::select wire:model="role" :searchable="false" label="{{ __('Role') }}"
+                            placeholder="{{ __('Select') }}" :options="$roles" />
                     </div>
-            
-                    <div class="modal-footer mt-auto">
-                        <button wire:click="createOrUpdateUser" class="btn btn-primary">{{ __('Save') }}</button>
-                    </div>
+                    <button wire:click="createOrUpdateUser" class="btn btn-primary">{{ __('Save') }}</button>
                 </div>
-                </x-slot>
-
-            </x-kompass::offcanvas>
-    
+            </x-slot>
+        </x-kompass::offcanvas>
     </div>
 
+    <div class="flex flex-col">
 
-    <div class="">
-
-        <div class="border-gray-200 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-          <input wire:model.live="search" type="text" class="block p-2 w-full border-2 border-gray-300 text-base rounded-md" placeholder="{{ __('User') }} {{ __('Search') }}...">
-
-            <button class="btn btn-primary" wire:click="selectItem(1, 'add')"><x-tabler-user-plus stroke-width="1.5" />{{ __('Create Account') }}</button>
+        <div class="border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
+            <div class="w-full">
+                <x-kompass::form.input type="text" name="search" wire:model.live="search"
+                    placeholder="{{ __('Search') }}..." />
+            </div>
+            <div class="flex justify-end gap-4 items-center">
+                <button class="btn btn-primary" wire:click="selectItem(1, 'add')">
+                    <x-tabler-user-plus stroke-width="1.5" />
+                    {{ __('Create Account') }}
+                </button>
+            </div>
         </div>
 
-        <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+        <div class="divider"></div>
 
-                <table class="min-w-full divide-y divide-gray-200">
+        <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
+
+            @if ($users->count())
+                <table class="min-w-full divide-y divide-gray-50">
                     <thead class="bg-base-300">
-                        @foreach ($headers as $key => $value)
-                            <th scope="col"
-                                class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
-                                @if(in_array($key, ['name', 'status']))
-                                    <button wire:click="sortBy('{{ $key }}')" class="flex items-center gap-1 uppercase font-medium">
-                                        {{ __($value) }}
-                                        @if($orderBy === $key)
-                                            @if($orderAsc)
-                                                <x-tabler-chevron-up class="w-4 h-4" />
-                                            @else
-                                                <x-tabler-chevron-down class="w-4 h-4" />
+                        <tr>
+                            @foreach ($headers as $key => $value)
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
+                                    @if (in_array($key, ['name', 'status']))
+                                        <button wire:click="sortBy('{{ $key }}')" class="flex items-center gap-1 uppercase font-medium">
+                                            {{ __($value) }}
+                                            @if ($orderBy === $key)
+                                                @if ($orderAsc)
+                                                    <x-tabler-chevron-up class="w-4 h-4" />
+                                                @else
+                                                    <x-tabler-chevron-down class="w-4 h-4" />
+                                                @endif
                                             @endif
-                                        @endif
-                                    </button>
-                                @else
-                                    {{ __($value) }}
-                                @endif
-                            </th>
-                        @endforeach
-
+                                        </button>
+                                    @else
+                                        {{ __($value) }}
+                                    @endif
+                                </th>
+                            @endforeach
+                        </tr>
                     </thead>
-
-                    <tbody class="bg-base-100 divide-y divide-gray-200">
-                        @if ($users->count())
-
-                            @foreach ($users as $user)
-                                <tr>
-                                    <td class="px-4 py-2 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
-                                                <x-kompass::elements.avatar :user="$user" size="w-10" />
-                                            </div>
-                                            <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    {{ $user->name }}
-                                                </div>
-                                                <div class="text-xs text-base-content/70">
-                                                    {{ $user->email }}
-                                                </div>
-                                            </div>
+                    <tbody class="bg-base-100 divide-y divide-gray-50">
+                        @foreach ($users as $user)
+                            <tr>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
+                                    <div class="flex items-center gap-3">
+                                        <x-kompass::elements.avatar :user="$user" size="w-9" />
+                                        <div>
+                                            <div class="font-medium">{{ $user->name }}</div>
+                                            <div class="text-xs text-base-content/50">{{ $user->email }}</div>
                                         </div>
-                                    </td>
-                                     <td class="px-4 py-2 whitespace-nowrap">
-                                        @empty($user->email_verified_at)
-                                            <span
-                                                class="px-2 inline-flex font-semibold rounded-md text-xs bg-red-300 text-red-800">
-                                                no Active {{ $user->email_verified_at }}
-                                            </span>
-                                        @else
-                                            <span
-                                                class="px-2 inline-flex font-semibold rounded text-xs bg-green-100 text-green-800">
-                                                {{ \Carbon\Carbon::parse($user->email_verified_at)->format('d.m.Y H:i') }}
-                                            </span>
-                                @endif
-
-                                </td>
-                                <td class="px-4 py-2 whitespace-nowrap text-sm text-base-content/70">
-                                    @foreach ($user->roles as $user_role)
-                                        {{ $user_role->display_name }}
-                                    @endforeach
-
-
-                                </td>
-                                <td class="px-4 py-2 whitespace-nowrap text-right">
-                                    <div class="flex justify-end items-center gap-1">
-                                        <span wire:click="selectItem('{{ $user->id }}', 'update')"
-                                            class="flex justify-center"><x-tabler-edit
-                                                class="cursor-pointer stroke-blue-500" /></span>
-                                        <span wire:click="selectItem('{{ $user->id }}', 'delete')"
-                                            class="flex justify-center"><x-tabler-trash
-                                                class="cursor-pointer stroke-red-500" /></span>
                                     </div>
                                 </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td>
-                                  <div class="flex items-center justify-center gap-2 p-4"><x-tabler-user stroke-width="1.5" class="w-5 h-5" /> <span class="font-semibold">{{ __('No Data') }}</span></div></td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm bg-base-100">
+                                    @empty($user->email_verified_at)
+                                        <span class="badge badge-sm border-red-200 bg-red-100 text-red-800">{{ __('Not verified') }}</span>
+                                    @else
+                                        <span class="badge badge-sm border-green-200 bg-green-100 text-green-800">
+                                            {{ \Carbon\Carbon::parse($user->email_verified_at)->format('d.m.Y') }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-base-content/70 bg-base-100">
+                                    @foreach ($user->roles as $user_role)
+                                        <span class="badge badge-sm border-blue-200 bg-blue-100 text-blue-800">{{ $user_role->display_name }}</span>
+                                    @endforeach
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap bg-base-100">
+                                    <div class="flex justify-end items-center gap-1">
+                                        @if ($user->id === auth()->id())
+                                            <a href="{{ route('admin.profile') }}" title="{{ __('Edit Profile') }}">
+                                                <x-tabler-user-edit class="cursor-pointer stroke-blue-500" />
+                                            </a>
+                                        @else
+                                            <span wire:click="selectItem('{{ $user->id }}', 'update')">
+                                                <x-tabler-edit class="cursor-pointer stroke-blue-500" />
+                                            </span>
+                                        @endif
+                                        @if ($user->id !== auth()->id())
+                                            <span wire:click="selectItem('{{ $user->id }}', 'delete')">
+                                                <x-tabler-trash class="cursor-pointer stroke-red-500" />
+                                            </span>
+                                        @else
+                                            <x-tabler-trash class="stroke-base-content/20 cursor-not-allowed" />
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
-                            @endif
-                            <!-- More people... -->
-                        </tbody>
-                    </table>
-
-
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="min-h-[60vh] flex flex-col items-center justify-center">
+                    <x-tabler-users stroke-width="1.5" class="w-16 h-16 mb-2 text-base-content/30" />
+                    <div class="text-lg font-semibold">{{ __('No Data') }}</div>
                 </div>
-            </div>
-
-
-
+            @endif
 
         </div>
     </div>
+</div>

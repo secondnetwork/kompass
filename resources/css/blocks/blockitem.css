@@ -4,7 +4,7 @@
 }
 
 .itemblock {
-    background-color: #fff;
+@apply bg-base-100;
     &.sort-ghost {
         opacity: 0.6
 

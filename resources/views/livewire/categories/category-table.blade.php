@@ -183,7 +183,7 @@
     <x-kompass::modal data="FormDelete" />
 
     <div class="flex flex-col">
-        <div class="border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
+        <div class="border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
             <div class="w-full">
                 <x-kompass::form.input type="text" name="search" wire:model.live="search"
                     placeholder="{{ __('Search categories...') }}" />
@@ -199,9 +199,9 @@
         <div class="divider"></div>
 
         <div class="align-middle inline-block min-w-full">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
                 @if ($categories->count())
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-50">
                         <thead class="bg-base-300">
                             <tr>
                                 @foreach ($headers as $key => $value)
@@ -227,7 +227,7 @@
                             </tr>
                         </thead>
 
-                        <tbody class="bg-base-100 divide-y divide-gray-200">
+                        <tbody class="bg-base-100 divide-y divide-gray-50">
                             @foreach ($categories as $category)
                                 <tr>
                                     @foreach ($data as $key => $value)

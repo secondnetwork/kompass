@@ -42,7 +42,7 @@
     <x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
-        <div class=" border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
+        <div class=" border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
             
             <div class="w-full">
                 <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search posts...') }}" />
@@ -65,12 +65,12 @@
         <div class="divider"></div>
 
         <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
 
 
 
                 @if ($posts->count())
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-50">
                         <thead class="bg-base-300">
                             <tr>
                                 @foreach ($headers as $key => $value)
@@ -96,14 +96,21 @@
                             </tr>
                         </thead>
 
-                <tbody class="bg-base-100 divide-y divide-gray-200">
+                <tbody class="bg-base-100 divide-y divide-gray-50">
                     @foreach ($posts as $key => $post)
                         <tr wire:key="post-{{ $post->id }}">
                             @foreach ($data as $column)
                                 <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                     @if ($column == 'title')
-                                        <a wire:navigate href="/admin/posts/show/{{ $post->id }}">
-                                            {{ __($post->title) }}
+                                        <a wire:navigate href="/admin/posts/show/{{ $post->id }}" class="flex items-center gap-3">
+                                            <div class="w-16 h-11 shrink-0 rounded overflow-hidden bg-base-300 flex items-center justify-center my-2">
+                                                @if ($post->thumbnailFile)
+                                                    <img src="{{ asset('storage/' . $post->thumbnailFile->path . '/' . $post->thumbnailFile->slug . '.' . $post->thumbnailFile->extension) }}" alt="{{ $post->thumbnailFile->alt ?? $post->title }}" class="w-full h-full object-cover" />
+                                                @else
+                                                    <x-tabler-photo class="w-5 h-5 text-base-content/30" />
+                                                @endif
+                                            </div>
+                                            <span>{{ $post->title }}</span>
                                         </a>
                                     @elseif ($column == 'status')
                                         @switch($post->status)

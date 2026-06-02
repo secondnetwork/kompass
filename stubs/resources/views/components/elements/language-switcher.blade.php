@@ -24,7 +24,7 @@
         <button 
             @click="open = !open" 
             type="button" 
-            class="inline-flex items-center gap-x-2 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 uppercase"
+            class="inline-flex items-center gap-x-2 px-3 py-2 text-sm font-medium rounded-lg border border-base-300 bg-base-100 text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 uppercase"
         >
             <x-tabler-language class="size-4" />
             {{ $currentLocale }}
@@ -34,7 +34,7 @@
         <div 
             x-show="open" 
             @click.away="open = false"
-            class="absolute right-0 mt-2 w-32 bg-white shadow-xl border border-gray-200 rounded-md overflow-hidden z-[999] dark:bg-slate-800 dark:border-gray-700"
+            class="absolute right-0 mt-2 w-32 bg-base-100 shadow-xl border border-base-300 rounded-md overflow-hidden z-[999] dark:bg-slate-800 dark:border-gray-700"
             x-cloak
         >
             <div class="flex flex-col py-1">

@@ -16,7 +16,7 @@
             </button>
         </div>
     @else
-    <div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow group">
+    <div class="card bg-base-100 border border-base-300 group">
         <figure class="relative aspect-video overflow-hidden">
             @if ($file->type == 'video')
                 <div class="flex items-center justify-center w-full h-full bg-base-300">
@@ -80,7 +80,7 @@
                     </button>
 
                     <input type="checkbox"
-                        class="checkbox checkbox-primary checkbox-md bg-white checked:text-black"
+                        class="checkbox checkbox-primary checkbox-md bg-base-100 checked:text-black"
                         :checked="checked"
                         @click.stop="$dispatch('media-toggle', { id: {{ $file->id }} })" />
                 </div>

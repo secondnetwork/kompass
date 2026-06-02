@@ -68,14 +68,14 @@
             x-transition:leave="transition ease-in duration-100"
             x-transition:leave-start="opacity-100 translate-y-0"
             x-transition:leave-end="opacity-0 translate-y-1"
-            class="bg-white border border-neutral-200 rounded-md shadow-md p-3 flex flex-col gap-1">
+            class="bg-base-100 border border-neutral-200 rounded-md shadow-md p-3 flex flex-col gap-1">
 
             {{-- Arrow --}}
             <div x-show="popoverPosition == 'bottom'" class="absolute top-0 right-3 inline-block w-5 -mt-2.5 overflow-hidden">
-                <div class="w-2.5 h-2.5 origin-bottom-left rotate-45 bg-white border-t border-l border-neutral-200 rounded-sm"></div>
+                <div class="w-2.5 h-2.5 origin-bottom-left rotate-45 bg-base-100 border-t border-l border-neutral-200 rounded-sm"></div>
             </div>
             <div x-show="popoverPosition == 'top'" class="absolute bottom-0 right-3 inline-block w-5 mb-px overflow-hidden">
-                <div class="w-2.5 h-2.5 origin-top-left -rotate-45 bg-white border-b border-l border-neutral-200 rounded-sm"></div>
+                <div class="w-2.5 h-2.5 origin-top-left -rotate-45 bg-base-100 border-b border-l border-neutral-200 rounded-sm"></div>
             </div>
 
             {{-- Header --}}

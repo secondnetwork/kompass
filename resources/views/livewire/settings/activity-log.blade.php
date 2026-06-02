@@ -1,8 +1,8 @@
 <div class="align-middle inline-block min-w-full my-6">
 
 
-    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+    <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-50">
             <thead class="bg-base-300">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -33,7 +33,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-base-100 divide-y divide-gray-200">
+            <tbody class="bg-base-100 divide-y divide-gray-50">
         
                 @forelse($logsact as $activity)
                     <tr>

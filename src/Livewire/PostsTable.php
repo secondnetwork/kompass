@@ -74,6 +74,7 @@ class PostsTable extends Component
         $headers[] = 'status';
         $headers[] = 'Updated';
         $headers[] = '';
+
         return $headers;
     }
 
@@ -85,6 +86,7 @@ class PostsTable extends Component
         }
         $data[] = 'status';
         $data[] = 'updated_at';
+
         return $data;
     }
 
@@ -114,7 +116,7 @@ class PostsTable extends Component
         }
 
         $this->available_locales = $locales;
-        
+
         if (empty($this->land) && session()->has('kompass_last_land')) {
             $this->land = session('kompass_last_land');
         }
@@ -137,7 +139,8 @@ class PostsTable extends Component
             $query->where('land', $this->land);
         }
 
-        return $query->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
+        return $query->with('thumbnailFile')
+            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
             ->simplePaginate($this->perPost);
     }
 
@@ -262,6 +265,7 @@ class PostsTable extends Component
             $this->cloneTree($children, $blocksclone, $newpost->id, $blockcopy->id);
         }
         $this->FormClone = false;
+
         return redirect()->to('/admin/posts/show/'.$newpost->id);
     }
 
@@ -306,7 +310,7 @@ class PostsTable extends Component
 
     public function addate()
     {
-        post::create($this->form->getState());
+        Post::create($this->form->getState());
         Post::where('deleted_at');
     }
 
@@ -320,7 +324,7 @@ class PostsTable extends Component
     public function sortBy($field)
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;

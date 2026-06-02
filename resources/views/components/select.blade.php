@@ -97,7 +97,7 @@
         <button
             type="button"
             role="combobox"
-            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border-2 bg-white h-10 px-4 py-2 text-sm font-medium tracking-wide text-slate-700 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border-2 bg-base-100 h-10 px-4 py-2 text-sm font-medium tracking-wide text-slate-700 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
             :class="{ 'border-blue-600': isOpen, 'border-slate-300': !isOpen }"
             aria-haspopup="listbox"
             aria-controls="industriesList"
@@ -125,7 +125,7 @@
         <ul
             x-cloak x-show="isOpen || openedWithKeyboard"
             id="industriesList"
-            class="absolute z-10 left-0 top-11 max-h-80 w-full flex flex-col rounded-md border-2 border-slate-300 bg-white shadow-lg"
+            class="absolute z-10 left-0 top-11 max-h-80 w-full flex flex-col rounded-md border-2 border-slate-300 bg-base-100 shadow-lg"
             :class="{ '!top-11 !border-t-0': @js(!$searchable) }"
             role="listbox"
             aria-label="{{ $label }} list"
@@ -134,7 +134,7 @@
             x-trap.noscroll="openedWithKeyboard">
 
             {{-- Suchfeld --}}
-            <div class="sticky top-0 bg-white border-b border-slate-200 p-2" x-show="{{ var_export($searchable, true) }}">
+            <div class="sticky top-0 bg-base-100 border-b border-slate-200 p-2" x-show="{{ var_export($searchable, true) }}">
                 <div class="relative">
                     <x-tabler-search class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
                     <input
@@ -148,7 +148,7 @@
             </div>
 
             {{-- Optionen Liste --}}
-            <div class="overflow-y-auto py-1.5 max-h-60 flex flex-col bg-white">
+            <div class="overflow-y-auto py-1.5 max-h-60 flex flex-col bg-base-100">
                 <template x-if="filteredOptions.length === 0">
                     <div class="px-4 py-3 text-sm text-slate-500 text-center">
                         {{ __('No results found') }}

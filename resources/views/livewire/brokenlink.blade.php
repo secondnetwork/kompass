@@ -1,7 +1,7 @@
 <div class=" align-middle inline-block min-w-full mt-8">
-    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+    <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
 
-        <table class="min-w-full divide-y divide-gray-200">
+        <table class="min-w-full divide-y divide-gray-50">
             <thead class="bg-base-300">
                 <tr>
                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -20,7 +20,7 @@
                 </tr>
             </thead>
 
-            <tbody wire:sortable="updateOrder" class="bg-base-100 divide-y divide-gray-200 ">
+            <tbody wire:sortable="updateOrder" class="bg-base-100 divide-y divide-gray-50 ">
                 <tr wire:sortable.item="1">
                     <td wire:sortable.handle="" class="pl-4 w-4 bg-base-100">
                         <svg class="cursor-move stroke-current  text-gray-400" xmlns="http://www.w3.org/2000/svg"

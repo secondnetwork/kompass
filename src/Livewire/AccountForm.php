@@ -89,6 +89,11 @@ class AccountForm extends Component
             $this->FormEdit = true;
         }
         if ($action == 'update') {
+            if ($this->selectedItem === auth()->id()) {
+                $this->redirect(route('admin.profile'));
+
+                return;
+            }
 
             $this->dispatch('getModelId', $this->selectedItem);
             $model = User::findOrFail($this->selectedItem);
@@ -180,6 +185,10 @@ class AccountForm extends Component
 
     public function delete()
     {
+        if ($this->selectedItem === auth()->id()) {
+            return;
+        }
+
         User::destroy($this->selectedItem);
         $this->FormDelete = false;
     }

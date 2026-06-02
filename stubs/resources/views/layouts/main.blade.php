@@ -96,12 +96,12 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="translate-x-0 opacity-100"
          x-transition:leave-end="-translate-x-full opacity-0"
-         class="fixed inset-y-0 left-0 z-50 w-full max-w-sm bg-white shadow-2xl md:hidden overflow-y-auto"
+         class="fixed inset-y-0 left-0 z-50 w-full max-w-sm bg-base-100 shadow-2xl md:hidden overflow-y-auto"
          x-cloak>
        
       <div class="flex flex-col h-full">
         <!-- Header with close button -->
-        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between p-4 border-b border-base-300 dark:border-gray-700">
           
           <x-kompass::elements.language-switcher />
 
@@ -122,7 +122,7 @@
     <div class="hidden md:flex md:items-center md:gap-2 ml-auto">
       <livewire:menus name="main" />
 
-      <div class="flex items-center gap-2 pl-4 border-l border-gray-200">
+      <div class="flex items-center gap-2 pl-4 border-l border-base-300">
         
         <x-kompass::elements.language-switcher />
 

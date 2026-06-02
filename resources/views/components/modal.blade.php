@@ -16,7 +16,7 @@
                 x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
                 x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-90"
-                class="overflow-hidden relative w-full p-6 bg-white shadow-md bg-opacity-90 drop-shadow-md backdrop-blur-sm sm:max-w-lg sm:rounded-lg">
+                class="overflow-hidden relative w-full p-6 bg-base-100 shadow-md bg-opacity-90 drop-shadow-md backdrop-blur-sm sm:max-w-lg sm:rounded-lg">
 
     <div class="relative w-max">
         <div data-featured-icon="true"

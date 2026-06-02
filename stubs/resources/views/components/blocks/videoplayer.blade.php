@@ -251,10 +251,10 @@ class="relative overflow-hidden rounded-md aspect-video not-prose">
                         @input="timelineSeek(event)"
                         type="range" min="0" max="100" value="0" step="any"
                         class="w-full h-full appearance-none flex items-center cursor-pointer bg-transparent z-30
-                            [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:appearance-none
-                            [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:appearance-none
-                            [&::-ms-thumb]:bg-white [&::-ms-thumb]:rounded-full [&::-ms-thumb]:border-0 [&::-ms-thumb]:w-2.5 [&::-ms-thumb]:h-2.5 [&::-ms-thumb]:appearance-none
-                            [&::-webkit-slider-runnable-track]:bg-white [&::-webkit-slider-runnable-track]:bg-opacity-30 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:overflow-hidden [&::-moz-range-track]:bg-neutral-200 [&::-moz-range-track]:rounded-full [&::-ms-track]:bg-neutral-200 [&::-ms-track]:rounded-full
+                            [&::-webkit-slider-thumb]:bg-base-100 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:appearance-none
+                            [&::-moz-range-thumb]:bg-base-100 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:appearance-none
+                            [&::-ms-thumb]:bg-base-100 [&::-ms-thumb]:rounded-full [&::-ms-thumb]:border-0 [&::-ms-thumb]:w-2.5 [&::-ms-thumb]:h-2.5 [&::-ms-thumb]:appearance-none
+                            [&::-webkit-slider-runnable-track]:bg-base-100 [&::-webkit-slider-runnable-track]:bg-opacity-30 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:overflow-hidden [&::-moz-range-track]:bg-neutral-200 [&::-moz-range-track]:rounded-full [&::-ms-track]:bg-neutral-200 [&::-ms-track]:rounded-full
                             [&::-moz-range-progress]:bg-gray-900 [&::-moz-range-progress]:rounded-full [&::-ms-fill-lower]:bg-gray-900 [&::-ms-fill-lower]:rounded-full [&::-webkit-slider-thumb]:shadow-[-995px_0px_0px_990px_#101827]
                     ">
                 </div>
@@ -276,11 +276,11 @@ class="relative overflow-hidden rounded-md aspect-video not-prose">
                         @input="updateVolume(event)"
                         type="range" min="0" max="1" :value="volume" step="0.01"
                         class="w-full h-full appearance-none flex items-center cursor-pointer bg-transparent z-30
-                            [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:appearance-none
-                            [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:appearance-none
-                            [&::-ms-thumb]:bg-white [&::-ms-thumb]:rounded-full [&::-ms-thumb]:border-0 [&::-ms-thumb]:w-2 [&::-ms-thumb]:h-2 [&::-ms-thumb]:appearance-none
-                            [&::-webkit-slider-runnable-track]:bg-white [&::-webkit-slider-runnable-track]:bg-opacity-30 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:overflow-hidden [&::-moz-range-track]:bg-neutral-200 [&::-moz-range-track]:rounded-full [&::-ms-track]:bg-neutral-200 [&::-ms-track]:rounded-full
-                            [&::-moz-range-progress]:bg-white [&::-moz-range-progress]:bg-opacity-80 [&::-moz-range-progress]:rounded-full [&::-ms-fill-lower]:bg-white [&::-ms-fill-lower]:bg-opacity-80 [&::-ms-fill-lower]:rounded-full [&::-webkit-slider-thumb]:shadow-[-995px_0px_0px_990px_rgba(255,_255,_255,_0.8)]
+                            [&::-webkit-slider-thumb]:bg-base-100 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 [&::-webkit-slider-thumb]:appearance-none
+                            [&::-moz-range-thumb]:bg-base-100 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:appearance-none
+                            [&::-ms-thumb]:bg-base-100 [&::-ms-thumb]:rounded-full [&::-ms-thumb]:border-0 [&::-ms-thumb]:w-2 [&::-ms-thumb]:h-2 [&::-ms-thumb]:appearance-none
+                            [&::-webkit-slider-runnable-track]:bg-base-100 [&::-webkit-slider-runnable-track]:bg-opacity-30 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:overflow-hidden [&::-moz-range-track]:bg-neutral-200 [&::-moz-range-track]:rounded-full [&::-ms-track]:bg-neutral-200 [&::-ms-track]:rounded-full
+                            [&::-moz-range-progress]:bg-base-100 [&::-moz-range-progress]:bg-opacity-80 [&::-moz-range-progress]:rounded-full [&::-ms-fill-lower]:bg-base-100 [&::-ms-fill-lower]:bg-opacity-80 [&::-ms-fill-lower]:rounded-full [&::-webkit-slider-thumb]:shadow-[-995px_0px_0px_990px_rgba(255,_255,_255,_0.8)]
                     ">
                 </div>
             </li>

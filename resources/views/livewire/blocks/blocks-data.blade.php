@@ -1,5 +1,5 @@
 <div>
-    <div class="border-b border-gray-200 px-20 py-10 flex justify-center items-center" >
+    <div class="border-b border-base-300 px-20 py-10 flex justify-center items-center" >
         <div class=" flex-auto">
             <span class="text-gray-400 ">df</span>
 
@@ -16,7 +16,7 @@
         <button class="flex btn gap-x-2   justify-center items-center" wire:click="saveUpdate({{$blocktemplatesId}})"><x-tabler-device-floppy class="icon-lg"/>{{ __('Save')}}</button>
     </div>
     <div class="px-20 py-10">
-        <div class="bg-white p-10 shadow rounded-[1rem]">
+        <div class="bg-base-100 p-10 shadow rounded-[1rem]">
 
 
 

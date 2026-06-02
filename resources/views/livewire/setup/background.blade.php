@@ -57,7 +57,7 @@
 
 
    
-    {{-- <div class="bg-white mx-auto my-auto p-6">
+    {{-- <div class="bg-base-100 mx-auto my-auto p-6">
       <div x-data="app()" x-init="[initColor()]">
         <div>
           <label for="color-picker" class="block mb-1 font-semibold">Select a color</label>
@@ -73,7 +73,7 @@
               x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
               x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100"
               x-transition:leave-end="opacity-0 scale-95" class="border border-gray-300 origin-top-right absolute right-0 top-full mt-2 rounded-md shadow-lg">
-              <div class="rounded-md bg-white shadow-xs p-2">
+              <div class="rounded-md bg-base-100 shadow-xs p-2">
                 <div class="flex">
                   <template x-for="color in colors">
                     <div class="">

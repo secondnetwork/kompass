@@ -44,7 +44,7 @@
 
     <div class="flex flex-col">
    
-        <div class="w-full border-gray-200 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
+        <div class="w-full border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
             
             <div class="w-full">
                 <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search pages...') }}" />
@@ -69,12 +69,12 @@
         <div class="divider"></div>
       
         <div class=" align-middle inline-block min-w-full h-full">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg h-full">
+            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg h-full">
 
 
 
                 @if ($pages->count())
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="min-w-full divide-y divide-gray-50">
                         <thead class="bg-base-300">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
@@ -98,7 +98,7 @@
 
                         </thead>
 
-                        <tbody class="bg-base-100 divide-y divide-gray-200" wire:sort="handleSort">
+                        <tbody class="bg-base-100 divide-y divide-gray-50" wire:sort="handleSort">
                             @foreach ($pages as $key => $page)
                                 <tr wire:key="page-{{ $page->id }}" wire:sort:item="{{ $page->id }}">
                                     <td wire:sort:handle class="pl-4 w-4 bg-base-100">

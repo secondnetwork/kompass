@@ -11,8 +11,8 @@
 ])
 <div>
   @if ($settings->count())
-  <table class="min-w-full divide-y divide-gray-200">
-      <tbody wire:sort="updateOrder" class="bg-base-100 divide-y divide-gray-200">
+  <table class="min-w-full divide-y divide-gray-50">
+      <tbody wire:sort="updateOrder" class="bg-base-100 divide-y divide-gray-50">
           @foreach ($settings as $key => $setting)
           <tr wire:sort:item="{{ $setting->id }}" >
               <td class="p-3">

@@ -47,9 +47,9 @@ class="relative">
   @keydown.escape.window="popoverOpen=false"
   :class="{ 'top-0 mt-8' : popoverPosition == 'bottom', 'bottom-0 mb-12' : popoverPosition == 'top' }"
   class="absolute w-[300px] max-w-lg right-0 z-20 overflow-hidden" x-cloak>
-  <div x-ref="popoverInner" x-show="popoverOpen" class="w-full p-4 bg-white border rounded-md shadow-sm border-blue-400">
-      {{-- <div x-show="popoverArrow && popoverPosition == 'bottom'" class="absolute top-0 inline-block w-5 mt-px overflow-hidden -translate-x-2 -translate-y-2.5 right-0"><div class="w-2.5 h-2.5 origin-bottom-left transform rotate-45 bg-white border-t border-l rounded-sm"></div></div>
-      <div x-show="popoverArrow  && popoverPosition == 'top'" class="absolute bottom-0 inline-block w-5 mb-px overflow-hidden -translate-x-2 right-0"><div class="w-2.5 h-2.5 origin-top-left transform -rotate-45 bg-white border-b border-l rounded-sm"></div></div> --}}
+  <div x-ref="popoverInner" x-show="popoverOpen" class="w-full p-4 bg-base-100 border rounded-md shadow-sm border-blue-400">
+      {{-- <div x-show="popoverArrow && popoverPosition == 'bottom'" class="absolute top-0 inline-block w-5 mt-px overflow-hidden -translate-x-2 -translate-y-2.5 right-0"><div class="w-2.5 h-2.5 origin-bottom-left transform rotate-45 bg-base-100 border-t border-l rounded-sm"></div></div>
+      <div x-show="popoverArrow  && popoverPosition == 'top'" class="absolute bottom-0 inline-block w-5 mb-px overflow-hidden -translate-x-2 right-0"><div class="w-2.5 h-2.5 origin-top-left transform -rotate-45 bg-base-100 border-b border-l rounded-sm"></div></div> --}}
       <div class="grid gap-4">
           {{-- <div class="space-y-2">
               <h4 class="font-medium leading-none">Dimensions</h4>

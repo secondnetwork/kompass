@@ -13,7 +13,7 @@
                                             </span>
 </div>
 
-      <div class="p-4 flex flex-col gap-4 bg-white rounded-b-md">
+      <div class="p-4 flex flex-col gap-4 bg-base-100 rounded-b-md">
       {{-- Binden an die Properties der Kind-Komponente --}}
 
       <div>
