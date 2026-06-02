@@ -4,9 +4,9 @@ namespace Secondnetwork\Kompass\Livewire\Settings;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -27,6 +27,8 @@ class Profile extends Component
 
     public string $password_confirmation = '';
 
+    public string $theme = 'light';
+
     /**
      * The new display photo.
      *
@@ -39,8 +41,25 @@ class Profile extends Component
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = Auth::user();
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->theme = $user->theme ?? 'light';
+    }
+
+    /**
+     * Persist the user's theme preference (light is the system-wide default;
+     * dark is opt-in here).
+     */
+    public function updateAppearance(): void
+    {
+        $validated = $this->validate([
+            'theme' => ['required', 'in:light,dark'],
+        ]);
+
+        Auth::user()->update($validated);
+
+        $this->dispatch('appearance-updated', theme: $validated['theme']);
     }
 
     /**
