@@ -242,7 +242,6 @@
         </div>
     @else
         {{-- Leaf block: droppable strip appears only while dragging, so there is no idle gap --}}
-        <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
-            :class="dragging ? 'min-h-[2rem]' : 'min-h-0'"></div>
+        <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"></div>
     @endif
 </div>
