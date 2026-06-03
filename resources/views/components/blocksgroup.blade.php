@@ -34,7 +34,7 @@
                 <x-tabler-grip-vertical class="cursor-move stroke-current size-5 md:size-6 mr-1" />
             </span>
 
-            @if ($showNest)
+            @if ($hasChildren)
                 <button type="button" @click="expanded = !expanded"
                     class="shrink-0 mr-1 {{ $style['accent'] }} transition-transform duration-200"
                     :class="expanded ? 'rotate-90' : ''" title="{{ __('Expand / collapse') }}">
@@ -218,30 +218,29 @@
 
     </div-nav-action>
 
-    @if ($hasChildren)
-        {{-- Has children: height is defined by the content, no empty gap --}}
-        <div x-show="expanded" x-collapse class="bg-base-300/40 rounded-b-md p-1.5">
+    @if ($isContainer && $hasChildren)
+        {{-- Layout/Accordion container with children: the only droppable target --}}
+        <div x-show="expanded" x-collapse class="border-l-2 {{ $style['rail'] }} bg-base-300/40 rounded-b-md p-1.5">
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
                 class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
                 <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
             </div>
         </div>
     @elseif ($isContainer)
-        {{-- Empty container: collapsed when idle, expands into a drop zone only while dragging --}}
-        <div x-show="expanded" x-collapse class="border-l-2 {{ $style['rail'] }} rounded-b-md"
-            :class="dragging ? 'bg-base-200/40 p-1.5' : ''">
+        {{-- Empty container: always open (no collapse toggle) so it stays a drop target; expands only while dragging --}}
+        <div class="border-l-2 {{ $style['rail'] }} rounded-b-md"
+            :class="dragging ? 'p-1.5' : ''">
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
-                class="relative grid grid-cols-{{ $itemblocks->layoutgrid }}"
-                :class="dragging ? 'min-h-[4rem]' : 'min-h-px'">
-                <div x-show="dragging" x-cloak
-                    class="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 border-2 border-dashed rounded-lg text-xs {{ $style['accent'] }}">
-                    <x-tabler-layout-grid-add class="size-5" />
-                    {{ __('Drag blocks here') }}
-                </div>
+                class="relative grid grid-cols-{{ $itemblocks->layoutgrid }} transition-[min-height] duration-200">
             </div>
         </div>
-    @else
-        {{-- Leaf block: droppable strip appears only while dragging, so there is no idle gap --}}
-        <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"></div>
+    @elseif ($hasChildren)
+
+        <div x-show="expanded" x-collapse class="bg-base-300/40 rounded-b-md p-1.5">
+            <div class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
+                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
+            </div>
+        </div>
     @endif
+
 </div>
