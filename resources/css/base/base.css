@@ -37,3 +37,5 @@ page-main {
   /* left:initial */
   
  }
+
+ [x-cloak] {display: none !important;}

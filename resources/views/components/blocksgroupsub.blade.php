@@ -1,4 +1,4 @@
 
 @foreach ($childrensub as $childitem )
-  <x-kompass::blocksgroup :itemblocks="$childitem" :fields="$fields" :page="$page" class="itemblock shadow border border-gray-300 col-span-{{ $childitem->layoutgrid }}"/>
+  <x-kompass::blocksgroup :itemblocks="$childitem" :fields="$fields" :page="$page" class="itemblock shadow-sm border border-base-300 rounded-md col-span-{{ $childitem->layoutgrid }}"/>
 @endforeach

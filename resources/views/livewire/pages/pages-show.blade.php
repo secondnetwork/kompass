@@ -100,7 +100,7 @@
 
                 @switch($page->status)
                     @case('published')
-                        <span class="flex gap-x-2 justify-end items-center text-md  text-gray-900">
+                        <span class="flex gap-x-2 justify-end items-center text-md  text-base-content">
 
                             <span class="relative flex h-3 w-3">
                                 <span
@@ -112,7 +112,7 @@
                     @break
 
                     @case('password')
-                        <span class="flex gap-x-2 justify-end items-center text-md  text-gray-900">
+                        <span class="flex gap-x-2 justify-end items-center text-md  text-base-content">
                             <span class="relative flex h-3 w-3">
                                 <span
                                     class="animate-[ping_3s_ease-in-out_infinite] absolute inline-flex h-full w-full rounded-full bg-purple-500 opacity-75"></span>
@@ -123,7 +123,7 @@
                     @break
 
                     @default
-                        <span class="flex gap-x-2 justify-end items-center text-md border-gray-300 text-gray-900 mx-2">
+                        <span class="flex gap-x-2 justify-end items-center text-md border-gray-300 text-base-content mx-2">
 
                             <span class="relative flex h-3 w-3">
 
@@ -174,13 +174,16 @@
 
     </div>
     <div class="divider"></div>
-    <div class="ordre-1">
+    <div class="ordre-1" x-data="{ dragging: false, allExpanded: false }"
+        @dragstart.window="dragging = true"
+        @dragend.window="dragging = false"
+        @drop.window="dragging = false">
 
         <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="">
 
             @forelse ($blocks as $itemblocks)
                 <div wire:sort:item="{{ $itemblocks->id }}">
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border border-base-300 rounded-md shadow-sm mt-3'" />
                 </div>
 
             @empty
@@ -193,7 +196,19 @@
 
 
         </div>
-        <div class="flex  justify-end my-6">
+        <div class="flex justify-end items-center gap-3 my-6">
+            @if (count($blocks))
+                <button type="button"
+                    @click="allExpanded = !allExpanded; $dispatch(allExpanded ? 'expand-all-blocks' : 'collapse-all-blocks')"
+                    class="btn btn-outline gap-1.5 border-base-300 text-base-content/70 hover:bg-base-200 hover:border-primary hover:text-base-content">
+                    <span x-show="!allExpanded" class="flex items-center gap-1.5">
+                        <x-tabler-chevrons-down class="size-4" /> {{ __('Expand all') }}
+                    </span>
+                    <span x-show="allExpanded" x-cloak class="flex items-center gap-1.5">
+                        <x-tabler-chevrons-up class="size-4" /> {{ __('Collapse all') }}
+                    </span>
+                </button>
+            @endif
             <button class="btn btn-primary"
                 wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
         </div>

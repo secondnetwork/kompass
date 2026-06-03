@@ -5,15 +5,28 @@
     'class' => '',
 ])
 
-<div class="{{ $class }} @if ($itemblocks->subgroup) group-block border-purple-600 border-2 @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-base-300 shadow-inner'"
+@php
+    $isContainer = in_array($itemblocks->type, ['group', 'accordiongroup']);
+    $hasChildren = $itemblocks->children->isNotEmpty();
+    $showNest = $isContainer || $hasChildren;
+
+    // Divi-style colour coding by hierarchy: layout = indigo, accordion = emerald, module = slate.
+    $style = match ($itemblocks->type) {
+        'group' => ['rail' => 'border-l-indigo-500', 'badge' => 'bg-indigo-500', 'bar' => 'bg-indigo-500/10', 'accent' => 'text-indigo-600'],
+        'accordiongroup' => ['rail' => 'border-l-emerald-500', 'badge' => 'bg-emerald-500', 'bar' => 'bg-emerald-500/10', 'accent' => 'text-emerald-600'],
+        default => ['rail' => 'border-l-slate-400', 'badge' => 'bg-slate-500', 'bar' => 'bg-base-200', 'accent' => 'text-slate-500'],
+    };
+@endphp
+
+<div class="{{ $class }} border-l-4 {{ $style['rail'] }} @if ($itemblocks->subgroup) group-block @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-base-300 shadow-inner'"
 
     @if ($itemblocks->subgroup) wire:sort:item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
-    @else
- wire:key="group-{{ $itemblocks->id }}" @endif
-    x-data="{ expanded: false, dropdownOpen: false }">
+    @else wire:key="group-{{ $itemblocks->id }}" @endif
+    x-data="{ expanded: false, dropdownOpen: false }"
+    @expand-all-blocks.window="expanded = true"
+    @collapse-all-blocks.window="expanded = false">
 
-    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4"
-        @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup') :class="'bg-base-300 border-slate-600'" @endif>
+    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4 {{ $style['bar'] }}">
 
         {{-- Left: drag + icon + name --}}
         <span class="flex items-center py-2 min-w-0 flex-1 overflow-hidden">
@@ -21,24 +34,30 @@
                 <x-tabler-grip-vertical class="cursor-move stroke-current size-5 md:size-6 mr-1" />
             </span>
 
-            <span class="text-xs inline-flex items-center gap-1.5 py-1 px-1 capitalize rounded font-semibold text-gray-400 cursor-pointer shrink-0">
+            @if ($showNest)
+                <button type="button" @click="expanded = !expanded"
+                    class="shrink-0 mr-1 {{ $style['accent'] }} transition-transform duration-200"
+                    :class="expanded ? 'rotate-90' : ''" title="{{ __('Expand / collapse') }}">
+                    <x-tabler-chevron-right class="size-5" />
+                </button>
+            @endif
+
+            <span class="shrink-0 mr-2 flex items-center justify-center size-7 rounded-md {{ $style['accent'] }}">
                 @switch($itemblocks->type)
                     @case('group')
-                        <x-tabler-template class="cursor-pointer stroke-current size-5 md:size-6 text-violet-600" />
+                        <x-tabler-template class="stroke-current size-6" />
                     @break
                     @case('accordiongroup')
-                        <x-tabler-layout-list class="cursor-pointer stroke-current size-5 md:size-6 text-violet-600" />
+                        <x-tabler-layout-list class="stroke-current size-6" />
                     @break
                     @default
                         @if ($itemblocks->iconclass)
-                            @svg(str_starts_with($itemblocks->iconclass, 'tabler-') ? $itemblocks->iconclass : 'tabler-' . $itemblocks->iconclass, 'w-5')
+                            @svg(str_starts_with($itemblocks->iconclass, 'tabler-') ? $itemblocks->iconclass : 'tabler-' . $itemblocks->iconclass, 'size-5')
                         @else
-                            @svg('tabler-section', 'w-5')
+                            @svg('tabler-section', 'size-6')
                         @endif
                 @endswitch
             </span>
-
-            <span class="inline-block border-r border-gray-400 w-px h-5 ml-1 mr-2 shrink-0"></span>
 
             <span class="truncate min-w-0">
                 <livewire:editable-name :itemblocks="$itemblocks" :key="'editable-block-name-'.$itemblocks->id" :size="'sm'" />
@@ -46,7 +65,7 @@
         </span>
 
         {{-- Right: actions --}}
-        <div class="flex items-center gap-1 shrink-0 ml-2">
+        <div class="flex items-center gap-1 shrink-0 ">
 
             @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
 
@@ -199,7 +218,31 @@
 
     </div-nav-action>
 
-    <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}" class="bg-purple-700 grid grid-cols-{{ $itemblocks->layoutgrid }}" >
-        <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
-    </div>
+    @if ($hasChildren)
+        {{-- Has children: height is defined by the content, no empty gap --}}
+        <div x-show="expanded" x-collapse class="bg-base-300/40 rounded-b-md p-1.5">
+            <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
+                class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
+                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
+            </div>
+        </div>
+    @elseif ($isContainer)
+        {{-- Empty container: collapsed when idle, expands into a drop zone only while dragging --}}
+        <div x-show="expanded" x-collapse class="border-l-2 {{ $style['rail'] }} rounded-b-md"
+            :class="dragging ? 'bg-base-200/40 p-1.5' : ''">
+            <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
+                class="relative grid grid-cols-{{ $itemblocks->layoutgrid }}"
+                :class="dragging ? 'min-h-[4rem]' : 'min-h-px'">
+                <div x-show="dragging" x-cloak
+                    class="pointer-events-none absolute inset-0 flex items-center justify-center gap-2 border-2 border-dashed rounded-lg text-xs {{ $style['accent'] }}">
+                    <x-tabler-layout-grid-add class="size-5" />
+                    {{ __('Drag blocks here') }}
+                </div>
+            </div>
+        </div>
+    @else
+        {{-- Leaf block: droppable strip appears only while dragging, so there is no idle gap --}}
+        <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
+            :class="dragging ? 'min-h-[2rem]' : 'min-h-0'"></div>
+    @endif
 </div>
