@@ -14,11 +14,13 @@
     $style = match ($itemblocks->type) {
         'group' => ['rail' => 'border-l-indigo-500', 'badge' => 'bg-indigo-500', 'bar' => 'bg-indigo-500/10', 'accent' => 'text-indigo-600'],
         'accordiongroup' => ['rail' => 'border-l-emerald-500', 'badge' => 'bg-emerald-500', 'bar' => 'bg-emerald-500/10', 'accent' => 'text-emerald-600'],
+        'video' => ['rail' => 'border-l-red-600', 'badge' => 'bg-slate-500', 'bar' => 'bg-slate-600/10', 'accent' => 'text-red-600'],
+        'gallery' => ['rail' => 'border-l-blue-500', 'badge' => 'bg-blue-500', 'bar' => 'bg-blue-500/10', 'accent' => 'text-blue-600'],
         default => ['rail' => 'border-l-slate-400', 'badge' => 'bg-slate-500', 'bar' => 'bg-base-200', 'accent' => 'text-slate-500'],
     };
 @endphp
 
-<div class="{{ $class }} border-l-4 {{ $style['rail'] }} @if ($itemblocks->subgroup) group-block @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100':'border-base-300 shadow-inner'"
+<div class="{{ $class }} border-l-4 {{ $style['rail'] }} @if ($itemblocks->subgroup) group-block @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100 ':'opacity-70 border-base-300 shadow-inner'"
 
     @if ($itemblocks->subgroup) wire:sort:item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else wire:key="group-{{ $itemblocks->id }}" @endif
@@ -26,7 +28,8 @@
     @expand-all-blocks.window="expanded = true"
     @collapse-all-blocks.window="expanded = false">
 
-    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4 {{ $style['bar'] }}">
+    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4 {{ $style['bar'] }}"
+        @if ($itemblocks->status !== 'published') style="background-image: repeating-linear-gradient(315deg, transparent 0 8px, color-mix(in oklch, var(--color-base-content) 15%, transparent) 8px 10px);" @endif>
 
         {{-- Left: drag + icon + name --}}
         <span class="flex items-center py-2 min-w-0 flex-1 overflow-hidden">
