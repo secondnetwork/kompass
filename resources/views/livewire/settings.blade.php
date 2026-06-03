@@ -168,6 +168,21 @@
 
                 </div>
 
+                @if (\Secondnetwork\Kompass\Features::hasSaml2())
+                @role(['super_admin', 'admin'])
+                <div x-show="asidenav === 'saml2'" x-cloak>
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('SAML2 SSO') }}</h3>
+                        <p class="text-base-content/60 text-sm">{{ __('Configure SAML2 identity providers for single sign-on.') }}</p>
+                    </div>
+                    <hr class="h-px w-full border-none bg-base-300 my-4">
+                    <livewire:settings.saml2 lazy />
+
+                </div>
+                @endrole
+                @endif
+
                 <div x-show="asidenav === 'redirection'" x-cloak>
                     {{-- <livewire:redirect lazy />
                     <livewire:brokenlink lazy /> --}}

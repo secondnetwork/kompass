@@ -50,7 +50,7 @@
             @else
                 <x-tabler-icons class="h-4 w-4" />
             @endif
-            Icon wählen
+            {{ __('Choose icon') }}
         </button>
         @if(!empty($data['iconclass']))
             <span class="text-xs">{{ $data['iconclass'] }}</span>

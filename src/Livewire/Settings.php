@@ -12,7 +12,7 @@ use Secondnetwork\Kompass\Models\Setting;
 
 class Settings extends Component
 {
-        #[Url(as: 'asidenav')]
+    #[Url(as: 'asidenav')]
     public $asidenav = 'page_information';
 
     #[Url]
@@ -23,10 +23,6 @@ class Settings extends Component
     public $headers;
 
     public $selectedItem;
-
-    
-
-    
 
     public $orderBy = 'order';
 
@@ -45,7 +41,7 @@ class Settings extends Component
     public $data;
 
     public $name;
-     
+
     public $icon;
 
     public $value;
@@ -92,7 +88,7 @@ class Settings extends Component
         $this->navigation = [
             [
                 'slug' => '',
-                'name' => 'Theme ' . __('Settings'),
+                'name' => 'Theme '.__('Settings'),
             ],
             [
                 'slug' => 'page_information',
@@ -115,7 +111,7 @@ class Settings extends Component
             ],
             [
                 'slug' => 'backend',
-                'name' => 'Login ' . __('Page'),
+                'name' => 'Login '.__('Page'),
                 'icon' => 'tabler-login',
             ],
             [
@@ -152,6 +148,18 @@ class Settings extends Component
                 'icon' => 'tabler-activity',
             ];
         }
+
+        if (Features::hasSaml2() && auth()->user()?->hasRole(['super_admin', 'admin'])) {
+            $this->navigation[] = [
+                'slug' => '',
+                'name' => __('Authentication'),
+            ];
+            $this->navigation[] = [
+                'slug' => 'saml2',
+                'name' => __('SAML2 SSO'),
+                'icon' => 'tabler-shield-lock',
+            ];
+        }
     }
 
     public function saveEditorState($editorJsonData, $id)
@@ -161,7 +169,7 @@ class Settings extends Component
         }
     }
 
-    #[on('refresh-setting')]
+    #[On('refresh-setting')]
     public function resetView()
     {
         $this->FormMedia = false;
@@ -215,12 +223,12 @@ class Settings extends Component
         $setting = Setting::updateOrCreate([
             'id' => $this->selectedItem,
         ],
-        [
-            'name' => $this->name,
-            'key' => Str::slug($this->key, '-', 'de'),
-            'group' => strtolower($this->group),
-            'type' => $this->type ?: 'text',
-        ]);
+            [
+                'name' => $this->name,
+                'key' => Str::slug($this->key, '-', 'de'),
+                'group' => strtolower($this->group),
+                'type' => $this->type ?: 'text',
+            ]);
 
         $this->selectedItem = $setting->id;
         $this->type = $setting->type;

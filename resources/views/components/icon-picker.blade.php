@@ -19,11 +19,12 @@
             <div class="flex-1 overflow-y-auto border border-base-300 rounded p-2">
                 <div class="grid grid-cols-6 gap-2">
                     @foreach($this->filteredIcons ?? [] as $iconItem)
-                        <button 
+                        <button
+                            type="button"
                             wire:click="selectIcon('{{ $iconItem['name'] }}')"
                             class="flex flex-col items-center gap-1 p-2 hover:bg-base-200 rounded transition-colors"
                         >
-                            <x-icon :name="$iconItem['full_name']" class="size-5 md:size-6" />
+                            @svg($iconItem['full_name'], 'size-5 md:size-6')
                             <span class="text-[9px] truncate max-w-full text-base-content/70">{{ $iconItem['name'] }}</span>
                         </button>
                     @endforeach

@@ -2,6 +2,9 @@
 
 namespace Secondnetwork\Kompass;
 
+use Slides\Saml2\Models\Tenant;
+use Spatie\Activitylog\Models\Activity;
+
 class Features
 {
     /**
@@ -92,6 +95,16 @@ class Features
 
     public static function hasActivityLog()
     {
-        return class_exists(\Spatie\Activitylog\Models\Activity::class);
+        return class_exists(Activity::class);
+    }
+
+    /**
+     * Determine if the scaler-tech/laravel-saml2 package is installed.
+     *
+     * @return bool
+     */
+    public static function hasSaml2()
+    {
+        return class_exists(Tenant::class);
     }
 }
