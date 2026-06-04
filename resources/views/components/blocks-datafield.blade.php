@@ -8,10 +8,6 @@
 
 <div class="{{ !in_array($itemblocks->type, ['gallery', 'video']) ? 'grid grid-cols-' . $itemblocks->grid . ' gap-6' : 'grid gap-6' }}">
 
-    <div>
-        <livewire:editable-name :itemblocks="$itemblocks" size="2xl" :key="'editable-block-name-2xl-'.$itemblocks->id" />
-    </div>
-
     @switch($itemblocks->type)
         @case('video')
             <x-kompass::block.video :itemblocks="$itemblocks" />

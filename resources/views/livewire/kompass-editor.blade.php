@@ -29,6 +29,7 @@
         placeholder: @js($placeholder),
         readOnly: @js($readOnly),
     }"
+    @click.outside="hideToolbar()"
 >
     <div class="relative">
         <template x-for="(block, index) in blocks" :key="block.id">
@@ -157,10 +158,11 @@
                     }"
                     :data-placeholder="placeholder"
                     x-init="$el.innerHTML = block.content"
+                    @focus="onBlockFocus(index)"
                     @input="updateBlock(index, $event.target)"
                     @keydown.enter.prevent="addBlock(index)"
                     @keydown.backspace="removeBlock(index, $event)"
-                    @keydown.escape="showDropdown = false"
+                    @keydown.escape="showDropdown = false; hideToolbar()"
                     @mouseup="handleSelection"
                     @keyup="handleSelection"
                     @paste.prevent="handlePaste(index, $event)"
@@ -194,56 +196,144 @@
         </template>
     </div>
 
-    {{-- Bubble menu --}}
+    {{-- Block toolbar (Gutenberg-style, appears above the focused block) --}}
+    @php
+        $tbBtn = 'flex items-center justify-center h-8 min-w-8 px-1.5 rounded text-base-content/80 hover:bg-base-200 hover:text-base-content transition';
+    @endphp
     <div
-        x-show="showBubbleMenu && !readOnly"
-        x-ref="bubbleMenu"
-        class="fixed z-[60] flex items-center bg-neutral text-neutral-content rounded-lg shadow-2xl p-1 border border-neutral kompass-fade-in"
-        :style="`top: ${bubblePos.top}px; left: ${bubblePos.left}px; transform: translate(-50%, -120%);`"
-        @click.outside="if (!showLinkPopover) showBubbleMenu = false"
+        x-show="showToolbar && !readOnly"
+        x-ref="blockToolbar"
+        class="fixed z-[60] flex items-center gap-0.5 bg-base-100 text-base-content rounded-md border border-base-300 p-0.5 kompass-fade-in"
+        :style="`top: ${toolbarPos.top}px; left: ${toolbarPos.left}px; transform: translateY(-118%);`"
         style="display: none;"
     >
-        <button type="button" @click="format('bold')" class="p-2 hover:bg-neutral/70 rounded transition" title="{{ __('Bold') }}">
-            <x-tabler-bold class="w-4 h-4 stroke-2" />
-        </button>
-        <button type="button" @click="format('italic')" class="p-2 hover:bg-neutral/70 rounded transition" title="{{ __('Italic') }}">
-            <x-tabler-italic class="w-4 h-4 stroke-2" />
-        </button>
-        <button type="button" @click="format('underline')" class="p-2 hover:bg-neutral/70 rounded transition" title="{{ __('Underline') }}">
-            <x-tabler-underline class="w-4 h-4 stroke-2" />
-        </button>
-        <button type="button" @click="format('strikeThrough')" class="p-2 hover:bg-neutral/70 rounded transition" title="{{ __('Strikethrough') }}">
-            <x-tabler-strikethrough class="w-4 h-4 stroke-2" />
-        </button>
-        <div class="w-px h-4 bg-neutral-content/20 mx-1"></div>
+        {{-- Block-type dropdown --}}
+        <div class="relative" @click.outside="showTypeMenu = false">
+            <button type="button" @mousedown.prevent="showTypeMenu = !showTypeMenu; showFormatsMenu = false; showOptionsMenu = false"
+                class="{{ $tbBtn }}" :class="{ 'bg-base-200 text-base-content': showTypeMenu }" title="{{ __('Block Type') }}">
+                <span class="w-5 h-5 flex items-center justify-center" x-html="(activeType() && activeType().icon) || ''"></span>
+            </button>
+            <div x-show="showTypeMenu" x-transition @mousedown.stop
+                class="absolute z-[80] top-full left-0 mt-1 w-56 bg-base-100 text-base-content border border-base-300 rounded-xl shadow-xl py-2 max-h-60 overflow-y-auto kompass-fade-in"
+                style="display: none;">
+                <template x-for="type in blockTypes" :key="type.id">
+                    <button type="button" @mousedown.prevent="selectBlockType(activeBlockIndex, type.id)"
+                        class="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-base-200 transition"
+                        :class="{ 'bg-primary/10 text-primary': activeType() && activeType().id === type.id }">
+                        <span class="w-7 h-7 flex items-center justify-center rounded border border-base-300 bg-base-200" x-html="type.icon"></span>
+                        <span class="text-xs font-semibold" x-text="type.label"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
 
-        <button type="button" @click="openLinkPopover" class="p-2 hover:bg-neutral/70 rounded transition" title="{{ __('Link') }}">
-            <x-tabler-link class="w-4 h-4 stroke-2" />
+        <div class="w-px h-5 bg-base-300 mx-0.5 self-center"></div>
+
+        {{-- Move up / down (stacked) --}}
+        <div class="flex flex-col items-center justify-center">
+            <button type="button" @mousedown.prevent="moveBlock(activeBlockIndex, -1)"
+                class="flex items-center justify-center w-7 h-4 rounded text-base-content/70 hover:bg-base-200 hover:text-base-content transition" title="{{ __('Move up') }}">
+                <x-tabler-chevron-up class="w-4 h-4 stroke-2" />
+            </button>
+            <button type="button" @mousedown.prevent="moveBlock(activeBlockIndex, 1)"
+                class="flex items-center justify-center w-7 h-4 rounded text-base-content/70 hover:bg-base-200 hover:text-base-content transition" title="{{ __('Move down') }}">
+                <x-tabler-chevron-down class="w-4 h-4 stroke-2" />
+            </button>
+        </div>
+
+        <div class="w-px h-5 bg-base-300 mx-0.5 self-center"></div>
+
+        {{-- Bold / Italic --}}
+        <button type="button" @mousedown.prevent="format('bold')"
+            class="flex items-center justify-center h-8 min-w-8 px-1.5 rounded transition"
+            :class="activeFormats.bold ? 'bg-base-content text-base-100' : 'text-base-content/80 hover:bg-base-200 hover:text-base-content'"
+            title="{{ __('Bold') }}">
+            <x-tabler-bold class="w-5 h-5 stroke-2" />
+        </button>
+        <button type="button" @mousedown.prevent="format('italic')"
+            class="flex items-center justify-center h-8 min-w-8 px-1.5 rounded transition"
+            :class="activeFormats.italic ? 'bg-base-content text-base-100' : 'text-base-content/80 hover:bg-base-200 hover:text-base-content'"
+            title="{{ __('Italic') }}">
+            <x-tabler-italic class="w-5 h-5 stroke-2" />
         </button>
 
-        {{-- Link popover --}}
-        <div
-            x-show="showLinkPopover"
-            x-transition
-            class="absolute top-full left-0 mt-2 w-72 bg-base-100 rounded-xl shadow-2xl border border-base-300 p-4 text-base-content kompass-fade-in"
-            @click.outside="showLinkPopover = false"
-            style="display: none;"
-        >
-            <div class="space-y-3">
-                <div>
-                    <label class="text-[10px] font-bold text-base-content/60 uppercase">{{ __('Link (URL)') }}</label>
-                    <input x-model="linkData.url" type="text" placeholder="https://..." class="w-full mt-1 px-3 py-1.5 bg-base-200 border border-base-300 rounded-md text-sm focus:ring-2 focus:ring-base-300 focus:outline-none">
+        {{-- Link --}}
+        <div class="relative" @click.outside="showLinkPopover = false">
+            <button type="button" @mousedown.prevent="openLinkPopover()" class="{{ $tbBtn }}" :class="{ 'bg-base-200 text-base-content': showLinkPopover }" title="{{ __('Link') }}">
+                <x-tabler-link class="w-5 h-5 stroke-2" />
+            </button>
+
+            {{-- Link popover --}}
+            <div
+                x-show="showLinkPopover"
+                x-transition
+                @mousedown.stop
+                class="absolute top-full left-0 mt-2 w-72 bg-base-100 rounded-xl shadow-2xl border border-base-300 p-4 text-base-content kompass-fade-in"
+                style="display: none;"
+            >
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-[10px] font-bold text-base-content/60 uppercase">{{ __('Link (URL)') }}</label>
+                        <input x-model="linkData.url" type="text" placeholder="https://..." class="w-full mt-1 px-3 py-1.5 bg-base-200 border border-base-300 rounded-md text-sm focus:ring-2 focus:ring-base-300 focus:outline-none">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input x-model="linkData.newTab" type="checkbox" id="kompass-newtab" class="rounded border-base-300 text-base-content focus:ring-primary">
+                        <label for="kompass-newtab" class="text-xs text-base-content/70">{{ __('Open in a new tab?') }}</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            @click="applyLink"
+                            class="flex-1 py-2 bg-primary text-primary-content rounded-lg text-sm font-semibold hover:bg-primary/90 transition"
+                        >
+                            {{ __('Apply Now') }}
+                        </button>
+                        <button
+                            type="button"
+                            x-show="linkData.editing"
+                            @click="removeLink"
+                            class="py-2 px-3 bg-base-200 text-error rounded-lg text-sm font-semibold hover:bg-error/10 transition"
+                            title="{{ __('Remove link') }}"
+                        >
+                            <x-tabler-unlink class="w-4 h-4 stroke-2" />
+                        </button>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <input x-model="linkData.newTab" type="checkbox" id="kompass-newtab" class="rounded border-base-300 text-base-content focus:ring-primary">
-                    <label for="kompass-newtab" class="text-xs text-base-content/70">{{ __('Open in a new tab?') }}</label>
-                </div>
-                <button
-                    type="button"
-                    @click="applyLink"
-                    class="w-full py-2 bg-neutral text-neutral-content rounded-lg text-sm font-semibold hover:bg-neutral/80 transition"
-                >
-                    {{ __('Apply Now') }}
+            </div>
+        </div>
+
+        {{-- More formats --}}
+        <div class="relative" @click.outside="showFormatsMenu = false">
+            <button type="button" @mousedown.prevent="showFormatsMenu = !showFormatsMenu; showTypeMenu = false; showOptionsMenu = false" class="{{ $tbBtn }} px-1" :class="{ 'bg-base-200 text-base-content': showFormatsMenu }" title="{{ __('More') }}">
+                <x-tabler-chevron-down class="w-4 h-4 stroke-2" />
+            </button>
+            <div x-show="showFormatsMenu" x-transition @mousedown.stop
+                class="absolute z-[80] top-full right-0 mt-1.5 w-44 bg-base-100 text-base-content border border-base-300 rounded-md shadow-xl py-1 kompass-fade-in"
+                style="display: none;">
+                <button type="button" @mousedown.prevent="format('underline'); showFormatsMenu = false" class="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-base-200 transition text-xs font-medium" :class="{ 'text-primary': activeFormats.underline }">
+                    <x-tabler-underline class="w-4 h-4 stroke-2" /> {{ __('Underline') }}
+                </button>
+                <button type="button" @mousedown.prevent="format('strikeThrough'); showFormatsMenu = false" class="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-base-200 transition text-xs font-medium" :class="{ 'text-primary': activeFormats.strikeThrough }">
+                    <x-tabler-strikethrough class="w-4 h-4 stroke-2" /> {{ __('Strikethrough') }}
+                </button>
+            </div>
+        </div>
+
+        <div class="w-px h-5 bg-base-300 mx-0.5 self-center"></div>
+
+        {{-- Options --}}
+        <div class="relative" @click.outside="showOptionsMenu = false">
+            <button type="button" @mousedown.prevent="showOptionsMenu = !showOptionsMenu; showTypeMenu = false; showFormatsMenu = false" class="{{ $tbBtn }}" :class="{ 'bg-base-200 text-base-content': showOptionsMenu }" title="{{ __('Options') }}">
+                <x-tabler-dots-vertical class="w-5 h-5 stroke-2" />
+            </button>
+            <div x-show="showOptionsMenu" x-transition @mousedown.stop
+                class="absolute z-[80] top-full right-0 mt-1.5 w-44 bg-base-100 text-base-content border border-base-300 rounded-md shadow-xl py-1 kompass-fade-in"
+                style="display: none;">
+                <button type="button" @click="duplicateBlock(activeBlockIndex)" class="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-base-200 transition text-xs font-medium">
+                    <x-tabler-copy class="w-4 h-4 stroke-2" /> {{ __('Duplicate') }}
+                </button>
+                <button type="button" @click="deleteBlock(activeBlockIndex)" class="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-base-200 transition text-xs font-medium text-error">
+                    <x-tabler-trash class="w-4 h-4 stroke-2" /> {{ __('Delete') }}
                 </button>
             </div>
         </div>
@@ -318,9 +408,18 @@
             bubblePos: { top: 0, left: 0 },
             savedRange: null,
 
+            // Block toolbar (Gutenberg-style, block-focus driven)
+            activeBlockIndex: null,
+            toolbarPos: { top: 0, left: 0 },
+            showToolbar: false,
+            showTypeMenu: false,
+            showFormatsMenu: false,
+            showOptionsMenu: false,
+            activeFormats: { bold: false, italic: false, underline: false, strikeThrough: false },
+
             // Link popover
             showLinkPopover: false,
-            linkData: { text: '', url: '', newTab: true },
+            linkData: { text: '', url: '', newTab: true, editing: false },
 
             // Drag & drop
             dragIndex: null,
@@ -360,6 +459,10 @@
                 const block = this.blocks.splice(index, 1)[0];
                 this.blocks.splice(newIndex, 0, block);
                 this.showTuneMenu = false;
+                if (this.activeBlockIndex === index) {
+                    this.activeBlockIndex = newIndex;
+                    this.$nextTick(() => this.positionToolbar(newIndex));
+                }
             },
 
             deleteBlock(index) {
@@ -372,6 +475,68 @@
                     if (el) el.innerHTML = '';
                 }
                 this.showTuneMenu = false;
+                this.hideToolbar();
+            },
+
+            // --- Block toolbar (Gutenberg-style) -------------------------------
+            onBlockFocus(index) {
+                this.activeBlockIndex = index;
+                this.positionToolbar(index);
+                this.showToolbar = true;
+                this.syncActiveFormats();
+            },
+
+            syncActiveFormats() {
+                try {
+                    this.activeFormats = {
+                        bold: document.queryCommandState('bold'),
+                        italic: document.queryCommandState('italic'),
+                        underline: document.queryCommandState('underline'),
+                        strikeThrough: document.queryCommandState('strikeThrough'),
+                    };
+                } catch (e) {
+                    // queryCommandState may throw if no editable context is active
+                }
+            },
+
+            positionToolbar(index) {
+                const block = this.blocks[index];
+                if (!block) return;
+                const el = document.getElementById(block.id);
+                if (!el) return;
+                const rect = el.getBoundingClientRect();
+                this.toolbarPos = {
+                    top: rect.top + window.scrollY,
+                    left: rect.left + window.scrollX,
+                };
+            },
+
+            hideToolbar() {
+                this.showToolbar = false;
+                this.showTypeMenu = false;
+                this.showFormatsMenu = false;
+                this.showOptionsMenu = false;
+                this.showLinkPopover = false;
+            },
+
+            activeType() {
+                if (this.activeBlockIndex === null) return null;
+                const block = this.blocks[this.activeBlockIndex];
+                if (!block) return null;
+                return this.blockTypes.find(t => t.id === block.type) || null;
+            },
+
+            duplicateBlock(index) {
+                const source = this.blocks[index];
+                if (!source) return;
+                const el = document.getElementById(source.id);
+                const content = el ? el.innerHTML : source.content;
+                this.blocks.splice(index + 1, 0, {
+                    id: this.newBlockId(),
+                    type: source.type,
+                    content: content,
+                });
+                this.showOptionsMenu = false;
             },
 
             dragStart(index, event) {
@@ -420,9 +585,11 @@
                     this.blocks[index].content = currentHtml;
                 }
                 this.showDropdown = false;
+                this.showTypeMenu = false;
                 this.$nextTick(() => {
                     const el2 = document.getElementById(this.blocks[index].id);
                     if (el2) this.focusAndSetCaret(el2);
+                    this.positionToolbar(index);
                 });
             },
 
@@ -526,6 +693,7 @@
             },
 
             handleSelection() {
+                this.syncActiveFormats();
                 const selection = window.getSelection();
                 if (selection.rangeCount > 0 && !selection.isCollapsed) {
                     const range = selection.getRangeAt(0);
@@ -547,6 +715,7 @@
             format(command) {
                 document.execCommand(command, false, null);
                 this.syncCurrentBlock();
+                this.syncActiveFormats();
             },
 
             changeBlockType(type) {
@@ -579,6 +748,7 @@
                         this.linkData.text = existingLink.innerText;
                         this.linkData.url = existingLink.getAttribute('href');
                         this.linkData.newTab = existingLink.getAttribute('target') === '_blank';
+                        this.linkData.editing = true;
 
                         const newRange = document.createRange();
                         newRange.selectNode(existingLink);
@@ -588,13 +758,18 @@
                     } else {
                         this.linkData.text = selection.toString();
                         this.linkData.url = '';
+                        this.linkData.editing = false;
                     }
                     this.showLinkPopover = true;
                 }
             },
 
             applyLink() {
-                if (!this.linkData.url) return;
+                if (!this.linkData.url || !this.savedRange) return;
+
+                const block = this.blocks[this.activeBlockIndex];
+                const blockEl = block ? document.getElementById(block.id) : null;
+                if (blockEl) blockEl.focus();
 
                 const selection = window.getSelection();
                 selection.removeAllRanges();
@@ -609,11 +784,41 @@
                 this.savedRange.deleteContents();
                 this.savedRange.insertNode(a);
 
+                // Keep the new link selected so it can be edited/removed again right away.
+                const after = document.createRange();
+                after.selectNodeContents(a);
+                selection.removeAllRanges();
+                selection.addRange(after);
+                this.savedRange = after.cloneRange();
+
                 this.syncCurrentBlock();
                 this.showLinkPopover = false;
-                this.showBubbleMenu = false;
+            },
 
+            removeLink() {
+                if (!this.savedRange) return;
+
+                const block = this.blocks[this.activeBlockIndex];
+                const blockEl = block ? document.getElementById(block.id) : null;
+                if (blockEl) blockEl.focus();
+
+                const selection = window.getSelection();
                 selection.removeAllRanges();
+                selection.addRange(this.savedRange);
+
+                const text = this.savedRange.toString();
+                this.savedRange.deleteContents();
+                const node = document.createTextNode(text);
+                this.savedRange.insertNode(node);
+
+                const after = document.createRange();
+                after.selectNode(node);
+                selection.removeAllRanges();
+                selection.addRange(after);
+                this.savedRange = after.cloneRange();
+
+                this.syncCurrentBlock();
+                this.showLinkPopover = false;
             },
 
             syncCurrentBlock() {

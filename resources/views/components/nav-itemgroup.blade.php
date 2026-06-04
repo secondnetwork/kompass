@@ -12,198 +12,144 @@
     $slider = $itemblocks->slider ?? '';
 @endphp
 
-<div x-data="{
-        popoverOpen: false,
-        popoverPosition: 'bottom',
-        popoverHeight: 0,
-        popoverOffset: 8,
-        popoverHeightCalculate() {
-            this.$refs.popover.classList.add('invisible');
-            this.popoverOpen = true;
-            let that = this;
-            $nextTick(function () {
-                that.popoverHeight = that.$refs.popover.offsetHeight;
-                that.popoverOpen = false;
-                that.$refs.popover.classList.remove('invisible');
-                that.popoverPositionCalculate();
-            });
-        },
-        popoverPositionCalculate() {
-            if (window.innerHeight < (this.$refs.popoverButton.getBoundingClientRect().top + this.$refs.popoverButton.offsetHeight + this.popoverOffset + this.popoverHeight)) {
-                this.popoverPosition = 'top';
-            } else {
-                this.popoverPosition = 'bottom';
-            }
-        }
-    }"
-    x-init="
-        window.addEventListener('resize', function(){ popoverPositionCalculate(); });
-        $watch('popoverOpen', function(value){ if(value){ popoverPositionCalculate(); } });
-    "
-    class="relative inline-block">
+<div x-data="{ open: false }" class="relative inline-block">
 
-    <button x-ref="popoverButton"
-        @click="popoverOpen = !popoverOpen"
+    <button type="button" @click="open = true"
         class="flex items-center justify-center size-5 md:size-6 cursor-pointer transition-colors"
-        :class="{ 'text-blue-500': popoverOpen }"
         title="{{ __('Settings') }}">
         <x-tabler-adjustments class="cursor-pointer stroke-current size-5 md:size-6 text-stone-500" />
     </button>
 
-    <div x-ref="popover"
-        x-show="popoverOpen"
-        x-init="setTimeout(function(){ popoverHeightCalculate(); }, 100);"
-        @click.away="popoverOpen = false"
-        @keydown.escape.window="popoverOpen = false"
-        :class="{
-            'top-0 mt-5': popoverPosition == 'bottom',
-            'bottom-0 mb-10': popoverPosition == 'top'
-        }"
-        class="absolute -right-3 z-50 w-96"
-        x-cloak>
+    <x-kompass::offcanvas :w="'w-1/3'">
+        <x-slot name="button">
+            <h4 class="font-bold text-lg">{{ __('Block Settings') }}</h4>
+        </x-slot>
 
-        <div x-show="popoverOpen"
-            x-transition:enter="transition ease-out duration-150"
-            x-transition:enter-start="opacity-0 translate-y-1"
-            x-transition:enter-end="opacity-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-100"
-            x-transition:leave-start="opacity-100 translate-y-0"
-            x-transition:leave-end="opacity-0 translate-y-1"
-            class="bg-base-100 border border-neutral-200 rounded-md shadow-md p-3 flex flex-col gap-1">
-
-            {{-- Arrow --}}
-            <div x-show="popoverPosition == 'bottom'" class="absolute top-0 right-3 inline-block w-5 -mt-2.5 overflow-hidden">
-                <div class="w-2.5 h-2.5 origin-bottom-left rotate-45 bg-base-100 border-t border-l border-neutral-200 rounded-sm"></div>
-            </div>
-            <div x-show="popoverPosition == 'top'" class="absolute bottom-0 right-3 inline-block w-5 mb-px overflow-hidden">
-                <div class="w-2.5 h-2.5 origin-top-left -rotate-45 bg-base-100 border-b border-l border-neutral-200 rounded-sm"></div>
-            </div>
-
-            {{-- Header --}}
-            <div class="flex items-center justify-between border-b border-neutral-100 pb-1 mb-1">
-                <span class="text-xs font-semibold text-neutral-500 uppercase tracking-wide">{{ __('Settings') }}</span>
-                <button @click="popoverOpen = false" class="text-neutral-400 hover:text-neutral-600 transition-colors">
-                    <x-tabler-x class="size-4" />
-                </button>
-            </div>
+        <x-slot name="body">
+            <x-kompass::block-settings-header :itemblocks="$itemblocks" />
 
             @if ($itemblocks->subgroup == null)
                 {{-- Layout --}}
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Layout') }}</span>
-                    <div class="flex items-center gap-1">
-                        <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'content' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                            wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
-                            <x-tabler-container class="{{ $layout == 'content' ? 'stroke-blue-500' : '' }}" />
-                        </span>
-                        <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'popout' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                            wire:click="saveset({{ $itemblocks->id }},'layout', 'popout')">
-                            <x-tabler-carousel-vertical class="{{ $layout == 'popout' ? 'stroke-blue-500' : '' }}" />
-                        </span>
-                        <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'fullpage' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                            wire:click="saveset({{ $itemblocks->id }},'layout', 'fullpage')">
-                            <x-tabler-arrow-autofit-width class="{{ $layout == 'fullpage' ? 'stroke-blue-500' : '' }}" />
-                        </span>
-                    </div>
-                </div>
-
-                @if ($type == 'group')
-                    {{-- Align --}}
-                    @php
-                        $alignOptions = [
-                            '' => ['icon' => 'tabler-layout-align-top', 'label' => 'Top'],
-                            'items-center' => ['icon' => 'tabler-layout-align-middle', 'label' => 'Middle'],
-                            'items-end' => ['icon' => 'tabler-layout-align-bottom', 'label' => 'Bottom'],
-                        ];
-                        $currentAlign = $itemblocks->getMeta('align') ?? '';
-                    @endphp
+                <x-kompass::settings-section :title="__('Layout')">
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Align') }}</span>
+                        <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('Width') }}</span>
                         <div class="flex items-center gap-1">
-                            @foreach ($alignOptions as $alignValue => $alignData)
-                                <span class="cursor-pointer rounded p-0.5 transition-colors {{ $currentAlign == $alignValue ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                                    wire:click="saveset({{ $itemblocks->id }},'align', '{{ $alignValue }}')">
-                                    @svg($alignData['icon'], $currentAlign == $alignValue ? 'stroke-blue-500' : '')
+                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'content' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                wire:click="saveset({{ $itemblocks->id }},'layout', 'content')">
+                                <x-tabler-container class="{{ $layout == 'content' ? 'stroke-blue-500' : '' }}" />
+                            </span>
+                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'popout' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                wire:click="saveset({{ $itemblocks->id }},'layout', 'popout')">
+                                <x-tabler-carousel-vertical class="{{ $layout == 'popout' ? 'stroke-blue-500' : '' }}" />
+                            </span>
+                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ $layout == 'fullpage' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                wire:click="saveset({{ $itemblocks->id }},'layout', 'fullpage')">
+                                <x-tabler-arrow-autofit-width class="{{ $layout == 'fullpage' ? 'stroke-blue-500' : '' }}" />
+                            </span>
+                        </div>
+                    </div>
+
+                    @if ($type == 'group')
+                        @php
+                            $alignOptions = [
+                                '' => ['icon' => 'tabler-layout-align-top', 'label' => 'Top'],
+                                'items-center' => ['icon' => 'tabler-layout-align-middle', 'label' => 'Middle'],
+                                'items-end' => ['icon' => 'tabler-layout-align-bottom', 'label' => 'Bottom'],
+                            ];
+                            $currentAlign = $itemblocks->getMeta('align') ?? '';
+                            $currentOrder = $itemblocks->getMeta('order') ?? '';
+                        @endphp
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('Align') }}</span>
+                            <div class="flex items-center gap-1">
+                                @foreach ($alignOptions as $alignValue => $alignData)
+                                    <span class="cursor-pointer rounded p-0.5 transition-colors {{ $currentAlign == $alignValue ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                        wire:click="saveset({{ $itemblocks->id }},'align', '{{ $alignValue }}')">
+                                        @svg($alignData['icon'], $currentAlign == $alignValue ? 'stroke-blue-500' : '')
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('Mobile reverse') }}</span>
+                            <div class="flex items-center gap-1">
+                                <span class="cursor-pointer rounded p-0.5 transition-colors {{ empty($currentOrder) ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                    wire:click="saveset({{ $itemblocks->id }},'order', '')">
+                                    @svg('tabler-layout-off', empty($currentOrder) ? 'stroke-blue-500' : '')
                                 </span>
-                            @endforeach
+                                <span class="cursor-pointer rounded p-0.5 transition-colors {{ $currentOrder == 'reverse' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                    wire:click="saveset({{ $itemblocks->id }},'order', 'reverse')">
+                                    @svg('tabler-reorder', $currentOrder == 'reverse' ? 'stroke-blue-500' : '')
+                                </span>
+                            </div>
                         </div>
-                    </div>
-
-                    {{-- Mobile Layout --}}
-                    @php $currentOrder = $itemblocks->getMeta('order') ?? ''; @endphp
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Mobile reverse') }}</span>
-                        <div class="flex items-center gap-1">
-                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ empty($currentOrder) ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                                wire:click="saveset({{ $itemblocks->id }},'order', '')">
-                                @svg('tabler-layout-off', empty($currentOrder) ? 'stroke-blue-500' : '')
-                            </span>
-                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ $currentOrder == 'reverse' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                                wire:click="saveset({{ $itemblocks->id }},'order', 'reverse')">
-                                @svg('tabler-reorder', $currentOrder == 'reverse' ? 'stroke-blue-500' : '')
-                            </span>
-                        </div>
-                    </div>
-                @endif
+                    @endif
+                </x-kompass::settings-section>
             @endif
 
             @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
-                {{-- Layout Grid --}}
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Layout Grid') }}</span>
+                {{-- Grid --}}
+                <x-kompass::settings-section :title="__('Layout Grid')">
                     <div class="flex items-center gap-1">
-                        @foreach([1, 2, 3, 4, 5] as $gridNumber)
+                        @foreach ([1, 2, 3, 4, 5] as $gridNumber)
                             <span class="cursor-pointer rounded p-0.5 transition-colors {{ $itemblocks->layoutgrid == $gridNumber ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                                 wire:click="updateLayoutGrid({{ $itemblocks->id }}, {{ $gridNumber }})">
-                                @svg('tabler-square-number-' . $gridNumber, $itemblocks->layoutgrid == $gridNumber ? 'stroke-blue-500' : '')
+                                @svg('tabler-square-number-'.$gridNumber, $itemblocks->layoutgrid == $gridNumber ? 'stroke-blue-500' : '')
                             </span>
                         @endforeach
                     </div>
-                </div>
-
-                {{-- Classname --}}
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Classname') }}</span>
-                    <livewire:editable-meta label="" meta-key="css-classname" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'css-classname-' . $itemblocks->id" />
-                </div>
-
-                {{-- ID --}}
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('ID') }}</span>
-                    <livewire:editable-meta label="" meta-key="id-anchor" :itemblocks="$itemblocks" wire-action="updateMeta" :key="'id-anchor-' . $itemblocks->id" />
-                </div>
+                </x-kompass::settings-section>
             @endif
 
             @if ($itemblocks->type == 'wysiwyg')
                 {{-- Alignment --}}
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Alignment') }}</span>
+                <x-kompass::settings-section :title="__('Alignment')">
                     <div class="flex items-center gap-1">
-                        @foreach(['align-left' => 'tabler-align-left', 'align-center' => 'tabler-align-center', 'align-right' => 'tabler-align-right'] as $alignValue => $iconName)
+                        @foreach (['align-left' => 'tabler-align-left', 'align-center' => 'tabler-align-center', 'align-right' => 'tabler-align-right'] as $alignValue => $iconName)
                             <span class="cursor-pointer rounded p-0.5 transition-colors {{ $alignment == $alignValue ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
                                 wire:click="saveset({{ $itemblocks->id }},'alignment', '{{ $alignValue }}')">
                                 @svg($iconName, $alignment == $alignValue ? 'stroke-blue-500' : '')
                             </span>
                         @endforeach
                     </div>
-                </div>
+                </x-kompass::settings-section>
             @elseif ($itemblocks->type == 'gallery')
-                {{-- Slider --}}
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-neutral-500 w-24 shrink-0">{{ __('Slider') }}</span>
-                    <div class="flex items-center gap-1">
-                        <span class="cursor-pointer rounded p-0.5 transition-colors {{ $slider == '' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                            wire:click="saveset({{ $itemblocks->id }},'slider', '')">
-                            @svg('tabler-layout-dashboard', 'rotate-90 ' . ($slider == '' ? 'stroke-blue-500' : ''))
-                        </span>
-                        <span class="cursor-pointer rounded p-0.5 transition-colors {{ $slider == 'true' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
-                            wire:click="saveset({{ $itemblocks->id }},'slider', 'true')">
-                            @svg('tabler-carousel-horizontal', $slider == 'true' ? 'stroke-blue-500' : '')
-                        </span>
+                {{-- Gallery --}}
+                <x-kompass::settings-section :title="__('Gallery')">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('Slider') }}</span>
+                        <div class="flex items-center gap-1">
+                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ $slider == '' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                wire:click="saveset({{ $itemblocks->id }},'slider', '')">
+                                @svg('tabler-layout-dashboard', 'rotate-90 '.($slider == '' ? 'stroke-blue-500' : ''))
+                            </span>
+                            <span class="cursor-pointer rounded p-0.5 transition-colors {{ $slider == 'true' ? 'bg-blue-50' : 'hover:bg-neutral-100' }}"
+                                wire:click="saveset({{ $itemblocks->id }},'slider', 'true')">
+                                @svg('tabler-carousel-horizontal', $slider == 'true' ? 'stroke-blue-500' : '')
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </x-kompass::settings-section>
             @endif
 
-        </div>
-    </div>
+            {{-- Color --}}
+            <x-kompass::settings-section :title="__('Block Color')">
+                <x-kompass::block-color :itemblocks="$itemblocks" />
+            </x-kompass::settings-section>
+
+            @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
+                {{-- Advanced --}}
+                <x-kompass::settings-section :title="__('Advanced')">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('Classname') }}</span>
+                        <x-kompass::block-meta-input :itemblocks="$itemblocks" meta-key="css-classname" placeholder="my-class" />
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('ID') }}</span>
+                        <x-kompass::block-meta-input :itemblocks="$itemblocks" meta-key="id-anchor" placeholder="section-id" />
+                    </div>
+                </x-kompass::settings-section>
+            @endif
+        </x-slot>
+    </x-kompass::offcanvas>
 </div>

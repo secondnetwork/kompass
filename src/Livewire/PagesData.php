@@ -3,9 +3,9 @@
 namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Encoders\JpegEncoder;
-use Secondnetwork\Kompass\Models\Meta;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -16,6 +16,7 @@ use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Menuitem;
+use Secondnetwork\Kompass\Models\Meta;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Setting;
 
@@ -230,9 +231,7 @@ class PagesData extends Component
     }
 
     #[On('component:refresh')]
-    public function handleRefresh(): void
-    {
-    }
+    public function handleRefresh(): void {}
 
     public function selectitem($action, $itemId, $fieldOrPageName = null, $blockgroupId = null)
     {
@@ -259,7 +258,7 @@ class PagesData extends Component
         $this->dispatch('getIdBlock', $blockgroupId);
     }
 
-    #[on('FormMedia')]
+    #[On('FormMedia')]
     public function FormMedia()
     {
         $this->FormMedia = true;
@@ -289,8 +288,8 @@ class PagesData extends Component
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
                     $manager = app('image');
-                    $image = method_exists($manager, 'decode') 
-                        ? $manager->decode($thumbnailContents) 
+                    $image = method_exists($manager, 'decode')
+                        ? $manager->decode($thumbnailContents)
                         : $manager->read($thumbnailContents);
 
                     $encoded = $image->encode(new JpegEncoder(quality: 60));
@@ -359,7 +358,7 @@ class PagesData extends Component
         $this->dispatch('status');
     }
 
-    #[on('refreshmedia')]
+    #[On('refreshmedia')]
     public function resetPageComponent()
     {
 
@@ -435,7 +434,7 @@ class PagesData extends Component
             foreach ($svgPaths as $path) {
                 if (is_dir($path)) {
                     $icons = $icons->merge(
-                        collect(\Illuminate\Support\Facades\File::files($path))
+                        collect(File::files($path))
                             ->map(fn ($file) => str_replace('.svg', '', $file->getFilename()))
                     );
                 }
@@ -481,10 +480,12 @@ class PagesData extends Component
         $this->iconPickerFieldId = null;
     }
 
-    public function savename($blockId)
+    public function savename($blockId, $name = null)
     {
-        if ($this->newName) {
-            Block::whereId($blockId)->update(['name' => $this->newName]);
+        $value = $name ?? $this->newName;
+
+        if ($value) {
+            Block::whereId($blockId)->update(['name' => $value]);
         }
         $this->resetPageComponent();
     }
@@ -505,6 +506,11 @@ class PagesData extends Component
     public function setnewName($value)
     {
         $this->newName = $value;
+    }
+
+    public function saveBlockMeta($blockId, $metaKey, $value): void
+    {
+        $this->updateBlockMeta((int) $blockId, $metaKey, $value);
     }
 
     private function updateBlockMeta(int $id, string $metaKey, $metaValue): void
@@ -540,6 +546,7 @@ class PagesData extends Component
             'slider' => 'slider',
             'order' => 'order',
             'align' => 'align',
+            'color' => 'color',
         ];
 
         if (isset($metaKeyMap[$set])) {
@@ -648,7 +655,7 @@ class PagesData extends Component
     public function delete() // delete block
     {
         Datafield::where('block_id', $this->getId)->delete();
-        block::destroy($this->getId);
+        Block::destroy($this->getId);
         $this->FormDelete = false;
         $this->resetPageComponent();
     }

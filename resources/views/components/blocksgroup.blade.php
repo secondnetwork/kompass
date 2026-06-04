@@ -18,9 +18,27 @@
         'gallery' => ['rail' => 'border-l-blue-500', 'badge' => 'bg-blue-500', 'bar' => 'bg-blue-500/10', 'accent' => 'text-blue-600'],
         default => ['rail' => 'border-l-slate-400', 'badge' => 'bg-slate-500', 'bar' => 'bg-base-200', 'accent' => 'text-slate-500'],
     };
+
+    // Per-block custom colour (set via the block settings offcanvas). When present it
+    // overrides the type-based palette above via inline styles (a custom hex can't be a Tailwind class).
+    $customColor = $itemblocks->getMeta('color') ?: null;
+    $railClass = $customColor ? '' : $style['rail'];
+    $barClass = $customColor ? '' : $style['bar'];
+    $accentClass = $customColor ? '' : $style['accent'];
+    $railStyle = $customColor ? "border-left-color: {$customColor};" : '';
+    $accentStyle = $customColor ? "color: {$customColor};" : '';
+
+    $headerStyle = '';
+    if ($customColor) {
+        $headerStyle .= "background-color: color-mix(in srgb, {$customColor} 14%, transparent);";
+    }
+    if ($itemblocks->status !== 'published') {
+        $headerStyle .= 'background-image: repeating-linear-gradient(315deg, transparent 0 8px, color-mix(in oklch, var(--color-base-content) 15%, transparent) 8px 10px);';
+    }
 @endphp
 
-<div class="{{ $class }} border-l-4 {{ $style['rail'] }} @if ($itemblocks->subgroup) group-block @endif" :class="'{{ $itemblocks->status }}' == 'published' ? 'opacity-100 ':'opacity-70 border-base-300 shadow-inner'"
+<div class="{{ $class }} border-l-4 {{ $railClass }} @if ($itemblocks->subgroup) group-block @endif" :class="'{{ $itemblocks->status }}' == 'published' ? ' ':' border-base-300 shadow-inner'"
+    @if ($railStyle) style="{{ $railStyle }}" @endif
 
     @if ($itemblocks->subgroup) wire:sort:item="{{ $itemblocks->id }}" wire:key="group-{{ $itemblocks->id }}"
     @else wire:key="group-{{ $itemblocks->id }}" @endif
@@ -28,8 +46,8 @@
     @expand-all-blocks.window="expanded = true"
     @collapse-all-blocks.window="expanded = false">
 
-    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4 {{ $style['bar'] }}"
-        @if ($itemblocks->status !== 'published') style="background-image: repeating-linear-gradient(315deg, transparent 0 8px, color-mix(in oklch, var(--color-base-content) 15%, transparent) 8px 10px);" @endif>
+    <div-nav-action class="@container flex items-center justify-between border-b border-base-300 px-4 {{ $barClass }}"
+        @if ($headerStyle) style="{{ $headerStyle }}" @endif>
 
         {{-- Left: drag + icon + name --}}
         <span class="flex items-center py-2 min-w-0 flex-1 overflow-hidden">
@@ -39,13 +57,15 @@
 
             @if ($hasChildren)
                 <button type="button" @click="expanded = !expanded"
-                    class="shrink-0 mr-1 {{ $style['accent'] }} transition-transform duration-200"
+                    class="shrink-0 mr-1 {{ $accentClass }} transition-transform duration-200"
+                    @if ($accentStyle) style="{{ $accentStyle }}" @endif
                     :class="expanded ? 'rotate-90' : ''" title="{{ __('Expand / collapse') }}">
                     <x-tabler-chevron-right class="size-5" />
                 </button>
             @endif
 
-            <span class="shrink-0 mr-2 flex items-center justify-center size-7 rounded-md {{ $style['accent'] }}">
+            <span class="shrink-0 mr-2 flex items-center justify-center size-7 rounded-md {{ $accentClass }}"
+                @if ($accentStyle) style="{{ $accentStyle }}" @endif>
                 @switch($itemblocks->type)
                     @case('group')
                         <x-tabler-template class="stroke-current size-6" />
@@ -223,7 +243,8 @@
 
     @if ($isContainer && $hasChildren)
         {{-- Layout/Accordion container with children: the only droppable target --}}
-        <div x-show="expanded" x-collapse class="border-l-2 {{ $style['rail'] }} bg-base-300/40 rounded-b-md p-1.5">
+        <div x-show="expanded" x-collapse class="border-l-2 {{ $railClass }} bg-base-300/40 rounded-b-md p-1.5"
+            @if ($railStyle) style="{{ $railStyle }}" @endif>
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
                 class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
                 <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
@@ -231,7 +252,8 @@
         </div>
     @elseif ($isContainer)
         {{-- Empty container: always open (no collapse toggle) so it stays a drop target; expands only while dragging --}}
-        <div class="border-l-2 {{ $style['rail'] }} rounded-b-md"
+        <div class="border-l-2 {{ $railClass }} rounded-b-md"
+            @if ($railStyle) style="{{ $railStyle }}" @endif
             :class="dragging ? 'p-1.5' : ''">
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
                 class="relative grid grid-cols-{{ $itemblocks->layoutgrid }} transition-[min-height] duration-200">
