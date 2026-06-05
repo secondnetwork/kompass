@@ -46,8 +46,12 @@
 
 
     <div class="flex flex-col">
-        <div class=" border-base-300 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-            
+        <div class="w-full border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
+
+            <div class="flex items-center gap-2 min-w-0">
+                <h4 class="text-lg font-bold text-base-content truncate">{{ __('Menus') }}</h4>
+            </div>
+
             <div class="flex justify-end gap-4 items-center">
                 @if (setting('global.multilingual'))
                 <div class="w-44">
@@ -62,6 +66,8 @@
           </div>
 
         </div>
+
+        <div class="divider"></div>
 
         <div class=" align-middle inline-block min-w-full ">
             <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
@@ -110,14 +116,15 @@
                                             <td class="px-4 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
                                                 @if ($column == 'name')
                                                     <div x-data="click_to_edit()" class="w-11/12 flex items-center gap-2">
-                                                        <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center select-none cursor-pointer" x-on:keydown.escape="isEditing = false">
+                                                        <a @click.prevent @click="toggleEditingState" x-show="!isEditing" class="flex items-center gap-2 select-none cursor-pointer group" x-on:keydown.escape="isEditing = false">
                                                             <span class="text-sm font-semibold">{{  $menu->name }}</span>
+                                                            <x-tabler-pencil class="shrink-0 size-3.5 text-base-content/0 group-hover:text-base-content/40 transition-colors" />
                                                         </a>
-                                                        
-                                                        <div x-show=isEditing class="flex items-center" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->name }}'}">
+
+                                                        <div x-show=isEditing x-cloak class="flex items-center gap-1" x-data="{id: '{{ $menu->id }}', name: '{{ $menu->name }}'}">
                                                             <input
                                                                 type="text"
-                                                                class="border border-gray-400 px-1 py-1 text-sm font-semibold"                 
+                                                                class="rounded-md border border-base-300 bg-base-100 px-2 py-1 text-sm font-semibold focus:outline-none focus:border-primary"
                                                                 x-model="name"
                                                                 wire:model.blur="newName" x-ref="input"
                                                                 x-on:keydown.enter="isEditing = false"
@@ -126,10 +133,10 @@
                                                                 wire:keydown.enter="rename({{$menu->id }})"
                                                             >
                                                             <span wire:click="rename({{ $menu->id }})" x-on:click="isEditing = false">
-                                                                <x-tabler-square-check class="cursor-pointer stroke-current size-5 md:size-6 text-green-600" />
+                                                                <x-tabler-square-check class="cursor-pointer size-6 text-green-600" />
                                                             </span>
                                                             <span x-on:click="isEditing = false">
-                                                                <x-tabler-square-x class="cursor-pointer stroke-current size-5 md:size-6 text-red-600" />
+                                                                <x-tabler-square-x class="cursor-pointer size-6 text-red-500" />
                                                             </span>
                                                         </div>
                                                     </div>

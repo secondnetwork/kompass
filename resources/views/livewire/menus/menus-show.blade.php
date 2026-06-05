@@ -1,18 +1,23 @@
 <div>
-    <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-4">
-            
-            <div x-data="click_to_edit('renameMenu')">
+    <div class="flex items-center justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3 min-w-0">
+            <a wire:navigate href="/admin/menus"
+                class="flex items-center justify-center size-9 rounded-lg border border-base-300 text-base-content/60 hover:bg-base-200 transition-colors shrink-0"
+                title="{{ __('Back') }}">
+                <x-tabler-arrow-left class="size-5" />
+            </a>
+
+            <div x-data="click_to_edit('renameMenu')" class="min-w-0">
                 <a @click.prevent @click="toggleEditingState" x-show="!isEditing"
-                    class="flex items-center gap-2 select-none cursor-pointer">
-                    <h4 class="text-gray-600 font-bold">{{ $menu->name }}</h4>
-                    <x-tabler-edit class="cursor-pointer stroke-current text-gray-400 hover:text-blue-500" />
+                    class="flex items-center gap-2 select-none cursor-pointer group min-w-0">
+                    <h4 class="text-lg font-bold text-base-content truncate">{{ $menu->name }}</h4>
+                    <x-tabler-pencil class="shrink-0 size-4 text-base-content/0 group-hover:text-base-content/40 transition-colors" />
                 </a>
                 <div x-show="isEditing" class="flex items-center" x-cloak>
-                    <x-kompass::form.input type="text" wire:model.live="menuName" x-ref="input" 
-                        class="text-gray-600 font-bold border-0 border-b-2 border-blue-500 focus:ring-0 px-0 py-0 bg-transparent w-auto"
+                    <x-kompass::form.input type="text" wire:model.live="menuName" x-ref="input"
+                        class="text-lg font-bold border-0 border-b-2 border-primary focus:ring-0 px-0 py-0 bg-transparent w-auto"
                         @keydown.enter="disableEditing"
-                        @keydown.window.escape="disableEditing" 
+                        @keydown.window.escape="disableEditing"
                         @click.away="handleClickAway" />
                 </div>
             </div>
@@ -63,6 +68,8 @@
     <div x-cloak x-data="{ open: @entangle('FormEdit') }">
         <x-kompass::offcanvas :w="'w-2/4'">
             <x-slot name="body">
+
+                <h3 class="text-lg font-bold mb-2">{{ __('Menu Item') }}</h3>
 
                 <x-kompass::form.input type="text" label="{{ __('Title') }}" wire:model="title" />
 
@@ -148,15 +155,13 @@
 
         @forelse ($menuitem as $key => $item)
             <div wire:sort:item="{{ $item->id }}">
-                <x-kompass::menugroup :item="$item" :fields="$menuitem" :key="$key" :class="'itemblock border-blue-400 shadow border-r-4 border-b-2 mt-4'" />
+                <x-kompass::menugroup :item="$item" :fields="$menuitem" :key="$key" />
             </div>
 
         @empty
-            <div
-                class="grid place-content-center border-2 border-dashed border-gray-300 rounded-2xl h-60 text-gray-400">
-
-                {{ __('Click "Add Menu" to create a new link') }}
-
+            <div class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-base-300 rounded-2xl py-16 text-base-content/50">
+                <x-tabler-layout-navbar stroke-width="1.5" class="size-12 text-base-content/30" />
+                <p class="text-sm">{{ __('Click "Add Menu" to create a new link') }}</p>
             </div>
         @endforelse
 

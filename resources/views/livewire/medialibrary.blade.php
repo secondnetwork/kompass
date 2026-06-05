@@ -64,9 +64,9 @@
                             <video controls src="{{ asset($file) }}"></video>
                         @elseif ($type == 'document')
                             <div class="flex items-center justify-center w-full py-16 bg-base-300 rounded-lg">
-                                <x-tabler-file-text stroke-width="1.5" class="w-24 h-24 opacity-40 group-hover:scale-110 transition-transform duration-300" />
+                                <x-tabler-file-text stroke-width="1.5"
+                                    class="w-24 h-24 opacity-40 group-hover:scale-110 transition-transform duration-300" />
                             </div>
-
                         @elseif ($type == 'image')
                             <picture>
                                 <source srcset="{{ imageToAvif($file, 500) }}" type="image/avif">
@@ -89,20 +89,20 @@
                     <x-kompass::form.input wire:model="description" label="{{ __('Description') }}" type="text"
                         class="form-control" />
                     <label>{{ __('Url') }}:</label>
-                    <input disabled value="{{ asset($file) }}" type="text" class="form-control input" />
-                    <div class="flex gap-2 items-end">
-                        <div class="flex-1">
-                            <x-kompass::select wire:model="newFolderLocation" :searchable="false" label="{{ __('Move to Folder') }}"
-                                :options="collect($dirgroup)
-                                    ->map(
-                                        fn($f) => [
-                                            'name' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug,
-                                            'id' => ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug,
-                                        ],
-                                    )
-                                    ->prepend(['name' => __('Base'), 'id' => 'media'])" />
-                        </div>
-                        <button wire:click="moveItem" class="btn btn-primary h-10">{{ __('Move') }}</button>
+                    <div class="flex gap-2 items-stretch" x-data="{ copied: false }">
+                        <button type="button" class="btn btn-square btn-ghost border border-base-300"
+                            title="{{ __('Copy URL') }}"
+                            @click="
+                                    navigator.clipboard.writeText($refs.urlField.value).then(() => {
+                                        copied = true;
+                                        setTimeout(() => copied = false, 1500);
+                                    });
+                                ">
+                            <x-tabler-copy x-show="!copied" class="w-5 h-5" />
+                            <x-tabler-check x-show="copied" x-cloak class="w-5 h-5 text-success" />
+                        </button>
+                        <input disabled value="{{ asset($file) }}" type="text" class="form-control input flex-1"
+                            x-ref="urlField" />
                     </div>
                 </div>
                 <div class="modal-footer mt-4 flex gap-4">
