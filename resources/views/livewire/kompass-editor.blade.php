@@ -160,7 +160,7 @@
                     x-init="$el.innerHTML = block.content"
                     @focus="onBlockFocus(index)"
                     @input="updateBlock(index, $event.target)"
-                    @keydown.enter.prevent="addBlock(index)"
+                    @keydown.enter.prevent="$event.shiftKey ? insertLineBreak(index, $event.target) : addBlock(index)"
                     @keydown.backspace="removeBlock(index, $event)"
                     @keydown.escape="showDropdown = false; hideToolbar()"
                     @mouseup="handleSelection"
@@ -607,33 +607,144 @@
                     return;
                 }
 
-                const newId = this.newBlockId();
                 const newType = (currentBlock.type === 'li' || currentBlock.type === 'oli')
                     ? currentBlock.type
                     : 'p';
 
-                this.blocks.splice(index + 1, 0, { id: newId, type: newType, content: '' });
+                // Split at the caret: text before the caret stays here, text after
+                // moves into the new block (mirrors Notion / Word behaviour).
+                let afterHtml = '';
+                if (el) {
+                    const selection = window.getSelection();
+                    if (selection.rangeCount > 0) {
+                        const range = selection.getRangeAt(0);
+                        if (el.contains(range.startContainer)) {
+                            if (!range.collapsed) {
+                                range.deleteContents();
+                            }
+                            const afterRange = document.createRange();
+                            afterRange.selectNodeContents(el);
+                            afterRange.setStart(range.startContainer, range.startOffset);
+                            const frag = afterRange.extractContents();
+                            const tmp = document.createElement('div');
+                            tmp.appendChild(frag);
+                            afterHtml = tmp.innerHTML;
+                        }
+                    }
+                    // Persist the remaining ("before") content of the current block.
+                    currentBlock.content = el.innerHTML;
+                }
+
+                const newId = this.newBlockId();
+                this.blocks.splice(index + 1, 0, { id: newId, type: newType, content: afterHtml });
 
                 this.$nextTick(() => {
                     const el2 = document.getElementById(newId);
-                    if (el2) el2.focus();
+                    if (el2) this.focusAndSetCaret(el2, true);
                 });
+            },
+
+            // Enter inserts a soft line break (a new line within the SAME block),
+            // not a new block. New blocks are created via the “+” side menu / slash menu.
+            insertLineBreak(index, el) {
+                let ok = false;
+                try {
+                    ok = document.execCommand('insertLineBreak');
+                } catch (e) {
+                    ok = false;
+                }
+
+                if (!ok) {
+                    const sel = window.getSelection();
+                    if (sel.rangeCount) {
+                        const range = sel.getRangeAt(0);
+                        range.deleteContents();
+                        const br = document.createElement('br');
+                        range.insertNode(br);
+                        range.setStartAfter(br);
+                        // A trailing <br> is required when the break sits at the very end,
+                        // otherwise the new line is not rendered and the caret can't land there.
+                        if (!br.nextSibling) {
+                            const trailing = document.createElement('br');
+                            range.insertNode(trailing);
+                            range.setStartBefore(trailing);
+                        }
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+
+                this.updateBlock(index, el);
             },
 
             removeBlock(index, event) {
                 this.showDropdown = false;
                 const el = event.target;
-                if (el.innerText.trim() === '' && this.blocks.length > 1) {
-                    event.preventDefault();
-                    const prevBlock = this.blocks[index - 1];
-                    this.blocks.splice(index, 1);
-                    this.$nextTick(() => {
-                        if (prevBlock) {
-                            const elPrev = document.getElementById(prevBlock.id);
-                            if (elPrev) this.focusAndSetCaret(elPrev);
-                        }
+
+                // Nothing to merge into for the very first block → normal backspace.
+                if (index <= 0) {
+                    return;
+                }
+
+                // Detect whether the caret sits at the very start of the block.
+                let atStart = false;
+                const sel = window.getSelection();
+                if (sel.rangeCount) {
+                    const range = sel.getRangeAt(0);
+                    if (range.collapsed) {
+                        const test = document.createRange();
+                        test.selectNodeContents(el);
+                        test.setEnd(range.startContainer, range.startOffset);
+                        atStart = test.toString().length === 0;
+                    }
+                }
+
+                const isEmpty = el.innerText.replace(/[\n\r\u200B]/g, '').trim() === '';
+
+                // Only merge back when empty or when backspacing at the start;
+                // otherwise let the browser delete a single character.
+                if (!atStart && !isEmpty) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const prevBlock = this.blocks[index - 1];
+                const prevEl = document.getElementById(prevBlock.id);
+                if (!prevEl) {
+                    return;
+                }
+
+                // Move this block's content to the end of the previous block,
+                // remembering the first moved node so the caret can land at the junction.
+                let firstMoved = null;
+                if (!isEmpty) {
+                    Array.from(el.childNodes).forEach((node, i) => {
+                        prevEl.appendChild(node);
+                        if (i === 0) firstMoved = node;
                     });
                 }
+                prevBlock.content = prevEl.innerHTML;
+
+                this.blocks.splice(index, 1);
+
+                this.$nextTick(() => {
+                    const elPrev = document.getElementById(prevBlock.id);
+                    if (!elPrev) return;
+                    elPrev.focus();
+                    const range = document.createRange();
+                    const selNew = window.getSelection();
+                    if (firstMoved && elPrev.contains(firstMoved)) {
+                        range.setStartBefore(firstMoved);
+                        range.collapse(true);
+                    } else {
+                        range.selectNodeContents(elPrev);
+                        range.collapse(false);
+                    }
+                    selNew.removeAllRanges();
+                    selNew.addRange(range);
+                });
             },
 
             handlePaste(index, event) {
@@ -830,12 +941,12 @@
                 });
             },
 
-            focusAndSetCaret(el) {
+            focusAndSetCaret(el, toStart = false) {
                 el.focus();
                 const range = document.createRange();
                 const sel = window.getSelection();
                 range.selectNodeContents(el);
-                range.collapse(false);
+                range.collapse(toStart);
                 sel.removeAllRanges();
                 sel.addRange(range);
             },
