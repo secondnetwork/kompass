@@ -143,6 +143,7 @@ if (! function_exists('get_field_as')) {
             'int', 'integer' => (int) $value,
             'bool', 'boolean' => (bool) $value,
             'array' => (array) $value,
+            'object' => is_string($value) ? json_decode($value) : (object) $value,
             default => (string) $value,
         };
     }

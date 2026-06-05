@@ -184,8 +184,13 @@
                 @endif
 
                 <div x-show="asidenav === 'redirection'" x-cloak>
-                    {{-- <livewire:redirect lazy />
-                    <livewire:brokenlink lazy /> --}}
+
+                    <div class="my-3">
+                        <h3 class="text-2xl font-bold">{{ __('Redirects') }}</h3>
+                        <p class="text-base-content/60 text-sm">{{ __('Create and manage URL redirects.') }}</p>
+                    </div>
+                    <livewire:redirection lazy />
+
                 </div>
 
                 <div x-show="asidenav === 'backup'" x-cloak>

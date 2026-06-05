@@ -4,107 +4,107 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Redirect;
 
 class Redirection extends Component
 {
+    use WithPagination;
+
     #[Url]
     public $search = '';
 
-    public $data;
+    public string $orderBy = 'updated_at';
 
-    public $headers;
+    public bool $orderAsc = false;
 
-    public $orderBy = 'updated_at';
+    public bool $FormAdd = false;
 
-    public $orderAsc = false;
+    public ?int $editId = null;
 
-    public $selectedItem;
+    public string $old_url = '';
 
-    public $FormDelete = false;
+    public string $new_url = '';
 
-    public $FormAdd = false;
+    public int $status_code = 301;
 
-    protected function headerTable(): array
+    /**
+     * @return array<string, mixed>
+     */
+    protected function rules(): array
     {
         return [
-            'old url',
-            'new url',
-            'status code',
-            'Updated',
-            '',
+            'old_url' => 'required|string|max:255|unique:redirections,old_url,'.($this->editId ?? 'NULL').',id',
+            'new_url' => 'required|string|max:255',
+            'status_code' => 'required|in:301,302,410',
         ];
     }
 
-    protected function dataTable(): array
-    {
-        return [
-            'old_url',
-            'new_url',
-            'status_code',
-            'updated_at',
-        ];
-    }
-
-    public function selectItem($itemId, $action)
-    {
-        $this->selectedItem = $itemId;
-        if ($action == 'add') {
-            // This will show the modal on the frontend
-            // $this->reset(['name', 'email', 'password', 'role']);
-            $this->FormAdd = true;
-        }
-        if ($action == 'update') {
-        }
-
-        if ($action == 'delete') {
-            $this->FormDelete = true;
-        }
-    }
-
-    public function mount()
-    {
-        $this->headers = $this->headerTable();
-        $this->data = $this->dataTable();
-        // $this->form->fill();
-    }
-
-    // public function selectItem($itemId, $action)
-    // {
-    //     $this->selectedItem = $itemId;
-    //     if ($action == 'add') {
-    //         // This will show the modal on the frontend
-    //         // $this->reset(['name', 'email', 'password', 'role']);
-    //         $this->FormAdd = true;
-    //     }
-    //     if ($action == 'update') {
-    //     }
-
-    //     if ($action == 'delete') {
-    //         $this->FormDelete = true;
-    //     }
-    // }
-
-    private function resultDate()
-    {
-        return Redirect::where('old_url', 'like', '%'.$this->search.'%')
-            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
-            ->paginate(100);
-    }
-
-    public function sortBy($field)
+    public function sortBy($field): void
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;
         }
     }
 
+    public function create(): void
+    {
+        $this->resetValidation();
+        $this->reset(['editId', 'old_url', 'new_url', 'status_code']);
+        $this->status_code = 301;
+        $this->FormAdd = true;
+    }
+
+    public function editItem($id): void
+    {
+        $redirect = Redirect::findOrFail($id);
+
+        $this->resetValidation();
+        $this->editId = $redirect->id;
+        $this->old_url = $redirect->old_url;
+        $this->new_url = $redirect->new_url;
+        $this->status_code = (int) $redirect->status_code;
+        $this->FormAdd = true;
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
+        Redirect::updateOrCreate(
+            ['id' => $this->editId],
+            [
+                'old_url' => $this->old_url,
+                'new_url' => $this->new_url,
+                'status_code' => $this->status_code,
+            ],
+        );
+
+        $this->FormAdd = false;
+        $this->reset(['editId', 'old_url', 'new_url', 'status_code']);
+        $this->resetPage();
+    }
+
+    public function delete($id): void
+    {
+        Redirect::whereKey($id)->delete();
+        $this->resetPage();
+    }
+
+    private function resultDate()
+    {
+        return Redirect::query()
+            ->where('old_url', 'like', '%'.$this->search.'%')
+            ->orWhere('new_url', 'like', '%'.$this->search.'%')
+            ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
+            ->paginate(20);
+    }
+
     public function render()
     {
-
         return view('kompass::livewire.redirect', [
             'pages' => $this->resultDate(),
         ])->layout('kompass::admin.layouts.app');

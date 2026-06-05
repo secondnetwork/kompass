@@ -139,6 +139,11 @@ class Settings extends Component
                 'name' => __('Error-log'),
                 'icon' => 'tabler-alert-triangle',
             ],
+            [
+                'slug' => 'redirection',
+                'name' => __('Redirects'),
+                'icon' => 'tabler-arrow-forward-up',
+            ],
         ];
 
         if (Features::hasActivityLog()) {
