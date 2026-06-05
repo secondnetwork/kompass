@@ -62,6 +62,22 @@
     }
   }
 
+  /* Nested menu items: indent with a single guide line, tighter padding,
+     and no DaisyUI submenu decorations (which caused doubled spacing). */
+  .sidenav .submenu {
+    margin: 0.15rem 0 0.15rem 1.4rem;
+    padding-inline-start: 0;
+    border-inline-start: 1px solid var(--color-base-300);
+
+    &::before {
+      display: none;
+    }
+
+    a {
+      padding: 0.3rem 0.85rem;
+    }
+  }
+
   nav.setting a {
     display: flex;
     align-items: center;
