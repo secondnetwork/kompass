@@ -1,23 +1,25 @@
 <?php
 
-use Livewire\Component;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
-use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Request;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
-use Illuminate\Support\Facades\Request;
-use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\ErrorLog;
 use Secondnetwork\Kompass\Models\Redirect;
-use Secondnetwork\Kompass\Models\Datafield;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 new #[Layout('layouts.main')] class extends Component
 {
     public $post;
 
-    public $blocks;
+    public $blocks = [];
 
     public $blocks_id;
 
@@ -36,26 +38,26 @@ new #[Layout('layouts.main')] class extends Component
             if ($localesData) {
                 $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
             } else {
-                $availableLocales = ['de', 'en', 'tr'];
+                $availableLocales = ['de', 'en'];
             }
-            
+
             $defaultLocale = $availableLocales[0] ?? 'de';
-            
+
             if ($slug === null && $locale !== null) {
-                if (!in_array($locale, $availableLocales)) {
+                if (! in_array($locale, $availableLocales)) {
                     $slug = $locale;
                     $locale = $defaultLocale;
                 }
             }
-            
+
             $land = $locale ?? $defaultLocale;
             app()->setLocale($land);
-            
+
             $this->ResolvePath($slug, $land);
             if ($this->post instanceof Redirect) {
-                return redirect($this->post->to_url, $this->post->status_code);
+                $this->sendRedirect($this->post->new_url, (int) $this->post->status_code);
             }
-            //blockable_type
+            // blockable_type
             $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
             if ($blocks->isNotEmpty()) {
@@ -82,12 +84,12 @@ new #[Layout('layouts.main')] class extends Component
         $canSeeDrafts = $user && $user->hasAnyRole($privilegedRoles);
 
         $query = Post::where('slug', $slug);
-        
+
         if ($land) {
             $query->where('land', $land);
         }
 
-        if (!$canSeeDrafts) {
+        if (! $canSeeDrafts) {
             $query->whereNot('status', 'draft');
         }
 
@@ -109,7 +111,7 @@ new #[Layout('layouts.main')] class extends Component
         foreach ($this->fields[$blockis] as $value) {
 
             if ($value->type == 'gallery' && $value->data != null) {
-                $file = file::where('id', $value->data)->first();
+                $file = File::where('id', $value->data)->first();
                 if ($file) {
                     // $dataarray[] =   asset('storage' . $file->path . '/' . $file->slug) . '.avif';
 
@@ -136,17 +138,17 @@ new #[Layout('layouts.main')] class extends Component
             if ($blockis == $value->block_id) {
                 if ($value->type == $type) {
                     if ($value->type == 'video' && $value->data != null) {
-                        $file = file::where('id', $value->data)->first();
+                        $file = File::where('id', $value->data)->first();
 
                         return $file->path.'/'.$file->slug.'.'.$file->extension;
                     }
                     if ($value->type == 'poster' && $value->data != null) {
-                        $file = file::where('id', $value->data)->first();
+                        $file = File::where('id', $value->data)->first();
 
                         return $file->path.'/'.$file->slug.'.'.$file->extension;
                     }
                     if ($value->type == 'image' && $value->data != null) {
-                        $file = file::where('id', $value->data)->first();
+                        $file = File::where('id', $value->data)->first();
                         if ($file) {
                             if ($size) {
                                 $sizes = '_'.$size;
@@ -176,6 +178,27 @@ new #[Layout('layouts.main')] class extends Component
         }
     }
 
+    /**
+     * Issue a real HTTP redirect from within a full-page Livewire mount.
+     *
+     * Livewire ignores the return value of mount(), so a plain `return redirect()`
+     * does not halt rendering. Throwing an HttpResponseException short-circuits the
+     * request while preserving the configured status code (301/302). A 410 status
+     * is treated as "Gone".
+     */
+    protected function sendRedirect(?string $url, int $statusCode): void
+    {
+        if ($statusCode === 410) {
+            abort(410);
+        }
+
+        if (empty($url)) {
+            return;
+        }
+
+        throw new HttpResponseException(new RedirectResponse($url, $statusCode));
+    }
+
     protected function log404Error($url, $e)
     {
         ErrorLog::create([
@@ -189,9 +212,11 @@ new #[Layout('layouts.main')] class extends Component
 
     public function getPostImage($fileId)
     {
-        if (!$fileId) return null;
+        if (! $fileId) {
+            return null;
+        }
 
-        return Cache::rememberForever('kompass_imgId_' . $fileId, function () use ($fileId) {
+        return Cache::rememberForever('kompass_imgId_'.$fileId, function () use ($fileId) {
             return File::find($fileId);
         });
     }

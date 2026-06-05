@@ -17,10 +17,10 @@
     @endif
 
 
-    <section class="popout">
+    <section>
         <!-- Blog Article -->
-        <div class="">
-            <div class="">
+        <div class="popout">
+   
                 <!-- Avatar Media -->
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex w-full sm:items-center gap-x-5 sm:gap-x-3">
@@ -68,14 +68,14 @@
                         <div class="relative rounded-xl overflow-hidden my-6">
                              <x-image :id="$post->thumbnails" class="object-cover w-full h-full rounded-lg shadow-md aspect-video" />
           
-                         
-
                             <span
                                 class="absolute top-0 end-0 rounded-se-xl rounded-es-xl text-xs font-medium bg-gray-800 text-white py-1.5 px-3">
-                                Sponsored
+                                {{ Carbon::parse($post->updated_at)->format('d. F Y') }}
                             </span>
                         </div>
+             
 
+                       
                         @if ($this->blocks)
                         @foreach ($this->blocks as $key => $item)
                             @php
@@ -107,13 +107,13 @@
                             @endif
                         @endforeach
                         @endif
-        
+   
 
                     </div>
 
                     <!-- End Content -->
                 </div>
-            </div>
+       
             <!-- End Blog Article -->
 
     </section>

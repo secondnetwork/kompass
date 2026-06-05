@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Layout;
@@ -12,14 +14,13 @@ use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Redirect;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 new #[Layout('layouts::Main')] class extends Component
 {
     public $page;
 
     public $page_frontNotFound = false;
 
-    public $blocks;
+    public $blocks = [];
 
     public $fields;
 
@@ -32,14 +33,14 @@ new #[Layout('layouts::Main')] class extends Component
             if ($localesData) {
                 $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
             } else {
-                $availableLocales = ['de', 'en', 'tr'];
+                $availableLocales = ['de', 'en'];
             }
             $defaultLocale = $availableLocales[0] ?? 'de';
-            
+
             if (setting('global.multilingual')) {
                 // Handle routes like /{slug} where only one param is passed
                 if ($slug === null && $locale !== null) {
-                    if (!in_array($locale, $availableLocales)) {
+                    if (! in_array($locale, $availableLocales)) {
                         $slug = $locale;
                         $locale = $defaultLocale;
                     }
@@ -53,16 +54,16 @@ new #[Layout('layouts::Main')] class extends Component
             }
 
             app()->setLocale($land);
-            
+
             $this->resolvePageAndRedirect($land, $slug);
-            
+
             if ($this->page instanceof Redirect) {
-                return redirect($this->page->to_url, $this->page->status_code);
+                $this->sendRedirect($this->page->new_url, (int) $this->page->status_code);
             }
             if (! empty($this->page->new_url)) {
-                return redirect($this->page->new_url, $this->page->status_code);
+                $this->sendRedirect($this->page->new_url, (int) $this->page->status_code);
             }
-            if ($this->page && !$this->page_frontNotFound) {
+            if ($this->page && ! $this->page_frontNotFound) {
                 $this->loadBlocks($this->page->slug);
             }
 
@@ -81,48 +82,49 @@ new #[Layout('layouts::Main')] class extends Component
             $availableLocales = ['de', 'en', 'tr'];
         }
         $defaultLocale = $availableLocales[0] ?? 'de';
-        
+
         $isMultilingual = setting('global.multilingual');
         $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
-        
+
         if ($slug === null) {
             $this->page = Page::query()
                 ->where(function ($query) use ($landurl, $isMultilingual) {
                     if ($isMultilingual) {
                         $query->where('land', $landurl)
-                              ->orWhere('land', '')
-                              ->orWhereNull('land');
+                            ->orWhere('land', '')
+                            ->orWhereNull('land');
                     }
                 })
                 ->where('layout', 'is_front_page')
                 ->where('status', 'published')
                 ->when($isMultilingual, function ($query) use ($landurl) {
-                    $query->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl]);
+                    $query->orderByRaw('CASE WHEN land = ? THEN 0 ELSE 1 END', [$landurl]);
                 })
                 ->first();
-                
-            if (!$this->page) {
+
+            if (! $this->page) {
                 // Fallback to any front page if specific language not found
                 $this->page = Page::query()
                     ->where('layout', 'is_front_page')
                     ->where('status', 'published')
                     ->first();
             }
-            
-            if (!$this->page) {
+
+            if (! $this->page) {
                 $this->page_frontNotFound = true;
+
                 return;
             }
         } else {
             $this->page = Page::query()
                 ->where(function ($query) use ($landurl) {
                     $query->where('land', $landurl)
-                          ->orWhere('land', '')
-                          ->orWhereNull('land');
+                        ->orWhere('land', '')
+                        ->orWhereNull('land');
                 })
                 ->where('slug', $slug)
                 ->whereNot('status', 'draft')
-                ->orderByRaw("CASE WHEN land = ? THEN 0 ELSE 1 END", [$landurl])
+                ->orderByRaw('CASE WHEN land = ? THEN 0 ELSE 1 END', [$landurl])
                 ->first();
         }
 
@@ -218,6 +220,27 @@ new #[Layout('layouts::Main')] class extends Component
         }
 
         return $file->path.'/'.$file->slug.'.'.$file->extension;
+    }
+
+    /**
+     * Issue a real HTTP redirect from within a full-page Livewire mount.
+     *
+     * Livewire ignores the return value of mount(), so a plain `return redirect()`
+     * does not halt rendering. Throwing an HttpResponseException short-circuits the
+     * request while preserving the configured status code (301/302). A 410 status
+     * is treated as "Gone".
+     */
+    protected function sendRedirect(?string $url, int $statusCode): void
+    {
+        if ($statusCode === 410) {
+            abort(410);
+        }
+
+        if (empty($url)) {
+            return;
+        }
+
+        throw new HttpResponseException(new RedirectResponse($url, $statusCode));
     }
 
     protected function log404Error($url, $e)
