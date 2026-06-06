@@ -4,7 +4,7 @@
         $cssclassname = get_meta($item, 'css-classname', 'bg-base-100');
         $image = get_field('image', $item->datafield);
         $title = get_field('wysiwyg', $item->datafield);
-        $titleData = $title ? (is_string($title) ? json_decode($title) : (object) $title) : null;
+        $titleData = to_compiled_object($title);
         $text = get_field('text', $item->datafield);
         $text = $text ? (is_string($text) ? json_decode($text) : $text) : null;
         $link = get_field('link', $item->datafield);
@@ -22,12 +22,12 @@
                         @endphp
                         @switch($block->type)
                             @case('header')
-                                <h{{ $blockData->level }} class="text-4xl md:text-6xl font-bold mb-4">
-                                    {!! $blockData->text !!}
-                                </h{{ $blockData->level }}>
+                                <h{{ $blockData->level ?? 2 }} class="text-4xl md:text-6xl font-bold mb-4">
+                                    {!! $blockData->text ?? '' !!}
+                                </h{{ $blockData->level ?? 2 }}>
                                 @break
                             @case('paragraph')
-                                <p class="text-xl mb-4">{!! $blockData->text !!}</p>
+                                <p class="text-xl mb-4">{!! $blockData->text ?? '' !!}</p>
                                 @break
                         @endswitch
                     @endforeach

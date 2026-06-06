@@ -63,7 +63,6 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin|manager|editor'], 'pre
         Route::get('roles', Roles::class)->name('roles');
     });
 
-    Route::view('about', 'kompass::admin.about')->name('about');
     Route::view('cd', 'kompass::admin.cd')->name('cd');
 });
 

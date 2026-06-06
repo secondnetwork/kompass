@@ -20,7 +20,7 @@
 
   .main-content {
     grid-area: main-content;
-    @apply py-4 px-6 relative bg-base-200;
+    @apply py-4 px-4 relative bg-base-200;
   }
 
   header,
