@@ -361,6 +361,26 @@ if (! function_exists('block_grid_classes')) {
     }
 }
 
+if (! function_exists('to_compiled_array')) {
+    /**
+     * Helper to get flat blocks array from any shape.
+     */
+    function to_compiled_array(mixed $input): array
+    {
+        return EditorMigrationHelper::toCompiledArray($input);
+    }
+}
+
+if (! function_exists('to_compiled_object')) {
+    /**
+     * Helper to get wrapped blocks object from any shape.
+     */
+    function to_compiled_object(mixed $input): object
+    {
+        return EditorMigrationHelper::toCompiledObject($input);
+    }
+}
+
 if (! function_exists('wysiwyg_blocks')) {
     /**
      * Resolve and normalize wysiwyg editor data into the canonical compiled

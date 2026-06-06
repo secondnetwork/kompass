@@ -64,21 +64,12 @@ class EditorMigrationHelper
 
     /**
      * Consolidate a flat block array into the canonical render-time shape used
-     * by the editor's compiledJson getter and the frontend renderer:
-     *
-     *   [
-     *     ['type' => 'p',          'content' => '...'],
-     *     ['type' => 'h2',         'content' => '...'],
-     *     ['type' => 'list',       'data' => ['type' => 'ordered', 'items' => [...]]],
-     *     ['type' => 'blockquote', 'content' => '...'],
-     *     ...
-     *   ]
-     *
-     * Consecutive `li`/`oli` blocks are merged into a single `list` block.
+     * by the frontend renderer. It returns a wrapped array { "blocks": [...] }
+     * for compatibility with legacy renderers.
      */
     public static function compile(array $blocks): array
     {
-        $output = [];
+        $compiledBlocks = [];
         $currentList = null;
 
         foreach ($blocks as $block) {
@@ -91,34 +82,70 @@ class EditorMigrationHelper
                 $style = $isBullet ? 'unordered' : 'ordered';
 
                 if ($currentList !== null
-                    && $output[$currentList]['type'] === 'list'
-                    && $output[$currentList]['data']['type'] === $style
+                    && isset($compiledBlocks[$currentList])
+                    && $compiledBlocks[$currentList]['type'] === 'list'
+                    && $compiledBlocks[$currentList]['data']['style'] === $style
                 ) {
-                    $output[$currentList]['data']['items'][] = $content;
+                    $compiledBlocks[$currentList]['data']['items'][] = $content;
 
                     continue;
                 }
 
-                $output[] = [
+                $compiledBlocks[] = [
                     'type' => 'list',
                     'data' => [
-                        'type' => $style,
+                        'style' => $style,
                         'items' => [$content],
                     ],
                 ];
-                $currentList = array_key_last($output);
+                $currentList = array_key_last($compiledBlocks);
 
                 continue;
             }
 
             $currentList = null;
-            $output[] = [
-                'type' => $type,
-                'content' => $content,
-            ];
+
+            // Map internal types to Editor.js-compatible types for the frontend
+            if (preg_match('/^h([1-6])$/', $type, $matches)) {
+                $compiledBlocks[] = [
+                    'type' => 'header',
+                    'data' => [
+                        'text' => $content,
+                        'level' => (int) $matches[1],
+                    ],
+                ];
+            } elseif ($type === 'p') {
+                $compiledBlocks[] = [
+                    'type' => 'paragraph',
+                    'data' => [
+                        'text' => $content,
+                    ],
+                ];
+            } elseif ($type === 'blockquote') {
+                $compiledBlocks[] = [
+                    'type' => 'quote',
+                    'data' => [
+                        'text' => $content,
+                        'caption' => '',
+                        'alignment' => 'left',
+                    ],
+                ];
+            } else {
+                $compiledBlocks[] = [
+                    'type' => $type,
+                    'data' => [
+                        'content' => $content,
+                        'text' => $content,
+                    ],
+                ];
+            }
         }
 
-        return $output;
+        return [
+            'time' => (int) (microtime(true) * 1000),
+            'blocks' => $compiledBlocks,
+            'version' => '2.28.2',
+        ];
     }
 
     /**
@@ -134,13 +161,23 @@ class EditorMigrationHelper
     }
 
     /**
-     * One-shot: take ANY known input shape and return the compiled render
-     * array. Use this in frontend Blade views to consume both legacy Editor.js
-     * data and the new compiled JSON uniformly.
+     * Returns ONLY the flat blocks array, ready for @foreach.
+     *
+     * @return array<int, array>
      */
     public static function toCompiledArray(mixed $input): array
     {
-        return self::compile(self::toFlatBlocks($input));
+        $compiled = self::compile(self::toFlatBlocks($input));
+
+        return $compiled['blocks'] ?? [];
+    }
+
+    /**
+     * Returns the full wrapped object {"blocks": [...]}, compatible with $data->blocks.
+     */
+    public static function toCompiledObject(mixed $input): object
+    {
+        return json_decode(json_encode(self::compile(self::toFlatBlocks($input))));
     }
 
     /**

@@ -36,8 +36,9 @@
             <div
                 class="relative group flex items-start ml-16 transition-all duration-200"
                 :class="{
-                    'opacity-40 border-l-2 border-base-300 bg-base-200/50': dragIndex === index,
-                    'border-t-2 border-base-300': dropTargetIndex === index && dragIndex !== index,
+                    'opacity-40 scale-[0.98] blur-[1px]': dragIndex === index,
+                    'drop-indicator-top': dropTargetIndex === index && dragIndex !== index && dragIndex > index,
+                    'drop-indicator-bottom': dropTargetIndex === index && dragIndex !== index && dragIndex < index,
                     'not-oli': block.type !== 'oli'
                 }"
                 @dragover.prevent="dropTargetIndex = index"
@@ -176,8 +177,19 @@
                     @click.outside="showDropdown = false"
                     style="display: none;"
                 >
+                    <div class="px-3 py-1.5 border-b border-base-200 mb-1">
+                        <input 
+                            type="text" 
+                            x-model="slashSearch" 
+                            x-ref="slashInput"
+                            placeholder="{{ __('Filter formats...') }}" 
+                            class="w-full text-xs bg-transparent border-none focus:ring-0 p-0 text-base-content/70"
+                            @keydown.escape="showDropdown = false"
+                            @keydown.enter="if(filteredBlockTypes().length > 0) selectBlockType(index, filteredBlockTypes()[0].id)"
+                        >
+                    </div>
                     <span class="block px-3 py-1 text-[10px] font-bold text-base-content/60 uppercase tracking-wider">{{ __('Format') }}</span>
-                    <template x-for="type in blockTypes" :key="type.id">
+                    <template x-for="type in filteredBlockTypes()" :key="type.id">
                         <button
                             type="button"
                             @mousedown.prevent="selectBlockType(index, type.id)"
@@ -383,6 +395,30 @@
         font-size: 0.875rem;
         color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
     }
+    .drop-indicator-top::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--color-primary);
+        border-radius: 2px;
+        z-index: 10;
+        box-shadow: 0 0 8px var(--color-primary);
+    }
+    .drop-indicator-bottom::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--color-primary);
+        border-radius: 2px;
+        z-index: 10;
+        box-shadow: 0 0 8px var(--color-primary);
+    }
 </style>
 @endassets
 
@@ -398,6 +434,7 @@
             // Menu state
             showDropdown: false,
             dropdownIndex: null,
+            slashSearch: '',
             showAddMenu: false,
             addMenuIndex: null,
             showTuneMenu: false,
@@ -427,6 +464,15 @@
 
             newBlockId() {
                 return 'block-' + Math.random().toString(36).substr(2, 9);
+            },
+
+            filteredBlockTypes() {
+                if (!this.slashSearch) return this.blockTypes;
+                const search = this.slashSearch.toLowerCase();
+                return this.blockTypes.filter(t => 
+                    t.label.toLowerCase().includes(search) || 
+                    t.id.toLowerCase().includes(search)
+                );
             },
 
             togglePlusMenu(index) {
@@ -562,11 +608,27 @@
             },
 
             updateBlock(index, el) {
-                this.blocks[index].content = el.innerHTML;
+                const block = this.blocks[index];
+                block.content = el.innerHTML;
                 const text = el.innerText.replace(/[\n\r\u200B]/g, '').trim();
-                if (text === '/') {
+
+                // 1. Markdown Shortcuts
+                if (text === '# ') this.selectBlockType(index, 'h1');
+                else if (text === '## ') this.selectBlockType(index, 'h2');
+                else if (text === '### ') this.selectBlockType(index, 'h3');
+                else if (text === '> ') this.selectBlockType(index, 'blockquote');
+                else if (text === '- ' || text === '* ') this.selectBlockType(index, 'li');
+                else if (text === '1. ') this.selectBlockType(index, 'oli');
+                else if (text === '---') this.selectBlockType(index, 'divider');
+
+                // 2. Slash Menu
+                if (text.startsWith('/')) {
                     this.showDropdown = true;
                     this.dropdownIndex = index;
+                    this.slashSearch = text.substring(1);
+                    this.$nextTick(() => {
+                        if (this.$refs.slashInput) this.$refs.slashInput.focus();
+                    });
                 } else if (this.dropdownIndex === index && !this.showDropdown) {
                     this.showDropdown = false;
                 }
@@ -576,16 +638,17 @@
                 this.blocks[index].type = type;
                 const el = document.getElementById(this.blocks[index].id);
                 if (el) {
-                    let currentHtml = el.innerHTML.replace(/^\//, '').trim();
-                    if (type === 'preline') {
-                        const t = el.innerText.replace(/^\//, '').trim().toUpperCase();
-                        currentHtml = t || this.prelinePlaceholder;
+                    let currentHtml = el.innerHTML.replace(/^\/|#+|>|-|\*|1\./, '').trim();
+                    if (type === 'preline' && !currentHtml) {
+                        currentHtml = this.prelinePlaceholder;
                     }
+                    
                     el.innerHTML = currentHtml;
                     this.blocks[index].content = currentHtml;
                 }
                 this.showDropdown = false;
                 this.showTypeMenu = false;
+                this.slashSearch = '';
                 this.$nextTick(() => {
                     const el2 = document.getElementById(this.blocks[index].id);
                     if (el2) this.focusAndSetCaret(el2);
@@ -748,27 +811,117 @@
             },
 
             handlePaste(index, event) {
-                const data = event.clipboardData.getData('text/plain');
-                if (!data) return;
+                const html = event.clipboardData.getData('text/html');
+                const text = event.clipboardData.getData('text/plain');
 
-                const lines = data.split(/\r?\n/).filter(line => line.trim() !== '');
+                if (html) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Simple HTML cleaning for inline content
+                    const cleanInlineHtml = (node) => {
+                        if (node.nodeType === 3) return node.textContent;
+                        if (node.nodeType !== 1) return '';
+
+                        let content = '';
+                        node.childNodes.forEach(child => content += cleanInlineHtml(child));
+
+                        const tag = node.tagName.toLowerCase();
+                        if (['strong', 'b'].includes(tag)) return `<strong>${content}</strong>`;
+                        if (['em', 'i'].includes(tag)) return `<em>${content}</em>`;
+                        if (['u'].includes(tag)) return `<u>${content}</u>`;
+                        if (tag === 'a') {
+                            const href = node.getAttribute('href');
+                            return href ? `<a href="${href}" target="_blank" class="text-primary underline">${content}</a>` : content;
+                        }
+                        return content;
+                    };
+
+                    const newBlocks = [];
+                    const processNode = (node) => {
+                        if (node.nodeType === 3) {
+                            const content = node.textContent.trim();
+                            if (content) newBlocks.push({ id: this.newBlockId(), type: 'p', content });
+                            return;
+                        }
+                        if (node.nodeType !== 1) return;
+
+                        const tag = node.tagName.toLowerCase();
+                        
+                        if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'blockquote'].includes(tag)) {
+                            newBlocks.push({ 
+                                id: this.newBlockId(), 
+                                type: tag, 
+                                content: cleanInlineHtml(node) 
+                            });
+                        } else if (tag === 'ul' || tag === 'ol') {
+                            const itemType = tag === 'ul' ? 'li' : 'oli';
+                            node.querySelectorAll('li').forEach(li => {
+                                newBlocks.push({ 
+                                    id: this.newBlockId(), 
+                                    type: itemType, 
+                                    content: cleanInlineHtml(li) 
+                                });
+                            });
+                        } else if (['div', 'section', 'article', 'body', 'html'].includes(tag)) {
+                            node.childNodes.forEach(child => processNode(child));
+                        } else {
+                            // For other tags (like span), if they have children that might be blocks
+                            let hasBlockChild = false;
+                            node.childNodes.forEach(child => {
+                                if (child.nodeType === 1 && ['p', 'div', 'h1', 'h2', 'h3', 'ul', 'ol'].includes(child.tagName.toLowerCase())) {
+                                    hasBlockChild = true;
+                                }
+                            });
+                            
+                            if (hasBlockChild) {
+                                node.childNodes.forEach(child => processNode(child));
+                            } else {
+                                // Treat as inline text if no block children
+                                const content = cleanInlineHtml(node);
+                                if (content.trim()) {
+                                    newBlocks.push({ id: this.newBlockId(), type: 'p', content });
+                                }
+                            }
+                        }
+                    };
+
+                    // Process the body children
+                    doc.body.childNodes.forEach(node => processNode(node));
+
+                    if (newBlocks.length > 0) {
+                        // If only one block and it's a paragraph, try to insert it at cursor
+                        if (newBlocks.length === 1 && newBlocks[0].type === 'p') {
+                            document.execCommand('insertHTML', false, newBlocks[0].content);
+                            this.updateBlock(index, event.target);
+                        } else {
+                            const currentEl = document.getElementById(this.blocks[index].id);
+                            if (currentEl && currentEl.innerText.trim() === '') {
+                                this.blocks.splice(index, 1, ...newBlocks);
+                            } else {
+                                this.blocks.splice(index + 1, 0, ...newBlocks);
+                            }
+                        }
+                        return;
+                    }
+                }
+
+                if (!text) return;
+
+                const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
 
                 if (lines.length <= 1) {
-                    document.execCommand('insertText', false, data);
+                    document.execCommand('insertText', false, text);
                     this.updateBlock(index, event.target);
                     return;
                 }
 
-                const newBlocks = [];
+                const newBlocksFromText = [];
                 lines.forEach(line => {
                     let type = 'p';
                     let content = line.trim();
 
-                    if (content.startsWith('npm ') || content.startsWith('curl ') || content.startsWith('git ') || content.startsWith('pi ') || content.startsWith('sh ') || content.startsWith('./')) {
-                        // Code-ish line — no `code` block in blockTypes, keep as `p`
-                        // so paste behaviour matches the new editor's surface area.
-                        type = 'p';
-                    } else if (content.startsWith('# ')) {
+                    if (content.startsWith('# ')) {
                         type = 'h1';
                         content = content.substring(2);
                     } else if (content.startsWith('## ')) {
@@ -788,7 +941,7 @@
                         content = content.substring(2);
                     }
 
-                    newBlocks.push({
+                    newBlocksFromText.push({
                         id: this.newBlockId(),
                         type: type,
                         content: content,
@@ -797,9 +950,9 @@
 
                 const currentEl = document.getElementById(this.blocks[index].id);
                 if (currentEl && currentEl.innerText.trim() === '') {
-                    this.blocks.splice(index, 1, ...newBlocks);
+                    this.blocks.splice(index, 1, ...newBlocksFromText);
                 } else {
-                    this.blocks.splice(index + 1, 0, ...newBlocks);
+                    this.blocks.splice(index + 1, 0, ...newBlocksFromText);
                 }
             },
 
@@ -954,3 +1107,4 @@
     };
 </script>
 @endscript
+script
