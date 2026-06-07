@@ -36,8 +36,8 @@
 }" @media-toggle.window="toggle($event.detail.id)">
 
     {{-- Search + Filter bar --}}
-    <div class="flex gap-4 items-center pb-2">
-        <div class="flex items-center gap-4 py-2">
+    <div class="flex gap-4 items-center pb-3">
+        <div class="flex items-center gap-4">
             <div class="w-48">
                 <x-kompass::select id="filter-type" :searchable="false" wire:model.live="filter" placeholder="{{ __('Filter by Type') }}" :options="[
                     ['name' => __('All'), 'id' => null],
@@ -107,7 +107,7 @@
                 <span class="text-sm font-semibold opacity-60">{{ __('Folders') }} ({{ $folders->count() }})</span>
             </div>
             <div class="@container">
-                <div class="grid @sm:grid-cols-2 @lg:grid-cols-3 @3xl:grid-cols-4 gap-3">
+                <div class="grid @sm:grid-cols-2 @lg:grid-cols-3 @3xl:grid-cols-5 gap-3">
                     @foreach ($folders as $folder)
                         <livewire:media-components.media-item :file="$folder" :key="'folder-'.$folder->id" />
                     @endforeach
@@ -136,7 +136,7 @@
             </div>
         @endif
         <div class="@container">
-            <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4 pb-1 gap-6">
+            <div class="grid @sm:grid-cols-1 @lg:grid-cols-3  @3xl:grid-cols-5 pb-1 gap-3">
                 @foreach ($files as $file)
                     <div :class="isSelected({{ $file->id }}) ? 'ring-2 ring-primary rounded-lg' : ''">
                         <livewire:media-components.media-item :file="$file" :key="$file->id" />

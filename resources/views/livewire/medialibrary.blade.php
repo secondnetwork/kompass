@@ -29,13 +29,7 @@
 
             </div>
 
-
-
-
         </div>
-
-        {{-- Filter UI --}}
-
 
         <div class="overflow-x-auto p-4" x-cloak x-data="{ dir: @entangle('dir') }">
             <livewire:media-components.media-list :dir="$dir" :filter="$filter" />
