@@ -1107,4 +1107,3 @@
     };
 </script>
 @endscript
-script
