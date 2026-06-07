@@ -1,28 +1,25 @@
 <div class="h-full" x-data="{ asidenav: @entangle('asidenav'), tab: @entangle('tab') }">
 
-    <grid-side class="flex gap-6" x-data="{}">
+    <grid-side class="flex gap-3" x-data="{}">
 
-        <aside class="pr-4 w-52  border-r border-base-300 h-full ">
+        <aside class="w-56 shrink-0 pr-4 border-r border-base-300">
 
-            <nav class="flex flex-col" aria-label="asidenav">
+            <nav class="flex flex-col gap-0.5 sticky top-4" aria-label="asidenav">
                 @foreach ($navigation as $tab)
                     @php $tab = (object) $tab; @endphp
                     @if ($tab->slug == '')
-                        <div class="uppercase text-xs mt-5 mb-1 text-base-content/70 font-semibold">
+                        <div class="uppercase text-[11px] tracking-wider mt-5 mb-1 px-3 text-base-content/50 font-semibold">
                             {{ $tab->name }}</div>
                     @else
                         <a href="#_" @click.prevent="asidenav = '{{ $tab->slug }}'"
-                            :class="{
-                                'border-indigo-500 text-indigo-600': asidenav ==
-                                    '{{ $tab->slug }}',
-                                'text-base-content/70 hover:border-gray-300 hover:text-gray-700': asidenav !=
-                                    '{{ $tab->slug }}'
-                            }"
-                            class="py-1 text-sm font-medium flex items-center gap-2">@svg($tab->icon ?? 'tabler-x')
-                            {{ $tab->name }}</a>
+                            :class="asidenav == '{{ $tab->slug }}'
+                                ? 'bg-brand-500/20 text-brand-600 font-bold'
+                                : 'text-base-content/70 hover:bg-base-200 hover:text-base-content'"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors">
+                            @svg($tab->icon ?? 'tabler-x', 'size-5 shrink-0')
+                            <span class="truncate">{{ $tab->name }}</span></a>
                     @endif
                 @endforeach
-                <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-base-content/70 hover:border-gray-300 hover:text-gray-700" -->
             </nav>
 
         </aside>
@@ -30,21 +27,21 @@
         <div class="flex flex-col w-full">
 
             <item-setting class="align-middle inline-block min-w-full">
-                <div x-show="asidenav === 'page_information'" x-cloak>
+                <div x-show="asidenav === 'page_information'" x-cloak class="bg-base-100 rounded-xl border border-base-300 p-6">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Page Information') }}</h3>
-                        <p class="text-base-content/60 text-sm">
+                    <div>
+                        <h6 class="font-semibold text-lg">{{ __('Page Information') }}</h6>
+                        <p class="text-xs opacity-60">
                             {{ __('Manage your website\'s basic information and SEO metadata.') }}</p>
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.page-information />
                 </div>
-                <div x-show="asidenav === 'page_appearance'" >
+                <div x-show="asidenav === 'page_appearance'" x-cloak class="bg-base-100 rounded-xl border border-base-300 p-6">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Page Appearance') }}</h3>
-                        <p class="text-base-content/60 text-sm">{{ __('Change how your dashboard looks and feels.') }}</p>
+                    <div>
+                        <h6 class="font-semibold text-lg">{{ __('Page Appearance') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Change how your dashboard looks and feels.') }}</p>
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
                     <div class="border-b border-base-300">
@@ -86,19 +83,19 @@
                     </div>
 
                 </div>
-                <div x-show="asidenav === 'multilingual'" x-cloak>
+                <div x-show="asidenav === 'multilingual'" x-cloak class="bg-base-100 rounded-xl border border-base-300 p-6">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Multilingual') }}</h3>
-                        <p class="text-base-content/60 text-sm">{{ __('Manage multiple languages for your website.') }}</p>
+                    <div>
+                        <h6 class="font-semibold text-lg">{{ __('Multilingual') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Manage multiple languages for your website.') }}</p>
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.multilingual />
                 </div>
-                <div x-show="asidenav === 'backend'" x-cloak>
-                    <div class="my-3">
-                        <h3 class="text-lg font-bold">Login {{ __('Page') }}</h3>
-                        <p class="text-sm text-base-content/60 text-sm">
+                <div x-show="asidenav === 'backend'" x-cloak class="bg-base-100 rounded-xl border border-base-300 p-6">
+                    <div>
+                        <h6 class="font-semibold text-lg">Login {{ __('Page') }}</h6>
+                        <p class="text-xs opacity-60">
                             {{ __('Customize the background of your authentication pages.') }}</p>
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
@@ -107,30 +104,30 @@
                     <livewire:setup.background lazy />
 
                 </div>
-                <div x-show="asidenav === 'backendmenu'" x-cloak>
-                    <div class="my-3">
-                        <h3 class="text-lg font-semibold mt-4">{{ __('Menu Visibility') }}</h3>
-                        <p class="text-sm text-base-content/70 mb-4">{{ __('Toggle visibility of menu items in the admin sidebar') }}</p>
+                <div x-show="asidenav === 'backendmenu'" x-cloak class="bg-base-100 rounded-xl border border-base-300 p-6">
+                    <div>
+                        <h6 class="font-semibold text-lg">{{ __('Menu Visibility') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Toggle visibility of menu items in the admin sidebar') }}</p>
                     </div>
                     <hr class="h-px w-full border-none bg-base-300 my-4">
                     <livewire:settings.backendmenu lazy />
                 </div>
                 {{-- <div x-show="asidenav === 'admin_panel'" x-cloak>
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Admin Panel') }}</h3>
-                        <p class="text-base-content/60 text-sm">
+                    <div>
+                        <h6 class="font-semibold text-lg">{{ __('Admin Panel') }}</h6>
+                        <p class="text-xs opacity-60">
                             {{ __('Settings specifically for the administration interface.') }}</p>
                     </div>
                     <livewire:settings.admin-panel lazy />
                 </div> --}}
-                <div x-show="asidenav === 'global'" x-cloak>
+                <div x-show="asidenav === 'global'" x-cloak class="bg-base-100 rounded-xl border border-base-300 p-6">
 
                     <div class="border-base-300 whitespace-nowrap flex gap-8 justify-between items-center mb-4">
 
-                        <div class="my-3">
-                            <h3 class="text-2xl font-bold">{{ __('Global Settings') }}</h3>
-                            <p class="text-base-content/60 text-sm">
+                        <div>
+                            <h6 class="font-semibold text-lg">{{ __('Global Settings') }}</h6>
+                            <p class="text-xs opacity-60">
                                 {{ __('Key-value pairs for general application configuration.') }}</p>
                         </div>
 
@@ -145,11 +142,11 @@
                 </div>
 
                 @if(class_exists(\Spatie\Activitylog\Models\Activity::class))
-                <div x-show="asidenav === 'activity-log'" x-cloak>
+                <div x-show="asidenav === 'activity-log'" x-cloak class="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Activity Log') }}</h3>
-                        <p class="text-base-content/60 text-sm">{{ __('Monitor all changes and actions within the system.') }}
+                    <div class="p-5 border-b border-base-300">
+                        <h6 class="font-semibold text-lg">{{ __('Activity Log') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Monitor all changes and actions within the system.') }}
                         </p>
                     </div>
 
@@ -158,11 +155,11 @@
                 </div>
                 @endif
 
-                <div x-show="asidenav === 'error-log'" x-cloak>
+                <div x-show="asidenav === 'error-log'" x-cloak class="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Error Log') }}</h3>
-                        <p class="text-base-content/60 text-sm">{{ __('Review 404 errors and other system exceptions.') }}</p>
+                    <div class="p-5 border-b border-base-300">
+                        <h6 class="font-semibold text-lg">{{ __('Error Log') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Review 404 errors and other system exceptions.') }}</p>
                     </div>
                     <livewire:settings.error-log lazy />
 
@@ -170,24 +167,25 @@
 
                 @if (\Secondnetwork\Kompass\Features::hasSaml2())
                 @role(['super_admin', 'admin'])
-                <div x-show="asidenav === 'saml2'" x-cloak>
+                <div x-show="asidenav === 'saml2'" x-cloak class="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('SAML2 SSO') }}</h3>
-                        <p class="text-base-content/60 text-sm">{{ __('Configure SAML2 identity providers for single sign-on.') }}</p>
+                    <div class="p-5 border-b border-base-300">
+                        <h6 class="font-semibold text-lg">{{ __('SAML2 SSO') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Configure SAML2 identity providers for single sign-on.') }}</p>
                     </div>
-                    <hr class="h-px w-full border-none bg-base-300 my-4">
-                    <livewire:settings.saml2 lazy />
+                    <div class="p-5">
+                        <livewire:settings.saml2 lazy />
+                    </div>
 
                 </div>
                 @endrole
                 @endif
 
-                <div x-show="asidenav === 'redirection'" x-cloak>
+                <div x-show="asidenav === 'redirection'" x-cloak class="bg-base-100 rounded-xl border border-base-300 overflow-hidden">
 
-                    <div class="my-3">
-                        <h3 class="text-2xl font-bold">{{ __('Redirects') }}</h3>
-                        <p class="text-base-content/60 text-sm">{{ __('Create and manage URL redirects.') }}</p>
+                    <div class="p-5 border-b border-base-300">
+                        <h6 class="font-semibold text-lg">{{ __('Redirects') }}</h6>
+                        <p class="text-xs opacity-60">{{ __('Create and manage URL redirects.') }}</p>
                     </div>
                     <livewire:redirection lazy />
 

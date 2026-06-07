@@ -106,7 +106,7 @@ class MediaList extends Component
             $filesQuery->where('type', '!=', 'folder');
         }
 
-        $files = $filesQuery->orderBy('created_at', 'DESC')->paginate(24);
+        $files = $filesQuery->orderBy('created_at', 'DESC')->paginate(15);
 
         $allFolders = File::where('type', 'folder')->orderBy('path')->orderBy('name')->get();
 

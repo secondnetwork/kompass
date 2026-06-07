@@ -2,14 +2,15 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Secondnetwork\Kompass\Models\Permission;
 use Secondnetwork\Kompass\Models\Role;
 
 class Roles extends Component
 {
-    // use WithPagination;
     public $headers;
 
     public $action;
@@ -21,6 +22,10 @@ class Roles extends Component
     public $FormAdd = false;
 
     public $FormEdit = false;
+
+    public $FormPermissions = false;
+
+    public $FormManagePermissions = false;
 
     #[Url]
     public $search;
@@ -41,20 +46,30 @@ class Roles extends Component
 
     public $Roles;
 
-    // protected $rules = [
-    //     'name' => 'required|regex:/^[\pL\s\-]+$/u|min:3|max:255',
-    // ];
+    /**
+     * Name of the role currently being edited in the permissions panel.
+     */
+    public $permissionRoleName = '';
 
-    private function headerConfig()
+    /**
+     * Permission names currently assigned to the selected role.
+     *
+     * @var array<int, string>
+     */
+    public array $selectedPermissions = [];
+
+    public $newPermissionName = '';
+
+    private function headerConfig(): array
     {
         return [
-            // 'id' => '#',
             'name' => __('Role'),
+            'permissions' => __('Permissions'),
             'edit' => '',
         ];
     }
 
-    public function mount()
+    public function mount(): void
     {
         $this->headers = $this->headerConfig();
 
@@ -63,26 +78,26 @@ class Roles extends Component
 
     private function resultDate()
     {
-        return Role::where('name', 'like', '%'.$this->search.'%')
+        return Role::withCount('permissions')
+            ->where('name', 'like', '%'.$this->search.'%')
             ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
     }
 
-    public function sortBy($field)
+    public function sortBy($field): void
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;
         }
     }
 
-    public function selectItem($itemId, $action)
+    public function selectItem($itemId, $action): void
     {
         $this->selectedItem = $itemId;
 
         if ($action == 'add') {
-            // This will show the modal on the frontend
             $this->reset(['name', 'display_name']);
             $this->FormEdit = true;
         }
@@ -95,13 +110,18 @@ class Roles extends Component
         }
 
         if ($action == 'delete') {
-            // This will show the modal on the frontend
             $this->FormDelete = true;
-            // $this->dispatchBrowserEvent('openDeleteModal');
+        }
+
+        if ($action == 'permissions') {
+            $model = Role::findOrFail($this->selectedItem);
+            $this->permissionRoleName = $model->display_name ?: $model->name;
+            $this->selectedPermissions = $model->permissions->pluck('name')->all();
+            $this->FormPermissions = true;
         }
     }
 
-    public function createOrUpdateRole()
+    public function createOrUpdateRole(): void
     {
         $role = Role::find($this->selectedItem);
 
@@ -113,30 +133,86 @@ class Roles extends Component
             $this->FormEdit = false;
         } else {
             $validate = $this->validate();
-            $array2 = ['guard_name' => 'web'];
-            $result = array_merge($validate, $array2);
 
-            Role::create($result);
+            Role::firstOrCreate(
+                ['name' => $validate['name'], 'guard_name' => 'web'],
+                ['display_name' => $validate['display_name'] ?? $validate['name']],
+            );
+
             $this->FormEdit = false;
         }
 
         $this->mount();
-
     }
 
-    public function delete()
+    public function delete(): void
     {
         Role::destroy($this->selectedItem);
         $this->FormDelete = false;
 
-        $this->Roles = Role::orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')->get();
+        $this->mount();
+    }
+
+    /**
+     * Open the global permission manager (create / delete permissions).
+     */
+    public function openPermissionManager(): void
+    {
+        $this->reset(['newPermissionName']);
+        $this->FormManagePermissions = true;
+    }
+
+    public function createPermission(): void
+    {
+        $this->validate(['newPermissionName' => 'required|string|min:2|max:255']);
+
+        Permission::firstOrCreate([
+            'name' => trim($this->newPermissionName),
+            'guard_name' => 'web',
+        ]);
+
+        $this->reset(['newPermissionName']);
+        $this->dispatch('status');
+    }
+
+    public function deletePermission($permissionId): void
+    {
+        Permission::whereKey($permissionId)->delete();
+        $this->dispatch('status');
+    }
+
+    /**
+     * Persist the permission selection for the active role.
+     */
+    public function savePermissions(): void
+    {
+        $role = Role::findOrFail($this->selectedItem);
+        $role->syncPermissions($this->selectedPermissions);
+
+        $this->FormPermissions = false;
+        $this->dispatch('status');
     }
 
     public function render()
     {
-        return view('kompass::livewire.roles', [
-            'roles' => $this->Roles,
+        $permissions = Permission::orderBy('name')->get();
 
+        $permissionGroups = $permissions->groupBy(function ($permission) {
+            if (Str::contains($permission->name, '.')) {
+                return Str::before($permission->name, '.');
+            }
+
+            if (Str::contains($permission->name, ' ')) {
+                return Str::after($permission->name, ' ');
+            }
+
+            return __('General');
+        })->sortKeys();
+
+        return view('kompass::livewire.roles', [
+            'roles' => $this->resultDate()->get(),
+            'permissions' => $permissions,
+            'permissionGroups' => $permissionGroups,
         ])->layout('kompass::admin.layouts.app');
     }
 }
