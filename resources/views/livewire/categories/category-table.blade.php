@@ -183,26 +183,31 @@
     <x-kompass::modal data="FormDelete" />
 
     <div class="flex flex-col">
-        <div class="border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
-            <div class="w-full">
-                <x-kompass::form.input type="text" name="search" wire:model.live="search"
-                    placeholder="{{ __('Search categories...') }}" />
+        <div class="flex items-end justify-between gap-4 flex-wrap p-5 bg-base-100 border border-base-300 rounded-t-xl">
+            <div>
+                <h6 class="font-semibold text-lg">{{ __('Categories') }}</h6>
+                <p class="text-xs opacity-60">{{ __('Manage post categories') }}</p>
             </div>
 
-            <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
-                <button class="btn btn-primary" @click="open = true">
-                    <x-tabler-square-plus stroke-width="1.5" />{{ __('New category') }}
-                </button>
+            <div class="flex items-center gap-2 flex-wrap justify-end">
+                <div class="w-full sm:w-64">
+                    <x-kompass::form.input type="text" name="search" wire:model.live="search"
+                        placeholder="{{ __('Search categories...') }}" />
+                </div>
+
+                <div x-data="{ open: @entangle('FormAdd') }">
+                    <button class="btn btn-primary" @click="open = true">
+                        <x-tabler-square-plus stroke-width="1.5" />{{ __('New category') }}
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="divider"></div>
-
         <div class="align-middle inline-block min-w-full">
-            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
+            <div class="overflow-hidden rounded-b-xl border border-t-0 border-base-300 bg-base-100">
                 @if ($categories->count())
-                    <table class="min-w-full divide-y divide-gray-50">
-                        <thead class="bg-base-300">
+                    <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
+                        <thead class="bg-base-200">
                             <tr>
                                 @foreach ($headers as $key => $value)
                                     <th scope="col"
@@ -227,7 +232,7 @@
                             </tr>
                         </thead>
 
-                        <tbody class="bg-base-100 divide-y divide-gray-50">
+                        <tbody class="bg-base-100 divide-y divide-base-200">
                             @foreach ($categories as $category)
                                 <tr>
                                     @foreach ($data as $key => $value)
@@ -269,6 +274,8 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <x-kompass::table-footer :paginator="$categories" />
                 @else
                     <div class="min-h-[60vh] flex flex-col items-center justify-center">
                         <x-tabler-tags stroke-width="1.5" class="w-16 h-16 mb-2 text-brand-500" />
@@ -276,10 +283,6 @@
                     </div>
                 @endif
             </div>
-        </div>
-
-        <div class="mt-4">
-            {{ $categories->links() }}
         </div>
     </div>
 </div>

@@ -1,10 +1,10 @@
 
-<div class="align-middle inline-block min-w-full my-6">
+<div class="min-w-full">
 
 
-    <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-50">
-            <thead class="bg-base-300">
+    <div>
+        <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
+            <thead class="bg-base-200">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                         <button wire:click="sortBy('url')" class="flex items-center gap-1 uppercase font-medium">
@@ -46,8 +46,8 @@
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-base-100 divide-y divide-gray-50">
-              
+            <tbody class="bg-base-100 divide-y divide-base-200">
+
                 @forelse($logsact as $activity)
                     <tr>
                         <td class="px-4 py-3 text-sm font-medium">
@@ -79,11 +79,12 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-4 py-3 text-sm text-center text-base-content/70">No Activity Logs Found.</td>
+                        <td colspan="5" class="px-4 py-3 text-sm text-center text-base-content/70">No Error Logs Found.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
-        {{ $logsact->links('kompass::livewire.pagination') }}
+
+        <x-kompass::table-footer :paginator="$logsact" />
     </div>
 </div>

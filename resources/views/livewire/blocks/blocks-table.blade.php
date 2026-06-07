@@ -15,22 +15,31 @@
     <x-kompass::modal data="FormDelete" />
 
     <div class="flex flex-col">
-        <div class=" border-base-300 py-4 whitespace-nowrap text-sm flex gap-8 justify-end items-center">
-            <div x-data="{ open: @entangle('FormAdd') }" class="flex justify-end gap-4">
+        <div class="flex items-end justify-between gap-4 flex-wrap p-5 bg-base-100 border border-base-300 rounded-t-xl">
+            <div>
+                <h6 class="font-semibold text-lg">{{ __('Blocks') }}</h6>
+                <p class="text-xs opacity-60">{{ __('Manage your content blocks') }}</p>
+            </div>
 
-                <button class="btn btn-primary" @click="open = true">
-                    <x-tabler-square-plus stroke-width="1.5" />{{ __('New block') }}
-                </button>
-                {{-- <template x-teleport="#navheader"> </template> --}}
+            <div class="flex items-center gap-2 flex-wrap justify-end">
+                <div class="w-full sm:w-64">
+                    <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search blocks...') }}" />
+                </div>
+
+                <div x-data="{ open: @entangle('FormAdd') }">
+                    <button class="btn btn-primary" @click="open = true">
+                        <x-tabler-square-plus stroke-width="1.5" />{{ __('New block') }}
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
+        <div class="align-middle inline-block min-w-full">
+            <div class="overflow-hidden rounded-b-xl border border-t-0 border-base-300 bg-base-100">
 
-                      @if ($pages->count())
-                    <table class="min-w-full divide-y divide-gray-50">
-                        <thead class="bg-base-300">
+                @if ($pages->count())
+                    <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
+                        <thead class="bg-base-200">
                             @foreach ($headers as $key => $value)
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
@@ -54,7 +63,7 @@
                         </thead>
 
 
-                        <tbody class="bg-base-100 divide-y divide-gray-50" wire:sort="handleSort">
+                        <tbody class="bg-base-100 divide-y divide-base-200" wire:sort="handleSort">
                             @foreach ($pages as $key => $page)
                                 <tr wire:sort:item="{{ $page->id }}">
                                     <td wire:sort:handle class="pl-4 w-4 bg-base-100">
@@ -103,8 +112,10 @@
 
                         </tbody>
                     </table>
+
+                    <x-kompass::table-footer :paginator="$pages" />
                 @else
-                    <div class="min-h-[60vh] flex flex-col items-center justify-center bg-gray-100">
+                    <div class="min-h-[60vh] flex flex-col items-center justify-center">
                         <div class="flex flex-col items-center">
                             <x-tabler-layout-grid-add stroke-width="1.5" class="w-16 h-16 mb-2 text-brand-500" />
                             <div class="font-semibold text-lg"> {{ __('No Data') }} </div>

@@ -23,7 +23,7 @@ class PostsTable extends Component
     #[Url]
     public $search;
 
-    public $perPost = 1000;
+    public $perPost = 10;
 
     public $orderBy = 'created_at';
 
@@ -93,6 +93,12 @@ class PostsTable extends Component
     public function updatedLand($value)
     {
         session(['kompass_last_land' => $value]);
+        $this->resetPage();
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
 
     public function mount()
@@ -141,7 +147,7 @@ class PostsTable extends Component
 
         return $query->with('thumbnailFile')
             ->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc')
-            ->simplePaginate($this->perPost);
+            ->paginate($this->perPost);
     }
 
     public function selectItem($itemId, $action)

@@ -144,8 +144,8 @@
                 @endforeach
             </div>
         </div>
-        <div class="flex justify-center">
-            {{ $files->links('kompass::livewire.pagination') }}
+        <div class="mt-4">
+            <x-kompass::table-footer :paginator="$files" />
         </div>
     @endif
 

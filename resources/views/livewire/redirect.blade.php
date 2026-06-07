@@ -1,7 +1,7 @@
 <div class="flex flex-col">
 
-    <div class="border-base-300 py-4 whitespace-nowrap text-sm flex gap-4 justify-between items-center">
-        <div class="relative w-full max-w-xs">
+    <div class="flex items-center justify-between gap-4 flex-wrap p-4 border-b border-base-300">
+        <div class="relative w-full sm:w-64">
             <input type="text" wire:model.live.debounce.300ms="search"
                 placeholder="{{ __('Search') }}"
                 class="input input-bordered w-full" />
@@ -13,9 +13,9 @@
     </div>
 
     <div class="align-middle inline-block min-w-full">
-        <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-50">
-                <thead class="bg-base-300">
+        <div>
+            <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
+                <thead class="bg-base-200">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
                             <button wire:click="sortBy('old_url')" class="flex items-center gap-1 uppercase font-medium">
@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
 
-                <tbody class="bg-base-100 divide-y divide-gray-50">
+                <tbody class="bg-base-100 divide-y divide-base-200">
                     @forelse ($pages as $page)
                         <tr wire:key="redirect-{{ $page->id }}">
                             <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-base-content bg-base-100">
@@ -109,7 +109,7 @@
                 </tbody>
             </table>
 
-            {{ $pages->links('kompass::livewire.pagination') }}
+            <x-kompass::table-footer :paginator="$pages" />
         </div>
     </div>
 

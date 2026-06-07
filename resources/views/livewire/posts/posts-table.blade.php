@@ -42,36 +42,36 @@
     <x-kompass::action-message class="" on="status" />
 
     <div class="flex flex-col">
-        <div class=" border-base-300 whitespace-nowrap text-sm flex gap-8 justify-between items-center">
-            
-            <div class="w-full">
-                <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search posts...') }}" />
+        <div class="flex items-end justify-between gap-4 flex-wrap p-5 bg-base-100 border border-base-300 rounded-t-xl">
+            <div>
+                <h6 class="font-semibold text-lg">{{ __('Posts') }}</h6>
+                <p class="text-xs opacity-60">{{ __('Manage your blog posts') }}</p>
             </div>
 
-            <div class="flex justify-end gap-4 items-center">
-                @if (setting('global.multilingual'))
-                <div class="w-44">
-                    <x-kompass::select wire:model.live="land" :searchable="false" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
-                    </x-kompass::select>
+            <div class="flex items-center gap-2 flex-wrap justify-end">
+                <div class="w-full sm:w-64">
+                    <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search posts...') }}" />
                 </div>
+
+                @if (setting('global.multilingual'))
+                    <div class="w-40">
+                        <x-kompass::select wire:model.live="land" :searchable="false" label=" " :options="collect($available_locales)->map(fn($l) => ['name' => strtoupper($l), 'id' => $l])->prepend(['name' => __('All Languages'), 'id' => ''])">
+                        </x-kompass::select>
+                    </div>
                 @endif
 
                 <button class="btn btn-primary" wire:click="$set('FormAdd', true)">
                     <x-tabler-square-plus stroke-width="1.5" />{{ __('New post') }}
                 </button>
-          </div>
+            </div>
         </div>
-        
-        <div class="divider"></div>
 
-        <div class=" align-middle inline-block min-w-full ">
-            <div class="shadow overflow-hidden border-b border-base-300 sm:rounded-lg">
-
-
+        <div class="align-middle inline-block min-w-full">
+            <div class="overflow-hidden rounded-b-xl border border-t-0 border-base-300 bg-base-100">
 
                 @if ($posts->count())
-                    <table class="min-w-full divide-y divide-gray-50">
-                        <thead class="bg-base-300">
+                    <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
+                        <thead class="bg-base-200">
                             <tr>
                                 @foreach ($headers as $key => $value)
                                     <th scope="col"
@@ -96,7 +96,7 @@
                             </tr>
                         </thead>
 
-                <tbody class="bg-base-100 divide-y divide-gray-50">
+                <tbody class="bg-base-100 divide-y divide-base-200">
                     @foreach ($posts as $key => $post)
                         <tr wire:key="post-{{ $post->id }}">
                             @foreach ($data as $column)
@@ -192,6 +192,8 @@
                     @endforeach
                 </tbody>
                     </table>
+
+                    <x-kompass::table-footer :paginator="$posts" />
                 @else
                     <div class="min-h-[60vh] flex flex-col items-center justify-center">
                         <x-tabler-news stroke-width="1.5" class="w-16 h-16 mb-2 text-brand-500" />
