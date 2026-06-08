@@ -22,7 +22,7 @@
             <x-kompass::video.oembed :url="$datafield->data" :idField="$datafield->id" />
         @break
 
-        @case('wysiwyg')
+        @case('editor')
             <livewire:kompass-editor
                 wire:key="kompass-editor-{{ $datafield->id }}"
                 :editor-id="$datafield->id"

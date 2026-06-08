@@ -34,16 +34,7 @@
 
        @error('grid') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-      <x-kompass::select :searchable="false" label="{{ __('Type') }}" :options="[
-        ['name' => __('Text'), 'id' => 'text', 'icon' => 'tabler-letter-case'],
-        ['name' => __('WYSIWYG Editor'), 'id' => 'wysiwyg', 'icon' => 'tabler-blockquote'],
-        ['name' => __('Image'), 'id' => 'image', 'icon' => 'tabler-photo'],
-        // ['name' => __('Gallery'), 'id' => 'gallery', 'icon' => 'tabler-image-in-picture'],
-        ['name' => __('Link'), 'id' => 'link', 'icon' => 'tabler-link'],
-        ['name' => __('true/false'), 'id' => 'true_false', 'icon' => 'tabler-toggle-left'],
-        ['name' => __('File'), 'id' => 'file', 'icon' => 'tabler-file-zip'],
-        ['name' => __('Color'), 'id' => 'color', 'icon' => 'tabler-palette'],
-      ]" option-label="name"
+      <x-kompass::select :searchable="false" label="{{ __('Type') }}" :options="field_registry()->fieldSelectOptions()" option-label="name"
       option-value="id" wire:model="type" />
 
     

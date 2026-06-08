@@ -332,7 +332,7 @@ return [
 
     'setting_field_types' => [
         'text' => ['label' => 'Text', 'icon' => 'tabler-letter-case'],
-        'rich_text_box' => ['label' => 'Rich Textbox', 'icon' => 'tabler-blockquote'],
+        'wysiwyg' => ['label' => 'WYSIWYG Editor', 'icon' => 'tabler-blockquote'],
         'image' => ['label' => 'Image', 'icon' => 'tabler-photo'],
         'link' => ['label' => 'Link', 'icon' => 'tabler-link'],
         'switch' => ['label' => 'true or false', 'icon' => 'tabler-toggle-left'],

@@ -2,9 +2,12 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Str;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 
 class BlocksTable extends Component
@@ -30,7 +33,13 @@ class BlocksTable extends Component
     {
         return [
             'name' => 'required|string|min:1',
-            'type' => 'required|string|min:1|unique:blocktemplates,type',
+            'type' => [
+                'required',
+                'string',
+                'min:1',
+                'unique:blocktemplates,type',
+                Rule::notIn(array_keys(config('kompass.block_types', []))),
+            ],
         ];
     }
 
@@ -84,17 +93,30 @@ class BlocksTable extends Component
         $this->FormAdd = false;
     }
 
-    protected function createBlockViewFile($type)
+    protected function createBlockViewFile(string $type): void
     {
-        $path = resource_path('views/components/blocks/' . $type . '.blade.php');
-        if (file_exists($path)) return;
-        $content = "@props(['item' => ''])
-        @if(\$item->type == '{$type}')
+        $path = resource_path('views/components/blocks/'.$type.'.blade.php');
+
+        if (File::exists($path)) {
+            return;
+        }
+
+        File::ensureDirectoryExists(dirname($path));
+
+        $stub = <<<BLADE
+        @props(['item' => ''])
+
         <div>
-            {{-- {$type} block content --}}
+            <x-kompass::blocks-datafield :itemblocks="\$item" />
         </div>
-        @endif";
-        file_put_contents($path, $content);
+        BLADE;
+
+        try {
+            File::put($path, $stub);
+        } catch (\Throwable $e) {
+            Log::error('Kompass: could not create block view file', ['type' => $type, 'path' => $path, 'error' => $e->getMessage()]);
+            $this->addError('type', __('Could not create block view file. Check storage permissions.'));
+        }
     }
 
     public function updatedName($value) { $this->type = Str::slug($value); }
