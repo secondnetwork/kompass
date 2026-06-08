@@ -10,7 +10,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Category;
 use Secondnetwork\Kompass\Models\Datafield;
@@ -252,55 +251,32 @@ class PostsData extends Component
         }
     }
 
-    public function addBlock($blocktemplatesID, $name, $type, $grid = null, $iconclass = null)
+    public function addBlock($blocktemplatesID, $name, $type, $iconclass = null)
     {
+        $tempBlock = Blocktemplates::find($blocktemplatesID);
 
-        $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
         $block = $this->post->blocks()->create([
             'name' => $name,
             'subgroup' => $this->blockgroupId,
-
             'status' => 'published',
             'iconclass' => $tempBlock->iconclass ?? $iconclass,
             'type' => $type,
             'order' => '999',
         ]);
 
-        $blockmeta = Block::find($block->id);
-        $blockmeta->saveMeta([
+        Block::find($block->id)->saveMeta([
             'layout' => 'popout',
             'alignment' => 'left',
             'slider' => '',
         ]);
 
-        if ($type == 'wysiwyg') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'type' => 'wysiwyg',
-                'order' => '1',
-            ]);
+        // Default datafields come from the central block-type registry (built-in
+        // defaults or, for a DB template, its Blockfields).
+        foreach (block_registry()->defaultFields($type, $blocktemplatesID) as $definition) {
+            $definition['block_id'] = $block->id;
+            Datafield::create($definition);
         }
 
-        if ($type == 'button') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'type' => 'link',
-                'order' => '1',
-            ]);
-        }
-
-        if ($blocktemplatesID != null) {
-            $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
-
-            foreach ($get_blocks as $value) {
-                Datafield::create([
-                    'block_id' => $block->id,
-                    'type' => $value->type,
-                    'grid' => $value->grid,
-                    'order' => $value->order,
-                ]);
-            }
-        }
         $this->FormBlocks = false;
         $this->resetPageComponent();
     }

@@ -1,5 +1,5 @@
 <div class="{{ $class }}">
-    @switch($datafield->type)
+    @switch(field_registry()->fieldEditWidget($datafield->type))
         @case('image')
             <div class="@container">
                 <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6" wire:sortable="updateOrderImages"

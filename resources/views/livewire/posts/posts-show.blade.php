@@ -288,37 +288,9 @@
             <x-slot name="body">
 
                 <div class="grid grid-cols-4">
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
-                        <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Textblock') }}</span>
-                    </div>
-
-                    <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Accordion Group','accordiongroup')">
-                        <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Accordion') }}</span>
-                    </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Button','button','box-model-2')">
-                        <img src="{{ kompass_asset('icons-blocks/button.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Button') }}</span>
-                    </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Video','video','video')">
-                        <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Video') }}</span>
-                    </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Gallery','gallery','photo')">
-                        <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Images and Gallery') }}</span>
-                    </div>
-
+                    @foreach (block_registry()->palette() as $entry)
+                        <x-kompass::blocks.palette-tile :entry="$entry" />
+                    @endforeach
                 </div>
             </x-slot>
         </x-kompass::offcanvas>

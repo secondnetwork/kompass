@@ -12,7 +12,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Menuitem;
@@ -320,34 +319,14 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    /**
+     * Create the default datafields for a freshly added block. The definitions
+     * come from the central block-type registry (built-in defaults or, for a DB
+     * template, its Blockfields).
+     */
     private function initializeDataFields($blockId, string $type, $blocktemplatesID): void
     {
-        $fieldDefinitions = match ($type) {
-            'wysiwyg' => [['type' => 'wysiwyg', 'order' => '1']],
-            'anchormenu' => [['name' => 'Name Anchormenu', 'type' => 'text', 'order' => '1']],
-            'button' => [['type' => 'link', 'order' => '1']],
-            default => [],
-        };
-
-        if (empty($fieldDefinitions)) {
-            $fielddate = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
-
-            $fieldDefinitions = [];
-
-            // Iteriere durch die abgerufenen Felder
-            foreach ($fielddate as $item) {
-                // Füge die Felddefinitionen zum Array hinzu
-                $fieldDefinitions[] = [
-                    'name' => $item->name,
-                    'type' => $item->type,
-                    'order' => $item->order,
-                    'grid' => $item->grid,
-                ];
-            }
-
-        }
-
-        foreach ($fieldDefinitions as $definition) {
+        foreach (block_registry()->defaultFields($type, $blocktemplatesID) as $definition) {
             $definition['block_id'] = $blockId;
             Datafield::create($definition);
         }

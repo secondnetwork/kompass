@@ -5,6 +5,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Secondnetwork\Kompass\Blocks\BlockTypeRegistry;
+use Secondnetwork\Kompass\Blocks\FieldTypeRegistry;
 use Secondnetwork\Kompass\Helpers\EditorMigrationHelper;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
@@ -400,6 +402,26 @@ if (! function_exists('wysiwyg_blocks')) {
         };
 
         return EditorMigrationHelper::toRenderBlocks($data);
+    }
+}
+
+if (! function_exists('block_registry')) {
+    /**
+     * The block-type registry (single source of truth for block types).
+     */
+    function block_registry(): BlockTypeRegistry
+    {
+        return app(BlockTypeRegistry::class);
+    }
+}
+
+if (! function_exists('field_registry')) {
+    /**
+     * The datafield-type registry.
+     */
+    function field_registry(): FieldTypeRegistry
+    {
+        return app(FieldTypeRegistry::class);
     }
 }
 

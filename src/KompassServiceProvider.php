@@ -168,6 +168,11 @@ class KompassServiceProvider extends ServiceProvider
     {
         $this->app->singleton('kompass', fn () => new Kompass);
 
+        $this->app->singleton(\Secondnetwork\Kompass\Blocks\BlockTypeRegistry::class);
+        $this->app->alias(\Secondnetwork\Kompass\Blocks\BlockTypeRegistry::class, 'kompass.blocks');
+        $this->app->singleton(\Secondnetwork\Kompass\Blocks\FieldTypeRegistry::class);
+        $this->app->alias(\Secondnetwork\Kompass\Blocks\FieldTypeRegistry::class, 'kompass.fields');
+
         $this->app->singleton($this::BINDING, function ($app) {
 
             $driverConfig = config('kompass.driver', 'gd'); // Default to 'gd'
