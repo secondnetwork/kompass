@@ -115,7 +115,7 @@
 
             <div class="flex items-center gap-2 flex-wrap justify-end">
                 <div class="w-full sm:w-64">
-                    <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search roles...') }}" />
+                    <x-kompass::table-search wire:model.live="search" placeholder="{{ __('Search roles...') }}" />
                 </div>
                 <button class="btn btn-ghost border border-base-300 gap-1" wire:click="openPermissionManager">
                     <x-tabler-key stroke-width="1.5" />

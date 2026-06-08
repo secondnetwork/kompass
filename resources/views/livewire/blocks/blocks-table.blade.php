@@ -23,7 +23,7 @@
 
             <div class="flex items-center gap-2 flex-wrap justify-end">
                 <div class="w-full sm:w-64">
-                    <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search blocks...') }}" />
+                    <x-kompass::table-search wire:model.live="search" placeholder="{{ __('Search blocks...') }}" />
                 </div>
 
                 <div x-data="{ open: @entangle('FormAdd') }">

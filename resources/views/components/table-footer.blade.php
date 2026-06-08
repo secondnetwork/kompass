@@ -30,12 +30,16 @@
         }
     }
 
-    $navBtn = 'inline-flex items-center justify-center min-w-9 h-9 px-2 text-sm rounded-md border border-base-300 text-base-content hover:bg-base-200 transition';
-    $navDisabled = 'inline-flex items-center justify-center min-w-9 h-9 px-2 text-sm rounded-md border border-base-300 text-base-content/40 cursor-not-allowed select-none';
+    // Numbered page button (ghost style — pops only on hover / when active).
+    $pageBtn = 'inline-flex items-center justify-center size-9 text-sm font-medium rounded-lg text-base-content/70 hover:bg-base-200 hover:text-base-content transition';
+    $pageActive = 'inline-flex items-center justify-center size-9 text-sm font-semibold rounded-lg bg-primary text-primary-content shadow-sm';
+    // Prev / Next — bordered nav controls.
+    $navBtn = 'inline-flex items-center justify-center gap-1 h-9 px-2.5 text-sm font-medium rounded-lg border border-base-300 text-base-content hover:bg-base-200 hover:border-base-content/20 transition';
+    $navDisabled = 'inline-flex items-center justify-center gap-1 h-9 px-2.5 text-sm font-medium rounded-lg border border-base-300 text-base-content/30 cursor-not-allowed select-none';
 @endphp
 
 @if ($paginator !== null)
-    <div class="flex items-center justify-between gap-4 px-4 py-3 border-t border-base-300 bg-base-100">
+    <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-t border-base-300 bg-base-100">
         <div class="text-sm text-base-content/60">
             @if ($isLengthAware && $paginator->hasPages())
                 {{ __(':shown of :total results', ['shown' => $paginator->count(), 'total' => $paginator->total()]) }}
@@ -45,34 +49,38 @@
         </div>
 
         @if ($isPaginator && $paginator->hasPages())
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1.5">
                 {{-- Prev --}}
                 @if ($paginator->onFirstPage())
-                    <span class="{{ $navDisabled }}"><x-tabler-chevron-left class="size-4" /></span>
+                    <span class="{{ $navDisabled }}"><x-tabler-chevron-left class="size-4" /><span class="hidden sm:inline">{{ __('Prev') }}</span></span>
                 @else
                     <button type="button" wire:click="previousPage" wire:loading.attr="disabled" class="{{ $navBtn }}" aria-label="{{ __('Prev') }}">
-                        <x-tabler-chevron-left class="size-4" />
+                        <x-tabler-chevron-left class="size-4" /><span class="hidden sm:inline">{{ __('Prev') }}</span>
                     </button>
                 @endif
 
                 {{-- Numbered pages (length-aware only) --}}
-                @foreach ($pageLinks as $link)
-                    @if ($link === '...')
-                        <span class="inline-flex items-center justify-center min-w-9 h-9 px-1 text-sm text-base-content/40 select-none">…</span>
-                    @elseif ($link == $paginator->currentPage())
-                        <span class="inline-flex items-center justify-center min-w-9 h-9 px-2 text-sm rounded-md border border-primary bg-primary text-primary-content font-semibold">{{ $link }}</span>
-                    @else
-                        <button type="button" wire:click="gotoPage({{ $link }})" wire:loading.attr="disabled" class="{{ $navBtn }}">{{ $link }}</button>
-                    @endif
-                @endforeach
+                @if (count($pageLinks))
+                    <div class="flex items-center gap-1 mx-1">
+                        @foreach ($pageLinks as $link)
+                            @if ($link === '...')
+                                <span class="inline-flex items-center justify-center size-9 text-sm text-base-content/40 select-none">…</span>
+                            @elseif ($link == $paginator->currentPage())
+                                <span class="{{ $pageActive }}" aria-current="page">{{ $link }}</span>
+                            @else
+                                <button type="button" wire:click="gotoPage({{ $link }})" wire:loading.attr="disabled" class="{{ $pageBtn }}">{{ $link }}</button>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
 
                 {{-- Next --}}
                 @if ($paginator->hasMorePages())
                     <button type="button" wire:click="nextPage" wire:loading.attr="disabled" class="{{ $navBtn }}" aria-label="{{ __('Next') }}">
-                        <x-tabler-chevron-right class="size-4" />
+                        <span class="hidden sm:inline">{{ __('Next') }}</span><x-tabler-chevron-right class="size-4" />
                     </button>
                 @else
-                    <span class="{{ $navDisabled }}"><x-tabler-chevron-right class="size-4" /></span>
+                    <span class="{{ $navDisabled }}"><span class="hidden sm:inline">{{ __('Next') }}</span><x-tabler-chevron-right class="size-4" /></span>
                 @endif
             </div>
         @endif

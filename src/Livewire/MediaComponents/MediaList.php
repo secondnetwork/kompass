@@ -14,11 +14,13 @@ class MediaList extends Component
 {
     use WithPagination;
 
+    // The parent Medialibrary owns the `?dir=` URL param and passes it down
+    // reactively. Declaring #[Url] here too would make the child re-hydrate the
+    // stale value from the query string and clobber the reactive update, which
+    // breaks breadcrumb navigation back to a parent folder.
     #[Reactive]
-    #[Url]
     public $dir = 'media';
 
-  
     #[Url]
     public $filter = null;
 
@@ -47,14 +49,14 @@ class MediaList extends Component
 
         File::whereIn('id', $ids)->each(function (File $file) use ($disk) {
             if ($file->type === 'folder') {
-                $full_path = ($file->path ? rtrim($file->path, '/') . '/' : '') . $file->slug;
+                $full_path = ($file->path ? rtrim($file->path, '/').'/' : '').$file->slug;
                 Storage::disk($disk)->deleteDirectory($full_path);
             } else {
-                $directory = $file->path ? $file->path . '/' : '';
+                $directory = $file->path ? $file->path.'/' : '';
                 Storage::disk($disk)->delete([
-                    $directory . $file->slug . '.' . $file->extension,
-                    $directory . $file->slug . '.avif',
-                    $directory . $file->slug . '_thumbnail.avif',
+                    $directory.$file->slug.'.'.$file->extension,
+                    $directory.$file->slug.'.avif',
+                    $directory.$file->slug.'_thumbnail.avif',
                 ]);
             }
             $file->delete();
@@ -69,8 +71,8 @@ class MediaList extends Component
         $disk = config('kompass.storage.disk', 'public');
 
         File::whereIn('id', $ids)->each(function (File $file) use ($disk, $targetPath) {
-            $old = ($file->path ? rtrim($file->path, '/') . '/' : '') . $file->slug . ($file->extension ? '.' . $file->extension : '');
-            $new = ($targetPath ? rtrim($targetPath, '/') . '/' : '') . $file->slug . ($file->extension ? '.' . $file->extension : '');
+            $old = ($file->path ? rtrim($file->path, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
+            $new = ($targetPath ? rtrim($targetPath, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
             if (Storage::disk($disk)->move($old, $new)) {
                 $file->update(['path' => $targetPath]);
             }
@@ -88,15 +90,15 @@ class MediaList extends Component
         if ($showFolders) {
             $folders = File::where('path', $this->dir)
                 ->where('type', 'folder')
-                ->where('name', 'like', '%' . $this->search . '%')
+                ->where('name', 'like', '%'.$this->search.'%')
                 ->orderBy('name')
                 ->get();
         }
 
         $filesQuery = File::where('path', $this->dir)
-            ->where('name', 'like', '%' . $this->search . '%');
+            ->where('name', 'like', '%'.$this->search.'%');
 
-        if (!empty($this->filter) && $this->filter !== 'folder') {
+        if (! empty($this->filter) && $this->filter !== 'folder') {
             if ($this->filter === 'image') {
                 $filesQuery->whereIn('type', ['image', 'svg']);
             } else {

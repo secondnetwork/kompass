@@ -52,7 +52,7 @@
 
             <div class="flex items-center gap-2 flex-wrap justify-end">
                 <div class="w-full sm:w-64">
-                    <x-kompass::form.input type="text" name="search" wire:model.live="search" placeholder="{{ __('Search pages...') }}" />
+                    <x-kompass::table-search wire:model.live="search" placeholder="{{ __('Search pages...') }}" />
                 </div>
 
                 @if (setting('global.multilingual'))
@@ -75,12 +75,13 @@
                     <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
                         <thead class="bg-base-200">
                             @foreach ($headers as $key => $value)
+                                @php $sortField = $value === 'Updated' ? 'updated_at' : $value; @endphp
                                 <th scope="col"
                                     class="px-4 py-3 text-left text-xs font-medium text-base-content/70 uppercase">
-                                    @if($value == 'title' || $value == 'slug' || $value == 'updated_at' || $value == 'status' || $value == 'land')
-                                        <button wire:click="sortBy('{{ $value }}')" class="flex items-center gap-1 uppercase font-medium">
+                                    @if(in_array($value, ['title', 'slug', 'Updated', 'status', 'land']))
+                                        <button wire:click="sortBy('{{ $sortField }}')" class="flex items-center gap-1 uppercase font-medium">
                                             {{ __($value) }}
-                                            @if($orderBy === $value)
+                                            @if($orderBy === $sortField)
                                                 @if($orderAsc)
                                                     <x-tabler-chevron-up class="w-4 h-4" />
                                                 @else

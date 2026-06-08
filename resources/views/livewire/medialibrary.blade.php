@@ -3,8 +3,16 @@
 
         <livewire:media-components.media-uploader :dir="$dir" />
 
-        <div class="flex  justify-between gap-4 border-y border-base-300 px-5">
-            <div class="breadcrumbs text-sm flex items-center gap-2 w-full">
+        <div class="flex items-center gap-3 border-y border-base-300 bg-base-200/30 px-5 py-2.5">
+            @if ($dir !== 'media' && $dir !== '')
+                <button wire:click="goToFolder('media')" title="{{ __('Back to overview') }}"
+                    class="inline-flex items-center justify-center shrink-0 size-8 rounded-lg border border-base-300 bg-base-100 hover:bg-base-200 hover:border-base-content/20 transition">
+                    <x-tabler-arrow-left class="size-4" />
+                </button>
+                <div class="h-5 w-px bg-base-300 shrink-0"></div>
+            @endif
+
+            <div class="breadcrumbs text-sm flex items-center gap-1.5 min-w-0 overflow-x-auto">
                 @php
                     $segments = explode('/', $dir);
                     $currentPath = '';
@@ -15,20 +23,16 @@
                     @endphp
                     @if ($loop->first)
                         <x-tabler-home class="size-4 opacity-40" />
-                    @endif
-                    @if (!$loop->first)
-                        <x-tabler-chevron-right class="size-4 opacity-40" /><x-tabler-folder class="size-4 opacity-40" />
+                    @else
+                        <x-tabler-chevron-right class="size-4 opacity-30" /><x-tabler-folder class="size-4 opacity-40" />
                     @endif
 
                     <button wire:click="goToFolder('{{ $currentPath }}')"
-                        class="hover:text-primary transition-colors cursor-pointer {{ $loop->last ? 'font-bold' : 'opacity-60' }}">
-                        {{ $segment == 'media' ? __('Home') : $segment }}
+                        class="hover:text-primary transition-colors cursor-pointer {{ $loop->last ? 'font-semibold text-base-content' : 'opacity-60' }}">
+                        {{ $segment == 'media' ? __('Root') : $segment }}
                     </button>
                 @endforeach
-
-
             </div>
-
         </div>
 
         <div class="overflow-x-auto p-4" x-cloak x-data="{ dir: @entangle('dir') }">

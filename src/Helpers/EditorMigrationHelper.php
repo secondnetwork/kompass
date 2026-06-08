@@ -181,6 +181,55 @@ class EditorMigrationHelper
     }
 
     /**
+     * Returns blocks in the flat render shape consumed by the frontend Blade
+     * renderers (components/blocks/wysiwyg, hero, card, download):
+     *   - text blocks:  ['type' => 'p|h1..h6|blockquote|...', 'content' => 'html']
+     *   - lists:        ['type' => 'list', 'data' => ['type' => 'ordered|unordered', 'items' => ['html', ...]]]
+     *
+     * Unlike compile()/toCompiledArray() (which emit the Editor.js shape with
+     * text nested under data.text), this keeps text at the top level under
+     * `content`, which is what those renderers read.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function toRenderBlocks(mixed $input): array
+    {
+        $out = [];
+        $currentList = null;
+
+        foreach (self::toFlatBlocks($input) as $block) {
+            $type = $block['type'] ?? 'p';
+            $content = $block['content'] ?? '';
+
+            if ($type === 'li' || $type === 'oli') {
+                $style = $type === 'oli' ? 'ordered' : 'unordered';
+
+                if ($currentList !== null
+                    && ($out[$currentList]['type'] ?? null) === 'list'
+                    && ($out[$currentList]['data']['type'] ?? null) === $style
+                ) {
+                    $out[$currentList]['data']['items'][] = $content;
+
+                    continue;
+                }
+
+                $out[] = [
+                    'type' => 'list',
+                    'data' => ['type' => $style, 'items' => [$content]],
+                ];
+                $currentList = array_key_last($out);
+
+                continue;
+            }
+
+            $currentList = null;
+            $out[] = ['type' => $type, 'content' => $content];
+        }
+
+        return $out;
+    }
+
+    /**
      * Editor.js JSON has a top-level "blocks" array whose first element has a
      * "data" key. We do not require "time" because some payloads omit it.
      */

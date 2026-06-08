@@ -24,22 +24,39 @@ class Medialibrary extends Component
 
     #[Url]
     public $dir = 'media';
+
     public $foldername;
+
     public $name;
+
     public $fieldOrPage;
+
     public $file;
+
     public $description;
+
     public $iditem;
+
     public $extension = '';
+
     public $type;
+
     public $alt;
+
     public $path;
+
     public $field_id;
+
     public $block_id;
+
     public $FormDelete = false;
+
     public $FormEdit = false;
+
     public $FormFolder = false;
+
     public $newFolderLocation;
+
     public $filesystem;
 
     #[On('file-selected')]
@@ -51,7 +68,7 @@ class Medialibrary extends Component
     #[On('add-folder')]
     public function handleAddFolder()
     {
-         $this->FormFolder = true;
+        $this->FormFolder = true;
     }
 
     #[On('getIdBlock')]
@@ -79,6 +96,10 @@ class Medialibrary extends Component
         $this->dir = $path;
         $this->filter = '';
         $this->search = '';
+
+        // The file list is a nested component receiving $dir reactively; tell it
+        // to reset its pagination so navigation never lands on a stale empty page.
+        $this->dispatch('refresh-media-list');
     }
 
     public function mount()
@@ -99,7 +120,7 @@ class Medialibrary extends Component
             $this->description = $model->description;
             $this->type = $model->type;
             $this->newFolderLocation = $model->path;
-            $this->file = Storage::url(($model->path ? $model->path . '/' : '') . $model->slug . '.' . $model->extension);
+            $this->file = Storage::url(($model->path ? $model->path.'/' : '').$model->slug.'.'.$model->extension);
             if ($model->type == 'folder') {
                 $this->file = null;
             }
@@ -139,7 +160,7 @@ class Medialibrary extends Component
     public function newFolder()
     {
         $new_slug = genSlug($this->foldername);
-        $new_folder = ($this->dir ? rtrim($this->dir, '/') . '/' : '') . $new_slug;
+        $new_folder = ($this->dir ? rtrim($this->dir, '/').'/' : '').$new_slug;
 
         if (Storage::disk($this->filesystem)->makeDirectory($new_folder)) {
             File::create([
@@ -157,8 +178,8 @@ class Medialibrary extends Component
     public function moveItem()
     {
         $file = File::findOrFail($this->iditem);
-        $old_path = ($file->path ? rtrim($file->path, '/') . '/' : '') . $file->slug . ($file->extension ? '.' . $file->extension : '');
-        $new_path = ($this->newFolderLocation ? rtrim($this->newFolderLocation, '/') . '/' : '') . $file->slug . ($file->extension ? '.' . $file->extension : '');
+        $old_path = ($file->path ? rtrim($file->path, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
+        $new_path = ($this->newFolderLocation ? rtrim($this->newFolderLocation, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
         if (Storage::disk($this->filesystem)->move($old_path, $new_path)) {
             $file->update(['path' => $this->newFolderLocation]);
             $this->FormEdit = false;
@@ -182,20 +203,20 @@ class Medialibrary extends Component
     {
         $file = File::findOrFail($this->iditem);
         $diskName = $this->filesystem ?: config('kompass.storage.disk', 'public');
-        
+
         if ($file->type == 'folder') {
-            $full_path = ($file->path ? rtrim($file->path, '/') . '/' : '') . $file->slug;
+            $full_path = ($file->path ? rtrim($file->path, '/').'/' : '').$file->slug;
             Storage::disk($diskName)->deleteDirectory($full_path);
         } else {
-            $directory = $file->path ? $file->path . '/' : '';
+            $directory = $file->path ? $file->path.'/' : '';
             $filesToDelete = [
-                $directory . $file->slug . '.' . $file->extension,
-                $directory . $file->slug . '.avif',
-                $directory . $file->slug . '_thumbnail.avif',
+                $directory.$file->slug.'.'.$file->extension,
+                $directory.$file->slug.'.avif',
+                $directory.$file->slug.'_thumbnail.avif',
             ];
             Storage::disk($diskName)->delete($filesToDelete);
         }
-        
+
         $file->delete();
         $this->FormDelete = false;
         $this->FormEdit = false;

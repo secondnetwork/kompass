@@ -28,8 +28,7 @@
 
             <div class="flex items-center gap-2 flex-wrap justify-end">
                 <div class="w-full sm:w-64">
-                    <x-kompass::form.input type="text" name="search" wire:model.live="search"
-                        placeholder="{{ __('Search') }}..." />
+                    <x-kompass::table-search wire:model.live="search" placeholder="{{ __('Search') }}..." />
                 </div>
                 <button class="btn btn-primary" wire:click="selectItem(1, 'add')">
                     <x-tabler-user-plus stroke-width="1.5" />

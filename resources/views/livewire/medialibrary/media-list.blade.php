@@ -36,28 +36,24 @@
 }" @media-toggle.window="toggle($event.detail.id)">
 
     {{-- Search + Filter bar --}}
-    <div class="flex gap-4 items-center pb-3">
-        <div class="flex items-center gap-4">
-            <div class="w-48">
-                <x-kompass::select id="filter-type" :searchable="false" wire:model.live="filter" placeholder="{{ __('Filter by Type') }}" :options="[
-                    ['name' => __('All'), 'id' => null],
-                    ['name' => __('Images'), 'id' => 'image'],
-                    ['name' => __('Videos'), 'id' => 'video'],
-                    ['name' => __('Audio'), 'id' => 'audio'],
-                    ['name' => __('Documents'), 'id' => 'document'],
-                ]" />
-            </div>
-        </div>
-
-        <div class="relative group md:w-sm">
+    <div class="flex flex-wrap gap-3 items-center pb-4">
+        <div class="relative group flex-1 min-w-[12rem] md:max-w-sm">
             <div class="absolute z-40 inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <x-tabler-search class="w-5 h-5 opacity-40 group-focus-within:opacity-100 transition-opacity" />
             </div>
             <input wire:model.live.debounce.300ms="search" type="text"
-                class="input input-bordered w-full pl-10 focus:bg-base-100 transition-colors"
+                class="input input-bordered input-sm h-10 w-full pl-10 focus:bg-base-100 transition-colors"
                 placeholder="{{ __('Search media...') }}">
         </div>
-
+        <div class="w-48">
+            <x-kompass::select id="filter-type" :searchable="false" wire:model.live="filter" placeholder="{{ __('Filter by Type') }}" :options="[
+                ['name' => __('All'), 'id' => null],
+                ['name' => __('Images'), 'id' => 'image'],
+                ['name' => __('Videos'), 'id' => 'video'],
+                ['name' => __('Audio'), 'id' => 'audio'],
+                ['name' => __('Documents'), 'id' => 'document'],
+            ]" />
+        </div>
     </div>
 
     {{-- Bulk action bar --}}
@@ -75,7 +71,7 @@
                 <div x-show="showMoveSelect" x-transition class="flex items-center gap-2">
                     <select x-model="moveTarget" class="select select-bordered select-sm">
                         <option value="">{{ __('Select folder...') }}</option>
-                        <option value="media">{{ __('Home') }}</option>
+                        <option value="media">{{ __('Root') }}</option>
                         @foreach ($allFolders as $f)
                             <option value="{{ ($f->path ? rtrim($f->path, '/') . '/' : '') . $f->slug }}">
                                 {{ ($f->path && $f->path !== 'media' ? rtrim($f->path, '/') . '/' : '') . $f->name }}
@@ -107,7 +103,7 @@
                 <span class="text-sm font-semibold opacity-60">{{ __('Folders') }} ({{ $folders->count() }})</span>
             </div>
             <div class="@container">
-                <div class="grid @sm:grid-cols-2 @lg:grid-cols-3 @3xl:grid-cols-5 gap-3">
+                <div class="grid grid-cols-2 @sm:grid-cols-2 @lg:grid-cols-3 @3xl:grid-cols-5 gap-3">
                     @foreach ($folders as $folder)
                         <livewire:media-components.media-item :file="$folder" :key="'folder-'.$folder->id" />
                     @endforeach
@@ -136,11 +132,9 @@
             </div>
         @endif
         <div class="@container">
-            <div class="grid @sm:grid-cols-1 @lg:grid-cols-3  @3xl:grid-cols-5 pb-1 gap-3">
+            <div class="grid grid-cols-2 @sm:grid-cols-2 @lg:grid-cols-3 @3xl:grid-cols-5 pb-1 gap-3">
                 @foreach ($files as $file)
-                    <div :class="isSelected({{ $file->id }}) ? 'ring-2 ring-primary rounded-lg' : ''">
-                        <livewire:media-components.media-item :file="$file" :key="$file->id" />
-                    </div>
+                    <livewire:media-components.media-item :file="$file" :key="$file->id" />
                 @endforeach
             </div>
         </div>

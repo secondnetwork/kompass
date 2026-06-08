@@ -399,7 +399,7 @@ if (! function_exists('wysiwyg_blocks')) {
             default => null,
         };
 
-        return EditorMigrationHelper::toCompiledArray($data);
+        return EditorMigrationHelper::toRenderBlocks($data);
     }
 }
 
