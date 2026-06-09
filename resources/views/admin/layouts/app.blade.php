@@ -88,7 +88,9 @@
           @role(['admin','manager'])
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('Theme') }}</div>
 
+          @role(['admin'])
           <li><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-blocks class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
+          @endrole
           <li><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
           @endrole
