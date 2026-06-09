@@ -101,6 +101,9 @@ class PostsData extends Component
     #[Locked]
     public $getId;
 
+    /** Per-block search term for the relationship block's manual record picker, keyed by block id. */
+    public array $relationshipSearch = [];
+
     public $post;
 
     public $title;
@@ -402,6 +405,66 @@ class PostsData extends Component
                     'align' => $status,
                 ]);
             }
+        }
+
+        $this->resetPageComponent();
+    }
+
+    public function saveBlockMeta($blockId, $metaKey, $value): void
+    {
+        $block = Block::findOrFail((int) $blockId);
+        $block->deleteMeta($metaKey);
+        if ($value !== '' && $value !== null) {
+            $block->saveMeta([$metaKey => $value]);
+        }
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Toggle a record in the relationship block's manual selection (query-ids),
+     * appending it to preserve selection order or removing it if already chosen.
+     */
+    public function toggleQueryRecord($blockId, $recordId): void
+    {
+        $block = Block::findOrFail((int) $blockId);
+        $recordId = (int) $recordId;
+
+        $ids = $block->getMeta('query-ids');
+        $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+        if (in_array($recordId, $ids, true)) {
+            $ids = array_values(array_filter($ids, fn ($id) => $id !== $recordId));
+        } else {
+            $ids[] = $recordId;
+        }
+
+        $block->deleteMeta('query-ids');
+        if (! empty($ids)) {
+            $block->saveMeta(['query-ids' => $ids]);
+        }
+
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Reorder a record in the relationship block's manual selection.
+     * Called by wire:sort with the dragged item key ("blockId-recordId") and its new 0-based position.
+     */
+    public function reorderQueryRecord(string $item, int $position): void
+    {
+        [$blockId, $recordId] = explode('-', $item, 2);
+        $block = Block::findOrFail((int) $blockId);
+        $recordId = (int) $recordId;
+
+        $ids = $block->getMeta('query-ids');
+        $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+        $ids = array_values(array_filter($ids, fn ($id) => $id !== $recordId));
+        array_splice($ids, $position, 0, [$recordId]);
+
+        $block->deleteMeta('query-ids');
+        if (! empty($ids)) {
+            $block->saveMeta(['query-ids' => $ids]);
         }
 
         $this->resetPageComponent();

@@ -426,6 +426,129 @@ if (! function_exists('field_registry')) {
     }
 }
 
+if (! function_exists('query_models')) {
+    /**
+     * Registered queryable models for the relationship block.
+     *
+     * @return array<string,array<string,mixed>>
+     */
+    function query_models(): array
+    {
+        return config('kompass.query_models', []);
+    }
+}
+
+if (! function_exists('kompass_query')) {
+    /**
+     * Run the relationship block's configured query and return the matched
+     * records. Reads the chosen source, ordering and limit from block meta
+     * (query-model, query-order, query-direction, query-limit) and resolves it
+     * against the kompass.query_models registry. Returns an empty collection
+     * when nothing is configured or the source is unknown.
+     */
+    function kompass_query($block): Collection
+    {
+        $key = get_meta($block, 'query-model');
+        $models = query_models();
+
+        if (! $key || ! isset($models[$key])) {
+            return collect();
+        }
+
+        $config = $models[$key];
+        $modelClass = $config['model'] ?? null;
+
+        if (! $modelClass || ! class_exists($modelClass)) {
+            return collect();
+        }
+
+        $with = $config['with'] ?? [];
+
+        // Manual mode: render the editor's curated selection in the saved order.
+        if (get_meta($block, 'query-mode') === 'manual') {
+            $ids = get_meta($block, 'query-ids');
+            $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+            if (empty($ids)) {
+                return collect();
+            }
+
+            $records = $modelClass::query()->with($with)->whereIn('id', $ids)->get()->keyBy('id');
+
+            return collect($ids)
+                ->map(fn ($id) => $records->get($id))
+                ->filter()
+                ->values();
+        }
+
+        $orderFields = $config['order_fields'] ?? ['created_at'];
+        $order = get_meta($block, 'query-order') ?: ($orderFields[0] ?? 'created_at');
+        if (! in_array($order, $orderFields, true)) {
+            $order = $orderFields[0] ?? 'created_at';
+        }
+
+        $direction = strtolower((string) get_meta($block, 'query-direction')) === 'asc' ? 'asc' : 'desc';
+        $limit = max(1, min(100, (int) (get_meta($block, 'query-limit') ?: 5)));
+
+        $query = $modelClass::query()->with($with);
+
+        if (! empty($config['status'])) {
+            $query->where('status', $config['status']);
+        }
+
+        return $query->orderBy($order, $direction)->limit($limit)->get();
+    }
+}
+
+if (! function_exists('kompass_query_candidates')) {
+    /**
+     * Selectable records of a query source, used by the relationship block's
+     * manual-selection list. An optional search term filters server-side on the
+     * source's label field. Capped to keep the picker responsive.
+     */
+    function kompass_query_candidates(string $modelKey, int $limit = 50, ?string $search = null): Collection
+    {
+        $config = query_models()[$modelKey] ?? null;
+        $modelClass = $config['model'] ?? null;
+
+        if (! $modelClass || ! class_exists($modelClass)) {
+            return collect();
+        }
+
+        $orderFields = $config['order_fields'] ?? ['created_at'];
+        $labelField = $config['label_field'] ?? 'title';
+
+        $query = $modelClass::query();
+
+        if ($search !== null && trim($search) !== '') {
+            $query->where($labelField, 'like', '%'.trim($search).'%');
+        }
+
+        return $query
+            ->orderBy($orderFields[0] ?? 'created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+}
+
+if (! function_exists('kompass_query_url')) {
+    /**
+     * Build the frontend URL for a queried record using the source's
+     * url_pattern ("{slug}" is replaced with the record slug). Returns null
+     * when the source has no pattern.
+     */
+    function kompass_query_url(string $modelKey, $record): ?string
+    {
+        $pattern = query_models()[$modelKey]['url_pattern'] ?? null;
+
+        if (! $pattern) {
+            return null;
+        }
+
+        return url(str_replace('{slug}', (string) ($record->slug ?? ''), $pattern));
+    }
+}
+
 if (! function_exists('seo')) {
     /**
      * Get or configure the SEO service.
