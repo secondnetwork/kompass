@@ -395,7 +395,8 @@ if (! function_exists('wysiwyg_blocks')) {
     function wysiwyg_blocks(mixed $item = null, $field = null): array
     {
         $data = match (true) {
-            $field !== null => $field->data ?? null,
+            $field !== null && is_object($field) => $field->data ?? null,
+            $field !== null => $field,  // already raw data (array or string)
             is_object($item) && isset($item->datafield) => get_field('wysiwyg', $item->datafield),
             is_array($item) || is_string($item) => $item,
             default => null,
