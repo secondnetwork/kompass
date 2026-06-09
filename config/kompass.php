@@ -312,12 +312,13 @@ return [
         'text' => ['label' => 'Text', 'icon' => 'tabler-letter-case', 'display_component' => 'block.text', 'edit_widget' => 'input'],
         'wysiwyg' => ['label' => 'WYSIWYG Editor', 'icon' => 'tabler-blockquote', 'display_component' => 'block.wysiwyg', 'edit_widget' => 'editor'],
         'image' => ['label' => 'Image', 'icon' => 'tabler-photo', 'display_component' => 'block.image', 'edit_widget' => 'image'],
+        'gallery' => ['label' => 'Gallery', 'icon' => 'tabler-layout-grid-add', 'display_component' => 'block.gallery-field', 'edit_widget' => 'gallery'],
         'link' => ['label' => 'Link', 'icon' => 'tabler-link', 'display_component' => 'block.link', 'edit_widget' => 'input'],
         'true_false' => ['label' => 'true/false', 'icon' => 'tabler-toggle-left', 'display_component' => 'block.true_false', 'edit_widget' => 'input'],
         'file' => ['label' => 'File', 'icon' => 'tabler-file-zip', 'display_component' => 'block.file', 'edit_widget' => 'input'],
         'color' => ['label' => 'Color', 'icon' => 'tabler-palette', 'display_component' => 'block.color', 'edit_widget' => 'input'],
         'oembed' => ['label' => 'Video embed', 'icon' => 'tabler-brand-youtube', 'display_component' => 'block.text', 'edit_widget' => 'oembed', 'select' => false],
-        'gallery' => ['label' => 'Gallery', 'icon' => 'tabler-photo-square-rounded', 'display_component' => 'block.gallery-field', 'edit_widget' => 'gallery'],
+        
     ],
 
     /*

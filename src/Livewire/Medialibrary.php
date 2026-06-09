@@ -152,10 +152,27 @@ class Medialibrary extends Component
                     }
                     $datafield->update(['data' => $existing]);
                 } else {
+                    // Migrate legacy rows (single integer per row) into one array row.
+                    $legacyIds = Datafield::where('block_id', $this->block_id)
+                        ->where('type', 'gallery')
+                        ->get()
+                        ->reject(fn ($d) => is_array($d->data))
+                        ->pluck('data')
+                        ->filter()
+                        ->values()
+                        ->toArray();
+
+                    Datafield::where('block_id', $this->block_id)
+                        ->where('type', 'gallery')
+                        ->whereNotNull('data')
+                        ->delete();
+
+                    $merged = array_values(array_unique([...$legacyIds, $media_id]));
+
                     Datafield::create([
                         'block_id' => $this->block_id,
                         'type' => 'gallery',
-                        'data' => [$media_id],
+                        'data' => $merged,
                         'order' => 1,
                     ]);
                 }

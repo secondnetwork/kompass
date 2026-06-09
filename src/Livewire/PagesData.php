@@ -649,15 +649,35 @@ class PagesData extends Component
 
     public function updateOrderImages($list)
     {
+        if (is_string($list)) {
+            $list = json_decode($list, true) ?? [];
+        }
 
         foreach ($list as $item) {
-
             Datafield::whereId($item['value'])->update(['order' => $item['order']]);
-
         }
 
         $this->resetPageComponent();
-        // $this->dispatch('status');
+    }
+
+    /**
+     * Reorder images in an array-based gallery Datafield.
+     * Called by wire:sort with the dragged item key ("fieldId-fileId") and its new 0-based position.
+     */
+    public function updateGalleryOrder(string $item, int $position): void
+    {
+        [$fieldId, $fileId] = explode('-', $item, 2);
+        $fieldId = (int) $fieldId;
+        $fileId = (int) $fileId;
+
+        $datafield = Datafield::findOrFail($fieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+
+        $data = array_values(array_filter($data, fn ($id) => $id != $fileId));
+        array_splice($data, $position, 0, [$fileId]);
+
+        $datafield->update(['data' => $data]);
+        $this->resetPageComponent();
     }
 
     public function updateOrder($list)

@@ -167,6 +167,7 @@ class BlocksTable extends Component
             return match ($field->type) {
                 'wysiwyg' => "    \$_{$var} = wysiwyg_blocks(\$item, {$raw});",
                 'link'    => "    \$_{$var}Raw = {$raw};\n    \$_{$var} = is_array(\$_{$var}Raw) ? (object) \$_{$var}Raw : (is_string(\$_{$var}Raw) ? json_decode(\$_{$var}Raw) : null);",
+                'gallery' => "    \$_{$var}Raw = {$raw};\n    \$_{$var} = is_array(\$_{$var}Raw) ? \$_{$var}Raw : [];",
                 default   => "    \$_{$var} = {$raw};",
             };
         })->implode("\n");
@@ -177,6 +178,7 @@ class BlocksTable extends Component
             return match ($field->type) {
                 'wysiwyg'    => "    {{-- wysiwyg: {$field->name} --}}\n    @foreach (\$_{$var} as \$block)\n        <p>{!! \$block['content'] ?? '' !!}</p>\n    @endforeach",
                 'image'      => "    {{-- image: {$field->name} --}}\n    @if (\$_{$var})\n        <x-image :id=\"\$_{$var}\" class=\"w-full\" />\n    @endif",
+                'gallery'    => "    {{-- gallery: {$field->name} --}}\n    @foreach (\$_{$var} as \$_{$var}Id)\n        <x-image :id=\"\$_{$var}Id\" class=\"w-full\" />\n    @endforeach",
                 'link'       => "    {{-- link: {$field->name} --}}\n    @if (\$_{$var})\n        <a href=\"{{ \$_{$var}->url ?? '#' }}\" class=\"underline hover:no-underline\">\n            {{ \$_{$var}->title ?? '{$field->name}' }}\n        </a>\n    @endif",
                 'file'       => "    {{-- file: {$field->name} --}}\n    @if (\$_{$var})\n        @php \$_fileModel = \\Secondnetwork\\Kompass\\Models\\File::find(\$_{$var}); @endphp\n        @if (\$_fileModel)\n            <a href=\"{{ asset('storage/' . \$_fileModel->path . '/' . \$_fileModel->slug . '.' . \$_fileModel->extension) }}\" download>\n                {{ \$_fileModel->name }}\n            </a>\n        @endif\n    @endif",
                 'true_false' => "    {{-- true_false: {$field->name} --}}\n    @if (\$_{$var})\n        {{-- visible when active --}}\n    @endif",

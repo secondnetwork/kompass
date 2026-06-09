@@ -544,6 +544,26 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
+    /**
+     * Reorder images in an array-based gallery Datafield.
+     * Sort item values are encoded as "fieldId-fileId".
+     */
+    public function updateGalleryOrder(string $item, int $position): void
+    {
+        [$fieldId, $fileId] = explode('-', $item, 2);
+        $fieldId = (int) $fieldId;
+        $fileId = (int) $fileId;
+
+        $datafield = Datafield::findOrFail($fieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+
+        $data = array_values(array_filter($data, fn ($id) => $id != $fileId));
+        array_splice($data, $position, 0, [$fileId]);
+
+        $datafield->update(['data' => $data]);
+        $this->resetPageComponent();
+    }
+
     public function delete() // delete block
     {
         block::destroy($this->getId);
