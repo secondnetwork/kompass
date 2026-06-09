@@ -143,6 +143,25 @@ class Medialibrary extends Component
                 $this->dispatch('refresh-setting');
                 break;
 
+            case 'gallery-field':
+                if ($this->field_id > 0) {
+                    $datafield = Datafield::findOrFail($this->field_id);
+                    $existing = is_array($datafield->data) ? $datafield->data : [];
+                    if (! in_array($media_id, $existing)) {
+                        $existing[] = $media_id;
+                    }
+                    $datafield->update(['data' => $existing]);
+                } else {
+                    Datafield::create([
+                        'block_id' => $this->block_id,
+                        'type' => 'gallery',
+                        'data' => [$media_id],
+                        'order' => 1,
+                    ]);
+                }
+                $this->dispatch('refreshmedia');
+                break;
+
             default:
                 Datafield::updateOrCreate(
                     ['id' => $this->field_id], [

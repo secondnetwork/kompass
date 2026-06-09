@@ -122,6 +122,7 @@ class BlockTypeRegistry
                     'type' => $field->type,
                     'order' => $field->order,
                     'grid' => $field->grid,
+                    'data' => $field->type === 'gallery' ? [] : null,
                 ])
                 ->all();
         }

@@ -33,6 +33,6 @@
         @break
 
         @default
-            <x-kompass::input wire:model="data" label="{{ $datafield->name }}" type="text" />
+            {{-- <x-kompass::input wire:model="data" label="{{ $datafield->name }}" type="text" /> --}}
     @endswitch
 </div>

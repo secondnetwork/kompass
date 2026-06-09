@@ -532,7 +532,15 @@ class PostsData extends Component
 
     public function removemedia($id)
     {
-        Datafield::whereId($id)->delete();
+        Datafield::whereId($id)->update(['data' => null]);
+        $this->resetPageComponent();
+    }
+
+    public function removeFromGalleryField(int $datafieldId, int $fileId): void
+    {
+        $datafield = Datafield::findOrFail($datafieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+        $datafield->update(['data' => array_values(array_filter($data, fn ($id) => $id != $fileId))]);
         $this->resetPageComponent();
     }
 

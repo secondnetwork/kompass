@@ -275,7 +275,7 @@ return [
             'icon' => 'photo',
             'component' => 'blocks.gallery',
             'container' => false,
-            'default_fields' => [],
+            'default_fields' => [['type' => 'gallery', 'order' => 1, 'data' => []]],
             'styling' => ['rail' => 'border-l-blue-500', 'badge' => 'bg-blue-500', 'bar' => 'bg-blue-500/10', 'accent' => 'text-blue-600'],
             'controls' => ['layout', 'gallery', 'color', 'advanced'],
             'palette' => true,
@@ -317,6 +317,7 @@ return [
         'file' => ['label' => 'File', 'icon' => 'tabler-file-zip', 'display_component' => 'block.file', 'edit_widget' => 'input'],
         'color' => ['label' => 'Color', 'icon' => 'tabler-palette', 'display_component' => 'block.color', 'edit_widget' => 'input'],
         'oembed' => ['label' => 'Video embed', 'icon' => 'tabler-brand-youtube', 'display_component' => 'block.text', 'edit_widget' => 'oembed', 'select' => false],
+        'gallery' => ['label' => 'Gallery', 'icon' => 'tabler-photo-square-rounded', 'display_component' => 'block.gallery-field', 'edit_widget' => 'gallery'],
     ],
 
     /*
