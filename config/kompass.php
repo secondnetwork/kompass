@@ -327,47 +327,32 @@ return [
     | and limit in block meta (query-model, query-order, query-direction,
     | query-limit) and renders the matched records via kompass_query().
     |
-    | label        Human label shown in the block-settings select.
-    | model        Fully-qualified Eloquent model class.
-    | label_field  Attribute used as the record's display title.
-    | order_fields Attributes offered in the "order by" select.
-    | url_pattern  URL built per record; "{slug}" is replaced with the record's
-    |              slug (set null to render records without a link).
-    | status       Optional value the model's "status" column must equal.
-    | item_view    Anonymous Blade component (under resources/views/components/)
-    |              that renders ONE record on the frontend, receiving $record,
-    |              $url and $modelKey. Lets each source look different (e.g. blog
-    |              posts with a thumbnail, team members with a photo). When unset
-    |              or missing, the block falls back to a plain title link.
-    | wrapper_class CSS classes for the <ul>/<div> wrapping the rendered items
-    |              (e.g. a responsive grid).
-    | with         Relations eager-loaded on every queried record to avoid N+1
-    |              when the item_view reads them (e.g. ['category']).
+    | Sources are now database-managed (the `query_sources` table, edited under
+    | Admin → Query sources, seeded by QuerySourceSeeder). query_models() merges
+    | any entries defined here with the database rows — config wins on a key
+    | collision. Leave `query_models` empty to manage every source from the
+    | backend, or add a literal entry here to ship a hard-coded, non-editable
+    | source. Per-entry keys: label, model, label_field, order_fields,
+    | url_pattern, status, item_view, wrapper_class, with.
     |
     */
 
+    /*
+    | Allowlist of models that database-defined query sources (the admin-managed
+    | `query_sources` table, merged in by query_models()) may be backed by. A
+    | source row stores one of these KEYS in `model_key`; the key is resolved to
+    | the class here. User input never supplies a raw class name, so an arbitrary
+    | class can never be instantiated. Add an entry to expose a model to the
+    | "create source" backend screen.
+    */
+    'query_source_models' => [
+        'pages' => Page::class,
+        'posts' => Post::class,
+    ],
+
     'query_models' => [
-        'pages' => [
-            'label' => 'Pages',
-            'model' => Page::class,
-            'label_field' => 'title',
-            'order_fields' => ['created_at', 'updated_at', 'title'],
-            'url_pattern' => '/{slug}',
-            'status' => 'published',
-            'item_view' => 'blocks.relations.page',
-            'wrapper_class' => 'grid gap-2',
-        ],
-        'posts' => [
-            'label' => 'Blog posts',
-            'model' => Post::class,
-            'label_field' => 'title',
-            'order_fields' => ['created_at', 'updated_at', 'title'],
-            'url_pattern' => '/blog/{slug}',
-            'status' => 'published',
-            'item_view' => 'blocks.relations.post',
-            'wrapper_class' => 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
-            'with' => ['category'],
-        ],
+        // Managed in the database (Admin → Query sources). See QuerySourceSeeder
+        // for the default Pages / Blog posts sources.
     ],
 
     /*

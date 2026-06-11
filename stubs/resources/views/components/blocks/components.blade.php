@@ -3,7 +3,7 @@
     'isFirst' => false
 ])
             @php
-                $componentName = 'blocks.' . $item->type;
+                $componentName = block_registry()->component($item->type);
                 $viewName = 'components.' . $componentName;
             @endphp
 
@@ -15,10 +15,11 @@
                     Component <code>&lt;x-{{ $componentName }} /&gt;</code> not found.<br>
                 </section>
             @else
+                @php \Illuminate\Support\Facades\Log::warning('Kompass: block component missing', ['type' => $item->type]); @endphp
                 <!-- Block {{ $item->type }} could not be loaded -->
             @endif
 
-            @if ($item->children->isNotEmpty() && !in_array($item->type, ['group', 'accordiongroup']))
+            @if ($item->children->isNotEmpty() && ! block_registry()->isContainer($item->type))
                 @php
                     ['gridCols' => $childGridCols] = block_grid_classes($item);
                 @endphp

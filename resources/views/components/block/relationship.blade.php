@@ -11,7 +11,6 @@
     $mode         = get_meta($itemblocks, 'query-mode') === 'manual' ? 'manual' : 'auto';
     $selectedIds  = get_meta($itemblocks, 'query-ids');
     $selectedIds  = is_array($selectedIds) ? array_map('intval', $selectedIds) : [];
-    $labelField   = $selected['label_field'] ?? 'title';
     $records      = $selected ? kompass_query($itemblocks) : collect();
 @endphp
 
@@ -91,7 +90,7 @@
                     <ul class="divide-y divide-teal-100">
                         @foreach ($records as $record)
                             <li wire:key="rel-{{ $itemblocks->id }}-{{ $record->id }}" class="py-1.5 text-sm text-neutral-700">
-                                {{ $record->{$labelField} ?? ('#' . $record->id) }}
+                                {{ kompass_query_label($selectedKey, $record) }}
                             </li>
                         @endforeach
                     </ul>
@@ -124,7 +123,7 @@
                                 wire:click="toggleQueryRecord({{ $itemblocks->id }}, {{ $record->id }})"
                                 class="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-left hover:bg-base-200">
                                 <x-tabler-plus class="size-4 shrink-0 text-teal-600" />
-                                <span class="truncate">{{ $record->{$labelField} ?? ('#' . $record->id) }}</span>
+                                <span class="truncate">{{ kompass_query_label($selectedKey, $record) }}</span>
                             </button>
                         @empty
                             <p class="px-2 py-2 text-xs text-neutral-400">
@@ -147,7 +146,7 @@
                                     <x-tabler-grip-vertical class="size-4" />
                                 </span>
                                 <span class="text-xs text-primary w-4 shrink-0">{{ $loop->iteration }}</span>
-                                <span class="truncate flex-1">{{ $record->{$labelField} ?? ('#' . $record->id) }}</span>
+                                <span class="truncate flex-1">{{ kompass_query_label($selectedKey, $record) }}</span>
                                 <button type="button"
                                     wire:click="toggleQueryRecord({{ $itemblocks->id }}, {{ $record->id }})"
                                     class="shrink-0">

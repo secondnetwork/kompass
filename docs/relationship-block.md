@@ -16,18 +16,107 @@ source.
 
 ---
 
+## Using the block (step by step)
+
+This is the everyday workflow once at least one source exists. If no source is
+available yet, jump to [Setting up a source](#setting-up-a-source) first.
+
+### 1. Add the block to a page
+
+In the page/post builder, open the block palette and add a **Relationship**
+block (teal database icon). The block has no datafields — its whole
+configuration lives in the inline edit panel that appears on the block.
+
+### 2. Choose a source
+
+In the block's edit panel, open the **Source** dropdown and pick what to pull in
+(e.g. *Blog posts*, *Pages*, *Team*). The list comes from the registered sources
+(`/admin/query-sources`). Nothing else shows until a source is selected.
+
+### 3. Pick a mode
+
+A **Mode** toggle appears with two options:
+
+| Mode | Use it when | What you configure |
+| --- | --- | --- |
+| **Automatic** | The list should stay current on its own ("latest 5 posts"). | Order field, direction, limit. |
+| **Manual** | You want an exact, hand-curated set in a specific order. | Which records, and their order. |
+
+You can switch modes at any time; each mode keeps its own settings.
+
+### 4a. Automatic mode
+
+Three controls appear, plus a **live preview** of the matched records:
+
+- **Order by** — a field from the source's allowed order fields (e.g.
+  `created_at`, `title`).
+- **Direction** — the ascending / descending icons toggle the sort order
+  (default: descending).
+- **Limit** — how many records to show (1–100, default 5).
+
+The preview list updates immediately so you can see exactly what visitors will
+get. Records are also filtered by the source's status/scope (e.g. only
+*published* posts) — that part is fixed by the source, not editable per block.
+
+### 4b. Manual mode
+
+Two lists sit side by side:
+
+- **Available** (left) — every selectable record. Type in the search box to
+  filter server-side (handy when there are many records); a spinner shows while
+  it searches. Click a record (or the **+**) to add it.
+- **Selected** (right) — your chosen records, in the order they'll render.
+  - **Reorder**: drag the grip handle (⋮⋮) to move a record up or down.
+  - **Remove**: click the **✕** to send it back to *Available*.
+
+The order on the right is exactly the order on the frontend.
+
+### 5. Save and view
+
+The block saves as you edit (each change writes block meta immediately). Publish
+/ view the page and the records render through the source's configured item view
+— e.g. blog posts as cards with thumbnail and category, team members with photo
+and contact details. If a source has no item view, records render as plain title
+links.
+
+> **Switching auto → manual (or back)** never loses data: your manual selection
+> and your auto settings are stored under separate meta keys, so toggling just
+> changes which one is used.
+
+---
+
+## Setting up a source
+
+Before editors can pick a source, an admin registers it once. Two steps:
+
+1. **Allow-list the model** in `config/kompass.php` under `query_source_models`
+   (a key → model class map). This is a security guard — only allow-listed
+   models can ever be queried.
+2. **Create the source** at **Admin → Query sources** (`/admin/query-sources`,
+   admin role only): click **Add**, choose the allow-listed model, set the
+   display fields, ordering, optional filters (status / scope), the frontend
+   item view, and the wrapper layout. Drag rows to set their order in the
+   editor's Source dropdown.
+
+The full end-to-end walkthrough — migration, model, allow-list, source row, and
+item view — is the [Team members worked example](#adding-a-new-source--full-worked-example-team-members)
+at the end of this document.
+
+---
+
 ## Architecture at a glance
 
 | Concern | Where |
 | --- | --- |
 | Block type registration | `config/kompass.php` → `block_types.relationship` |
-| Selectable sources | `config/kompass.php` → `query_models` |
+| Allow-listed models | `config/kompass.php` → `query_source_models` (key → FQCN) |
+| Selectable sources | `query_sources` table, managed at `/admin/query-sources` (merged with optional `config('kompass.query_models')`) |
 | Query execution / helpers | `src/Helpers/helpers.php` |
 | Admin edit UI (inline) | `resources/views/components/block/relationship.blade.php` |
 | Admin builder dispatch | `resources/views/components/blocks-datafield.blade.php` |
 | Editor actions (Livewire) | `src/Livewire/PagesData.php`, `src/Livewire/PostsData.php` |
 | Frontend rendering | `resources/views/components/blocks/relationship.blade.php` (published to the app) |
-| Per-source item views | `resources/views/components/blocks/relations/*.blade.php` (published to the app) |
+| Per-source item views | `resources/views/components/relations/*.blade.php` (published to the app) |
 
 The configuration (chosen source, mode, ordering, limit, manual selection) is
 stored entirely in **block meta** — the block has no datafields.
@@ -38,7 +127,7 @@ stored entirely in **block meta** — the block has no datafields.
 
 | Meta key | Type | Meaning |
 | --- | --- | --- |
-| `query-model` | string | Key into `config('kompass.query_models')` (the chosen source). |
+| `query-model` | string | The chosen source's `key` (resolved via `query_models()`). |
 | `query-mode` | string | `auto` (default) or `manual`. |
 | `query-order` | string | Column to order by (auto mode). Must be one of the source's `order_fields`. |
 | `query-direction` | string | `asc` or `desc` (auto mode, default `desc`). |
@@ -54,35 +143,47 @@ Meta arrays are transparently JSON-encoded/decoded by the `HasMeta` trait, so
 
 ### Registering a source
 
-Add an entry to the `query_models` array in `config/kompass.php`:
+Sources are **database-managed**: each row in the `query_sources` table is one
+selectable source, created and edited at **Admin → Query sources**
+(`/admin/query-sources`, admin role only). Before a source can point at a model,
+that model must be allow-listed in `config/kompass.php`:
 
 ```php
-'query_models' => [
-    'posts' => [
-        'label'         => 'Blog posts',
-        'model'         => \Secondnetwork\Kompass\Models\Post::class,
-        'label_field'   => 'title',
-        'order_fields'  => ['created_at', 'updated_at', 'title'],
-        'url_pattern'   => '/blog/{slug}',
-        'status'        => 'published',
-        'item_view'     => 'blocks.relations.post',
-        'wrapper_class' => 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
-        'with'          => ['category'],
-    ],
+// config/kompass.php — a raw class name is never instantiated from a DB row
+'query_source_models' => [
+    'pages' => \Secondnetwork\Kompass\Models\Page::class,
+    'posts' => \Secondnetwork\Kompass\Models\Post::class,
+    // 'teams' => \App\Models\TeamMember::class,
 ],
 ```
+
+`query_models()` then resolves each DB row into the source shape below (DB
+columns map: `model_key` → `model` via the allow-list, `status_filter` →
+`status`). The full Team walkthrough is at the end of this document. For
+fresh installs, provision rows in a seeder (see `QuerySourceSeeder`).
+
+> **Optional config sources.** You can still hardcode a source in
+> `config('kompass.query_models')` using the same shape as below. Config sources
+> are merged with DB rows and **win on key collision**, so a built-in can never
+> be shadowed by a database row.
+
+The resolved source shape (DB column → array key in parentheses):
 
 | Key | Required | Description |
 | --- | --- | --- |
 | `label` | yes | Human label shown in the source `<select>`. |
-| `model` | yes | Fully-qualified Eloquent model class. |
-| `label_field` | yes | Attribute used as the record's display title (admin picker, fallback rendering, search column). |
+| `model` | yes | Eloquent model class, resolved from the row's `model_key` via the allow-list. |
+| `display_fields` | yes | List of attributes shown in the picker/preview (joined with ` · `) and searched server-side. **The first entry is the record's title / link text** (exposed as the derived `label_field`). |
 | `order_fields` | yes | Columns offered in the "Order by" select (auto mode). First entry is the default. |
-| `url_pattern` | no | URL built per record; `{slug}` is replaced with the record's `slug`. Set to `null` to render records without a link. |
-| `status` | no | If set, the query filters `where('status', <value>)` (auto mode only). |
+| `url_pattern` | no | URL built per record; `{slug}` is replaced with the record's `slug`. Empty → records render without a link. |
+| `status` | no | From the `status_filter` column. If set, the query filters `where('status', <value>)` (auto mode only). |
+| `scope` | no | Eloquent local scope applied to the query (e.g. `active` → `scopeActive()`). Applied in both auto mode and the candidate picker, **only** when the model actually defines it. |
 | `item_view` | no | Anonymous Blade component rendering **one** record on the frontend. Falls back to a plain title link when unset or missing. |
 | `wrapper_class` | no | CSS classes for the element wrapping the rendered items (e.g. a responsive grid). Defaults to `grid gap-4`. |
-| `with` | no | Relations eager-loaded on every queried record to avoid N+1 when the item view reads them (e.g. `['category']`). |
+| `with` | no | Relations eager-loaded on every queried record to avoid N+1 when the item view reads them (e.g. `['category']`). The **Eager loads** field. |
+
+> Row **order** in the admin list is set by dragging rows (grip handle), and
+> determines the order sources appear in the block's source `<select>`.
 
 ---
 
@@ -92,7 +193,9 @@ Defined in `src/Helpers/helpers.php`, globally available.
 
 ### `query_models(): array`
 
-Returns the registered sources (`config('kompass.query_models')`).
+Returns the registered sources, keyed by source key. Merges the `query_sources`
+table (allow-list-guarded, cached under `kompass-query-sources`) with any
+`config('kompass.query_models')` entries — config wins on key collision.
 
 ### `kompass_query($block): Illuminate\Support\Collection`
 
@@ -108,12 +211,24 @@ Runs the block's configured query and returns the matched records.
 ### `kompass_query_candidates(string $modelKey, int $limit = 50, ?string $search = null): Collection`
 
 Returns selectable records for the manual picker. When `$search` is provided it
-filters server-side with `where(label_field, 'like', '%term%')`.
+filters server-side across the source's `display_fields`, `OR`-ing a
+`like '%term%'` per field. Applies the source's `scope`.
 
 ### `kompass_query_url(string $modelKey, $record): ?string`
 
 Builds the frontend URL for a record from the source's `url_pattern` (replacing
 `{slug}`). Returns `null` when the source has no pattern.
+
+### `kompass_query_label(string $modelKey, $record): string`
+
+Human label for a record. Joins the source's `display_fields` with ` · `; falls
+back to `#id` when nothing is filled. Used by the admin picker and preview.
+
+### `kompass_apply_scope($query, string $modelClass, ?string $scope): void`
+
+Applies a named Eloquent local scope to a query, but **only** when the model
+defines `scope{Name}()`. Guards against calling arbitrary methods from
+admin-supplied configuration.
 
 ---
 
@@ -176,7 +291,7 @@ receives:
 | `$url` | The record's URL (from `url_pattern`) or `null`. |
 | `$modelKey` | The source key (e.g. `posts`). |
 
-Example — `resources/views/components/blocks/relations/post.blade.php`:
+Example — `resources/views/components/relations/post.blade.php`:
 
 ```blade
 @props(['record', 'url' => null, 'modelKey' => null])
@@ -217,6 +332,7 @@ wiring it up as a relationship source. The team member has these fields:
 | Address | `address` | string |
 | Description | `description` | text |
 | Sort order | `order` | integer |
+| Active | `is_active` | boolean *(optional — used to demo the `scope` filter)* |
 
 ### 1. Create the migration
 
@@ -244,6 +360,7 @@ return new class extends Migration
             $table->string('address')->nullable();           // Adresse
             $table->text('description')->nullable();         // Beschreibung
             $table->integer('order')->default(0);
+            $table->boolean('is_active')->default(true);     // optional, for the Scope demo
             $table->timestamps();
         });
     }
@@ -272,6 +389,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Secondnetwork\Kompass\Models\File;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class TeamMember extends Model
 {
     protected $guarded = [];
@@ -284,34 +403,84 @@ class TeamMember extends Model
     {
         return $this->belongsTo(File::class, 'photo');
     }
+
+    /**
+     * Optional: a local scope the source can reference via its `scope` field
+     * (e.g. Scope = "active" → this method). Only applied if it exists.
+     */
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('is_active', true);
+    }
 }
 ```
 
 > The `photo` column stores a medialibrary file id (the same convention as
 > `posts.thumbnails`), so it renders with `<x-image :id="$record->photo" />`.
 
-### 3. Register the source
+### 3. Allow-list the model
 
-In `config/kompass.php`:
+Sources are stored in the database, but the model they may point at must be
+allow-listed in `config/kompass.php` (a raw class name is never instantiated
+from a DB row). Add the model under `query_source_models`, keyed by a short
+`model_key`:
 
 ```php
-'query_models' => [
-    // …existing sources…
-    'teams' => [
-        'label'         => 'Team',
-        'model'         => \App\Models\TeamMember::class,
-        'label_field'   => 'name',
-        'order_fields'  => ['order', 'name'],
-        'url_pattern'   => null,            // team members have no detail page
-        'item_view'     => 'blocks.relations.team',
-        'wrapper_class' => 'grid gap-8 sm:grid-cols-2 lg:grid-cols-3',
-    ],
+// config/kompass.php
+'query_source_models' => [
+    'pages' => \Secondnetwork\Kompass\Models\Page::class,
+    'posts' => \Secondnetwork\Kompass\Models\Post::class,
+    'teams' => \App\Models\TeamMember::class, // ← add this
 ],
 ```
 
-### 4. Create the item view
+### 4. Create the source
 
-At `resources/views/components/blocks/relations/team.blade.php` — renders all
+Source definitions live in the `query_sources` table and are managed from
+**Admin → Query sources** (`/admin/query-sources`, admin role only). Click
+**Add** and fill in:
+
+| Field | Value | Notes |
+| --- | --- | --- |
+| Label | `Team` | Shown in the block's source `<select>`. |
+| Key | `team` | Stable identifier saved on blocks — avoid renaming later. |
+| Model | `teams (TeamMember)` | The `model_key` you allow-listed in step 3. |
+| Display fields | `name, role` | First field is the title/link text; all are searched. |
+| Order fields | `order, name` | Offered in the "Order by" select (auto mode). |
+| Status filter | *(empty)* | Simple `where('status', …)`; not needed here. |
+| Scope | `active` | Optional — calls `scopeActive()` from step 2. |
+| URL pattern | *(empty)* | Team members have no detail page → rendered without a link. |
+| Item view | `relations.team` | The component from step 5. |
+| Wrapper class | `grid gap-8 sm:grid-cols-2 lg:grid-cols-3` | Layout around the rendered items. |
+| Eager loads | *(empty)* | Add relations here if the item view reads them (avoids N+1). |
+
+Row **order** in the list is set by dragging rows (the grip handle), not a form
+field.
+
+> **Provisioning sources in code.** For fresh installs / version control, create
+> the same rows in a seeder instead of by hand (see `QuerySourceSeeder`):
+>
+> ```php
+> use Secondnetwork\Kompass\Models\QuerySource;
+>
+> QuerySource::updateOrCreate(['key' => 'team'], [
+>     'label'          => 'Team',
+>     'model_key'      => 'teams',
+>     'display_fields' => ['name', 'role'],
+>     'order_fields'   => ['order', 'name'],
+>     'scope'          => 'active',
+>     'item_view'      => 'relations.team',
+>     'wrapper_class'  => 'grid gap-8 sm:grid-cols-2 lg:grid-cols-3',
+>     'order'          => 3,
+> ]);
+> ```
+>
+> The `model_key` must exist in `query_source_models`; rows pointing at a
+> non-allow-listed model are silently skipped by `query_models()`.
+
+### 5. Create the item view
+
+At `resources/views/components/relations/team.blade.php` — renders all
 fields, with `tel:`/`mailto:` links:
 
 ```blade
@@ -355,16 +524,17 @@ fields, with `tel:`/`mailto:` links:
 </div>
 ```
 
-### 5. Done
+### 6. Done
 
 The editor can now add a Relationship block, pick **Team** as the source, and
-either auto-query by `order` or manually select members (with search and
-drag-and-drop ordering). No block code changes were required — the new source and
-its layout came entirely from config + one item view.
+either auto-query (ordered by `order`, filtered to active members via the
+`scope`) or manually select members with search and drag-and-drop ordering. No
+block code changes were required — the new source came from one allow-list entry,
+one database row (admin UI or seeder), and one item view.
 
 > Tip: if an item view reads a relation (e.g. `$record->department`), add it to
-> the source's `with` array (`'with' => ['department']`) to keep the frontend
-> query free of N+1s.
+> the source's **Eager loads** (`with`) field to keep the frontend query free of
+> N+1s.
 
 ---
 

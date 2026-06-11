@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -10,6 +11,7 @@ use Secondnetwork\Kompass\Blocks\FieldTypeRegistry;
 use Secondnetwork\Kompass\Helpers\EditorMigrationHelper;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
+use Secondnetwork\Kompass\Models\QuerySource;
 use Secondnetwork\Kompass\Seo\SeoService;
 
 if (! function_exists('getImageID')) {
@@ -428,13 +430,52 @@ if (! function_exists('field_registry')) {
 
 if (! function_exists('query_models')) {
     /**
-     * Registered queryable models for the relationship block.
+     * Registered queryable sources for the relationship block. Merges the
+     * config-defined sources (config('kompass.query_models')) with the
+     * admin-managed `query_sources` table. Config sources win on key collision,
+     * so built-ins are never shadowed by a database row. Database sources are
+     * resolved against the kompass.query_source_models allowlist; rows whose
+     * model_key is not allow-listed are skipped.
      *
      * @return array<string,array<string,mixed>>
      */
     function query_models(): array
     {
-        return config('kompass.query_models', []);
+        $config = config('kompass.query_models', []);
+
+        $db = cache()->rememberForever('kompass-query-sources', function () {
+            try {
+                $allow = config('kompass.query_source_models', []);
+
+                return QuerySource::orderBy('order')
+                    ->get()
+                    ->filter(fn ($source) => isset($allow[$source->model_key]))
+                    ->mapWithKeys(function ($source) use ($allow) {
+                        $display = $source->display_fields ?: ['title'];
+
+                        return [$source->key => [
+                            'label' => $source->label,
+                            'model' => $allow[$source->model_key],
+                            'display_fields' => $display,
+                            'label_field' => $display[0], // first display field doubles as the title/link text
+                            'order_fields' => $source->order_fields ?: ['created_at'],
+                            'url_pattern' => $source->url_pattern,
+                            'status' => $source->status_filter,
+                            'scope' => $source->scope,
+                            'item_view' => $source->item_view,
+                            'wrapper_class' => $source->wrapper_class,
+                            'with' => $source->with ?: [],
+                        ]];
+                    })
+                    ->all();
+            } catch (Throwable $e) {
+                // Table not migrated yet, or DB unavailable — fall back to config only.
+                return [];
+            }
+        });
+
+        // Config sources win on key collision.
+        return $config + $db;
     }
 }
 
@@ -496,6 +537,8 @@ if (! function_exists('kompass_query')) {
             $query->where('status', $config['status']);
         }
 
+        kompass_apply_scope($query, $modelClass, $config['scope'] ?? null);
+
         return $query->orderBy($order, $direction)->limit($limit)->get();
     }
 }
@@ -516,12 +559,23 @@ if (! function_exists('kompass_query_candidates')) {
         }
 
         $orderFields = $config['order_fields'] ?? ['created_at'];
-        $labelField = $config['label_field'] ?? 'title';
+        $searchFields = ! empty($config['display_fields'])
+            ? $config['display_fields']
+            : [$config['label_field'] ?? 'title'];
 
         $query = $modelClass::query();
 
+        kompass_apply_scope($query, $modelClass, $config['scope'] ?? null);
+
         if ($search !== null && trim($search) !== '') {
-            $query->where($labelField, 'like', '%'.trim($search).'%');
+            $term = trim($search);
+            $query->where(function ($q) use ($searchFields, $term): void {
+                foreach (array_values($searchFields) as $i => $field) {
+                    $i === 0
+                        ? $q->where($field, 'like', '%'.$term.'%')
+                        : $q->orWhere($field, 'like', '%'.$term.'%');
+                }
+            });
         }
 
         return $query
@@ -546,6 +600,54 @@ if (! function_exists('kompass_query_url')) {
         }
 
         return url(str_replace('{slug}', (string) ($record->slug ?? ''), $pattern));
+    }
+}
+
+if (! function_exists('kompass_apply_scope')) {
+    /**
+     * Apply a named Eloquent local scope to a query, but only when the model
+     * actually defines it (scope{Name}()). The scope name comes from admin
+     * configuration, so this guard prevents calling arbitrary methods.
+     *
+     * @param  Builder  $query
+     */
+    function kompass_apply_scope($query, string $modelClass, ?string $scope): void
+    {
+        if (! $scope || trim($scope) === '') {
+            return;
+        }
+
+        $scope = trim($scope);
+
+        if (method_exists($modelClass, 'scope'.Str::studly($scope))) {
+            $query->{$scope}();
+        }
+    }
+}
+
+if (! function_exists('kompass_query_label')) {
+    /**
+     * Human label for a queried record. Uses the source's display_fields
+     * (joined with " · ") when set, otherwise the single label_field. Falls
+     * back to "#id" when nothing is filled.
+     */
+    function kompass_query_label(string $modelKey, $record): string
+    {
+        $config = query_models()[$modelKey] ?? [];
+
+        $fields = ! empty($config['display_fields'])
+            ? $config['display_fields']
+            : [$config['label_field'] ?? 'title'];
+
+        $parts = [];
+        foreach ($fields as $field) {
+            $value = $record->{$field} ?? null;
+            if (filled($value)) {
+                $parts[] = (string) $value;
+            }
+        }
+
+        return $parts !== [] ? implode(' · ', $parts) : '#'.$record->id;
     }
 }
 
