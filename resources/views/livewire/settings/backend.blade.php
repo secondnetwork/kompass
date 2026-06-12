@@ -7,6 +7,10 @@
     <x-kompass::form.switch wire:model.live="registration_can_user" label="{{ __('User can register') }}" />
 
     <hr class="h-px w-full border-none bg-base-300">
+
+    <x-kompass::form.switch wire:model.live="dashboard_docs_card" label="{{ __('Show documentation card on dashboard') }}" />
+
+    <hr class="h-px w-full border-none bg-base-300">
     
     <x-kompass::upload-image 
         wire:model="adminlogo" 

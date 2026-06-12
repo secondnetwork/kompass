@@ -21,6 +21,8 @@ class Backend extends Component
 
     public $adminlogo;
 
+    public $dashboard_docs_card;
+
     private $dbKeyRegistration = 'registration_can_user';
 
     private $imageKey = 'adminlogo';
@@ -35,6 +37,9 @@ class Backend extends Component
             : config('kompass.auth.password_login_enabled', false);
         $this->admincopyright = optional($globalSettings->get('admincopyright'))->data ?? '';
         $this->adminlogo = optional($globalSettings->get($this->imageKey))->data ?? '';
+        $this->dashboard_docs_card = optional($globalSettings->get('dashboard_docs_card'))->data !== null
+            ? (bool) optional($globalSettings->get('dashboard_docs_card'))->data
+            : true;
     }
 
     public function updating($property, $value)
@@ -47,6 +52,9 @@ class Backend extends Component
         }
         if ($property === 'admincopyright') {
             $this->updateSettingInDatabase('admincopyright', $value);
+        }
+        if ($property === 'dashboard_docs_card') {
+            $this->updateSettingInDatabase('dashboard_docs_card', (string) $value);
         }
         if ($property == 'adminlogo') {
             if ($value instanceof TemporaryUploadedFile) {
