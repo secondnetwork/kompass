@@ -12,9 +12,7 @@
 
         @if ($file)
             <div class="relative" wire:sort:item="{{ $itemfield->id }}">
-                <span class="absolute top-2 left-2 " wire:sort:handle>
-                    <x-tabler-arrow-autofit-width class="cursor-move stroke-current size-5 md:size-6 mr-1 text-gray-800 bg-gray-200 rounded" />
-                </span>
+  
                 <img on="pages.pages-show" alt="logo" class="w-full aspect-[4/3] object-cover rounded"
                     src="{{ asset('storage/' . $file->path . '/' . $file->slug . '.' . $file->extension) }}">
                 <action-button class="absolute flex justify-between items-center w-full bottom-0 right-0 z-10 p-3 gap-1 bg-gray-100/80 ">

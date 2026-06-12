@@ -10,7 +10,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Category;
 use Secondnetwork\Kompass\Models\Datafield;
@@ -101,6 +100,9 @@ class PostsData extends Component
 
     #[Locked]
     public $getId;
+
+    /** Per-block search term for the relationship block's manual record picker, keyed by block id. */
+    public array $relationshipSearch = [];
 
     public $post;
 
@@ -252,55 +254,32 @@ class PostsData extends Component
         }
     }
 
-    public function addBlock($blocktemplatesID, $name, $type, $grid = null, $iconclass = null)
+    public function addBlock($blocktemplatesID, $name, $type, $iconclass = null)
     {
+        $tempBlock = Blocktemplates::find($blocktemplatesID);
 
-        $tempBlock = Blocktemplates::where('id', $blocktemplatesID)->first();
         $block = $this->post->blocks()->create([
             'name' => $name,
             'subgroup' => $this->blockgroupId,
-
             'status' => 'published',
             'iconclass' => $tempBlock->iconclass ?? $iconclass,
             'type' => $type,
             'order' => '999',
         ]);
 
-        $blockmeta = Block::find($block->id);
-        $blockmeta->saveMeta([
+        Block::find($block->id)->saveMeta([
             'layout' => 'popout',
             'alignment' => 'left',
             'slider' => '',
         ]);
 
-        if ($type == 'wysiwyg') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'type' => 'wysiwyg',
-                'order' => '1',
-            ]);
+        // Default datafields come from the central block-type registry (built-in
+        // defaults or, for a DB template, its Blockfields).
+        foreach (block_registry()->defaultFields($type, $blocktemplatesID) as $definition) {
+            $definition['block_id'] = $block->id;
+            Datafield::create($definition);
         }
 
-        if ($type == 'button') {
-            Datafield::create([
-                'block_id' => $block->id,
-                'type' => 'link',
-                'order' => '1',
-            ]);
-        }
-
-        if ($blocktemplatesID != null) {
-            $get_blocks = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
-
-            foreach ($get_blocks as $value) {
-                Datafield::create([
-                    'block_id' => $block->id,
-                    'type' => $value->type,
-                    'grid' => $value->grid,
-                    'order' => $value->order,
-                ]);
-            }
-        }
         $this->FormBlocks = false;
         $this->resetPageComponent();
     }
@@ -431,6 +410,66 @@ class PostsData extends Component
         $this->resetPageComponent();
     }
 
+    public function saveBlockMeta($blockId, $metaKey, $value): void
+    {
+        $block = Block::findOrFail((int) $blockId);
+        $block->deleteMeta($metaKey);
+        if ($value !== '' && $value !== null) {
+            $block->saveMeta([$metaKey => $value]);
+        }
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Toggle a record in the relationship block's manual selection (query-ids),
+     * appending it to preserve selection order or removing it if already chosen.
+     */
+    public function toggleQueryRecord($blockId, $recordId): void
+    {
+        $block = Block::findOrFail((int) $blockId);
+        $recordId = (int) $recordId;
+
+        $ids = $block->getMeta('query-ids');
+        $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+        if (in_array($recordId, $ids, true)) {
+            $ids = array_values(array_filter($ids, fn ($id) => $id !== $recordId));
+        } else {
+            $ids[] = $recordId;
+        }
+
+        $block->deleteMeta('query-ids');
+        if (! empty($ids)) {
+            $block->saveMeta(['query-ids' => $ids]);
+        }
+
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Reorder a record in the relationship block's manual selection.
+     * Called by wire:sort with the dragged item key ("blockId-recordId") and its new 0-based position.
+     */
+    public function reorderQueryRecord(string $item, int $position): void
+    {
+        [$blockId, $recordId] = explode('-', $item, 2);
+        $block = Block::findOrFail((int) $blockId);
+        $recordId = (int) $recordId;
+
+        $ids = $block->getMeta('query-ids');
+        $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+        $ids = array_values(array_filter($ids, fn ($id) => $id !== $recordId));
+        array_splice($ids, $position, 0, [$recordId]);
+
+        $block->deleteMeta('query-ids');
+        if (! empty($ids)) {
+            $block->saveMeta(['query-ids' => $ids]);
+        }
+
+        $this->resetPageComponent();
+    }
+
     public function updatestatus($id, $status)
     {
         if ($status == 'draft') {
@@ -556,7 +595,35 @@ class PostsData extends Component
 
     public function removemedia($id)
     {
-        Datafield::whereId($id)->delete();
+        Datafield::whereId($id)->update(['data' => null]);
+        $this->resetPageComponent();
+    }
+
+    public function removeFromGalleryField(int $datafieldId, int $fileId): void
+    {
+        $datafield = Datafield::findOrFail($datafieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+        $datafield->update(['data' => array_values(array_filter($data, fn ($id) => $id != $fileId))]);
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Reorder images in an array-based gallery Datafield.
+     * Sort item values are encoded as "fieldId-fileId".
+     */
+    public function updateGalleryOrder(string $item, int $position): void
+    {
+        [$fieldId, $fileId] = explode('-', $item, 2);
+        $fieldId = (int) $fieldId;
+        $fileId = (int) $fileId;
+
+        $datafield = Datafield::findOrFail($fieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+
+        $data = array_values(array_filter($data, fn ($id) => $id != $fileId));
+        array_splice($data, $position, 0, [$fileId]);
+
+        $datafield->update(['data' => $data]);
         $this->resetPageComponent();
     }
 

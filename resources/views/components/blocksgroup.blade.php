@@ -6,18 +6,12 @@
 ])
 
 @php
-    $isContainer = in_array($itemblocks->type, ['group', 'accordiongroup']);
+    $isContainer = block_registry()->isContainer($itemblocks->type);
     $hasChildren = $itemblocks->children->isNotEmpty();
     $showNest = $isContainer || $hasChildren;
 
-    // Divi-style colour coding by hierarchy: layout = indigo, accordion = emerald, module = slate.
-    $style = match ($itemblocks->type) {
-        'group' => ['rail' => 'border-l-indigo-500', 'badge' => 'bg-indigo-500', 'bar' => 'bg-indigo-500/10', 'accent' => 'text-indigo-600'],
-        'accordiongroup' => ['rail' => 'border-l-emerald-500', 'badge' => 'bg-emerald-500', 'bar' => 'bg-emerald-500/10', 'accent' => 'text-emerald-600'],
-        'video' => ['rail' => 'border-l-red-600', 'badge' => 'bg-slate-500', 'bar' => 'bg-slate-600/10', 'accent' => 'text-red-600'],
-        'gallery' => ['rail' => 'border-l-blue-500', 'badge' => 'bg-blue-500', 'bar' => 'bg-blue-500/10', 'accent' => 'text-blue-600'],
-        default => ['rail' => 'border-l-slate-400', 'badge' => 'bg-slate-500', 'bar' => 'bg-base-200', 'accent' => 'text-slate-500'],
-    };
+    // Colour coding by block type, resolved from the central block-type registry.
+    $style = block_registry()->styling($itemblocks->type);
 
     // Per-block custom colour (set via the block settings offcanvas). When present it
     // overrides the type-based palette above via inline styles (a custom hex can't be a Tailwind class).
@@ -90,7 +84,7 @@
         {{-- Right: actions --}}
         <div class="flex items-center gap-1 shrink-0 ">
 
-            @if ($itemblocks->type == 'group' || $itemblocks->type == 'accordiongroup')
+            @if ($isContainer)
 
                 {{-- Inline icons: visible when container >= 380px --}}
                 <div class="hidden @[280px]:flex items-center gap-1">

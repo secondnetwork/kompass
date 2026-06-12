@@ -4,7 +4,7 @@ namespace Secondnetwork\Kompass\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Blocktemplates extends Model
 {
@@ -20,6 +20,14 @@ class Blocktemplates extends Model
     //    'id', 'status', 'name', 'slug', 'thumbnails', 'meta_description', 'layout','content'
     // ];
     protected $guarded = [];
+
+    /**
+     * The field definitions (datafield blueprints) for this template.
+     */
+    public function fields(): HasMany
+    {
+        return $this->hasMany(Blockfields::class, 'blocktemplate_id')->orderBy('order');
+    }
 
     // protected static function boot()
     // {

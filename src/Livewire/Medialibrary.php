@@ -143,6 +143,42 @@ class Medialibrary extends Component
                 $this->dispatch('refresh-setting');
                 break;
 
+            case 'gallery-field':
+                if ($this->field_id > 0) {
+                    $datafield = Datafield::findOrFail($this->field_id);
+                    $existing = is_array($datafield->data) ? $datafield->data : [];
+                    if (! in_array($media_id, $existing)) {
+                        $existing[] = $media_id;
+                    }
+                    $datafield->update(['data' => $existing]);
+                } else {
+                    // Migrate legacy rows (single integer per row) into one array row.
+                    $legacyIds = Datafield::where('block_id', $this->block_id)
+                        ->where('type', 'gallery')
+                        ->get()
+                        ->reject(fn ($d) => is_array($d->data))
+                        ->pluck('data')
+                        ->filter()
+                        ->values()
+                        ->toArray();
+
+                    Datafield::where('block_id', $this->block_id)
+                        ->where('type', 'gallery')
+                        ->whereNotNull('data')
+                        ->delete();
+
+                    $merged = array_values(array_unique([...$legacyIds, $media_id]));
+
+                    Datafield::create([
+                        'block_id' => $this->block_id,
+                        'type' => 'gallery',
+                        'data' => $merged,
+                        'order' => 1,
+                    ]);
+                }
+                $this->dispatch('refreshmedia');
+                break;
+
             default:
                 Datafield::updateOrCreate(
                     ['id' => $this->field_id], [

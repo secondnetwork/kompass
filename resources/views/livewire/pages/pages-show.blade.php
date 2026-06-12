@@ -227,6 +227,7 @@
 
                 @foreach ($datafield as $itemblocks)
                     <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :cssclassname="$cssClassname"
+                        :relationship-search="$relationshipSearch"
                         :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
                 @endforeach
 
@@ -263,64 +264,8 @@
             <x-slot name="body">
 
                 <div class="grid grid-cols-4">
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Textblock','wysiwyg','blockquote')">
-                        <img src="{{ kompass_asset('icons-blocks/default.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Textblock') }}</span>
-                    </div>
-
-                    <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Layout Block','group')">
-                        <img src="{{ kompass_asset('icons-blocks/group.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Layout Block') }}</span>
-                    </div>
-
-                    <div class=" border-purple-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Accordion Group','accordiongroup')">
-                        <img src="{{ kompass_asset('icons-blocks/accordiongroup.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Accordion') }}</span>
-                    </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Button','button','box-model-2')">
-                        <img src="{{ kompass_asset('icons-blocks/button.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Button') }}</span>
-                    </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Video','video','video')">
-                        <img src="{{ kompass_asset('icons-blocks/videoplayer.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Video') }}</span>
-                    </div>
-
-                    <div class="border-blue-600 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                        wire:click="addBlock('','Gallery','gallery','photo')">
-                        <img class="rounded" src="{{ kompass_asset('icons-blocks/gallery.png') }}" alt="">
-                        <span class="text-xs block mt-2">{{ __('Images and Gallery') }}</span>
-                    </div>
-
-                    @foreach ($blocktemplates as $itemblock)
-                        <div class="border-gray-400 border-2 rounded-lg p-2 m-2 cursor-pointer"
-                            wire:click="addBlock({{ $itemblock['id'] }},'{{ $itemblock['name'] }}','{{ $itemblock['type'] }}','{{ $itemblock['iconclass'] }}')">
-
-                            @if ($itemblock['icon_img_path'])
-                                <img class=" w-full border-base-300 border-solid border-2 rounded object-cover"
-                                    src="{{ asset('storage/' . $itemblock['icon_img_path']) }}" alt="">   
-                            @elseif($itemblock['iconclass'])
-                                <div class="bg-gray-100 rounded-t-md w-full aspect-[16/12] relative flex justify-center pt-6 px-4 overflow-hidden">
-                                    <div class="w-full h-full border-t-2 border-l-2 border-r-2 border-blue-500 bg-base-100 rounded-t-md flex justify-center items-center">
-                                        <div class="relative flex justify-center items-center text-blue-500 size-16">
-                                            @svg(str_starts_with($itemblock['iconclass'], 'tabler-') ? $itemblock['iconclass'] : 'tabler-' . $itemblock['iconclass'], 'text-blue-500 flex justify-center items-end w-full h-full')
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                <img class="rounded" src="{{ kompass_asset('icons-blocks/contact.png') }}"
-                                    alt="">
-                            @endif
-                            <span class="text-xs block mt-2">{{ $itemblock['name'] }}</span>
-                        </div>
+                    @foreach (block_registry()->palette() as $entry)
+                        <x-kompass::blocks.palette-tile :entry="$entry" />
                     @endforeach
                 </div>
             </x-slot>

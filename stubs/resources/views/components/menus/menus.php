@@ -1,8 +1,7 @@
 <?php
 
-use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
-
+use Livewire\Component;
 use Secondnetwork\Kompass\Models\Menu as Menus;
 use Secondnetwork\Kompass\Models\Menuitem;
 

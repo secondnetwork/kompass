@@ -4,59 +4,32 @@
     'page' => '',
     'class' => '',
     'cssclassname' => '',
+    'relationshipSearch' => [],
 ])
 
-<div class="{{ !in_array($itemblocks->type, ['gallery', 'video']) ? 'grid grid-cols-' . $itemblocks->grid . ' gap-6' : 'grid gap-6' }}">
+@php
+    $isBuiltinGallery      = block_registry()->isBuiltin($itemblocks->type) && $itemblocks->type === 'gallery';
+    $isBuiltinVideo        = block_registry()->isBuiltin($itemblocks->type) && $itemblocks->type === 'video';
+    $isBuiltinRelationship = block_registry()->isBuiltin($itemblocks->type) && $itemblocks->type === 'relationship';
+    $isSpecial             = $isBuiltinGallery || $isBuiltinVideo || $isBuiltinRelationship;
+@endphp
+<div class="{{ $isSpecial ? 'grid gap-6' : 'grid grid-cols-' . $itemblocks->grid . ' gap-6' }}">
 
-    @switch($itemblocks->type)
-        @case('video')
-            <x-kompass::block.video :itemblocks="$itemblocks" />
-        @break
+    @if ($isBuiltinVideo)
+        <x-kompass::block.video :itemblocks="$itemblocks" />
+    @elseif ($isBuiltinGallery)
+        <x-kompass::block.gallery :itemblocks="$itemblocks" />
+    @elseif ($isBuiltinRelationship)
+        <x-kompass::block.relationship :itemblocks="$itemblocks" :search="$relationshipSearch[$itemblocks->id] ?? ''" />
+    @else
+        @foreach ($itemblocks->datafield as $item)
+            <div wire:key="datafield-{{ $item->id }}" class="col-span-1 md:col-span-{{ $item->grid ?? '1' }} ">
+                <x-dynamic-component :component="'kompass::'.field_registry()->fieldComponent($item->type)" :itemfield="$item" />
+            </div>
+        @endforeach
+    @endif
 
-        @case('gallery')
-            <x-kompass::block.gallery :itemblocks="$itemblocks" />
-        @break
-
-        @default
-            @foreach ($itemblocks->datafield as $item)
-                <div wire:key="datafield-{{ $item->id }}" class="col-span-1 md:col-span-{{ $item->grid ?? '1' }} ">
-                    @switch($item['type'])
-                        @case('true_false')
-                            <x-kompass::block.true_false :itemfield="$item" />
-                        @break
-
-                        @case('image')
-                            <x-kompass::block.image :itemfield="$item" />
-                        @break
-
-                        @case('wysiwyg')
-                            <x-kompass::block.wysiwyg :itemfield="$item" />
-                        @break
-
-                        @case('buttom')
-                            <x-kompass::block.link :itemfield="$item" />
-                        @break
-
-                        @case('link')
-                            <x-kompass::block.link :itemfield="$item" />
-                        @break
-
-                        @case('file')
-                            <x-kompass::block.file :itemfield="$item" />
-                        @break
-
-                        @case('color')
-                            <x-kompass::block.color :itemfield="$item" />
-                        @break
-
-                        @default
-                            <x-kompass::block.text :itemfield="$item" />
-                    @endswitch
-                </div>
-            @endforeach
-        @endswitch
-
-    </div>
+</div>
 
     {{-- @foreach ($fields as $field)
             <div wire:sort:item="{{ $field->id }}" wire:key="field-item-{{ $field->id }}" class="col-span-1 md:col-span-{{ $field->grid ?? '1' }} ">

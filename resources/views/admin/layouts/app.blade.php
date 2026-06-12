@@ -87,12 +87,14 @@
 
           @role(['admin','manager'])
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('Theme') }}</div>
-
-          <li><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-blocks class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.menus*')  ) class="active" @endif href="/admin/menus"><x-tabler-layout-navbar class="icon-lg"/><span>{{ __('Menu') }}</span></a></li>
+          @role(['admin'])
+          <li><a wire:navigate @if(Route::is('admin.blocks*')) class="active" @endif href="/admin/blocks"><x-tabler-blocks class="icon-lg"/><span>{{ __('Block') }}</span></a></li>
+          <li><a wire:navigate @if(Route::is('admin.query-sources*')) class="active" @endif href="/admin/query-sources"><x-tabler-database class="icon-lg"/><span>{{ __('Query sources') }}</span></a></li>
+          @endrole
           <li><a wire:navigate @if(Route::is('admin.settings*')  ) class="active" @endif href="/admin/settings"><x-tabler-settings class="icon-lg"/><span>{{ __('Settings') }}</span></a></li>
           @endrole
-          
+    
           @role(['super_admin','admin'])
           <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('User management') }}</div>
           <li><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>

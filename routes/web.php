@@ -17,6 +17,7 @@ use Secondnetwork\Kompass\Livewire\PagesData;
 use Secondnetwork\Kompass\Livewire\PagesTable;
 use Secondnetwork\Kompass\Livewire\PostsData;
 use Secondnetwork\Kompass\Livewire\PostsTable;
+use Secondnetwork\Kompass\Livewire\QuerySources;
 use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 use Secondnetwork\Kompass\Livewire\Settings\Profile;
@@ -53,12 +54,13 @@ Route::group(['middleware' => ['web', 'auth', 'role:admin|manager|editor'], 'pre
     Route::group(['middleware' => ['role:admin|manager']], function (): void {
         Route::get('menus', MenuTable::class)->name('menus');
         Route::get('menus/{action}/{id}', MenuData::class)->name('menus.show');
-        Route::get('blocks', BlocksTable::class)->name('blocks');
-        Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
         Route::get('settings', Settings::class)->name('settings');
     });
 
     Route::group(['middleware' => ['role:admin']], function (): void {
+        Route::get('blocks', BlocksTable::class)->name('blocks');
+        Route::get('blocks/{action}/{id}', BlocksData::class)->name('blocks.show');
+        Route::get('query-sources', QuerySources::class)->name('query-sources');
         Route::get('account', AccountForm::class)->name('account');
         Route::get('roles', Roles::class)->name('roles');
     });

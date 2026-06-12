@@ -14,6 +14,69 @@
 
     <x-kompass::modal data="FormDelete" />
 
+    {{-- Regenerate confirm modal --}}
+    <div x-data="{ open: @entangle('FormRegenerate') }" @keydown.escape.window="open = false" :class="{ 'z-40': open }" class="relative">
+        <template x-teleport="body">
+            <div x-show="open" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen">
+                <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                    @click="open = false" class="absolute inset-0 w-full h-full bg-opacity-50 backdrop-blur-sm"></div>
+                <div x-show="open" x-trap.inert.noscroll="open"
+                    x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
+                    class="overflow-hidden relative w-full p-6 bg-base-100 shadow-md bg-opacity-90 drop-shadow-md backdrop-blur-sm sm:max-w-lg sm:rounded-lg">
+
+                    <div class="relative w-max">
+                        <div data-featured-icon="true"
+                            class="relative flex shrink-0 items-center justify-center *:data-icon:size-6 rounded-full size-12 bg-primary/20 text-primary">
+                            <x-tabler-replace />
+                        </div>
+                        <svg width="336" height="336" viewBox="0 0 336 336" fill="none"
+                            class="opacity-30 pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                            <mask id="mask_regen" style="mask-type: alpha;" maskUnits="userSpaceOnUse" x="0" y="0" width="336" height="336">
+                                <rect width="336" height="336" fill="url(#paint_regen)" />
+                            </mask>
+                            <g mask="url(#mask_regen)">
+                                <circle cx="168" cy="168" r="47.5" stroke="currentColor" />
+                                <circle cx="168" cy="168" r="71.5" stroke="currentColor" />
+                                <circle cx="168" cy="168" r="95.5" stroke="currentColor" />
+                                <circle cx="168" cy="168" r="119.5" stroke="currentColor" />
+                                <circle cx="168" cy="168" r="143.5" stroke="currentColor" />
+                                <circle cx="168" cy="168" r="167.5" stroke="currentColor" />
+                            </g>
+                            <defs>
+                                <radialGradient id="paint_regen" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                                    gradientTransform="translate(168 168) rotate(90) scale(168 168)">
+                                    <stop />
+                                    <stop offset="1" stop-opacity="0" />
+                                </radialGradient>
+                            </defs>
+                        </svg>
+                    </div>
+
+                    <span @click="open = false" class="absolute top-3 right-4 cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all">
+                        <x-tabler-x />
+                    </span>
+
+                    <div class="py-6 space-y-2">
+                        <p class="font-semibold">{{ __('Regenerate view file') }}</p>
+                        <p class="text-sm font-mono text-primary break-all">{{ $regenerateFileName }}</p>
+                        <p class="text-sm text-base-content">{{ __('This will overwrite the existing view file with a new stub based on the current fields. Any custom changes you have made to the file will be lost.') }}</p>
+                        
+                    </div>
+
+                    <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+                        <button @click="open = false" type="button" class="btn btn-neutral">{{ __('Cancel') }}</button>
+                        <button wire:click="regenerateViewFile({{ $regenerateId }})" @click="open = false" type="button" class="btn btn-error">
+                            <x-tabler-replace class="size-4" />
+                            {{ __('Regenerate') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
     <div class="flex flex-col">
         <div class="flex items-end justify-between gap-4 flex-wrap p-5 bg-base-100 border border-base-300 rounded-t-xl">
             <div>
@@ -99,6 +162,12 @@
                                                 class="flex justify-center">
                                                 <x-tabler-edit class="cursor-pointer stroke-blue-500" />
                                             </a>
+
+                                            <button wire:click="confirmRegenerate({{ $page->id }})"
+                                                title="{{ __('Regenerate view file') }}"
+                                                class="flex justify-center">
+                                                <x-tabler-replace class="cursor-pointer stroke-current text-base-content/50 hover:stroke-primary" />
+                                            </button>
 
                                             <span wire:click="selectItem({{ $page->id }}, 'delete')"
                                                 class="flex justify-center">

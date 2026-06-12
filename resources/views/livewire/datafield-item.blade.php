@@ -1,5 +1,5 @@
 <div class="{{ $class }}">
-    @switch($datafield->type)
+    @switch(field_registry()->fieldEditWidget($datafield->type))
         @case('image')
             <div class="@container">
                 <div class="grid @sm:grid-cols-1 @lg:grid-cols-3 @3xl:grid-cols-4  gap-6" wire:sortable="updateOrderImages"
@@ -22,7 +22,7 @@
             <x-kompass::video.oembed :url="$datafield->data" :idField="$datafield->id" />
         @break
 
-        @case('wysiwyg')
+        @case('editor')
             <livewire:kompass-editor
                 wire:key="kompass-editor-{{ $datafield->id }}"
                 :editor-id="$datafield->id"
@@ -33,6 +33,6 @@
         @break
 
         @default
-            <x-kompass::input wire:model="data" label="{{ $datafield->name }}" type="text" />
+            {{-- <x-kompass::input wire:model="data" label="{{ $datafield->name }}" type="text" /> --}}
     @endswitch
 </div>

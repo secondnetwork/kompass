@@ -91,14 +91,14 @@
             this.$watch('searchQuery', () => this.filterOptions());
         }
     }" class="w-full flex flex-col" x-on:keydown.esc.window="isOpen = false; openedWithKeyboard = false">
-    <label class="block text-sm font-medium leading-6 text-gray-900">{{ $label }}</label>
+    <label class="block text-sm font-medium leading-6 ">{{ $label }}</label>
    <div class="relative">
         {{-- Trigger Button --}}
         <button
             type="button"
             role="combobox"
-            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border-2 bg-base-100 h-10 px-4 py-2 text-sm font-medium tracking-wide text-slate-700 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-            :class="{ 'border-blue-600': isOpen, 'border-slate-300': !isOpen }"
+            class="inline-flex w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-base-300 bg-base-100 h-10 px-4 py-2 text-sm font-medium tracking-wide text-base-content transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            :class="{ 'border-primary': isOpen, 'border-base-300': !isOpen }"
             aria-haspopup="listbox"
             aria-controls="industriesList"
             x-on:click="isOpen = !isOpen"
@@ -109,23 +109,22 @@
             :aria-expanded="isOpen || openedWithKeyboard">
 
             <div class="flex items-center gap-2">
-                {{-- OPTIMIERTE ANZEIGE DES GEWÄHLTEN ITEMS --}}
                 <template x-if="selectedItem && selectedItem.icon && icons[selectedItem.icon]">
                      <div x-html="icons[selectedItem.icon]"></div>
                 </template>
 
                 <span x-show="selectedItem" x-text="selectedItem ? (selectedItem.display_name || selectedItem.name) : ''" class="block truncate"></span>
-                <span x-show="!selectedItem" class="block truncate text-slate-500">{{ $placeholder }}</span>
+                <span x-show="!selectedItem" class="block truncate text-base-content/50">{{ $placeholder }}</span>
             </div>
 
-            <x-tabler-selector class="size-5 text-slate-500" />
+            <x-tabler-selector class="size-5 text-base-content/50" />
         </button>
 
-        {{-- Dropdown Liste mit Suche --}}
+        {{-- Dropdown --}}
         <ul
             x-cloak x-show="isOpen || openedWithKeyboard"
             id="industriesList"
-            class="absolute z-10 left-0 top-11 max-h-80 w-full flex flex-col rounded-md border-2 border-slate-300 bg-base-100 shadow-lg"
+            class="absolute z-10 left-0 top-11 max-h-80 w-full flex flex-col rounded-md border border-base-300 bg-base-100 shadow-lg"
             :class="{ '!top-11 !border-t-0': @js(!$searchable) }"
             role="listbox"
             aria-label="{{ $label }} list"
@@ -134,39 +133,38 @@
             x-trap.noscroll="openedWithKeyboard">
 
             {{-- Suchfeld --}}
-            <div class="sticky top-0 bg-base-100 border-b border-slate-200 p-2" x-show="{{ var_export($searchable, true) }}">
+            <div class="sticky top-0 bg-base-100 border-b border-base-300 p-2" x-show="{{ var_export($searchable, true) }}">
                 <div class="relative">
-                    <x-tabler-search class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                    <x-tabler-search class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-base-content/40" />
                     <input
                         type="text"
                         x-model="searchQuery"
                         x-on:keydown="handleSearchKeydown($event)"
                         placeholder="{{ __('Search...') }}"
-                        class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        class="input input-sm w-full pl-9"
                     />
             </div>
             </div>
 
-            {{-- Optionen Liste --}}
+            {{-- Optionen --}}
             <div class="overflow-y-auto py-1.5 max-h-60 flex flex-col bg-base-100">
                 <template x-if="filteredOptions.length === 0">
-                    <div class="px-4 py-3 text-sm text-slate-500 text-center">
+                    <div class="px-4 py-3 text-sm text-base-content/50 text-center">
                         {{ __('No results found') }}
                     </div>
                 </template>
 
                 <template x-for="item in filteredOptions" :key="item.id">
                     <li
-                        class="combobox-option group flex w-full cursor-pointer items-center justify-between gap-6 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:text-black focus-visible:outline-none"
+                        class="combobox-option group flex w-full cursor-pointer items-center justify-between gap-6 px-4 py-2 text-sm text-base-content hover:bg-base-200 focus-visible:bg-base-200 focus-visible:outline-none"
                         role="option"
-                        :class="{ 'bg-slate-200': selectedOption == item.id }"
+                        :class="{ 'bg-base-200': selectedOption == item.id }"
                         :aria-selected="selectedOption == item.id"
                         x-on:click="setSelectedOption(item)"
                         x-on:keydown.enter.prevent="setSelectedOption(item)"
                         :id="'option-' + item.id"
                         tabindex="-1">
 
-                        {{-- Label und Icon --}}
                         <div class="flex items-center gap-2">
                             <template x-if="item.icon && icons[item.icon]">
                                 <div x-html="icons[item.icon]"></div>
@@ -175,9 +173,8 @@
                             <span :class="{ 'font-semibold': selectedOption == item.id }" x-text="item.name"></span>
                         </div>
 
-                        {{-- Checkmark --}}
                         <span x-show="selectedOption == item.id">
-                            <x-tabler-check class="size-5 text-blue-600" />
+                            <x-tabler-check class="size-5 text-primary" />
                         </span>
                     </li>
                 </template>
@@ -185,7 +182,7 @@
         </ul>
     </div>
     @error($attributes->wire('model')->value())
-        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        <p class="mt-1 text-sm text-error">{{ $message }}</p>
     @enderror
     </div>
     

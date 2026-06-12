@@ -12,7 +12,6 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
-use Secondnetwork\Kompass\Models\Blockfields;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Menuitem;
@@ -159,6 +158,9 @@ class PagesData extends Component
     public $data = [];
 
     public array $selected = [];
+
+    /** Per-block search term for the relationship block's manual record picker, keyed by block id. */
+    public array $relationshipSearch = [];
 
     public $setting;
 
@@ -320,34 +322,14 @@ class PagesData extends Component
         $this->resetPageComponent();
     }
 
+    /**
+     * Create the default datafields for a freshly added block. The definitions
+     * come from the central block-type registry (built-in defaults or, for a DB
+     * template, its Blockfields).
+     */
     private function initializeDataFields($blockId, string $type, $blocktemplatesID): void
     {
-        $fieldDefinitions = match ($type) {
-            'wysiwyg' => [['type' => 'wysiwyg', 'order' => '1']],
-            'anchormenu' => [['name' => 'Name Anchormenu', 'type' => 'text', 'order' => '1']],
-            'button' => [['type' => 'link', 'order' => '1']],
-            default => [],
-        };
-
-        if (empty($fieldDefinitions)) {
-            $fielddate = Blockfields::where('blocktemplate_id', $blocktemplatesID)->get();
-
-            $fieldDefinitions = [];
-
-            // Iteriere durch die abgerufenen Felder
-            foreach ($fielddate as $item) {
-                // Füge die Felddefinitionen zum Array hinzu
-                $fieldDefinitions[] = [
-                    'name' => $item->name,
-                    'type' => $item->type,
-                    'order' => $item->order,
-                    'grid' => $item->grid,
-                ];
-            }
-
-        }
-
-        foreach ($fieldDefinitions as $definition) {
+        foreach (block_registry()->defaultFields($type, $blocktemplatesID) as $definition) {
             $definition['block_id'] = $blockId;
             Datafield::create($definition);
         }
@@ -513,6 +495,56 @@ class PagesData extends Component
         $this->updateBlockMeta((int) $blockId, $metaKey, $value);
     }
 
+    /**
+     * Toggle a record in the relationship block's manual selection (query-ids),
+     * appending it to preserve selection order or removing it if already chosen.
+     */
+    public function toggleQueryRecord($blockId, $recordId): void
+    {
+        $block = Block::findOrFail((int) $blockId);
+        $recordId = (int) $recordId;
+
+        $ids = $block->getMeta('query-ids');
+        $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+        if (in_array($recordId, $ids, true)) {
+            $ids = array_values(array_filter($ids, fn ($id) => $id !== $recordId));
+        } else {
+            $ids[] = $recordId;
+        }
+
+        $block->deleteMeta('query-ids');
+        if (! empty($ids)) {
+            $block->saveMeta(['query-ids' => $ids]);
+        }
+
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Reorder a record in the relationship block's manual selection.
+     * Called by wire:sort with the dragged item key ("blockId-recordId") and its new 0-based position.
+     */
+    public function reorderQueryRecord(string $item, int $position): void
+    {
+        [$blockId, $recordId] = explode('-', $item, 2);
+        $block = Block::findOrFail((int) $blockId);
+        $recordId = (int) $recordId;
+
+        $ids = $block->getMeta('query-ids');
+        $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+        $ids = array_values(array_filter($ids, fn ($id) => $id !== $recordId));
+        array_splice($ids, $position, 0, [$recordId]);
+
+        $block->deleteMeta('query-ids');
+        if (! empty($ids)) {
+            $block->saveMeta(['query-ids' => $ids]);
+        }
+
+        $this->resetPageComponent();
+    }
+
     private function updateBlockMeta(int $id, string $metaKey, $metaValue): void
     {
         $block = Block::findOrFail($id);
@@ -648,7 +680,15 @@ class PagesData extends Component
 
     public function removemedia($id)
     {
-        Datafield::whereId($id)->delete();
+        Datafield::whereId($id)->update(['data' => null]);
+        $this->resetPageComponent();
+    }
+
+    public function removeFromGalleryField(int $datafieldId, int $fileId): void
+    {
+        $datafield = Datafield::findOrFail($datafieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+        $datafield->update(['data' => array_values(array_filter($data, fn ($id) => $id != $fileId))]);
         $this->resetPageComponent();
     }
 
@@ -662,15 +702,35 @@ class PagesData extends Component
 
     public function updateOrderImages($list)
     {
+        if (is_string($list)) {
+            $list = json_decode($list, true) ?? [];
+        }
 
         foreach ($list as $item) {
-
             Datafield::whereId($item['value'])->update(['order' => $item['order']]);
-
         }
 
         $this->resetPageComponent();
-        // $this->dispatch('status');
+    }
+
+    /**
+     * Reorder images in an array-based gallery Datafield.
+     * Called by wire:sort with the dragged item key ("fieldId-fileId") and its new 0-based position.
+     */
+    public function updateGalleryOrder(string $item, int $position): void
+    {
+        [$fieldId, $fileId] = explode('-', $item, 2);
+        $fieldId = (int) $fieldId;
+        $fileId = (int) $fileId;
+
+        $datafield = Datafield::findOrFail($fieldId);
+        $data = is_array($datafield->data) ? $datafield->data : [];
+
+        $data = array_values(array_filter($data, fn ($id) => $id != $fileId));
+        array_splice($data, $position, 0, [$fileId]);
+
+        $datafield->update(['data' => $data]);
+        $this->resetPageComponent();
     }
 
     public function updateOrder($list)

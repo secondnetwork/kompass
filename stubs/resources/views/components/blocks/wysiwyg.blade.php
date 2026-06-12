@@ -41,17 +41,25 @@
             <div class="group-hover:bg-primary/60 transition block absolute inset-0 rounded-2xl -z-10"></div>
         @endif
 
+        @php
+            $alignMap = ['left' => 'text-left', 'center' => 'text-center', 'right' => 'text-right'];
+        @endphp
         @foreach ($renderBlocks as $block)
+            @php $alignCls = $alignMap[$block['alignment'] ?? ''] ?? ''; @endphp
             @if (($block['type'] ?? null) === 'list')
                 @php $tag = ($block['data']['type'] ?? 'unordered') === 'ordered' ? 'ol' : 'ul'; @endphp
-                <{{ $tag }} class="{{ $tag === 'ol' ? 'list-decimal' : 'list-disc' }} pl-6 mb-2 space-y-1">
+                <{{ $tag }} @class([
+                    $tag === 'ol' ? 'list-decimal' : 'list-disc',
+                    'pl-6 mb-2 space-y-1',
+                    $alignCls,
+                ])>
                     @foreach ($block['data']['items'] ?? [] as $li)
                         <li>{!! is_string($li) ? $li : ($li['content'] ?? $li['text'] ?? '') !!}</li>
                     @endforeach
                 </{{ $tag }}>
             @else
                 @php [$tag, $cls] = $tagMap[$block['type'] ?? 'p'] ?? ['p', '']; @endphp
-                <{{ $tag }} @class([$cls])>{!! $block['content'] ?? '' !!}</{{ $tag }}>
+                <{{ $tag }} @class([$cls, $alignCls])>{!! $block['content'] ?? '' !!}</{{ $tag }}>
             @endif
         @endforeach
     </div>

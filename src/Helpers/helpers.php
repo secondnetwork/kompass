@@ -1,13 +1,17 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Secondnetwork\Kompass\Blocks\BlockTypeRegistry;
+use Secondnetwork\Kompass\Blocks\FieldTypeRegistry;
 use Secondnetwork\Kompass\Helpers\EditorMigrationHelper;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
+use Secondnetwork\Kompass\Models\QuerySource;
 use Secondnetwork\Kompass\Seo\SeoService;
 
 if (! function_exists('getImageID')) {
@@ -393,13 +397,257 @@ if (! function_exists('wysiwyg_blocks')) {
     function wysiwyg_blocks(mixed $item = null, $field = null): array
     {
         $data = match (true) {
-            $field !== null => $field->data ?? null,
+            $field !== null && is_object($field) => $field->data ?? null,
+            $field !== null => $field,  // already raw data (array or string)
             is_object($item) && isset($item->datafield) => get_field('wysiwyg', $item->datafield),
             is_array($item) || is_string($item) => $item,
             default => null,
         };
 
         return EditorMigrationHelper::toRenderBlocks($data);
+    }
+}
+
+if (! function_exists('block_registry')) {
+    /**
+     * The block-type registry (single source of truth for block types).
+     */
+    function block_registry(): BlockTypeRegistry
+    {
+        return app(BlockTypeRegistry::class);
+    }
+}
+
+if (! function_exists('field_registry')) {
+    /**
+     * The datafield-type registry.
+     */
+    function field_registry(): FieldTypeRegistry
+    {
+        return app(FieldTypeRegistry::class);
+    }
+}
+
+if (! function_exists('query_models')) {
+    /**
+     * Registered queryable sources for the relationship block. Merges the
+     * config-defined sources (config('kompass.query_models')) with the
+     * admin-managed `query_sources` table. Config sources win on key collision,
+     * so built-ins are never shadowed by a database row. Database sources are
+     * resolved against the kompass.query_source_models allowlist; rows whose
+     * model_key is not allow-listed are skipped.
+     *
+     * @return array<string,array<string,mixed>>
+     */
+    function query_models(): array
+    {
+        $config = config('kompass.query_models', []);
+
+        $db = cache()->rememberForever('kompass-query-sources', function () {
+            try {
+                $allow = config('kompass.query_source_models', []);
+
+                return QuerySource::orderBy('order')
+                    ->get()
+                    ->filter(fn ($source) => isset($allow[$source->model_key]))
+                    ->mapWithKeys(function ($source) use ($allow) {
+                        $display = $source->display_fields ?: ['title'];
+
+                        return [$source->key => [
+                            'label' => $source->label,
+                            'model' => $allow[$source->model_key],
+                            'display_fields' => $display,
+                            'label_field' => $display[0], // first display field doubles as the title/link text
+                            'order_fields' => $source->order_fields ?: ['created_at'],
+                            'url_pattern' => $source->url_pattern,
+                            'status' => $source->status_filter,
+                            'scope' => $source->scope,
+                            'item_view' => $source->item_view,
+                            'wrapper_class' => $source->wrapper_class,
+                            'with' => $source->with ?: [],
+                        ]];
+                    })
+                    ->all();
+            } catch (Throwable $e) {
+                // Table not migrated yet, or DB unavailable — fall back to config only.
+                return [];
+            }
+        });
+
+        // Config sources win on key collision.
+        return $config + $db;
+    }
+}
+
+if (! function_exists('kompass_query')) {
+    /**
+     * Run the relationship block's configured query and return the matched
+     * records. Reads the chosen source, ordering and limit from block meta
+     * (query-model, query-order, query-direction, query-limit) and resolves it
+     * against the kompass.query_models registry. Returns an empty collection
+     * when nothing is configured or the source is unknown.
+     */
+    function kompass_query($block): Collection
+    {
+        $key = get_meta($block, 'query-model');
+        $models = query_models();
+
+        if (! $key || ! isset($models[$key])) {
+            return collect();
+        }
+
+        $config = $models[$key];
+        $modelClass = $config['model'] ?? null;
+
+        if (! $modelClass || ! class_exists($modelClass)) {
+            return collect();
+        }
+
+        $with = $config['with'] ?? [];
+
+        // Manual mode: render the editor's curated selection in the saved order.
+        if (get_meta($block, 'query-mode') === 'manual') {
+            $ids = get_meta($block, 'query-ids');
+            $ids = is_array($ids) ? array_values(array_filter(array_map('intval', $ids))) : [];
+
+            if (empty($ids)) {
+                return collect();
+            }
+
+            $records = $modelClass::query()->with($with)->whereIn('id', $ids)->get()->keyBy('id');
+
+            return collect($ids)
+                ->map(fn ($id) => $records->get($id))
+                ->filter()
+                ->values();
+        }
+
+        $orderFields = $config['order_fields'] ?? ['created_at'];
+        $order = get_meta($block, 'query-order') ?: ($orderFields[0] ?? 'created_at');
+        if (! in_array($order, $orderFields, true)) {
+            $order = $orderFields[0] ?? 'created_at';
+        }
+
+        $direction = strtolower((string) get_meta($block, 'query-direction')) === 'asc' ? 'asc' : 'desc';
+        $limit = max(1, min(100, (int) (get_meta($block, 'query-limit') ?: 5)));
+
+        $query = $modelClass::query()->with($with);
+
+        if (! empty($config['status'])) {
+            $query->where('status', $config['status']);
+        }
+
+        kompass_apply_scope($query, $modelClass, $config['scope'] ?? null);
+
+        return $query->orderBy($order, $direction)->limit($limit)->get();
+    }
+}
+
+if (! function_exists('kompass_query_candidates')) {
+    /**
+     * Selectable records of a query source, used by the relationship block's
+     * manual-selection list. An optional search term filters server-side on the
+     * source's label field. Capped to keep the picker responsive.
+     */
+    function kompass_query_candidates(string $modelKey, int $limit = 50, ?string $search = null): Collection
+    {
+        $config = query_models()[$modelKey] ?? null;
+        $modelClass = $config['model'] ?? null;
+
+        if (! $modelClass || ! class_exists($modelClass)) {
+            return collect();
+        }
+
+        $orderFields = $config['order_fields'] ?? ['created_at'];
+        $searchFields = ! empty($config['display_fields'])
+            ? $config['display_fields']
+            : [$config['label_field'] ?? 'title'];
+
+        $query = $modelClass::query();
+
+        kompass_apply_scope($query, $modelClass, $config['scope'] ?? null);
+
+        if ($search !== null && trim($search) !== '') {
+            $term = trim($search);
+            $query->where(function ($q) use ($searchFields, $term): void {
+                foreach (array_values($searchFields) as $i => $field) {
+                    $i === 0
+                        ? $q->where($field, 'like', '%'.$term.'%')
+                        : $q->orWhere($field, 'like', '%'.$term.'%');
+                }
+            });
+        }
+
+        return $query
+            ->orderBy($orderFields[0] ?? 'created_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+}
+
+if (! function_exists('kompass_query_url')) {
+    /**
+     * Build the frontend URL for a queried record using the source's
+     * url_pattern ("{slug}" is replaced with the record slug). Returns null
+     * when the source has no pattern.
+     */
+    function kompass_query_url(string $modelKey, $record): ?string
+    {
+        $pattern = query_models()[$modelKey]['url_pattern'] ?? null;
+
+        if (! $pattern) {
+            return null;
+        }
+
+        return url(str_replace('{slug}', (string) ($record->slug ?? ''), $pattern));
+    }
+}
+
+if (! function_exists('kompass_apply_scope')) {
+    /**
+     * Apply a named Eloquent local scope to a query, but only when the model
+     * actually defines it (scope{Name}()). The scope name comes from admin
+     * configuration, so this guard prevents calling arbitrary methods.
+     *
+     * @param  Builder  $query
+     */
+    function kompass_apply_scope($query, string $modelClass, ?string $scope): void
+    {
+        if (! $scope || trim($scope) === '') {
+            return;
+        }
+
+        $scope = trim($scope);
+
+        if (method_exists($modelClass, 'scope'.Str::studly($scope))) {
+            $query->{$scope}();
+        }
+    }
+}
+
+if (! function_exists('kompass_query_label')) {
+    /**
+     * Human label for a queried record. Uses the source's display_fields
+     * (joined with " · ") when set, otherwise the single label_field. Falls
+     * back to "#id" when nothing is filled.
+     */
+    function kompass_query_label(string $modelKey, $record): string
+    {
+        $config = query_models()[$modelKey] ?? [];
+
+        $fields = ! empty($config['display_fields'])
+            ? $config['display_fields']
+            : [$config['label_field'] ?? 'title'];
+
+        $parts = [];
+        foreach ($fields as $field) {
+            $value = $record->{$field} ?? null;
+            if (filled($value)) {
+                $parts[] = (string) $value;
+            }
+        }
+
+        return $parts !== [] ? implode(' · ', $parts) : '#'.$record->id;
     }
 }
 
