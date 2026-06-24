@@ -100,6 +100,14 @@
                                     <x-kompass::form.input type="text" name="valuedata" label="{{ __('URL') }}" wire:model="valuedata" placeholder="https://..." />
                                 @break
                                 @case('switch') <input @if($valuedata) checked="" @endif wire:change="update('{{ $selectedItem }}', $el.checked)" type="checkbox" class="toggle toggle-primary"> @break
+                                @case('color')
+                                    <div class="max-w-xs">
+                                        <x-kompass::color-picker
+                                            :value="$valuedata"
+                                            @changed="$wire.set('valuedata', $event.detail)"
+                                        />
+                                    </div>
+                                @break
                                 @case('wysiwyg')
                                     <livewire:kompass-editor
                                         wire:key="editor-{{ $selectedItem }}"

@@ -2,11 +2,12 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile; // Importiere Str für die Pfadprüfung
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str; // Importiere Str für die Pfadprüfung
 use Secondnetwork\Kompass\Models\Setting;
 
 class Background extends Component
@@ -14,19 +15,18 @@ class Background extends Component
     use WithFileUploads;
 
     public $color;
+
     public $adminBackground; // Wird den Bildpfad speichern
+
     public $image_overlay_color;
-    public $image_overlay_opacity; // Wird den Wert 0-100 speichern (für die Anzeige/Eingabe)
 
     // Definiere die Datenbank-Keys für die Einstellungen
     private $dbKeyImage = 'background_image';
+
     private $dbKeyOverlayColor = 'background_image_overlay_color';
-    private $dbKeyOverlayOpacity = 'background_image_overlay_opacity'; // Datenbank speichert 0-1
 
     #[On('component:refresh')]
-    public function handleRefresh(): void
-    {
-    }
+    public function handleRefresh(): void {}
 
     public function mount()
     {
@@ -37,9 +37,6 @@ class Background extends Component
         // Verwende optional() und ?? '' für sicheren Zugriff
         $this->adminBackground = optional($globalSettings->get($this->dbKeyImage))->data ?? '';
         $this->image_overlay_color = optional($globalSettings->get($this->dbKeyOverlayColor))->data ?? ''; // Standardwert
-        // Lese die Opazität aus der DB (0-1) und multipliziere für die Anzeige (0-100)
-        $dbOpacity = optional($globalSettings->get($this->dbKeyOverlayOpacity))->data ?? '0'; // Standardwert 0
-        $this->image_overlay_opacity = (floatval($dbOpacity) * 100);
     }
 
     // Updating Hooks werden ausgelöst, BEVOR sich die Eigenschaft ändert (außer bei FileUpload)
@@ -48,12 +45,6 @@ class Background extends Component
     public function updatingColor($value)
     {
         $this->updateSettingInDatabase($this->dbKeyColor, $value);
-    }
-
-    public function updatingImageOverlayOpacity($value)
-    {
-        // Speichere die Opazität in der Datenbank als Wert zwischen 0 und 1
-        $this->updateSettingInDatabase($this->dbKeyOverlayOpacity, (string) floatval($value / 100));
     }
 
     public function updatingImageOverlayColor($value)
@@ -68,28 +59,28 @@ class Background extends Component
     {
         // Handle den Dateiupload für adminBackground
         if ($property == 'adminBackground') {
-            if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                 // Optional: Lösche das alte Bild, bevor du das neue speicherst
-                 $this->deleteImageFile(); // Nur die Datei löschen, nicht den DB-Eintrag
+            if ($value instanceof TemporaryUploadedFile) {
+                // Optional: Lösche das alte Bild, bevor du das neue speicherst
+                $this->deleteImageFile(); // Nur die Datei löschen, nicht den DB-Eintrag
 
-                 $filename = $value->getClientOriginalName();
-                 $extension = $value->getClientOriginalExtension();
-                 // Standardisierter Dateiname
-                 $newFilename = 'admin_background.' . $extension;
+                $filename = $value->getClientOriginalName();
+                $extension = $value->getClientOriginalExtension();
+                // Standardisierter Dateiname
+                $newFilename = 'admin_background.'.$extension;
 
-                 // Speichere das Bild im public Disk unter images/auth
-                 $path = $value->storeAs('images/auth', $newFilename, 'public');
+                // Speichere das Bild im public Disk unter images/auth
+                $path = $value->storeAs('images/auth', $newFilename, 'public');
 
-                 // Hole den öffentlichen Pfad/URL
-                 $publicPath = Storage::disk('public')->url($path);
+                // Hole den öffentlichen Pfad/URL
+                $publicPath = Storage::disk('public')->url($path);
 
-                 // Speichere den öffentlichen Pfad in der Datenbank
-                 $this->updateSettingInDatabase($this->dbKeyImage, $publicPath);
+                // Speichere den öffentlichen Pfad in der Datenbank
+                $this->updateSettingInDatabase($this->dbKeyImage, $publicPath);
 
-                 // Setze die Eigenschaft im Component auf den neuen Pfad
-                 $this->adminBackground = $publicPath;
+                // Setze die Eigenschaft im Component auf den neuen Pfad
+                $this->adminBackground = $publicPath;
 
-                 // Kein value = null mehr nötig, Livewire managed das FileInput Property
+                // Kein value = null mehr nötig, Livewire managed das FileInput Property
             }
             // Wenn $value null ist (z.B. Upload abgebrochen), passiert hier nichts.
             // Das Löschen wird über deleteImage() gehandhabt.
@@ -126,14 +117,13 @@ class Background extends Component
 
         // Entferne die Datei aus dem Speicher, falls sie existiert und ein Speicherpfad ist
         if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
-             // Entferne den '/storage/' Teil, um den Pfad relativ zum public Disk Root zu erhalten
-             $relativePath = str_replace('/storage/', '', $imagePath);
-             if (Storage::disk('public')->exists($relativePath)) {
-                 Storage::disk('public')->delete($relativePath);
-             }
+            // Entferne den '/storage/' Teil, um den Pfad relativ zum public Disk Root zu erhalten
+            $relativePath = str_replace('/storage/', '', $imagePath);
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
         }
     }
-
 
     public function deleteImage()
     {
@@ -147,7 +137,7 @@ class Background extends Component
         $this->adminBackground = '';
 
         // Sende eine Benachrichtigung oder ähnliches
-        //$this->js('savedMessageOpen()');
+        // $this->js('savedMessageOpen()');
     }
 
     public function render()

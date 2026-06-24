@@ -398,6 +398,24 @@ return [
         'link' => ['label' => 'Link', 'icon' => 'tabler-link'],
         'switch' => ['label' => 'true or false', 'icon' => 'tabler-toggle-left'],
         'file' => ['label' => 'File', 'icon' => 'tabler-file-zip'],
+        'color' => ['label' => 'Color', 'icon' => 'tabler-palette'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Color Picker Swatches
+    |--------------------------------------------------------------------------
+    |
+    | Default preset palette shown in the <x-kompass::color-picker> component.
+    | Override per instance via the `swatches` prop. Use #rrggbb or #rrggbbaa.
+    |
+    */
+
+    'color_picker' => [
+        'swatches' => [
+            '#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6',
+            '#3b82f6', '#6366f1', '#a855f7', '#ec4899', '#111827',
+        ],
     ],
 
 ];

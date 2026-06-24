@@ -1,7 +1,7 @@
 <div
     x-data="{
         adminBackground: @entangle('adminBackground'),
-        image_overlay_opacity: @entangle('image_overlay_opacity')    }"
+    }"
  class="max-w-2xl">
 
       
@@ -17,40 +17,13 @@
             <label class="block text-sm font-medium leading-6 text-gray-900">{{ __('Image Overlay Color') }}</label>
             <p class="text-sm leading-6 text-gray-400">{{ __('If you use a background image you can specify a color overlay here.') }}</p>
         </div>
-        <div x-data="{ selectedColor: @entangle('image_overlay_color'), showPicker: false }" class="w-full h-auto flex items-center gap-2">
- 
-        
-            <!-- Hidden Color Input -->
-            <input type="color" x-ref="colorInput" style="display: none;" @change="selectedColor = $refs.colorInput.value; $wire.set('image_overlay_color', selectedColor)" />
-    
-            <!-- Custom Button to Open Color Picker -->
-            <div class="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center cursor-pointer" :style="{ backgroundColor: selectedColor }" @click="$refs.colorInput.click()">
-         
-            </div>
-            <input type="text" value="#000000"  wire:model.live="image_overlay_color" class="w-28" />
-    
+        <div class="w-full max-w-xs">
+            <x-kompass::color-picker
+                :value="$image_overlay_color"
+                @changed="$wire.set('image_overlay_color', $event.detail)"
+            />
         </div>
 
-    </div>
-
-    <div class="py-5 mb-5 border-b border-zinc-200">
-        <div class="pb-3 w-full">
-            <label class="block text-sm font-medium leading-6 text-gray-900">{{ __('Image Overlay Opacity') }}</label>
-            <p class="text-sm leading-6 text-gray-400">{{ __('The opacity of the image overlay color. Set to 0 for no overlay') }}</p>
-        </div>
-        <div class="w-full h-auto">
-            <p class="font-bold" x-text="image_overlay_opacity + '%'"></p>
-            <div class="relative mb-6 max-w-xs">
-                <input type="range" value="100" min="0" max="100" x-model="image_overlay_opacity" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
-                <span class="flex justify-between items-center w-full">
-                    <span class="-bottom-6 text-sm text-base-content/70">0%</span>
-                    <span class="-bottom-6 text-sm text-base-content/70">50%</span>
-                    <span class="-bottom-6 text-sm text-base-content/70">100%</span>
-                </span>
-            </div>
-        </div>
-
-        
     </div>
     </div>
 

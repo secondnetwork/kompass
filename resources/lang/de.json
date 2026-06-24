@@ -1227,5 +1227,11 @@
     "Leave empty for no link. \"{slug}\" is replaced per record.": "Leer lassen für keinen Link. \"{slug}\" wird je Datensatz ersetzt.",
     "Comma separated relations to avoid N+1.": "Kommagetrennte Relationen gegen N+1.",
     "Sort by order to enable drag-and-drop": "Nach Reihenfolge sortieren, um Drag-and-drop zu aktivieren",
-    "Drag to reorder": "Zum Umsortieren ziehen"
+    "Drag to reorder": "Zum Umsortieren ziehen",
+    "Choose color": "Farbe wählen",
+    "No color": "Keine Farbe",
+    "Hue": "Farbton",
+    "Opacity": "Deckkraft",
+    "Presets": "Vorlagen",
+    "Remove color": "Farbe entfernen"
 }

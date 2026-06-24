@@ -76,15 +76,10 @@
         <label class="block text-sm font-medium leading-6 text-gray-900">Theme Color Meta Tag</label>
         <p class="text-sm leading-6 text-gray-400">{{ __('A color for the browser toolbar and the status bar on mobile devices.') }}</p>
     </div>
-    <div x-data="{ selectedColor: @entangle('color_theme'), showPicker: false }" class="w-full h-auto flex items-center gap-2">
-          <!-- Hidden Color Input -->
-        <input type="color" x-ref="colorInput" style="display: none;" @change="selectedColor = $refs.colorInput.value; $wire.set('color_theme', selectedColor)" />
-
-        <!-- Custom Button to Open Color Picker -->
-        <div class="w-10 h-10 border-2 border-gray-300 rounded-full flex items-center justify-center cursor-pointer" :style="{ backgroundColor: selectedColor }" @click="$refs.colorInput.click()">
-     
-        </div>
-        <input type="text" value="#000000"  wire:model.live="color_theme" class="w-28" />
-
+    <div class="w-full max-w-xs">
+        <x-kompass::color-picker
+            :value="$color_theme"
+            @changed="$wire.set('color_theme', $event.detail)"
+        />
     </div>
 </div>
