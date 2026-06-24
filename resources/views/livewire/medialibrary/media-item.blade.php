@@ -68,11 +68,11 @@
             {{-- Quick actions (top-right, hover) --}}
             <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button wire:click.stop="selectField({{ $file->id }})"
-                    class="btn btn-xs btn-circle btn-primary shadow selectField" title="{{ __('Use file') }}">
+                    class="btn btn-xs btn-primary shadow selectField" title="{{ __('Use file') }}">
                     <x-tabler-square-plus class="w-4 h-4 stroke-current" />
                 </button>
                 <button wire:click.stop="select"
-                    class="btn btn-xs btn-circle bg-base-100 border-base-300 hover:bg-base-200 shadow" title="{{ __('Edit Meta') }}">
+                    class="btn btn-xs bg-base-100 border-base-300 hover:bg-base-200 shadow" title="{{ __('Edit Meta') }}">
                     <x-tabler-edit class="w-4 h-4 stroke-current" />
                 </button>
             </div>

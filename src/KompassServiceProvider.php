@@ -17,6 +17,7 @@ use Livewire\Livewire;
 use Secondnetwork\Kompass\BladeDirectives\SeoDirective;
 use Secondnetwork\Kompass\Commands\CreateUserCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\Commands\UpdateCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
 use Secondnetwork\Kompass\DataWriter\Repository;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
@@ -269,6 +270,7 @@ class KompassServiceProvider extends ServiceProvider
             $this->commands([
                 KompassCommand::class,
                 CreateUserCommand::class,
+                UpdateCommand::class,
             ]);
         }
     }
