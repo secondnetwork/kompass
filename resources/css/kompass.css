@@ -16,7 +16,9 @@ License URI: http://opensource.org/licenses/mit-license.php
 @import "tailwindcss";
 
 @source "../../resources/views/**/*.blade.php";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: false;
+}
 
 @import "./base/base.css";
 @import "./base/grid_layout.css";
@@ -113,7 +115,7 @@ License URI: http://opensource.org/licenses/mit-license.php
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  prefersdark: true;
+  prefersdark: false;
   color-scheme: "light";
   --color-base-100: oklch(100% 0 0);
   --color-base-200: oklch(98% 0.002 247.839);
