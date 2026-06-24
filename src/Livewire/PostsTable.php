@@ -9,6 +9,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Block;
+use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Post;
 
 class PostsTable extends Component
@@ -203,9 +204,42 @@ class PostsTable extends Component
             'slug' => $newpostslug,
             'land' => $this->land ?: 'de',
         ]);
+
+        $this->addDefaultTextBlock($post);
+
         $this->FormAdd = false;
 
         return redirect()->to('/admin/posts/show/'.$post->id);
+    }
+
+    /**
+     * Seed a freshly created post with a default text block so the editor
+     * never opens empty. Mirrors PostsData::addBlock() for the wysiwyg type.
+     */
+    private function addDefaultTextBlock(Post $post): void
+    {
+        $type = 'wysiwyg';
+        $definition = block_registry()->get($type);
+
+        $block = $post->blocks()->create([
+            'name' => __($definition['label'] ?? 'Textblock'),
+            'subgroup' => null,
+            'status' => 'published',
+            'iconclass' => $definition['icon'] ?? 'blockquote',
+            'type' => $type,
+            'order' => '1',
+        ]);
+
+        $block->saveMeta([
+            'layout' => 'popout',
+            'alignment' => 'left',
+            'slider' => '',
+        ]);
+
+        foreach (block_registry()->defaultFields($type) as $field) {
+            $field['block_id'] = $block->id;
+            Datafield::create($field);
+        }
     }
 
     public function clonePage()
