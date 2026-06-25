@@ -6,7 +6,7 @@
             @env('local')
                 <div
                     class="flex items-center p-2 px-6 rounded-t-xl font-bold gap-1 bg-warning text-warning-content w-full text-center text-xs">
-                    Developer Mode
+                    {{ __('Developer Mode') }}
                 </div>
             @endenv
             <div class="p-6">

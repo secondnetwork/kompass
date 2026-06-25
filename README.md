@@ -64,6 +64,33 @@ To keep assets up-to-date and avoid issues in future updates, we strongly recomm
 }
 ```
 
+## Languages
+
+Kompass ships with translations for the admin panel in:
+
+- 🇩🇪 German (`de`)
+- 🇬🇧 English (`en`)
+- 🇪🇸 Spanish (`es`)
+- 🇫🇷 French (`fr`)
+
+The translation files live in the package under `resources/lang/{locale}.json` and are
+loaded automatically based on your app's `app.locale` (set via the `APP_LOCALE` env variable).
+
+### Overriding or adding a language
+
+JSON translations defined in your own application take precedence over the package's.
+To customize a string or add a new locale, create/edit `lang/{locale}.json` in your project:
+
+```json
+{
+    "Choose color": "Farbe wählen",
+    "Documentation": "Dokumentation"
+}
+```
+
+Each entry is a flat key/value pair; missing keys fall back to the English source string.
+Contributions of additional locales to the package itself are welcome.
+
 ## Documentation
 
 Documentation is available at https://kompass.secondnetwork.de

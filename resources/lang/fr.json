@@ -1216,5 +1216,15 @@
     "Leave empty for no link. \"{slug}\" is replaced per record.": "Laisser vide pour aucun lien. « {slug} » est remplacé par enregistrement.",
     "Comma separated relations to avoid N+1.": "Relations séparées par des virgules pour éviter le N+1.",
     "Sort by order to enable drag-and-drop": "Trier par ordre pour activer le glisser-déposer",
-    "Drag to reorder": "Glisser pour réordonner"
+    "Drag to reorder": "Glisser pour réordonner",
+    "Choose color": "Choisir une couleur",
+    "No color": "Aucune couleur",
+    "Hue": "Teinte",
+    "Opacity": "Opacité",
+    "Presets": "Préréglages",
+    "Remove color": "Supprimer la couleur",
+    "Developer Mode": "Mode développeur",
+    "Documentation": "Documentation",
+    "Explore the documentation": "Explorer la documentation",
+    "In this documentation we'll walk you through all information and tips.": "Dans cette documentation, nous vous guidons à travers toutes les informations et astuces."
 }

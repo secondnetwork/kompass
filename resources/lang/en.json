@@ -799,5 +799,15 @@
     "You may not leave a team that you created.": "You may not leave a team that you created.",
     "Your email address is not verified.": "Your email address is not verified.",
     "Zambia": "Zambia",
-    "Zimbabwe": "Zimbabwe"
+    "Zimbabwe": "Zimbabwe",
+    "Choose color": "Choose color",
+    "No color": "No color",
+    "Hue": "Hue",
+    "Opacity": "Opacity",
+    "Presets": "Presets",
+    "Remove color": "Remove color",
+    "Developer Mode": "Developer Mode",
+    "Documentation": "Documentation",
+    "Explore the documentation": "Explore the documentation",
+    "In this documentation we'll walk you through all information and tips.": "In this documentation we'll walk you through all information and tips."
 }

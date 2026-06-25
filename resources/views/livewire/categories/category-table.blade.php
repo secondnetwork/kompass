@@ -14,8 +14,8 @@
                     <div class="flex flex-wrap gap-2 mb-2">
                         @foreach (['primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error', 'neutral'] as $themeColor)
                             <button type="button" wire:click="$set('color', '{{ $themeColor }}')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === $themeColor ? 'border-base-content scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: var(--color-{{ $themeColor }});" title="{{ $themeColor }}"></button>
+                                class="badge badge-{{ $themeColor }} cursor-pointer transition {{ $color === $themeColor ? 'ring-2 ring-base-content ring-offset-1' : 'opacity-60 hover:opacity-100' }}"
+                                title="{{ $themeColor }}">{{ $themeColor }}</button>
                         @endforeach
                     </div>
                     <x-kompass::form.input type="text" name="color" wire:model="color" placeholder="#3b82f6" />
@@ -86,8 +86,8 @@
                     <div class="flex flex-wrap gap-2 mb-2">
                         @foreach (['primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error', 'neutral'] as $themeColor)
                             <button type="button" wire:click="$set('color', '{{ $themeColor }}')"
-                                class="w-8 h-8 rounded-full border-2 {{ $color === $themeColor ? 'border-base-content scale-110' : 'border-transparent hover:scale-105' }}"
-                                style="background-color: var(--color-{{ $themeColor }});" title="{{ $themeColor }}"></button>
+                                class="badge badge-{{ $themeColor }} cursor-pointer transition {{ $color === $themeColor ? 'ring-2 ring-base-content ring-offset-1' : 'opacity-60 hover:opacity-100' }}"
+                                title="{{ $themeColor }}">{{ $themeColor }}</button>
                         @endforeach
                     </div>
                     <x-kompass::form.input type="text" name="color" wire:model="color" placeholder="#3b82f6" />
