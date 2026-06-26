@@ -52,7 +52,7 @@
                             type="button"
                             @click="togglePlusMenu(index)"
                             class="p-1 hover:bg-base-200 rounded text-base-content transition"
-                            title="{{ __('Neuer Block mit Format') }}"
+                            title="{{ __('New block with format') }}"
                         >
                             <x-tabler-plus class="w-4 h-4 stroke-2" />
                         </button>
@@ -64,7 +64,7 @@
                             @click.outside="showAddMenu = false"
                             style="display: none;"
                         >
-                            <span class="block px-3 py-1 text-[10px] font-bold text-base-content/60 uppercase tracking-wider">{{ __('Neu erstellen') }}</span>
+                            <span class="block px-3 py-1 text-[10px] font-bold text-base-content/60 uppercase tracking-wider">{{ __('Create new') }}</span>
                             <template x-for="type in blockTypes" :key="type.id">
                                 <button
                                     type="button"
@@ -83,7 +83,7 @@
 
                     <div
                         class="p-1 cursor-grab active:cursor-grabbing text-base-content transition relative"
-                        title="{{ __('Verschieben oder Einstellen') }}"
+                        title="{{ __('Move or configure') }}"
                         draggable="true"
                         @dragstart="dragStart(index, $event)"
                         @dragend="dragEnd()"
