@@ -98,11 +98,7 @@ class AccountForm extends Component
             $this->dispatch('getModelId', $this->selectedItem);
             $model = User::findOrFail($this->selectedItem);
 
-            foreach ($model->roles as $user_role) {
-                $roleid = $user_role->id;
-            }
-
-            $this->role = $roleid;
+            $this->role = $model->roles->first()?->id;
             $this->name = $model->name;
             $this->email = $model->email;
             $this->FormEdit = true;
@@ -175,7 +171,7 @@ class AccountForm extends Component
 
             Mail::to($maildata['email'])->send(new Invitation($maildata));
 
-            //->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
+            // ->subject(__('Willkomenn bei Kompass für').env('APP_NAME'))
             $this->FormEdit = false;
 
             $this->reset(['name', 'email', 'password', 'role']);
@@ -207,11 +203,11 @@ class AccountForm extends Component
     public function sortBy($field)
     {
         $allowedFields = ['name', 'status', 'created_at'];
-        if (!in_array($field, $allowedFields)) {
+        if (! in_array($field, $allowedFields)) {
             return;
         }
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;
