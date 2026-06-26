@@ -11,8 +11,6 @@
 
 Kompass is what a modern Laravel CMS should feel like. Built on Tailwind CSS 4, Livewire 4, and Laravel 13 — with a block builder, media library, drag-and-drop menus builder, multilingual content, passkey login, SEO, and role-based permissions baked in. No workarounds. No compromises. Built for developers who expect more.
 
-Still using WordPress or TYPO3? There's a better way. Kompass combines the power of Laravel with everything you need for modern web projects — without the legacy overhead.
-
 ## Key Features
 
 - **Modern Tech Stack**: Built with Laravel 13, PHP 8.2+, Livewire 4, and Tailwind CSS 4
@@ -26,7 +24,7 @@ Still using WordPress or TYPO3? There's a better way. Kompass combines the power
 ## Requirements
 
 Additionally Kompass requires you to use
-- PHP 8.3 or newer 
+- PHP 8.2 or newer 
 - Laravel 13 or newer
 - Livewire 4.0 or newer
 - Tailwindcss 4.0 or newer
@@ -45,59 +43,9 @@ With the command we install frontend asset, created new admin user and drop all 
 php artisan kompass:install  
 ```
 
-## Publishing Kompass's frontend assets in future updates
-
-```bash
-php artisan vendor:publish --tag=kompass.assets --force && php artisan optimize:clear
-```
-
-To keep assets up-to-date and avoid issues in future updates, we strongly recommend that you add the following command to your composer.json file:
-
-```json
-{
-    "scripts": {
-        "post-update-cmd": [
-            // Other scripts
-            "@php artisan vendor:publish --tag=kompass.assets --force"
-        ]
-    }
-}
-```
-
-## Languages
-
-Kompass ships with translations for the admin panel in:
-
-- 🇩🇪 German (`de`)
-- 🇬🇧 English (`en`)
-- 🇪🇸 Spanish (`es`)
-- 🇫🇷 French (`fr`)
-
-The translation files live in the package under `resources/lang/{locale}.json` and are
-loaded automatically based on your app's `app.locale` (set via the `APP_LOCALE` env variable).
-
-### Overriding or adding a language
-
-JSON translations defined in your own application take precedence over the package's.
-To customize a string or add a new locale, create/edit `lang/{locale}.json` in your project:
-
-```json
-{
-    "Choose color": "Farbe wählen",
-    "Documentation": "Dokumentation"
-}
-```
-
-Each entry is a flat key/value pair; missing keys fall back to the English source string.
-Contributions of additional locales to the package itself are welcome.
-
 ## Documentation
 
 Documentation is available at https://kompass.secondnetwork.de
-
-## Screenshots
-
-at https://kompass.secondnetwork.de/docs/screenshots
 
 ## Security
 
