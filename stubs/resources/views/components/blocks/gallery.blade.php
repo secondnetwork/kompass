@@ -22,7 +22,7 @@
 <div {{ $attributes->merge(['class' => 'relative group ' . $gridCols . ' ' . $colSpan]) }}>
     <div class="md:grid gap-4 transition-all ease-in-out duration-500 grid-cols-{{ $item->grid }} one-image {{ get_meta($item, 'css-classname') }}">
         @foreach ($galleryImages as $imageId)
-            <x-image :id="$imageId" wire:key="gallery-{{ $item->id }}-{{ $loop->index }}" class="w-full h-full rounded-lg" />
+            <x-media-item :id="$imageId" wire:key="gallery-{{ $item->id }}-{{ $loop->index }}" class="w-full h-full rounded-lg" />
         @endforeach
     </div>
 </div>

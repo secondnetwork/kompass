@@ -281,7 +281,7 @@ return [
             'palette_border' => 'border-blue-600',
         ],
         'gallery' => [
-            'label' => 'Images and Gallery',
+            'label' => 'Media',
             'icon' => 'photo',
             'component' => 'blocks.gallery',
             'container' => false,
