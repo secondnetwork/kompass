@@ -3,8 +3,8 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Block;
@@ -85,7 +85,7 @@ new #[Layout('layouts.main')] class extends Component
 
         $query = Post::where('slug', $slug);
 
-        if ($land) {
+        if ($land && setting('global.multilingual')) {
             $query->where('land', $land);
         }
 
