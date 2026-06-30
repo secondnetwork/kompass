@@ -1,5 +1,6 @@
 @props(['record', 'url' => null, 'modelKey' => null])
 
+@if (($record->status ?? null) === 'published')
 {{-- Blog post card: thumbnail + title --}}
 <article class="card bg-base-100 overflow-hidden">
     @if ($record->thumbnails)
@@ -33,3 +34,4 @@
         <span class="text-xs text-base-content/50">{{ $record->created_at }}</span>
     </div>
 </article>
+@endif

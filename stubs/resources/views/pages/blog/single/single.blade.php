@@ -63,7 +63,20 @@
                 <!-- Content -->
                 <div class="space-y-5 md:space-y-8">
                     <div class="space-y-3">
+                        @if ($post->category)
+                            <span class="badge badge-sm badge-{{ $post->category->color ?? 'neutral' }} gap-1">
+                                @if ($post->category->icon)
+                                    <x-dynamic-component :component="$post->category->icon" class="size-3" />
+                                @endif
+                                {{ $post->category->name }}
+                            </span>
+                        @endif
+
                         <h2 class="text-2xl font-bold md:text-3xl">{{ $post->title }}</h2>
+
+                        @if ($post->meta_description)
+                            <p class="mt-3 text-lg text-base-content/70">{{ $post->meta_description }}</p>
+                        @endif
 
                         <div class="relative rounded-xl overflow-hidden my-6">
                              <x-image :id="$post->thumbnails" class="object-cover w-full h-full rounded-lg shadow-md aspect-video" />
@@ -79,22 +92,17 @@
                         @if ($this->blocks)
                         @foreach ($this->blocks as $key => $item)
                             @php
-                                // Der Name der Komponente, z.B. "blocks.hero"
-                                $componentName = 'blocks.' . $item->type;
-
-                                // Der Pfad zur View, z.B. "components.blocks.hero"
+                                $componentName = block_registry()->component($item->type);
                                 $viewName = 'components.' . $componentName;
                             @endphp
 
                             @if (view()->exists($viewName))
-                                {{-- Komponente existiert -> Rendern --}}
                                 <section
                                     class="{{ $item->getMeta('layout') ?? 'fullpage' }} {{ $item->getMeta('css-classname') }}"
                                     id="{{ $item->getMeta('id-anchor') }}">
                                     <x-dynamic-component :component="$componentName" :item="$item" />
                                 </section>
                             @elseif (app()->hasDebugModeEnabled())
-                                {{-- Komponente fehlt & wir sind im Dev-Modus -> Fehler anzeigen --}}
                                 <section
                                     class="fullpage border border-dashed border-red-500 bg-red-50 p-4 text-red-600 rounded">
                                     <strong>Entwickler-Info:</strong><br>
@@ -102,8 +110,7 @@
                                     gefunden.<br>
                                 </section>
                             @else
-                                {{-- Produktion -> Einfach nichts anzeigen (Fallback) --}}
-                                <!-- Block {{ $item->type }} konnte nicht geladen werden -->
+                                @php \Illuminate\Support\Facades\Log::warning('Kompass: block component missing', ['type' => $item->type]); @endphp
                             @endif
                         @endforeach
                         @endif

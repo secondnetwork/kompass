@@ -1,18 +1,16 @@
 <?php
 
-use Livewire\Component;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\Locked;
-use Secondnetwork\Kompass\Models\Post;
-use Secondnetwork\Kompass\Models\File;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
+use Secondnetwork\Kompass\Models\File;
+use Secondnetwork\Kompass\Models\Post;
 
 new #[Layout('layouts.main')] class extends Component
 {
-    public $amount = 6; 
+    public $amount = 6;
 
     #[Locked]
     public $total;
@@ -28,12 +26,14 @@ new #[Layout('layouts.main')] class extends Component
         } else {
             $availableLocales = ['de', 'en', 'tr'];
         }
-        
+
         $defaultLocale = $availableLocales[0] ?? 'de';
         $land = in_array($locale, $availableLocales) ? $locale : $defaultLocale;
         app()->setLocale($land);
-        
-        $this->total = Post::where('status', 'published')->where('land', $land)->count();
+
+        $this->total = Post::where('status', 'published')
+            ->when(setting('global.multilingual'), fn ($q) => $q->where('land', $land))
+            ->count();
     }
 
     public function loadMore()
@@ -50,13 +50,14 @@ new #[Layout('layouts.main')] class extends Component
         } else {
             $availableLocales = ['de', 'en', 'tr'];
         }
-        
+
         $defaultLocale = $availableLocales[0] ?? 'de';
         $land = app()->getLocale() ?: $defaultLocale;
 
         return Post::query()
+            ->with('category')
             ->where('status', 'published')
-            ->where('land', $land)
+            ->when(setting('global.multilingual'), fn ($q) => $q->where('land', $land))
             ->orderBy('created_at', 'desc')
             ->take($this->amount)
             ->get();
@@ -68,12 +69,12 @@ new #[Layout('layouts.main')] class extends Component
      */
     public function getPostImage($fileId)
     {
-        if (!$fileId) return null;
+        if (! $fileId) {
+            return null;
+        }
 
-        return Cache::rememberForever('kompass_imgId_' . $fileId, function () use ($fileId) {
+        return Cache::rememberForever('kompass_imgId_'.$fileId, function () use ($fileId) {
             return File::find($fileId);
         });
     }
-
-
-}
+};
