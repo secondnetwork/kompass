@@ -23,7 +23,7 @@
     {{-- file missing: render nothing --}}
 @elseif ($isImage && $lightbox)
     {{-- image opens in the gallery lightbox on click --}}
-    <button type="button" @click="$dispatch('open-lightbox', '{{ $fileUrl }}')"
+    <button type="button" @click="$dispatch('open-lightbox', @js($fileUrl))"
         {{ $attributes->merge(['class' => 'block cursor-zoom-in']) }}>
         <x-image :id="$id" class="w-full h-full rounded-lg object-cover" />
     </button>
