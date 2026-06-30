@@ -1,5 +1,6 @@
 @props(['record', 'url' => null, 'modelKey' => null])
 
+@if (($record->status ?? null) === 'published')
 <div>
     @if ($url)
         <a href="{{ $url }}" class="text-lg font-medium hover:underline">{{ $record->title }}</a>
@@ -7,3 +8,4 @@
         <span class="text-lg font-medium">{{ $record->title }}</span>
     @endif
 </div>
+@endif
