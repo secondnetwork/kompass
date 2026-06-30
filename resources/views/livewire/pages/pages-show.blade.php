@@ -210,7 +210,10 @@
                 </button>
             @endif
             <button class="btn btn-primary"
-                wire:click="selectitem('addBlock',{{ $page->id }})">{{ __('Add') }}</button>
+                wire:click="selectitem('addBlock',{{ $page->id }})">
+                <x-tabler-category-plus class="size-5" />
+                {{ __('Add') }}
+            </button>
         </div>
     </div>
 

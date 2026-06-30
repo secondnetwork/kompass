@@ -237,7 +237,10 @@
             </div>
             <div class="flex  justify-end my-6">
                 <button class="btn btn-primary"
-                    wire:click="selectitem('addBlock',{{ $post->id }})">{{ __('Add') }}</button>
+                    wire:click="selectitem('addBlock',{{ $post->id }})">
+                    <x-tabler-category-plus class="size-5" />
+                    {{ __('Add') }}
+                </button>
             </div>
         </div>
     </div>
