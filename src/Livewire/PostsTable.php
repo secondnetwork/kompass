@@ -202,7 +202,7 @@ class PostsTable extends Component
             'status' => 'draft',
             'meta_description' => $this->meta_description,
             'slug' => $newpostslug,
-            'land' => $this->land ?: 'de',
+            'land' => setting('global.multilingual') ? ($this->land ?: config('app.locale', 'de')) : null,
         ]);
 
         $this->addDefaultTextBlock($post);
@@ -272,7 +272,7 @@ class PostsTable extends Component
         }
         $newpost->status = 'draft';
         $newpost->created_at = Carbon::now();
-        $newpost->land = $this->cloneLand;
+        $newpost->land = setting('global.multilingual') ? $this->cloneLand : null;
 
         $newpost->push();
 

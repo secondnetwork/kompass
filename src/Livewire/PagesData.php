@@ -576,6 +576,7 @@ class PagesData extends Component
             'col-span' => 'col-span',
             'alignment' => 'alignment',
             'slider' => 'slider',
+            'lightbox' => 'lightbox',
             'order' => 'order',
             'align' => 'align',
             'color' => 'color',
@@ -661,7 +662,7 @@ class PagesData extends Component
             'layout' => $this->layout,
             'status' => $this->status,
             'slug' => $slugNameURL,
-            'land' => $this->land,
+            'land' => setting('global.multilingual') ? $this->land : null,
             'updated_at' => Carbon::now(),
         ]);
 

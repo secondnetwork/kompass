@@ -306,7 +306,7 @@ class PostsData extends Component
 
     public function clone($id)
     {
-        $block = block::find($id);
+        $block = Block::find($id);
         $newblock = $block->replicate();
 
         $newblock->created_at = Carbon::now();
@@ -343,7 +343,7 @@ class PostsData extends Component
     public function savename($id)
     {
         if ($this->newName != null) {
-            $block = block::findOrFail($id);
+            $block = Block::findOrFail($id);
             $block->update(['name' => $this->newName]);
         }
         $this->resetPageComponent();
@@ -385,6 +385,15 @@ class PostsData extends Component
             } else {
                 $setblock->saveMeta([
                     'slider' => $status,
+                ]);
+            }
+        }
+        if ($set == 'lightbox') {
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('lightbox');
+            } else {
+                $setblock->saveMeta([
+                    'lightbox' => $status,
                 ]);
             }
         }
@@ -548,7 +557,7 @@ class PostsData extends Component
             'meta_description' => $this->description,
             'status' => $this->status,
             'slug' => $slugNameURL,
-            'land' => $this->land,
+            'land' => setting('global.multilingual') ? $this->land : null,
             'category_id' => $this->category_id ?: null,
             'updated_at' => Carbon::now(),
         ]);
@@ -629,7 +638,7 @@ class PostsData extends Component
 
     public function delete() // delete block
     {
-        block::destroy($this->getId);
+        Block::destroy($this->getId);
         $this->FormDelete = false;
         // $this->mount($this->selectedItem);
         $this->resetPageComponent();

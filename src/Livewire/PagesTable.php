@@ -188,7 +188,7 @@ class PagesTable extends Component
         $newPage->slug = $newSlug;
         $newPage->order = 999;
         $newPage->status = 'draft';
-        $newPage->land = $this->cloneLand;
+        $newPage->land = setting('global.multilingual') ? $this->cloneLand : null;
         $newPage->push();
 
         $relationships = ['datafield', 'meta', 'children'];
@@ -280,7 +280,7 @@ class PagesTable extends Component
             'meta_description' => $this->meta_description,
             'order' => '999',
             'slug' => $newpageslug,
-            'land' => $this->land ?: 'de',
+            'land' => setting('global.multilingual') ? ($this->land ?: config('app.locale', 'de')) : null,
         ]);
         $this->FormAdd = false;
 
