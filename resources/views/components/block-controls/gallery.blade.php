@@ -1,6 +1,9 @@
 @props(['itemblocks'])
 
-@php $slider = $itemblocks->slider ?? ''; @endphp
+@php
+    $slider = $itemblocks->slider ?? '';
+    $lightbox = $itemblocks->lightbox ?? '';
+@endphp
 
 <x-kompass::settings-section :title="__('Gallery')">
     <div class="flex items-center gap-2">
@@ -26,5 +29,12 @@
                 </span>
             @endforeach
         </div>
+    </div>
+    <div class="flex items-center gap-2 {{ $slider === 'true' ? 'opacity-40' : '' }}">
+        <span class="text-xs text-neutral-500 w-28 shrink-0 leading-tight">{{ __('Lightbox') }}</span>
+        <input type="checkbox" class="toggle toggle-sm toggle-primary" @checked($lightbox === 'true')
+            @disabled($slider === 'true')
+            x-data
+            @change="$wire.saveset({{ $itemblocks->id }}, 'lightbox', $event.target.checked ? 'true' : '')" />
     </div>
 </x-kompass::settings-section>

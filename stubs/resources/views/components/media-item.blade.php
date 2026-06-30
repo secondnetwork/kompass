@@ -1,5 +1,6 @@
 @props([
     'id' => null,
+    'lightbox' => false,
 ])
 
 @php
@@ -20,6 +21,12 @@
 
 @if (! $file)
     {{-- file missing: render nothing --}}
+@elseif ($isImage && $lightbox)
+    {{-- image opens in the gallery lightbox on click --}}
+    <button type="button" @click="$dispatch('open-lightbox', '{{ $fileUrl }}')"
+        {{ $attributes->merge(['class' => 'block cursor-zoom-in']) }}>
+        <x-image :id="$id" class="w-full h-full rounded-lg object-cover" />
+    </button>
 @elseif ($isImage)
     {{-- images keep the normal <img> rendering --}}
     <x-image :id="$id" {{ $attributes }} />
