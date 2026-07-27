@@ -50,14 +50,19 @@ class KompassEditor extends Component
 
     public function mount(
         $editorId = null,
-        $value = '',
+        $value = null,
         ?string $placeholder = null,
         bool $readOnly = false,
     ): void {
         $this->editorId = $editorId !== null && $editorId !== '' ? (int) $editorId : null;
         $this->readOnly = $readOnly;
         $this->placeholder = $placeholder ?? __('Tippe \'/\' für Befehle...');
-        $this->blocks = EditorMigrationHelper::toFlatBlocks($value);
+
+        // In wire:model mode, Livewire's #[Modelable] support already hydrates
+        // $this->value from the parent's bound property before mount() runs.
+        // No `value` param is passed in that mode, so `$value` stays null here
+        // and must not overwrite that already-hydrated value with an empty one.
+        $this->blocks = EditorMigrationHelper::toFlatBlocks($value ?? $this->value);
         $this->value = $this->compileValue($this->blocks);
     }
 
