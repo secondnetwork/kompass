@@ -258,7 +258,6 @@ class Settings extends Component
         if ($this->valuedata == '0') {
             $this->valuedata = '';
         }
-        $this->dispatch('savedatajs');
 
         Setting::updateOrCreate([
             'id' => $this->selectedItem,
