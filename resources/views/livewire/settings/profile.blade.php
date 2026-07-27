@@ -151,7 +151,7 @@
                       class="space-y-6">
                     <div class="grid grid-cols-2 gap-4">
                         <label class="cursor-pointer">
-                            <input type="radio" value="light" wire:model.live="theme" class="peer sr-only">
+                            <input type="radio" value="light" x-model="theme" class="peer sr-only">
                             <div class="border-2 border-base-300 peer-checked:border-primary rounded-xl p-4 hover:border-base-content/40 transition">
                                 <div class="aspect-[4/3] rounded-lg bg-white border border-base-300 flex flex-col p-2 gap-1 mb-3">
                                     <div class="h-1.5 w-8 bg-slate-300 rounded"></div>
@@ -166,7 +166,7 @@
                         </label>
 
                         <label class="cursor-pointer">
-                            <input type="radio" value="dark" wire:model.live="theme" class="peer sr-only">
+                            <input type="radio" value="dark" x-model="theme" class="peer sr-only">
                             <div class="border-2 border-base-300 peer-checked:border-primary rounded-xl p-4 hover:border-base-content/40 transition">
                                 <div class="aspect-[4/3] rounded-lg bg-slate-900 border border-slate-700 flex flex-col p-2 gap-1 mb-3">
                                     <div class="h-1.5 w-8 bg-slate-600 rounded"></div>
