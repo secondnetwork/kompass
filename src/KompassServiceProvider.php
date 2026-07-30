@@ -30,7 +30,7 @@ use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 class KompassServiceProvider extends ServiceProvider
 {
-    protected const BINDING = 'image';
+    protected const BINDING = 'kompass.image';
 
     /**
      * Bootstrap the application services.
@@ -168,7 +168,7 @@ class KompassServiceProvider extends ServiceProvider
                 driver: $driverConfig,
                 autoOrientation: config('kompass.options.autoOrientation', true),
                 decodeAnimation: config('kompass.options.decodeAnimation', true),
-                blendingColor: config('kompass.options.blendingColor', 'ffffff')
+                backgroundColor: config('kompass.options.blendingColor', 'ffffff')
             );
         });
 

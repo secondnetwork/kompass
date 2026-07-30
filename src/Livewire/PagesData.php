@@ -289,7 +289,7 @@ class PagesData extends Component
             if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
                 $thumbnailContents = file_get_contents($thumbnailUrl);
                 if ($thumbnailContents) {
-                    $manager = app('image');
+                    $manager = app('kompass.image');
                     $image = method_exists($manager, 'decode')
                         ? $manager->decode($thumbnailContents)
                         : $manager->read($thumbnailContents);

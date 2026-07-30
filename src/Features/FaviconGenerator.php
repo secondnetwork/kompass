@@ -20,7 +20,7 @@ class FaviconGenerator
 
     public function generateFaviconsFromImagePath()
     {
-        $manager = app('image');
+        $manager = app('kompass.image');
         $image = method_exists($manager, 'decode') 
             ? $manager->decode(file_get_contents($this->filePath)) 
             : $manager->read($this->filePath);

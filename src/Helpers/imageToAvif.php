@@ -51,7 +51,7 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
     }
 
     try {
-        $manager = app('image');
+        $manager = app('kompass.image');
         $content = $storage->get($diskPathImages);
         $image = method_exists($manager, 'decode') 
             ? $manager->decode($content) 
