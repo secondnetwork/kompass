@@ -14,8 +14,9 @@
     <div class="max-w-120">
         @if (isset($image) && $image != '')
             <div class="relative border border-dashed border-base-300 rounded-lg">
+                <div class="absolute inset-0 h-full rounded-lg border text-black/10 dark:text-white/12.5 bg-size-[8px_8px] bg-top-left bg-[repeating-linear-gradient(315deg,currentColor_0,currentColor_1px,transparent_0,transparent_50%)]"></div>
                 <img src="{{ is_string($image) ? url($image) . '?' . uniqid() : $image->temporaryUrl() }}"
-                    class="h-auto rounded-lg aspect-video w-full object-cover" />
+                    class="h-auto relative rounded-lg aspect-video w-full" />
                 <button wire:click="{{ $deleteAction }}"
                     class="flex absolute top-0 right-0 items-center px-3 py-1.5 mt-2 mr-2 text-xs font-medium text-white rounded-md bg-red-500/70 hover:bg-red-500/90">
                     <x-tabler-trash class="mr-1 w-4 h-4" />
@@ -27,7 +28,7 @@
                 @dragover.prevent="isDropping = true" @dragleave.prevent="isDropping = false"
                 @drop.prevent="isDropping = false; $refs.fileInput.files = $event.dataTransfer.files; $refs.fileInput.dispatchEvent(new Event('change'))">
                 <label 
-                    class="relative flex justify-center items-center cursor-pointer rounded-lg aspect-video border border-dashed bg-base-300 border-base-content/20 hover:border-primary px-6 py-10 transition-colors duration-200">
+                    class="relative flex justify-center items-center cursor-pointer rounded-lg aspect-video border border-dashed bg-base-200 border-base-content/20 hover:border-primary px-6 py-10 transition-colors duration-200">
 
                     <div class="text-center ">
                         <x-tabler-cloud-upload stroke-width="1.5" class="mx-auto size-12 text-gray-400" />
