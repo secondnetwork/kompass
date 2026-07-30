@@ -151,6 +151,12 @@ class PagesData extends Component
 
     public $FormEditBlock = false;
 
+    public $FormCopyToPage = false;
+
+    public $copyTargetPageId = null;
+
+    public $pages = [];
+
     public $Editorjs;
 
     public $oembedUrl;
@@ -223,6 +229,11 @@ class PagesData extends Component
             ->get();
 
         $this->blocktemplates = Blocktemplates::orderBy('order')->get();
+
+        $this->pages = Page::orderBy('order', 'asc')
+            ->get()
+            ->map(fn ($page) => ['id' => $page->id, 'name' => $page->title])
+            ->toArray();
     }
 
     #[On('reload-pages-data')]
@@ -243,6 +254,7 @@ class PagesData extends Component
             'addBlock' => $this->setAddBlock($blockgroupId),
             'addMedia' => $this->setAddMedia($fieldOrPageName, $blockgroupId),
             'deleteblock' => $this->FormDelete = true,
+            'copyToPage' => $this->setCopyToPage(),
             default => null,
         };
     }
@@ -258,6 +270,14 @@ class PagesData extends Component
         $this->FormMedia = true;
         $this->dispatch('getIdField_changnd', $this->getId, $fieldOrPageName);
         $this->dispatch('getIdBlock', $blockgroupId);
+    }
+
+    private function setCopyToPage(): void
+    {
+        // Default the picker to the current page, so confirming without
+        // changing the selection simply duplicates the block in place.
+        $this->copyTargetPageId = $this->page->id;
+        $this->FormCopyToPage = true;
     }
 
     #[On('FormMedia')]
@@ -354,23 +374,44 @@ class PagesData extends Component
         // return redirect()->to('admin');
     }
 
-    public function clone($id)
+    public function copyToPage()
     {
-        $block = Block::findOrFail($id);
-        $this->cloneBlockRecursive($block, $block->subgroup);
+        if (! $this->copyTargetPageId) {
+            return;
+        }
 
+        $block = Block::findOrFail($this->getId);
+        $targetPageId = (int) $this->copyTargetPageId;
+
+        if ($targetPageId === $this->page->id) {
+            // Same page selected: duplicate the block right where it is.
+            $this->cloneBlockRecursive($block, $block->subgroup);
+        } else {
+            // Different page selected: copy the tree in as a new root-level block.
+            $this->cloneBlockRecursive($block, null, $targetPageId);
+        }
+
+        $this->FormCopyToPage = false;
+        $this->copyTargetPageId = null;
         $this->resetPageComponent();
     }
 
     /**
      * Recursively clone a block, its meta, its datafields, and (for container
-     * blocks like Layout/Accordion) all of its nested children.
+     * blocks like Layout/Accordion) all of its nested children. Pass
+     * $targetBlockableId to copy the tree onto a different page instead of
+     * duplicating it within the current one.
      */
-    private function cloneBlockRecursive(Block $block, ?string $subgroup): Block
+    private function cloneBlockRecursive(Block $block, ?string $subgroup, ?int $targetBlockableId = null): Block
     {
         $newBlock = $block->replicate();
         $newBlock->subgroup = $subgroup;
         $newBlock->created_at = now();
+
+        if ($targetBlockableId !== null) {
+            $newBlock->blockable_id = $targetBlockableId;
+        }
+
         $newBlock->save();
 
         foreach ($block->allMeta as $meta) {
@@ -384,7 +425,7 @@ class PagesData extends Component
         }
 
         foreach (Block::where('subgroup', (string) $block->id)->get() as $child) {
-            $this->cloneBlockRecursive($child, (string) $newBlock->id);
+            $this->cloneBlockRecursive($child, (string) $newBlock->id, $targetBlockableId);
         }
 
         return $newBlock;

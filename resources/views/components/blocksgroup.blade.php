@@ -3,6 +3,7 @@
     'fields' => '',
     'page' => '',
     'class' => '',
+    'copyToPage' => false,
 ])
 
 @php
@@ -101,9 +102,16 @@
                             <x-tabler-eye-off class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
                         </span>
                     @endif
-                    <span wire:click="clone({{ $itemblocks->id }})" class="flex justify-center">
-                        <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
-                    </span>
+                    @if ($copyToPage)
+                        <span wire:click="selectitem('copyToPage', {{ $itemblocks->id }})" class="flex justify-center"
+                            title="{{ __('Clone') }}">
+                            <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
+                        </span>
+                    @else
+                        <span wire:click="clone({{ $itemblocks->id }})" class="flex justify-center">
+                            <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
+                        </span>
+                    @endif
                     <span wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" class="flex justify-center">
                         <x-tabler-trash class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
                     </span>
@@ -147,11 +155,19 @@
                                 {{ __('Publish') }}
                             </button>
                         @endif
-                        <button wire:click="clone({{ $itemblocks->id }})" @click="dropdownOpen = false"
-                            class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
-                            <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
-                            {{ __('Clone') }}
-                        </button>
+                        @if ($copyToPage)
+                            <button wire:click="selectitem('copyToPage', {{ $itemblocks->id }})" @click="dropdownOpen = false"
+                                class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
+                                <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
+                                {{ __('Clone') }}
+                            </button>
+                        @else
+                            <button wire:click="clone({{ $itemblocks->id }})" @click="dropdownOpen = false"
+                                class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
+                                <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
+                                {{ __('Clone') }}
+                            </button>
+                        @endif
                         <div class="h-px my-1 bg-neutral-100"></div>
                         <button wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" @click="dropdownOpen = false"
                             class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-red-600 hover:bg-red-50">
@@ -178,9 +194,16 @@
                             <x-tabler-eye-off class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
                         </span>
                     @endif
-                    <span wire:click="clone({{ $itemblocks->id }})" class="flex justify-center">
-                        <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
-                    </span>
+                    @if ($copyToPage)
+                        <span wire:click="selectitem('copyToPage', {{ $itemblocks->id }})" class="flex justify-center"
+                            title="{{ __('Clone') }}">
+                            <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
+                        </span>
+                    @else
+                        <span wire:click="clone({{ $itemblocks->id }})" class="flex justify-center">
+                            <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
+                        </span>
+                    @endif
                     <span wire:click="selectitem('deleteblock',{{ $itemblocks->id }})" class="flex justify-center">
                         <x-tabler-trash class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
                     </span>
@@ -224,11 +247,19 @@
                                 {{ __('Publish') }}
                             </button>
                         @endif
-                        <button wire:click="clone({{ $itemblocks->id }})" @click="dropdownOpen = false"
-                            class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
-                            <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
-                            {{ __('Clone') }}
-                        </button>
+                        @if ($copyToPage)
+                            <button wire:click="selectitem('copyToPage', {{ $itemblocks->id }})" @click="dropdownOpen = false"
+                                class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
+                                <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
+                                {{ __('Clone') }}
+                            </button>
+                        @else
+                            <button wire:click="clone({{ $itemblocks->id }})" @click="dropdownOpen = false"
+                                class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
+                                <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
+                                {{ __('Clone') }}
+                            </button>
+                        @endif
                         <div class="h-px my-1 bg-neutral-100"></div>
                         <button wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" @click="dropdownOpen = false"
                             class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-red-600 hover:bg-red-50">
@@ -249,7 +280,7 @@
             @if ($railStyle) style="{{ $railStyle }}" @endif>
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
                 class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
-                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
+                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" />
             </div>
         </div>
     @elseif ($isContainer)
@@ -265,7 +296,7 @@
 
         <div x-show="expanded" x-collapse class="bg-base-300/40 rounded-b-md p-1.5">
             <div class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
-                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" />
+                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" />
             </div>
         </div>
     @endif

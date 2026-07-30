@@ -191,7 +191,7 @@
 
             @forelse ($blocks as $itemblocks)
                 <div wire:sort:item="{{ $itemblocks->id }}">
-                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :class="'itemblock border border-base-300 rounded-md shadow-sm mt-3'" />
+                    <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :copy-to-page="true" :class="'itemblock border border-base-300 rounded-md shadow-sm mt-3'" />
                 </div>
 
             @empty
@@ -267,6 +267,23 @@
 
     <x-kompass::action-message class="" on="status" />
     <x-kompass::modal data="FormDelete" />
+
+    <div x-cloak x-data="{ open: @entangle('FormCopyToPage') }">
+        <x-kompass::offcanvas :w="'w-1/3'" class="p-8 grid gap-4">
+            <x-slot name="body">
+                <strong class="text-gray-600">{{ __('Clone') }}</strong>
+
+                <x-kompass::select wire:model.live="copyTargetPageId" :searchable="true"
+                    label="{{ __('Page') }}" placeholder="{{ __('Select a page') }}" :options="$pages" />
+
+                <button class="btn btn-primary" wire:click="copyToPage" @click="open = false"
+                    :disabled="!copyTargetPageId">
+                    <x-tabler-copy class="icon-lg" />
+                    {{ __('Copy') }}
+                </button>
+            </x-slot>
+        </x-kompass::offcanvas>
+    </div>
 
     <x-kompass::icon-picker />
 
