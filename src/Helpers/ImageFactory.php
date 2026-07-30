@@ -60,6 +60,37 @@ class ImageFactory
     }
 
     /**
+     * Direkte URL-Auflösung für Meta-Tags (z. B. og:image), ohne HTML-Rendering.
+     */
+    public static function getUrl($id, ?string $sizeKey = null): ?string
+    {
+        if (empty($id)) {
+            return null;
+        }
+
+        $file = Cache::rememberForever('kompass_file_'.$id, function () use ($id) {
+            return File::find($id);
+        });
+
+        if (! $file) {
+            return null;
+        }
+
+        $relativePath = $file->path ? $file->path.'/'.$file->slug.'.'.$file->extension : $file->slug.'.'.$file->extension;
+        $storage = Storage::disk(config('kompass.storage.disk', 'public'));
+
+        if (! $storage->exists($relativePath)) {
+            return null;
+        }
+
+        if ($sizeKey && ($preset = config("kompass.sizes.{$sizeKey}"))) {
+            return self::processImage($relativePath, 'jpeg', $preset) ?: $storage->url($relativePath);
+        }
+
+        return $storage->url($relativePath);
+    }
+
+    /**
      * Fluent Setter: CSS Klasse
      */
     public function class(string $class): self
@@ -368,6 +399,8 @@ class ImageFactory
                 }
             } elseif ($format === 'webp') {
                 $encoded = self::encodeImage($image, 'webp', $quality);
+            } elseif (in_array($format, ['jpeg', 'jpg', 'png'])) {
+                $encoded = self::encodeImage($image, $format, $quality);
             } else {
                 return null;
             }

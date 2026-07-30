@@ -5,8 +5,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Head\Enums\OgType;
+use Laravel\Head\Facades\Head;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\ErrorLog;
@@ -57,6 +60,11 @@ new #[Layout('layouts.main')] class extends Component
             if ($this->post instanceof Redirect) {
                 $this->sendRedirect($this->post->new_url, (int) $this->post->status_code);
             }
+
+            if (! empty($this->post->slug)) {
+                $this->setHeadMetadata();
+            }
+
             // blockable_type
             $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
 
@@ -102,6 +110,21 @@ new #[Layout('layouts.main')] class extends Component
 
         if (! $this->post) {
             throw new NotFoundHttpException('Post not found - '.$slug);
+        }
+    }
+
+    private function setHeadMetadata(): void
+    {
+        $ogImageUrl = ImageFactory::getUrl($this->post->thumbnails, 'og')
+            ?? (($fallback = setting('global.ogimage_src')) ? asset($fallback) : null);
+
+        Head::title($this->post->title.' | '.setting('global.webtitle', 'Kompass'))
+            ->description($this->post->meta_description ?? setting('global.description', ''))
+            ->og(type: OgType::Article)
+            ->twitter(site: setting('global.twitter_handle'));
+
+        if ($ogImageUrl) {
+            Head::ogImage($ogImageUrl)->twitterImage($ogImageUrl);
         }
     }
 

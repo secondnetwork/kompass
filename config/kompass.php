@@ -160,6 +160,12 @@ return [
             'method' => 'cover',
             'quality' => 75,
         ],
+        'og' => [
+            'width' => 1200,
+            'height' => 630,
+            'method' => 'cover',
+            'quality' => 80,
+        ],
     ],
 
     'fallback' => [

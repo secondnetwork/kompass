@@ -15,7 +15,7 @@
     }
 </script>
 {{-- SEO Meta Tags --}}
-<x-kompass::seo-meta />
+@head
 @if (setting('global.favicon_light_image_path'))
 <link href="{{ url(setting('global.favicon_light_image_path')) }}" rel="icon" media="(prefers-color-scheme: light)" />
 <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }} ">

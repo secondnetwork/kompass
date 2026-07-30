@@ -12,7 +12,6 @@ use Secondnetwork\Kompass\Helpers\EditorMigrationHelper;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
 use Secondnetwork\Kompass\Models\QuerySource;
-use Secondnetwork\Kompass\Seo\SeoService;
 
 if (! function_exists('getImageID')) {
     /**
@@ -648,15 +647,5 @@ if (! function_exists('kompass_query_label')) {
         }
 
         return $parts !== [] ? implode(' · ', $parts) : '#'.$record->id;
-    }
-}
-
-if (! function_exists('seo')) {
-    /**
-     * Get or configure the SEO service.
-     */
-    function seo(): SeoService
-    {
-        return app('seo');
     }
 }

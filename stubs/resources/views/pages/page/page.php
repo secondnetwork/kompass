@@ -4,6 +4,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Laravel\Head\Facades\Head;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Block;
@@ -65,6 +66,10 @@ new #[Layout('layouts::Main')] class extends Component
             }
             if ($this->page && ! $this->page_frontNotFound) {
                 $this->loadBlocks($this->page->slug);
+            }
+
+            if (! empty($this->page->slug)) {
+                $this->setHeadMetadata();
             }
 
         } catch (NotFoundHttpException $e) {
@@ -149,6 +154,23 @@ new #[Layout('layouts::Main')] class extends Component
                 }, 'datafield', 'meta'])
                 ->get();
         });
+    }
+
+    private function setHeadMetadata(): void
+    {
+        $webtitle = setting('global.webtitle', 'Kompass');
+        $supline = setting('global.supline', 'A Laravel CMS');
+
+        Head::title($this->page->layout === 'is_front_page'
+                ? $webtitle.' | '.$supline
+                : ($this->page->title ?? $webtitle).' | '.$webtitle)
+            ->description($this->page->meta_description ?? setting('global.description', ''))
+            ->og(locale: str_replace('_', '-', app()->getLocale()))
+            ->twitter(site: setting('global.twitter_handle'));
+
+        if ($ogImage = setting('global.ogimage_src')) {
+            Head::ogImage(asset($ogImage));
+        }
     }
 
     private function loadFields($slug)

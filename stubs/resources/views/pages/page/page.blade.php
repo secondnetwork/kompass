@@ -1,23 +1,4 @@
 <div>
-    @if (! empty($page->slug))
-        @php
-            $webtitle = setting('global.webtitle', 'Kompass');
-            $supline = setting('global.supline', 'A Laravel CMS');
-
-            seo()
-                ->title($page->layout === 'is_front_page'
-                    ? $webtitle . ' | ' . $supline
-                    : ($page->title ?? $webtitle) . ' | ' . $webtitle)
-                ->description($page->meta_description ?? setting('global.description', ''))
-                ->locale(str_replace('_', '-', app()->getLocale()))
-                ->twitter();
-
-            if ($ogImage = setting('global.ogimage_src')) {
-                seo()->tag('og:image', asset($ogImage));
-            }
-        @endphp
-    @endif
-
     @if ($page_frontNotFound)
         <section class="py-16 text-center">
             <h1>404</h1>

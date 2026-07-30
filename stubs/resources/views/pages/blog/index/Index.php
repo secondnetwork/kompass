@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Cache;
+use Laravel\Head\Facades\Head;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
@@ -34,6 +35,19 @@ new #[Layout('layouts.main')] class extends Component
         $this->total = Post::where('status', 'published')
             ->when(setting('global.multilingual'), fn ($q) => $q->where('land', $land))
             ->count();
+
+        $this->setHeadMetadata();
+    }
+
+    private function setHeadMetadata(): void
+    {
+        Head::title('Blog | '.setting('global.webtitle', 'Kompass'))
+            ->description(setting('global.description', ''))
+            ->twitter(site: setting('global.twitter_handle'));
+
+        if ($ogImage = setting('global.ogimage_src')) {
+            Head::ogImage(asset($ogImage))->twitterImage(asset($ogImage));
+        }
     }
 
     public function loadMore()

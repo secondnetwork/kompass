@@ -5,15 +5,6 @@
 <div>
     @if (!empty($post->slug))
         @section('slug', $post->slug)
-        @seo(['title' => $post->title . ' | ' . setting('global.webtitle' ?? 'Kompass')])
-        @php
-            seo()
-                ->description($post->meta_description ?? setting('global.description' ?? ''))
-                // ->locale(str_replace('_', '-', app()->getLocale()))
-                // ->twitter()
-                // ->tag('og:image', asset(setting('global.ogimage_src')))
-                // ->twitter();
-        @endphp
     @endif
 
 
