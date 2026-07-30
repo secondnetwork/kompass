@@ -53,7 +53,7 @@
                     {{-- <h3 class="text-lg font-semibold">Modal Title</h3> --}}
 
                     <span @click="modalOpen = false"
-                        class="absolute top-3 right-4 cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all"><x-tabler-x /></span>
+                        class="absolute top-3 right-4 cursor-pointer p-2 bg-base-200 rounded-full hover:bg-base-300 transition-all"><x-tabler-x /></span>
                 </div>
                 <div class="relative w-auto py-8">
                     <div> {{ __('Are you sure you want to delete the selected resources?') }}</div>

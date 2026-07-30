@@ -54,7 +54,7 @@
                         </svg>
                     </div>
 
-                    <span @click="open = false" class="absolute top-3 right-4 cursor-pointer p-2 bg-gray-100 rounded-full hover:bg-gray-300 transition-all">
+                    <span @click="open = false" class="absolute top-3 right-4 cursor-pointer p-2 bg-base-200 rounded-full hover:bg-base-300 transition-all">
                         <x-tabler-x />
                     </span>
 
