@@ -101,6 +101,9 @@
                             <x-tabler-eye-off class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
                         </span>
                     @endif
+                    <span wire:click="clone({{ $itemblocks->id }})" class="flex justify-center">
+                        <x-tabler-copy class="cursor-pointer size-5 md:size-6 stroke-violet-500" />
+                    </span>
                     <span wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" class="flex justify-center">
                         <x-tabler-trash class="cursor-pointer stroke-current size-5 md:size-6 text-red-500" />
                     </span>
@@ -144,6 +147,11 @@
                                 {{ __('Publish') }}
                             </button>
                         @endif
+                        <button wire:click="clone({{ $itemblocks->id }})" @click="dropdownOpen = false"
+                            class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
+                            <x-tabler-copy class="size-4 text-violet-500 shrink-0" />
+                            {{ __('Clone') }}
+                        </button>
                         <div class="h-px my-1 bg-neutral-100"></div>
                         <button wire:click="selectitem('deleteblock', {{ $itemblocks->id }})" @click="dropdownOpen = false"
                             class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-red-600 hover:bg-red-50">

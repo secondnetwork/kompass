@@ -306,22 +306,38 @@ class PostsData extends Component
 
     public function clone($id)
     {
-        $block = Block::find($id);
-        $newblock = $block->replicate();
-
-        $newblock->created_at = Carbon::now();
-
-        $newblock->push();
-
-        $fields = Datafield::where('block_id', $id)->get();
-
-        $fields->each(function ($item, $key) use ($newblock): void {
-            $copyitem = $item->replicate();
-            $copyitem->block_id = $newblock->id;
-            $copyitem->save();
-        }, );
+        $block = Block::findOrFail($id);
+        $this->cloneBlockRecursive($block, $block->subgroup);
 
         $this->resetPageComponent();
+    }
+
+    /**
+     * Recursively clone a block, its meta, its datafields, and (for container
+     * blocks like Layout/Accordion) all of its nested children.
+     */
+    private function cloneBlockRecursive(Block $block, ?string $subgroup): Block
+    {
+        $newBlock = $block->replicate();
+        $newBlock->subgroup = $subgroup;
+        $newBlock->created_at = Carbon::now();
+        $newBlock->save();
+
+        foreach ($block->allMeta as $meta) {
+            $newBlock->saveMeta([$meta->key => $meta->value]);
+        }
+
+        foreach (Datafield::where('block_id', $block->id)->get() as $field) {
+            $newField = $field->replicate();
+            $newField->block_id = $newBlock->id;
+            $newField->save();
+        }
+
+        foreach (Block::where('subgroup', (string) $block->id)->get() as $child) {
+            $this->cloneBlockRecursive($child, (string) $newBlock->id);
+        }
+
+        return $newBlock;
     }
 
     public function selected($id)

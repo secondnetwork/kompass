@@ -184,10 +184,10 @@
 
 
                 @if ($post->status === 'draft')
-                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"
-                        title="{{ __('Vorschau') }}">
+                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline"
+                        title="{{ __('Preview') }}">
                         <x-tabler-eye class="icon-lg" />
-                        {{ __('Vorschau') }}
+                        {{ __('Preview') }}
                     </a>
                 @endif
 

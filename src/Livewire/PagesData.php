@@ -357,19 +357,37 @@ class PagesData extends Component
     public function clone($id)
     {
         $block = Block::findOrFail($id);
+        $this->cloneBlockRecursive($block, $block->subgroup);
+
+        $this->resetPageComponent();
+    }
+
+    /**
+     * Recursively clone a block, its meta, its datafields, and (for container
+     * blocks like Layout/Accordion) all of its nested children.
+     */
+    private function cloneBlockRecursive(Block $block, ?string $subgroup): Block
+    {
         $newBlock = $block->replicate();
+        $newBlock->subgroup = $subgroup;
         $newBlock->created_at = now();
         $newBlock->save();
 
-        $fields = Datafield::where('block_id', $id)->get();
+        foreach ($block->allMeta as $meta) {
+            $newBlock->saveMeta([$meta->key => $meta->value]);
+        }
 
-        foreach ($fields as $field) {
+        foreach (Datafield::where('block_id', $block->id)->get() as $field) {
             $newField = $field->replicate();
             $newField->block_id = $newBlock->id;
             $newField->save();
         }
 
-        $this->resetPageComponent();
+        foreach (Block::where('subgroup', (string) $block->id)->get() as $child) {
+            $this->cloneBlockRecursive($child, (string) $newBlock->id);
+        }
+
+        return $newBlock;
     }
 
     public function selectedAction($id)
