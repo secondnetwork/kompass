@@ -90,6 +90,7 @@ new #[Layout('layouts::Main')] class extends Component
 
         $isMultilingual = setting('global.multilingual');
         $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
+        $canSeeDrafts = $this->userCanSeeDrafts();
 
         if ($slug === null) {
             $this->page = Page::query()
@@ -101,7 +102,7 @@ new #[Layout('layouts::Main')] class extends Component
                     }
                 })
                 ->where('layout', 'is_front_page')
-                ->where('status', 'published')
+                ->when(! $canSeeDrafts, fn ($query) => $query->where('status', 'published'))
                 ->when($isMultilingual, function ($query) use ($landurl) {
                     $query->orderByRaw('CASE WHEN land = ? THEN 0 ELSE 1 END', [$landurl]);
                 })
@@ -111,7 +112,7 @@ new #[Layout('layouts::Main')] class extends Component
                 // Fallback to any front page if specific language not found
                 $this->page = Page::query()
                     ->where('layout', 'is_front_page')
-                    ->where('status', 'published')
+                    ->when(! $canSeeDrafts, fn ($query) => $query->where('status', 'published'))
                     ->first();
             }
 
@@ -128,7 +129,7 @@ new #[Layout('layouts::Main')] class extends Component
                         ->orWhereNull('land');
                 })
                 ->where('slug', $slug)
-                ->whereNot('status', 'draft')
+                ->when(! $canSeeDrafts, fn ($query) => $query->whereNot('status', 'draft'))
                 ->orderByRaw('CASE WHEN land = ? THEN 0 ELSE 1 END', [$landurl])
                 ->first();
         }
@@ -143,17 +144,30 @@ new #[Layout('layouts::Main')] class extends Component
 
     private function loadBlocks($slug)
     {
-        $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
+        $canSeeDrafts = $this->userCanSeeDrafts();
+
+        $query = function () use ($canSeeDrafts) {
             return Block::where('blockable_type', 'page')
                 ->where('blockable_id', $this->page->id)
-                ->where('status', 'published')
+                ->when(! $canSeeDrafts, fn ($q) => $q->where('status', 'published'))
                 ->orderBy('order', 'asc')
                 ->where('subgroup', null)
-                ->with(['children' => function ($query): void {
-                    $query->where('status', 'published');
+                ->with(['children' => function ($query) use ($canSeeDrafts): void {
+                    $query->when(! $canSeeDrafts, fn ($q) => $q->where('status', 'published'));
                 }, 'datafield', 'meta'])
                 ->get();
-        });
+        };
+
+        // Drafts are previewed by privileged users only — never cache that variant,
+        // so an editor's preview can't leak unpublished blocks into the public cache.
+        $this->blocks = $canSeeDrafts ? $query() : Cache::rememberForever('kompass_block_'.$slug, $query);
+    }
+
+    private function userCanSeeDrafts(): bool
+    {
+        $user = auth()->user();
+
+        return $user && $user->hasAnyRole(['admin', 'manager', 'editor', 'author', 'writer']);
     }
 
     private function setHeadMetadata(): void

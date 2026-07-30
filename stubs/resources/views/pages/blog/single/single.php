@@ -66,7 +66,13 @@ new #[Layout('layouts.main')] class extends Component
             }
 
             // blockable_type
-            $blocks = Block::where('blockable_type', 'post')->where('blockable_id', $this->post->id)->where('status', 'published')->orderBy('order', 'asc')->where('subgroup', null)->with('children')->get();
+            $blocks = Block::where('blockable_type', 'post')
+                ->where('blockable_id', $this->post->id)
+                ->when(! $this->userCanSeeDrafts(), fn ($query) => $query->where('status', 'published'))
+                ->orderBy('order', 'asc')
+                ->where('subgroup', null)
+                ->with('children')
+                ->get();
 
             if ($blocks->isNotEmpty()) {
                 $this->blocks = $blocks;
@@ -86,10 +92,7 @@ new #[Layout('layouts.main')] class extends Component
 
     public function ResolvePath($slug, $land = null)
     {
-        $user = auth()->user();
-
-        $privilegedRoles = ['admin', 'manager', 'editor', 'author', 'writer'];
-        $canSeeDrafts = $user && $user->hasAnyRole($privilegedRoles);
+        $canSeeDrafts = $this->userCanSeeDrafts();
 
         $query = Post::where('slug', $slug);
 
@@ -111,6 +114,13 @@ new #[Layout('layouts.main')] class extends Component
         if (! $this->post) {
             throw new NotFoundHttpException('Post not found - '.$slug);
         }
+    }
+
+    private function userCanSeeDrafts(): bool
+    {
+        $user = auth()->user();
+
+        return $user && $user->hasAnyRole(['admin', 'manager', 'editor', 'author', 'writer']);
     }
 
     private function setHeadMetadata(): void

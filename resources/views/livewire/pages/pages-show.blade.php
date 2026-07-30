@@ -87,6 +87,12 @@
         </div>
 
 
+        @php
+            $defaultLocale = config('app.locale', 'de');
+            $langPrefix = empty($land) || $land == $defaultLocale ? '' : '/' . $land;
+            $permalink =
+                $layout == 'is_front_page' ? url($langPrefix ?: '/') : url($langPrefix . '/' . $page->slug);
+        @endphp
         <div class="flex gap-4 justify-end items-center">
 
             <span x-data="{ open: false }" class="relative transition-all flex gap-4 items-center">
@@ -134,6 +140,14 @@
                 @endswitch
 
 
+                @if ($page->status === 'draft')
+                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"
+                        title="{{ __('Vorschau') }}">
+                        <x-tabler-eye class="icon-lg" />
+                        {{ __('Vorschau') }}
+                    </a>
+                @endif
+
                 <button class="btn btn-primary" wire:click="update('{{ $page->id }}')">
                     <div wire:loading>
                         <svg class="animate-spin h-5 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -159,12 +173,6 @@
 
         </div>
         <div>
-            @php
-                $defaultLocale = config('app.locale', 'de');
-                $langPrefix = empty($land) || $land == $defaultLocale ? '' : '/' . $land;
-                $permalink =
-                    $layout == 'is_front_page' ? url($langPrefix ?: '/') : url($langPrefix . '/' . $page->slug);
-            @endphp
             <strong class="text-gray-400 text-xs">{{ __('Permalink') }}: </strong>
             <a class="text-gray-400 hover:text-blue-500 text-xs mt-4" href="{{ $permalink }}" target="_blank"
                 rel="noopener noreferrer">{{ $permalink }}</a>
