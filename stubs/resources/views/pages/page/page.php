@@ -27,9 +27,13 @@ new #[Layout('layouts::Main')] class extends Component
 
     public $settings;
 
+    private bool $canSeeDrafts = false;
+
     public function mount(Request $request, $locale = null, $slug = null)
     {
         try {
+            $this->canSeeDrafts = $this->userCanSeeDrafts();
+
             $localesData = setting('global.available_locales');
             if ($localesData) {
                 $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
@@ -90,7 +94,7 @@ new #[Layout('layouts::Main')] class extends Component
 
         $isMultilingual = setting('global.multilingual');
         $landurl = ($isMultilingual && in_array($land, $availableLocales)) ? $land : $defaultLocale;
-        $canSeeDrafts = $this->userCanSeeDrafts();
+        $canSeeDrafts = $this->canSeeDrafts;
 
         if ($slug === null) {
             $this->page = Page::query()
@@ -144,23 +148,20 @@ new #[Layout('layouts::Main')] class extends Component
 
     private function loadBlocks($slug)
     {
-        $canSeeDrafts = $this->userCanSeeDrafts();
-
-        $query = function () use ($canSeeDrafts) {
+        // Previewing a draft page only bypasses the page-level status check (see
+        // resolvePageAndRedirect()) — individual blocks still need to be published
+        // to render, even for privileged users.
+        $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
             return Block::where('blockable_type', 'page')
                 ->where('blockable_id', $this->page->id)
-                ->when(! $canSeeDrafts, fn ($q) => $q->where('status', 'published'))
+                ->where('status', 'published')
                 ->orderBy('order', 'asc')
                 ->where('subgroup', null)
-                ->with(['children' => function ($query) use ($canSeeDrafts): void {
-                    $query->when(! $canSeeDrafts, fn ($q) => $q->where('status', 'published'));
+                ->with(['children' => function ($query): void {
+                    $query->where('status', 'published');
                 }, 'datafield', 'meta'])
                 ->get();
-        };
-
-        // Drafts are previewed by privileged users only — never cache that variant,
-        // so an editor's preview can't leak unpublished blocks into the public cache.
-        $this->blocks = $canSeeDrafts ? $query() : Cache::rememberForever('kompass_block_'.$slug, $query);
+        });
     }
 
     private function userCanSeeDrafts(): bool
@@ -178,7 +179,7 @@ new #[Layout('layouts::Main')] class extends Component
         Head::title($this->page->layout === 'is_front_page'
                 ? $webtitle.' | '.$supline
                 : ($this->page->title ?? $webtitle).' | '.$webtitle)
-            ->description($this->page->meta_description ?? setting('global.description', ''))
+            ->description(filled($this->page->meta_description) ? $this->page->meta_description : setting('global.description', ''))
             ->og(locale: str_replace('_', '-', app()->getLocale()))
             ->twitter(site: setting('global.twitter_handle'));
 

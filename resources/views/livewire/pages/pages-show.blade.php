@@ -141,7 +141,7 @@
 
 
                 @if ($page->status === 'draft')
-                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline"
+                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline hover:border-primary hover:text-base-content"
                         title="{{ __('Preview') }}">
                         <x-tabler-eye class="icon-lg" />
                         {{ __('Preview') }}

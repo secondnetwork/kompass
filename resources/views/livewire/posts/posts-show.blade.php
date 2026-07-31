@@ -172,7 +172,7 @@
                     @break
 
                     @default
-                        <span class="flex gap-x-2 justify-end items-center text-md border-gray-300 text-gray-900 mx-2">
+                        <span class="flex gap-x-2 justify-end items-center text-md border-gray-300 text-base-content mx-2">
 
                             <span class="relative flex h-3 w-3">
 
@@ -184,7 +184,7 @@
 
 
                 @if ($post->status === 'draft')
-                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline"
+                    <a href="{{ $permalink }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline hover:border-primary hover:text-base-content"
                         title="{{ __('Preview') }}">
                         <x-tabler-eye class="icon-lg" />
                         {{ __('Preview') }}

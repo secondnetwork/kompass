@@ -34,9 +34,13 @@ new #[Layout('layouts.main')] class extends Component
 
     public $blocks_collapse;
 
+    private bool $canSeeDrafts = false;
+
     public function mount(Request $request, $locale = null, $slug = null)
     {
         try {
+            $this->canSeeDrafts = $this->userCanSeeDrafts();
+
             $localesData = setting('global.available_locales');
             if ($localesData) {
                 $availableLocales = is_array($localesData) ? $localesData : json_decode($localesData, true);
@@ -66,9 +70,12 @@ new #[Layout('layouts.main')] class extends Component
             }
 
             // blockable_type
+            // Previewing a draft post only bypasses the post-level status check (see
+            // ResolvePath()) — individual blocks still need to be published to
+            // render, even for privileged users.
             $blocks = Block::where('blockable_type', 'post')
                 ->where('blockable_id', $this->post->id)
-                ->when(! $this->userCanSeeDrafts(), fn ($query) => $query->where('status', 'published'))
+                ->where('status', 'published')
                 ->orderBy('order', 'asc')
                 ->where('subgroup', null)
                 ->with('children')
@@ -92,7 +99,7 @@ new #[Layout('layouts.main')] class extends Component
 
     public function ResolvePath($slug, $land = null)
     {
-        $canSeeDrafts = $this->userCanSeeDrafts();
+        $canSeeDrafts = $this->canSeeDrafts;
 
         $query = Post::where('slug', $slug);
 
@@ -129,7 +136,7 @@ new #[Layout('layouts.main')] class extends Component
             ?? (($fallback = setting('global.ogimage_src')) ? asset($fallback) : null);
 
         Head::title($this->post->title.' | '.setting('global.webtitle', 'Kompass'))
-            ->description($this->post->meta_description ?? setting('global.description', ''))
+            ->description(filled($this->post->meta_description) ? $this->post->meta_description : setting('global.description', ''))
             ->og(type: OgType::Article)
             ->twitter(site: setting('global.twitter_handle'));
 
