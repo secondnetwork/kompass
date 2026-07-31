@@ -140,7 +140,7 @@
                                                         @break
 
                                                     @default
-                                                        <span class="badge badge-sm border-gray-300 bg-gray-900/10 text-gray-800">
+                                                        <span class="badge badge-sm border-gray-300 bg-gray-100 text-gray-800">
                                                             <span class="relative flex h-2 w-2">
                                                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
                                                             </span>
