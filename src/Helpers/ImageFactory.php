@@ -69,14 +69,14 @@ class ImageFactory
         }
 
         $file = Cache::rememberForever('kompass_file_'.$id, function () use ($id) {
-            return File::find($id);
+            return File::find($id)?->toArray();
         });
 
         if (! $file) {
             return null;
         }
 
-        $relativePath = $file->path ? $file->path.'/'.$file->slug.'.'.$file->extension : $file->slug.'.'.$file->extension;
+        $relativePath = $file['path'] ? $file['path'].'/'.$file['slug'].'.'.$file['extension'] : $file['slug'].'.'.$file['extension'];
         $storage = Storage::disk(config('kompass.storage.disk', 'public'));
 
         if (! $storage->exists($relativePath)) {
@@ -162,16 +162,16 @@ class ImageFactory
         // 2. Pfad ermitteln (ID oder URL)
         if ($this->type === 'id') {
             $file = Cache::rememberForever('kompass_file_'.$this->idOrUrl, function () {
-                return File::find($this->idOrUrl);
+                return File::find($this->idOrUrl)?->toArray();
             });
 
             if (! $file) {
                 return self::getPlaceholder($this->cssClass);
             }
 
-            $relativePath = $file->path ? $file->path.'/'.$file->slug.'.'.$file->extension : $file->slug.'.'.$file->extension;
+            $relativePath = $file['path'] ? $file['path'].'/'.$file['slug'].'.'.$file['extension'] : $file['slug'].'.'.$file['extension'];
             if ($finalAlt === null) {
-                $finalAlt = $file->alt ?? $file->title ?? '';
+                $finalAlt = $file['alt'] ?? $file['title'] ?? '';
             }
         } else {
             $path = str_replace(Storage::url(''), '', $this->idOrUrl);

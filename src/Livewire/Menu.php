@@ -2,7 +2,6 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Menu as Menus;
 use Secondnetwork\Kompass\Models\Menuitem;
@@ -19,13 +18,9 @@ class Menu extends Component
     {
         $this->name = $name;
 
-        $this->menu = Cache::rememberForever('kompass_menu_'.$name, function () {
-            return Menus::where('group', $this->name)->first();
-        });
+        $this->menu = Menus::where('group', $this->name)->first();
         if ($this->menu) {
-            $this->menuitem = Cache::rememberForever('kompass_menuitem_'.$name, function () {
-                return Menuitem::where('menu_id', $this->menu['id'])->orderBy('order')->where('subgroup', null)->with('children')->get();
-            });
+            $this->menuitem = Menuitem::where('menu_id', $this->menu['id'])->orderBy('order')->where('subgroup', null)->with('children')->get();
         }
 
         return '';
