@@ -301,7 +301,7 @@ class EditorMigrationHelper
                     }
                 }
 
-                return [self::makeBlock('p', $text, $sourceId)];
+                return [self::makeBlock($type, $text, $sourceId)];
         }
     }
 
