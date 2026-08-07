@@ -1,9 +1,13 @@
-    html {
-        @apply antialiased scroll-smooth;
-    }
+html {
+    @apply antialiased scroll-smooth;
+    scroll-padding-top: var(--header-h);
+}
 
+body {
+    background-position: center;
+    @apply scroll-smooth;
+}
 
-    body{
-        background-position: center; 
-        @apply scroll-smooth;
-    }
+[x-cloak] {
+    display: none !important;
+}

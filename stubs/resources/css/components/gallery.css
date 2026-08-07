@@ -1,3 +1,7 @@
 .animate-marquee img{
     @apply aspect-square max-w-[clamp(10rem,28vmin,20rem)] rounded-md object-cover shadow-md;
 }
+
+.one-image{
+    @apply max-md:py-5
+}
