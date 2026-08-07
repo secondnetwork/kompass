@@ -9,13 +9,7 @@
 
     // Existing values (classname / id-anchor) for quick reuse.
     $suggestions = in_array($metaKey, ['css-classname', 'id-anchor'], true)
-        ? \Secondnetwork\Kompass\Models\Meta::where('key', $metaKey)
-            ->whereNotNull('value')
-            ->where('value', '!=', '')
-            ->distinct()
-            ->orderBy('value')
-            ->pluck('value')
-            ->all()
+        ? \Secondnetwork\Kompass\Models\Meta::distinctValuesForKey($metaKey)
         : [];
 @endphp
 

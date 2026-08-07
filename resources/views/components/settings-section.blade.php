@@ -1,3 +1,4 @@
+@blaze(fold: true, unsafe: ['action'])
 @props(['title' => '', 'action' => null])
 
 <div {{ $attributes->merge(['class' => 'py-4 border-t border-base-300 first:border-t-0 first:pt-0']) }}>

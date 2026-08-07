@@ -14,8 +14,8 @@ trait HasMeta
 
     public function getMeta(string $key, $default = null)
     {
-        // 1. Suche nach dem Key direkt
-        $meta = $this->metas()->where('key', $key)->first();
+        // 1. Suche nach dem Key direkt (nutzt die geladene Relation statt einer neuen Query)
+        $meta = $this->metas->firstWhere('key', $key);
         if ($meta) {
             $value = $meta->value;
             $decoded = json_decode($value, true);
@@ -27,7 +27,7 @@ trait HasMeta
         }
 
         // 2. Falls nicht gefunden, suche in 'set' (falls vorhanden)
-        $setMeta = $this->metas()->where('key', 'set')->first();
+        $setMeta = $this->metas->firstWhere('key', 'set');
         if ($setMeta) {
             $decoded = json_decode($setMeta->value, true);
             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
@@ -51,11 +51,15 @@ trait HasMeta
             ['key' => $key],
             ['value' => $value]
         );
+
+        $this->unsetRelation('metas');
     }
 
     public function deleteMeta(string $key): void
     {
         $this->metas()->where('key', $key)->delete();
+
+        $this->unsetRelation('metas');
     }
 
     public function saveMeta(array $data): void

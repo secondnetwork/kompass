@@ -276,7 +276,7 @@
 
     @if ($isContainer && $hasChildren)
         {{-- Layout/Accordion container with children: the only droppable target --}}
-        <div x-show="expanded" x-collapse class="border-l-2 {{ $railClass }} bg-base-300/40 rounded-b-md p-1.5"
+        <div x-show="expanded" x-collapse x-cloak class="border-l-2 {{ $railClass }} bg-base-300/40 rounded-b-md p-1.5"
             @if ($railStyle) style="{{ $railStyle }}" @endif>
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
                 class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
@@ -294,7 +294,7 @@
         </div>
     @elseif ($hasChildren)
 
-        <div x-show="expanded" x-collapse class="bg-base-300/40 rounded-b-md p-1.5">
+        <div x-show="expanded" x-collapse x-cloak class="bg-base-300/40 rounded-b-md p-1.5">
             <div class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
                 <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" />
             </div>
