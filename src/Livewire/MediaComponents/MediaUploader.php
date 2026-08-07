@@ -12,7 +12,7 @@ class MediaUploader extends Component
 {
     use WithFileUploads;
 
-    #[Validate(['files.*' => 'image|max:10240'])]
+    #[Validate(['files.*' => 'image:allow_svg|max:10240'])]
     public array $files = [];
 
     #[Reactive]
