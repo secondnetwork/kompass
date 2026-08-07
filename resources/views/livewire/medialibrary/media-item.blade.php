@@ -32,6 +32,17 @@
                         class="w-14 h-14 opacity-30 group-hover:scale-110 transition-transform duration-300" />
                 </div>
 
+            @elseif ($file->type == 'svg')
+
+                @php
+                    $imgpath = Storage::url(
+                        ($file->path ? $file->path . '/' : '') . $file->slug . '.' . $file->extension,
+                    );
+                @endphp
+
+                <img src="{{ asset($imgpath) }}"
+                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy">
             @elseif ($file->type == 'image')
 
                 @php

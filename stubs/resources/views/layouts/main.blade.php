@@ -1,21 +1,19 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' }" x-init="$watch('darkMode', val => { 
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' }" x-init="$watch('darkMode', val => {
     localStorage.setItem('theme', val ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', val ? 'dark' : 'light');
-})" :data-theme="darkMode ? 'dark' : 'light'">
+})"
+    :data-theme="darkMode ? 'dark' : 'light'">
 
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-    if (localStorage.getItem('theme') === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-    }
-</script>
-{{-- SEO Meta Tags --}}
+
 @head
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="{{ setting('global.favicon_theme_color', '#ffffff') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="url" content="{{ url('/') }}">
 @if (setting('global.favicon_light_image_path'))
 <link href="{{ url(setting('global.favicon_light_image_path')) }}" rel="icon" media="(prefers-color-scheme: light)" />
 <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }} ">
@@ -24,11 +22,14 @@
 @if (setting('global.favicon_dark_image_path', ''))
 <link href="{{ url(setting('global.favicon_dark_image_path')) }}" rel="icon" media="(prefers-color-scheme: dark)" />
 @endif
-<meta name="theme-color" content="{{ setting('global.favicon_theme_color', '#ffffff') }}">
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="url" content="{{ url('/') }}">
-<meta name="assets-path" content="{{ route('kompass_asset') }}" />
+<script>
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+</script>
 
 {{ Vite::useBuildDirectory('content')->withEntryPoints(['resources/css/main.css']) }}
 

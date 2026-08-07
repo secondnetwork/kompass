@@ -11,9 +11,9 @@ new class extends Component
 
     public $menu;
 
-    public $menuitem = [];
+    public $class = '';
 
-    public function mount($name = null)
+    public function mount($name = null, $class = '')
     {
         $this->name = $name;
         $this->menu = Cache::rememberForever('kompass_menu_'.$name, function () {

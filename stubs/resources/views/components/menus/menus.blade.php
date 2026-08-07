@@ -1,9 +1,9 @@
-@props(['menuitem' => null, 'level' => 0])
+@props(['menuitem' => null, 'level' => 0, 'class' => ''])
 <div>
 
 @isset($menuitem)
 
-    <ul class="{{ $level == 0 ? 'menu menu-horizontal px-0' : 'menu' }}">
+    <ul class="{{ $level == 0 ? 'menu menu-horizontal px-0' : 'menu' }} {{ $class }}">
         @foreach ($menuitem as $item)
         <li x-data="{ open: false }"
             @mouseenter="open = true"
