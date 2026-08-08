@@ -2,7 +2,6 @@
 
 namespace Secondnetwork\Kompass;
 
-use Intervention\Image\Drivers\Gd\Driver;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
@@ -127,13 +126,12 @@ return [
     | Image Processing
     |--------------------------------------------------------------------------
     |
-    | Settings for Intervention Image V3 and image handling.
+    | Backs Laravel's native Image API (Illuminate\Support\Facades\Image).
+    | 'gd' or 'imagick'.
     |
     */
 
-    'driver' => Driver::class,
-
-    'generate_blur_placeholder' => true,
+    'driver' => 'gd',
 
     'quality' => [
         'avif' => 50,
@@ -173,12 +171,6 @@ return [
         'height' => 2500,
         'method' => 'scaleDown',
         'quality' => 85,
-    ],
-
-    'options' => [
-        'autoOrientation' => true,
-        'decodeAnimation' => true,
-        'blendingColor' => 'ffffff',
     ],
 
     /*

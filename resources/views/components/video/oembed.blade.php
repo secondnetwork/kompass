@@ -7,7 +7,8 @@
 @php
     $videoEmbed = videoEmbed($url);
     $assetExists = $videoEmbed ? Storage::disk('public')->exists('thumbnails-video/'.$videoEmbed['id'].'.jpg') : false;
-    $assetUrl = $assetExists ? Storage::disk('public')->url('thumbnails-video/'.$videoEmbed['id'].'.jpg') : null;
+    $webpExists = $assetExists && Storage::disk('public')->exists('thumbnails-video/'.$videoEmbed['id'].'.webp');
+    $assetUrl = $assetExists ? Storage::disk('public')->url('thumbnails-video/'.$videoEmbed['id'].($webpExists ? '.webp' : '.jpg')) : null;
 @endphp
 
 @if ($videoEmbed)

@@ -17,11 +17,12 @@
             @php
                 $poster = get_field('poster', $item->datafield);
                 $assetExists = Storage::disk('public')->exists('thumbnails-video/' . $videoEmbed['id'] . '.jpg');
+                $webpExists = $assetExists && Storage::disk('public')->exists('thumbnails-video/' . $videoEmbed['id'] . '.webp');
 
                 if (!empty($poster)) {
                     $assetUrl = $poster;
                 } elseif ($assetExists) {
-                    $assetUrl = Storage::disk('public')->url('thumbnails-video/' . $videoEmbed['id'] . '.jpg');
+                    $assetUrl = Storage::disk('public')->url('thumbnails-video/' . $videoEmbed['id'] . ($webpExists ? '.webp' : '.jpg'));
                 } else {
                     $assetUrl = null;
                 }

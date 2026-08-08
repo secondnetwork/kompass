@@ -4,8 +4,9 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Encoders\JpegEncoder;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -303,21 +304,22 @@ class PagesData extends Component
     {
         $videoEmbed = videoEmbed($url);
         if ($videoEmbed['type'] == 'youtube') {
-            $thumbnailName = $videoEmbed['id'].'.jpg';
-            $thumbnailUrl = 'https://i.ytimg.com/vi/'.$videoEmbed['id'].'/maxresdefault.jpg';
+            $jpgPath = 'thumbnails-video/'.$videoEmbed['id'].'.jpg';
+            $webpPath = 'thumbnails-video/'.$videoEmbed['id'].'.webp';
 
-            if (Storage::disk('public')->missing('thumbnails-video/'.$thumbnailName)) {
-                $thumbnailContents = file_get_contents($thumbnailUrl);
-                if ($thumbnailContents) {
-                    $manager = app('kompass.image');
-                    $image = method_exists($manager, 'decode')
-                        ? $manager->decode($thumbnailContents)
-                        : $manager->read($thumbnailContents);
+            if (Storage::disk('public')->missing($jpgPath) && Storage::disk('public')->missing($webpPath)) {
+                $webpResponse = Http::get('https://i.ytimg.com/vi_webp/'.$videoEmbed['id'].'/maxresdefault.webp');
 
-                    $encoded = $image->encode(new JpegEncoder(quality: 60));
-                    Storage::disk('public')->put('thumbnails-video/'.$thumbnailName, (string) $encoded);
+                if ($webpResponse->successful()) {
+                    Storage::disk('public')->put($webpPath, $webpResponse->body());
+                } else {
+                    $jpgResponse = Http::get('https://i.ytimg.com/vi/'.$videoEmbed['id'].'/maxresdefault.jpg');
+
+                    if ($jpgResponse->successful()) {
+                        $imageData = Image::fromBytes($jpgResponse->body())->toJpeg()->quality(60)->toBytes();
+                        Storage::disk('public')->put($jpgPath, $imageData);
+                    }
                 }
-
             }
         }
     }

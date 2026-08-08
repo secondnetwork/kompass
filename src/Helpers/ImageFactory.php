@@ -3,14 +3,8 @@
 namespace Secondnetwork\Kompass\Helpers;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Encoders\AutoEncoder;
-use Intervention\Image\Encoders\AvifEncoder;
-use Intervention\Image\Encoders\JpegEncoder;
-use Intervention\Image\Encoders\PngEncoder;
-use Intervention\Image\Encoders\WebpEncoder;
-use Intervention\Image\ImageManager;
 use Secondnetwork\Kompass\Models\File;
 
 class ImageFactory
@@ -27,9 +21,6 @@ class ImageFactory
     protected $altText = null;
 
     protected $attributes = [];
-
-    // Statische Manager Instanz
-    protected static $manager;
 
     /**
      * Konstruktor (wird von den statischen Methoden aufgerufen)
@@ -195,45 +186,6 @@ class ImageFactory
     // Ab hier: Interne Helfer-Methoden (Processing, HTML Bauen, Placeholder)
     // -------------------------------------------------------------------------
 
-    protected static function getManager()
-    {
-        if (! self::$manager) {
-            $driverName = config('kompass.driver', 'gd');
-            $driverClass = match ($driverName) {
-                'imagick' => \Intervention\Image\Drivers\Imagick\Driver::class,
-                default => \Intervention\Image\Drivers\Gd\Driver::class,
-            };
-            self::$manager = new ImageManager(driver: new $driverClass);
-        }
-
-        return self::$manager;
-    }
-
-    protected static function readImage($content)
-    {
-        $manager = self::getManager();
-
-        if (method_exists($manager, 'decode')) {
-            return $manager->decode($content);
-        }
-
-        return $manager->read($content);
-    }
-
-    protected static function encodeImage($image, string $format, int $quality = 85)
-    {
-        // v4 uses encoders
-        $encoderClass = match ($format) {
-            'avif' => AvifEncoder::class,
-            'webp' => WebpEncoder::class,
-            'jpeg', 'jpg' => JpegEncoder::class,
-            'png' => PngEncoder::class,
-            default => AutoEncoder::class,
-        };
-
-        return $image->encode(new $encoderClass($quality));
-    }
-
     protected static function generateHtml($relativePath, $sizeKey, $cssClass, $alt, $attributes = [])
     {
         $storage = Storage::disk(config('kompass.storage.disk', 'public'));
@@ -253,14 +205,6 @@ class ImageFactory
         $webpUrl = self::processImage($relativePath, 'webp', $config);
         $originalUrl = $storage->url($relativePath);
 
-        $placeholderStyle = '';
-        if (config('kompass.generate_blur_placeholder', true)) {
-            $base64 = self::getTinyPlaceholder($relativePath, $storage);
-            if ($base64) {
-                $placeholderStyle = "style=\"background-image: url('{$base64}'); background-size: cover; background-position: center;\"";
-            }
-        }
-
         $attrString = '';
         foreach ($attributes as $key => $val) {
             $attrString .= ' '.$key.'="'.htmlspecialchars($val).'"';
@@ -273,7 +217,7 @@ class ImageFactory
         if ($webpUrl) {
             $html .= '<source type="image/webp" srcset="'.$webpUrl.'">';
         }
-        $html .= '<img loading="lazy" src="'.$originalUrl.'" alt="'.htmlspecialchars($alt).'" class="'.$cssClass.'" '.$placeholderStyle.$attrString.'>';
+        $html .= '<img loading="lazy" src="'.$originalUrl.'" alt="'.htmlspecialchars($alt).'" class="'.$cssClass.'"'.$attrString.'>';
         $html .= '</picture>';
 
         return $html;
@@ -315,33 +259,6 @@ class ImageFactory
         }
     }
 
-    protected static function getTinyPlaceholder($path, $storage)
-    {
-        $cacheKey = 'img_blur_'.$path;
-
-        return Cache::rememberForever($cacheKey, function () use ($path, $storage) {
-            try {
-                $content = $storage->get($path);
-                $manager = self::getManager();
-                $image = self::readImage($content);
-                $image->scale(width: 20);
-                $image->blur(5);
-
-                $encoded = self::encodeImage($image, 'jpeg', 50);
-
-                // v4: Encoded object has toDataUri(); v3: returns binary string
-                if (is_object($encoded) && method_exists($encoded, 'toDataUri')) {
-                    return (string) $encoded->toDataUri();
-                }
-
-                // v3: binary string, wrap as data URI
-                return 'data:image/jpeg;base64,'.base64_encode($encoded);
-            } catch (\Exception $e) {
-                return null;
-            }
-        });
-    }
-
     protected static function processImage($sourcePath, $format, $config)
     {
         $width = $config['width'] ?? null;
@@ -356,7 +273,8 @@ class ImageFactory
             return Cache::get($cacheKey);
         }
 
-        $storage = Storage::disk(config('kompass.storage.disk', 'public'));
+        $disk = config('kompass.storage.disk', 'public');
+        $storage = Storage::disk($disk);
         $dir = pathinfo($sourcePath, PATHINFO_DIRNAME);
         $filename = pathinfo($sourcePath, PATHINFO_FILENAME);
         $newFilename = "{$filename}-{$dimString}.{$format}";
@@ -369,50 +287,51 @@ class ImageFactory
             return $url;
         }
 
+        if ($format === 'avif' && ! self::avifSupported()) {
+            // AVIF not supported, fallback to WebP
+            $format = 'webp';
+            $newPath = str_replace('.avif', '.webp', $newPath);
+        }
+
         try {
-            $content = $storage->get($sourcePath);
-            $image = self::readImage($content);
+            $image = Image::fromStorage($sourcePath, $disk);
 
             if ($width || $height) {
-                if ($method === 'cover') {
-                    $image->cover($width, $height);
-                } elseif ($method === 'resize') {
-                    $image->resize($width, $height);
-                } else {
-                    $image->scaleDown($width, $height);
-                }
+                $image = match ($method) {
+                    'cover' => $image->cover($width, $height),
+                    'resize' => $image->resize($width, $height),
+                    default => $image->scale($width, $height),
+                };
             }
 
-            if ($format === 'avif' && ! self::avifSupported()) {
-                // AVIF not supported, fallback to WebP
+            try {
+                $imageData = match ($format) {
+                    'avif' => $image->toAvif()->quality($quality)->toBytes(),
+                    'webp' => $image->toWebp()->quality($quality)->toBytes(),
+                    'jpeg', 'jpg' => $image->toJpeg()->quality($quality)->toBytes(),
+                    'png' => $image->toPng()->toBytes(),
+                    default => null,
+                };
+            } catch (\Throwable $e) {
+                if ($format !== 'avif') {
+                    throw $e;
+                }
+
                 $format = 'webp';
                 $newPath = str_replace('.avif', '.webp', $newPath);
+                $imageData = $image->toWebp()->quality($quality)->toBytes();
             }
 
-            if ($format === 'avif') {
-                try {
-                    $encoded = self::encodeImage($image, 'avif', $quality);
-                } catch (\Exception $e) {
-                    $format = 'webp';
-                    $newPath = str_replace('.avif', '.webp', $newPath);
-                    $encoded = self::encodeImage($image, 'webp', $quality);
-                }
-            } elseif ($format === 'webp') {
-                $encoded = self::encodeImage($image, 'webp', $quality);
-            } elseif (in_array($format, ['jpeg', 'jpg', 'png'])) {
-                $encoded = self::encodeImage($image, $format, $quality);
-            } else {
+            if ($imageData === null) {
                 return null;
             }
 
-            // v4: Encoded object; v3: binary string
-            $imageData = is_object($encoded) ? (string) $encoded : $encoded;
             $storage->put($newPath, $imageData, 'public');
             $url = $storage->url($newPath);
             Cache::put($cacheKey, $url, now()->addDay());
 
             return $url;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return null;
         }
     }

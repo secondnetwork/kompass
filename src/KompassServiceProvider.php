@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
-use Intervention\Image\ImageManager;
 use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
 use Livewire\Livewire;
+use Secondnetwork\Kompass\Blocks\BlockTypeRegistry;
+use Secondnetwork\Kompass\Blocks\FieldTypeRegistry;
 use Secondnetwork\Kompass\Commands\CreateUserCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
 use Secondnetwork\Kompass\Commands\UpdateCommand;
@@ -30,8 +31,6 @@ use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 class KompassServiceProvider extends ServiceProvider
 {
-    protected const BINDING = 'kompass.image';
-
     /**
      * Bootstrap the application services.
      */
@@ -154,22 +153,12 @@ class KompassServiceProvider extends ServiceProvider
     {
         $this->app->singleton('kompass', fn () => new Kompass);
 
-        $this->app->singleton(\Secondnetwork\Kompass\Blocks\BlockTypeRegistry::class);
-        $this->app->alias(\Secondnetwork\Kompass\Blocks\BlockTypeRegistry::class, 'kompass.blocks');
-        $this->app->singleton(\Secondnetwork\Kompass\Blocks\FieldTypeRegistry::class);
-        $this->app->alias(\Secondnetwork\Kompass\Blocks\FieldTypeRegistry::class, 'kompass.fields');
+        $this->app->singleton(BlockTypeRegistry::class);
+        $this->app->alias(BlockTypeRegistry::class, 'kompass.blocks');
+        $this->app->singleton(FieldTypeRegistry::class);
+        $this->app->alias(FieldTypeRegistry::class, 'kompass.fields');
 
-        $this->app->singleton($this::BINDING, function ($app) {
-
-            $driverConfig = config('kompass.driver', 'gd'); // Default to 'gd'
-
-            return new ImageManager(
-                driver: $driverConfig,
-                autoOrientation: config('kompass.options.autoOrientation', true),
-                decodeAnimation: config('kompass.options.decodeAnimation', true),
-                backgroundColor: config('kompass.options.blendingColor', 'ffffff')
-            );
-        });
+        $this->app['config']->set('images.default', config('kompass.driver', 'gd'));
 
         $this->app->singleton($this->repository(), function ($app, $items) {
             $writer = new FileWriter($this->getFiles(), $this->getConfigPath());

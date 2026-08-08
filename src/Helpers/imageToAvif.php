@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Encoders\AvifEncoder;
 
 function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = null, array $config = []): ?string
 {
@@ -51,33 +51,24 @@ function imageToAvif(string $imageUrl = '', ?int $width = null, ?int $height = n
     }
 
     try {
-        $manager = app('kompass.image');
-        $content = $storage->get($diskPathImages);
-        $image = method_exists($manager, 'decode') 
-            ? $manager->decode($content) 
-            : $manager->read($content);
+        $image = Image::fromStorage($diskPathImages, config('kompass.storage.disk', 'public'));
+        $image = $crop ? $image->cover($width, $height) : $image->scale($width, $height);
 
-        if ($crop) {
-            $image->cover($width, $height);
-        } else {
-            $image->scaleDown($width, $height);
-        }
-
-        $encoded = $image->encode(new AvifEncoder(quality: $quality));
-        $storage->put($resizedImagePath, (string) $encoded, 'public');
+        $imageData = $image->toAvif()->quality($quality)->toBytes();
+        $storage->put($resizedImagePath, $imageData, 'public');
         $fullUrl = $storage->url($resizedImagePath);
         Cache::put($cacheKey, $fullUrl, now()->addDay());
 
         return $fullUrl;
 
-    } catch (\Error $e) {
+    } catch (Error $e) {
         // Wenn imageavif() fehlt (Error, nicht Exception), markiere AVIF als nicht verfügbar
         if (str_contains($e->getMessage(), 'imageavif') || str_contains($e->getMessage(), 'AvifEncoder')) {
             Cache::put('server_avif_support', false, now()->addHours(24));
         }
 
         return null;
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return null;
     }
 }
@@ -116,7 +107,7 @@ function isAvifSupported(): bool
                             unlink($tempFile);
                         }
                     }
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     // Test fehlgeschlagen
                 }
             }
@@ -126,12 +117,12 @@ function isAvifSupported(): bool
     // Test 2: Imagick mit AVIF (wenn GD nicht funktioniert hat)
     if (! $supported && extension_loaded('imagick') && class_exists('Imagick')) {
         try {
-            $imagick = new \Imagick;
+            $imagick = new Imagick;
             $formats = $imagick->queryFormats();
             if (in_array('AVIF', $formats, true)) {
                 $supported = true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Test fehlgeschlagen
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Secondnetwork\Kompass\Features;
 
-use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Image;
 
 class FaviconGenerator
 {
@@ -20,17 +20,15 @@ class FaviconGenerator
 
     public function generateFaviconsFromImagePath()
     {
-        $manager = app('kompass.image');
-        $image = method_exists($manager, 'decode') 
-            ? $manager->decode(file_get_contents($this->filePath)) 
-            : $manager->read($this->filePath);
-        $image->resize(512, 512)->save($this->distPath.'/android-chrome-512x512.png', 100, 'png');
-        $image->resize(192, 192)->save($this->distPath.'/android-chrome-192x192.png', 100, 'png');
-        $image->resize(192, 192)->save($this->distPath.'/apple-touch-icon.png', 100, 'png');
-        $image->resize(150, 150)->save($this->distPath.'/mstile-150x150.png', 100, 'png');
-        $image->resize(32, 32)->save($this->distPath.'/favicon-32x32.png', 100, 'png');
-        $image->resize(32, 32)->save($this->distPath.'/favicon.png', 100, 'png');
-        $image->resize(16, 16)->save($this->distPath.'/favicon-16x16.png', 100, 'png');
+        $image = Image::fromPath($this->filePath)->toPng();
+
+        file_put_contents($this->distPath.'/android-chrome-512x512.png', $image->resize(512, 512)->toBytes());
+        file_put_contents($this->distPath.'/android-chrome-192x192.png', $image->resize(192, 192)->toBytes());
+        file_put_contents($this->distPath.'/apple-touch-icon.png', $image->resize(192, 192)->toBytes());
+        file_put_contents($this->distPath.'/mstile-150x150.png', $image->resize(150, 150)->toBytes());
+        file_put_contents($this->distPath.'/favicon-32x32.png', $image->resize(32, 32)->toBytes());
+        file_put_contents($this->distPath.'/favicon.png', $image->resize(32, 32)->toBytes());
+        file_put_contents($this->distPath.'/favicon-16x16.png', $image->resize(16, 16)->toBytes());
 
         $this->saveBrowserConfigXml();
         $this->saveSiteWebManifest();
