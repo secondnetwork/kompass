@@ -2,10 +2,12 @@
 
 namespace Secondnetwork\Kompass;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -21,7 +23,9 @@ use Secondnetwork\Kompass\Commands\UpdateCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
 use Secondnetwork\Kompass\DataWriter\Repository;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
+use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
+use Secondnetwork\Kompass\Models\Meta;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
@@ -104,6 +108,7 @@ class KompassServiceProvider extends ServiceProvider
         $this->mergeConfigurations();
         $this->registerSingletons();
         $this->registerPasskeyLoginResponse();
+        $this->registerCacheSerialization();
 
         try {
             if (Schema::hasTable('settings')) {
@@ -128,6 +133,30 @@ class KompassServiceProvider extends ServiceProvider
     private function mergeConfigurations(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/kompass.php', 'kompass');
+    }
+
+    /**
+     * Allow-list Kompass's own model classes for cache deserialization.
+     *
+     * Laravel disables unserializing PHP objects from the cache by default
+     * (cache.serializable_classes = false) to prevent gadget-chain attacks if
+     * APP_KEY leaks. Kompass caches Eloquent results (e.g. page blocks) via
+     * cache()->rememberForever(), so its own trusted classes need to be
+     * explicitly allowed — without this, cached results silently come back
+     * as __PHP_Incomplete_Class on the next request.
+     */
+    private function registerCacheSerialization(): void
+    {
+        $allowed = Config::get('cache.serializable_classes', false);
+
+        if ($allowed === true) {
+            return;
+        }
+
+        Config::set('cache.serializable_classes', array_unique(array_merge(
+            is_array($allowed) ? $allowed : [],
+            [Collection::class, Block::class, Datafield::class, Meta::class],
+        )));
     }
 
     private function registerPasskeyLoginResponse(): void

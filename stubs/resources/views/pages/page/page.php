@@ -150,16 +150,23 @@ new #[Layout('layouts::Main')] class extends Component
     {
         // Previewing a draft page only bypasses the page-level status check (see
         // resolvePageAndRedirect()) — individual blocks still need to be published
-        // to render, even for privileged users.
-        $this->blocks = Block::where('blockable_type', 'page')
-            ->where('blockable_id', $this->page->id)
-            ->where('status', 'published')
-            ->orderBy('order', 'asc')
-            ->where('subgroup', null)
-            ->with(['children' => function ($query): void {
-                $query->where('status', 'published');
-            }, 'datafield', 'meta'])
-            ->get();
+        // to render, even for privileged users. That makes the query result
+        // identical for every visitor, so it can be cached per page. Block::boot()
+        // flushes the whole cache on any block create/update/delete, so this never
+        // goes stale. The cached classes (Block, Datafield, Meta, Collection) are
+        // allow-listed for cache deserialization by KompassServiceProvider.
+        $this->blocks = cache()->rememberForever(
+            "blocks-page-{$this->page->id}",
+            fn () => Block::where('blockable_type', 'page')
+                ->where('blockable_id', $this->page->id)
+                ->where('status', 'published')
+                ->orderBy('order', 'asc')
+                ->where('subgroup', null)
+                ->with(['children' => function ($query): void {
+                    $query->where('status', 'published');
+                }, 'datafield', 'meta'])
+                ->get(),
+        );
     }
 
     private function userCanSeeDrafts(): bool
