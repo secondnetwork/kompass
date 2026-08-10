@@ -3,7 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Laravel\Head\Enums\Media;
 use Laravel\Head\Facades\Head;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -151,17 +151,15 @@ new #[Layout('layouts::Main')] class extends Component
         // Previewing a draft page only bypasses the page-level status check (see
         // resolvePageAndRedirect()) — individual blocks still need to be published
         // to render, even for privileged users.
-        $this->blocks = Cache::rememberForever('kompass_block_'.$slug, function () {
-            return Block::where('blockable_type', 'page')
-                ->where('blockable_id', $this->page->id)
-                ->where('status', 'published')
-                ->orderBy('order', 'asc')
-                ->where('subgroup', null)
-                ->with(['children' => function ($query): void {
-                    $query->where('status', 'published');
-                }, 'datafield', 'meta'])
-                ->get();
-        });
+        $this->blocks = Block::where('blockable_type', 'page')
+            ->where('blockable_id', $this->page->id)
+            ->where('status', 'published')
+            ->orderBy('order', 'asc')
+            ->where('subgroup', null)
+            ->with(['children' => function ($query): void {
+                $query->where('status', 'published');
+            }, 'datafield', 'meta'])
+            ->get();
     }
 
     private function userCanSeeDrafts(): bool
@@ -181,10 +179,28 @@ new #[Layout('layouts::Main')] class extends Component
                 : ($this->page->title ?? $webtitle).' | '.$webtitle)
             ->description(filled($this->page->meta_description) ? $this->page->meta_description : setting('global.description', ''))
             ->og(locale: str_replace('_', '-', app()->getLocale()))
-            ->twitter(site: setting('global.twitter_handle'));
+            ->twitter(site: setting('global.twitter_handle'))
+            ->viewport('width=device-width, initial-scale=1.0')
+            ->themeColor(setting('global.favicon_theme_color', '#ffffff'))
+            ->meta('csrf-token', csrf_token())
+            ->meta('url', url('/'));
 
         if ($ogImage = setting('global.ogimage_src')) {
-            Head::ogImage(asset($ogImage));
+            Head::ogImage(asset($ogImage), width: 1200, height: 630);
+        }
+
+        if ($faviconLight = setting('global.favicon_light_image_path')) {
+            Head::icon(url($faviconLight), media: Media::Light)
+                ->manifest(asset('favicon/site.webmanifest'))
+                ->appleTouchIcon(asset('favicon/apple-touch-icon.png'));
+        }
+
+        if ($faviconDark = setting('global.favicon_dark_image_path', '')) {
+            Head::icon(url($faviconDark), media: Media::Dark);
+        }
+
+        if (in_array($this->page->slug, ['datenschutz', 'impressum'])) {
+            Head::hiddenFromRobots();
         }
     }
 
@@ -192,9 +208,7 @@ new #[Layout('layouts::Main')] class extends Component
     {
         $blockIds = $this->blocks->pluck('id');
 
-        $this->fields = Cache::rememberForever('kompass_field_'.$slug, function () use ($blockIds) {
-            return Datafield::whereIn('block_id', $blockIds)->get()->groupBy('block_id');
-        });
+        $this->fields = Datafield::whereIn('block_id', $blockIds)->get()->groupBy('block_id');
     }
 
     public function getGallery($blockId = null)
