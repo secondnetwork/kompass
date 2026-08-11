@@ -37,9 +37,10 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto rounded-b-xl border border-t-0 border-base-300 bg-base-100">
+        <div class="overflow-hidden rounded-b-xl border border-t-0 border-base-300 bg-base-100">
 
             @if ($users->count())
+                <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
                     <thead class="bg-base-200">
                         <tr>
@@ -113,6 +114,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
 
                 <x-kompass::table-footer :paginator="$users" />
             @else
