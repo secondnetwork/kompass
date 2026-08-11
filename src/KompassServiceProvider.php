@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\ComponentAttributeBag;
+use Laravel\Head\Facades\Head;
+use Laravel\Head\HeadBuilder;
 use Laravel\Passkeys\Contracts\PasskeyLoginResponse as PasskeyLoginResponseContract;
 use Livewire\Livewire;
 use Secondnetwork\Kompass\Blocks\BlockTypeRegistry;
@@ -23,9 +25,7 @@ use Secondnetwork\Kompass\Commands\UpdateCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
 use Secondnetwork\Kompass\DataWriter\Repository;
 use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
-use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
-use Secondnetwork\Kompass\Models\Meta;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
 use Secondnetwork\Kompass\Models\Setting;
@@ -44,6 +44,7 @@ class KompassServiceProvider extends ServiceProvider
         $this->bootBladeComponents();
         $this->bootMacros();
         $this->registerBladeDirectives();
+        $this->bootHeadDefaults();
 
         $this->loadJSONTranslationsFrom(__DIR__.'/../resources/lang', 'kompass');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'kompass');
@@ -57,6 +58,26 @@ class KompassServiceProvider extends ServiceProvider
         $this->registerGates();
         $this->registerBladeConditions();
         $this->registerMorphMaps();
+    }
+
+    /**
+     * Default <head> metadata (title fallback, canonical URL, indexable by
+     * default) applied to every page unless a route or runtime layer
+     * overrides it — e.g. the noindex routes registered via withHead(), or
+     * the full title strings pages already build via Head::title().
+     *
+     * No suffix/prefix is set here: pages that call Head::title() (see
+     * pages/page/page.php, pages/blog/*) already build the complete
+     * "Page | Site" string themselves, and Head appends the default's
+     * suffix onto every override unless exact: true is passed.
+     */
+    private function bootHeadDefaults(): void
+    {
+        Head::defaults(function (HeadBuilder $head): void {
+            $head->title(config('app.name'))
+                ->canonical()
+                ->searchableByRobots();
+        });
     }
 
     private function bootBladeComponents(): void
@@ -143,7 +164,9 @@ class KompassServiceProvider extends ServiceProvider
      * APP_KEY leaks. Kompass caches Eloquent results (e.g. page blocks) via
      * cache()->rememberForever(), so its own trusted classes need to be
      * explicitly allowed — without this, cached results silently come back
-     * as __PHP_Incomplete_Class on the next request.
+     * as __PHP_Incomplete_Class on the next request. The allow-list itself
+     * lives in config('kompass.serializable_classes') so new cached models
+     * only need to be added there.
      */
     private function registerCacheSerialization(): void
     {
@@ -155,7 +178,8 @@ class KompassServiceProvider extends ServiceProvider
 
         Config::set('cache.serializable_classes', array_unique(array_merge(
             is_array($allowed) ? $allowed : [],
-            [Collection::class, Block::class, Datafield::class, Meta::class],
+            [Collection::class],
+            Config::get('kompass.serializable_classes', []),
         )));
     }
 

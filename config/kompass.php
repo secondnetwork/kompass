@@ -5,6 +5,8 @@ namespace Secondnetwork\Kompass;
 use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
+use Secondnetwork\Kompass\Models\Menu;
+use Secondnetwork\Kompass\Models\Menuitem;
 use Secondnetwork\Kompass\Models\Meta;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
@@ -43,6 +45,8 @@ return [
         Datafield::class,
         Meta::class,
         File::class,
+        Menu::class,
+        Menuitem::class,
     ],
 
     /*

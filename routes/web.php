@@ -27,16 +27,16 @@ use Secondnetwork\Kompass\Livewire\Auth\PasskeySetup;
 Route::get('assets/{path?}', [KompassController::class, 'assets'])->name('kompass_asset');
 
 // Passkey Setup Route (required after first password login)
-Route::middleware(['web', 'auth'])->group(function (): void {
+Route::middleware(['web', 'auth'])->withHead(robots: 'noindex, nofollow')->group(function (): void {
     Route::get('passkey-setup', PasskeySetup::class)->name('admin.passkey-setup');
 });
 
 // Profile Route (for 'user' role - no admin access)
-Route::group(['middleware' => ['web', 'auth', 'role:user'], 'prefix' => 'profile', 'as' => 'profile.'], function (): void {
+Route::middleware(['web', 'auth', 'role:user'])->prefix('profile')->name('profile.')->withHead(robots: 'noindex, nofollow')->group(function (): void {
     Route::get('/', Profile::class)->name('dashboard');
 });
 
-Route::group(['middleware' => ['web', 'auth', 'role:admin|manager|editor'], 'prefix' => 'admin', 'as' => 'admin.'], function (): void {
+Route::middleware(['web', 'auth', 'role:admin|manager|editor'])->prefix('admin')->name('admin.')->withHead(robots: 'noindex, nofollow')->group(function (): void {
     Route::get('/', Dashboard::class)->name('dashboard-root');
     Route::get('dashboard', Dashboard::class)->name('dashboard');
     Route::get('profile', Profile::class)->name('profile');
