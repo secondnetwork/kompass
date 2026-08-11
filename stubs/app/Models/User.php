@@ -69,7 +69,7 @@ class User extends Authenticatable implements PasskeyUser
 
     public function getProfilePhotoPathAttribute()
     {
-        return $this->attributes['profile_photo_path'];
+        return $this->attributes['profile_photo_path'] ?? null;
     }
 
     public function files()
