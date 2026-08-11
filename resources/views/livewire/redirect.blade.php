@@ -13,7 +13,7 @@
     </div>
 
     <div class="align-middle inline-block min-w-full">
-        <div>
+        <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-base-200 [&_tbody_tr:hover_td]:bg-base-200/50">
                 <thead class="bg-base-200">
                     <tr>

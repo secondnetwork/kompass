@@ -29,7 +29,7 @@
         @endif
 
         @if (! empty($tenants))
-            <div class="overflow-hidden rounded-lg border border-base-300">
+            <div class="overflow-x-auto rounded-lg border border-base-300">
                 <table class="table">
                     <thead>
                         <tr class="bg-base-200">
