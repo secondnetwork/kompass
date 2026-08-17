@@ -114,7 +114,7 @@ class BlocksData extends Component
     {
         $possiblePaths = [
             base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
-            dirname(base_path()) . '/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            dirname(base_path()).'/vendor/secondnetwork/blade-tabler-icons/resources/svg',
             public_path('vendor/blade-tabler-icons'),
         ];
 
@@ -132,36 +132,35 @@ class BlocksData extends Component
         $this->filteredIcons = [];
 
         $iconPath = $this->getIconPath();
-        
-        if (empty($iconPath) || !is_dir($iconPath)) {
+
+        if (empty($iconPath) || ! is_dir($iconPath)) {
             return;
         }
 
         try {
             $files = File::files($iconPath);
-            
+
             if (empty($files)) {
                 return;
             }
-            
+
             $icons = collect($files)
-                ->map(fn($file) => str_replace('.svg', '', $file->getFilename()))
+                ->map(fn ($file) => str_replace('.svg', '', $file->getFilename()))
                 ->sort()
                 ->values();
 
             if ($this->iconSearch) {
                 $search = strtolower(trim($this->iconSearch));
-                if (!empty($search)) {
-                    $icons = $icons->filter(fn($name) =>
-                        str_contains(strtolower($name), $search)
+                if (! empty($search)) {
+                    $icons = $icons->filter(fn ($name) => str_contains(strtolower($name), $search)
                     );
                 }
             }
 
-            $this->filteredIcons = $icons->take(100)->map(fn($name) => [
-                'id' => 'tabler-' . $name,
+            $this->filteredIcons = $icons->take(100)->map(fn ($name) => [
+                'id' => 'tabler-'.$name,
                 'name' => $name,
-                'full_name' => 'tabler-' . $name,
+                'full_name' => 'tabler-'.$name,
             ])->values()->toArray();
         } catch (\Exception $e) {
             $this->filteredIcons = [];
@@ -175,8 +174,8 @@ class BlocksData extends Component
 
     public function selectIcon($name)
     {
-        $this->selectedIcon = 'tabler-' . $name;
-        $this->iconclass = 'tabler-' . $name;
+        $this->selectedIcon = 'tabler-'.$name;
+        $this->iconclass = 'tabler-'.$name;
     }
 
     public function resetIcon()
@@ -343,7 +342,7 @@ class BlocksData extends Component
     {
 
         foreach ($list as $item) {
-            blockfields::whereId($item['value'])->update(['order' => $item['order']]);
+            Blockfields::whereId($item['value'])->update(['order' => $item['order']]);
             // foreach($itemg['items'] as $item){
             //     block::whereId($item['value'])->update(['order' => $item['order']]);
             // }

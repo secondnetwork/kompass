@@ -15,21 +15,37 @@ class BlocksTable extends Component
     use WithPagination;
 
     public $headers;
+
     public $data;
+
     public $action;
+
     public $selectedItem;
+
     public $FormDelete = false;
+
     public $FormAdd = false;
+
     public $FormEdit = false;
+
     public $FormRegenerate = false;
+
     public $regenerateId = null;
+
     public $regenerateFileName = '';
+
     public $perPage = 10000;
+
     public $search = '';
+
     public $orderBy = 'order';
+
     public $orderAsc = true;
+
     public $blockarray;
+
     public $name;
+
     public $type;
 
     protected function rules(): array
@@ -82,8 +98,12 @@ class BlocksTable extends Component
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
-        if ($action == 'add') $this->FormAdd = true;
-        if ($action == 'delete') $this->FormDelete = true;
+        if ($action == 'add') {
+            $this->FormAdd = true;
+        }
+        if ($action == 'delete') {
+            $this->FormDelete = true;
+        }
     }
 
     public function saveBlock()
@@ -106,18 +126,18 @@ class BlocksTable extends Component
 
         File::ensureDirectoryExists(dirname($path));
 
-        $stub = <<<BLADE
+        $stub = <<<'BLADE'
         @props(['item' => ''])
 
         @php
-            \$cssclassname = get_meta(\$item, 'css-classname', '');
-            // \$title = get_field('title', \$item->datafield);
-            // \$image = get_field('image', \$item->datafield);
-            // \$text  = get_field('text',  \$item->datafield);
+            $cssclassname = get_meta($item, 'css-classname', '');
+            // $title = get_field('title', $item->datafield);
+            // $image = get_field('image', $item->datafield);
+            // $text  = get_field('text',  $item->datafield);
         @endphp
 
-        <div class="{{ \$cssclassname }}">
-            {{-- TODO: render fields from \$item->datafield --}}
+        <div class="{{ $cssclassname }}">
+            {{-- TODO: render fields from $item->datafield --}}
         </div>
         BLADE;
 
@@ -166,9 +186,9 @@ class BlocksTable extends Component
 
             return match ($field->type) {
                 'wysiwyg' => "    \$_{$var} = wysiwyg_blocks(\$item, {$raw});",
-                'link'    => "    \$_{$var}Raw = {$raw};\n    \$_{$var} = is_array(\$_{$var}Raw) ? (object) \$_{$var}Raw : (is_string(\$_{$var}Raw) ? json_decode(\$_{$var}Raw) : null);",
+                'link' => "    \$_{$var}Raw = {$raw};\n    \$_{$var} = is_array(\$_{$var}Raw) ? (object) \$_{$var}Raw : (is_string(\$_{$var}Raw) ? json_decode(\$_{$var}Raw) : null);",
                 'gallery' => "    \$_{$var}Raw = {$raw};\n    \$_{$var} = is_array(\$_{$var}Raw) ? \$_{$var}Raw : [];",
-                default   => "    \$_{$var} = {$raw};",
+                default => "    \$_{$var} = {$raw};",
             };
         })->implode("\n");
 
@@ -176,14 +196,14 @@ class BlocksTable extends Component
             $var = $varMap[$field->name];
 
             return match ($field->type) {
-                'wysiwyg'    => "    {{-- wysiwyg: {$field->name} --}}\n    @foreach (\$_{$var} as \$block)\n        <p>{!! \$block['content'] ?? '' !!}</p>\n    @endforeach",
-                'image'      => "    {{-- image: {$field->name} --}}\n    @if (\$_{$var})\n        <x-image :id=\"\$_{$var}\" class=\"w-full\" />\n    @endif",
-                'gallery'    => "    {{-- gallery: {$field->name} --}}\n    @foreach (\$_{$var} as \$_{$var}Id)\n        <x-image :id=\"\$_{$var}Id\" class=\"w-full\" />\n    @endforeach",
-                'link'       => "    {{-- link: {$field->name} --}}\n    @if (\$_{$var})\n        <a href=\"{{ \$_{$var}->url ?? '#' }}\" class=\"underline hover:no-underline\">\n            {{ \$_{$var}->title ?? '{$field->name}' }}\n        </a>\n    @endif",
-                'file'       => "    {{-- file: {$field->name} --}}\n    @if (\$_{$var})\n        @php \$_fileModel = \\Secondnetwork\\Kompass\\Models\\File::find(\$_{$var}); @endphp\n        @if (\$_fileModel)\n            <a href=\"{{ asset('storage/' . \$_fileModel->path . '/' . \$_fileModel->slug . '.' . \$_fileModel->extension) }}\" download>\n                {{ \$_fileModel->name }}\n            </a>\n        @endif\n    @endif",
+                'wysiwyg' => "    {{-- wysiwyg: {$field->name} --}}\n    @foreach (\$_{$var} as \$block)\n        <p>{!! \$block['content'] ?? '' !!}</p>\n    @endforeach",
+                'image' => "    {{-- image: {$field->name} --}}\n    @if (\$_{$var})\n        <x-image :id=\"\$_{$var}\" class=\"w-full\" />\n    @endif",
+                'gallery' => "    {{-- gallery: {$field->name} --}}\n    @foreach (\$_{$var} as \$_{$var}Id)\n        <x-image :id=\"\$_{$var}Id\" class=\"w-full\" />\n    @endforeach",
+                'link' => "    {{-- link: {$field->name} --}}\n    @if (\$_{$var})\n        <a href=\"{{ \$_{$var}->url ?? '#' }}\" class=\"underline hover:no-underline\">\n            {{ \$_{$var}->title ?? '{$field->name}' }}\n        </a>\n    @endif",
+                'file' => "    {{-- file: {$field->name} --}}\n    @if (\$_{$var})\n        @php \$_fileModel = \\Secondnetwork\\Kompass\\Models\\File::find(\$_{$var}); @endphp\n        @if (\$_fileModel)\n            <a href=\"{{ asset('storage/' . \$_fileModel->path . '/' . \$_fileModel->slug . '.' . \$_fileModel->extension) }}\" download>\n                {{ \$_fileModel->name }}\n            </a>\n        @endif\n    @endif",
                 'true_false' => "    {{-- true_false: {$field->name} --}}\n    @if (\$_{$var})\n        {{-- visible when active --}}\n    @endif",
-                'color'      => "    {{-- color: {$field->name} --}}\n    @if (\$_{$var})\n        <div class=\"w-8 h-8 rounded-full border border-base-300\" style=\"background-color: {{ \$_{$var} }}\"></div>\n    @endif",
-                default      => "    {{-- {$field->type}: {$field->name} --}}\n    @if (\$_{$var})<p>{{ \$_{$var} }}</p>@endif",
+                'color' => "    {{-- color: {$field->name} --}}\n    @if (\$_{$var})\n        <div class=\"w-8 h-8 rounded-full border border-base-300\" style=\"background-color: {{ \$_{$var} }}\"></div>\n    @endif",
+                default => "    {{-- {$field->type}: {$field->name} --}}\n    @if (\$_{$var})<p>{{ \$_{$var} }}</p>@endif",
             };
         })->implode("\n\n");
 
@@ -198,7 +218,10 @@ class BlocksTable extends Component
         }
     }
 
-    public function updatedName($value) { $this->type = Str::slug($value); }
+    public function updatedName($value)
+    {
+        $this->type = Str::slug($value);
+    }
 
     public function delete()
     {
@@ -210,11 +233,15 @@ class BlocksTable extends Component
     {
         $blocks = Blocktemplates::orderBy('order', 'ASC')->get();
         $movedItemIndex = $blocks->search(fn ($block) => $block->id == $item);
-        if ($movedItemIndex === false) return;
+        if ($movedItemIndex === false) {
+            return;
+        }
         $movedItem = $blocks->pull($movedItemIndex);
         $blocks->splice($position, 0, [$movedItem]);
         foreach ($blocks->values() as $index => $block) {
-            if ($block->order !== $index) $block->update(['order' => $index]);
+            if ($block->order !== $index) {
+                $block->update(['order' => $index]);
+            }
         }
         $this->call_emit_reset();
     }
@@ -222,12 +249,15 @@ class BlocksTable extends Component
     public function sortBy($field)
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;
         }
     }
 
-    public function toJSON(): string { return '{}'; }
+    public function toJSON(): string
+    {
+        return '{}';
+    }
 }

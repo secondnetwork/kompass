@@ -11,18 +11,25 @@ class Color extends Component
     use WithFileUploads;
 
     public $text_color;
+
     public $button_color;
+
     public $button_text_color;
+
     public $input_text_color;
+
     public $input_border_color;
 
     // Definiere die Datenbank-Keys
     private $dbKeyTextColor = 'color_text';
-    private $dbKeyButtonColor = 'color_button';
-    private $dbKeyButtonTextColor = 'color_button_text';
-    private $dbKeyInputTextColor = 'color_input_text';
-    private $dbKeyInputBorderColor = 'color_input_border';
 
+    private $dbKeyButtonColor = 'color_button';
+
+    private $dbKeyButtonTextColor = 'color_button_text';
+
+    private $dbKeyInputTextColor = 'color_input_text';
+
+    private $dbKeyInputBorderColor = 'color_input_border';
 
     public function mount()
     {

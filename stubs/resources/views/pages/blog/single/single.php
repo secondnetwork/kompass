@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Head\Enums\OgType;
 use Laravel\Head\Facades\Head;

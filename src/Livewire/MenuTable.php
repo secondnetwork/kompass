@@ -4,24 +4,40 @@ namespace Secondnetwork\Kompass\Livewire;
 
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Menu;
+use Secondnetwork\Kompass\Models\Menuitem;
 
 class MenuTable extends Component
 {
     public $name;
+
     public $group;
+
     public $headers;
+
     public $data;
+
     public $newName;
+
     public $land = '';
+
     public $available_locales;
+
     public $selectedItem;
+
     public $timestamps = false;
+
     public $FormDelete = false;
+
     public $FormAdd = false;
+
     public $FormClone = false;
+
     public $FormEdit = false;
+
     public $cloneLand = '';
+
     public $orderBy = 'order';
+
     public $orderAsc = true;
 
     protected function rules(): array
@@ -46,6 +62,7 @@ class MenuTable extends Component
             $headers[] = 'land';
         }
         $headers[] = '';
+
         return $headers;
     }
 
@@ -55,6 +72,7 @@ class MenuTable extends Component
         if (setting('global.multilingual')) {
             $data[] = 'land';
         }
+
         return $data;
     }
 
@@ -71,15 +89,15 @@ class MenuTable extends Component
         }
 
         $appLocale = config('app.locale', 'de');
-        
+
         // Move app locale to front
         if (($key = array_search($appLocale, $locales)) !== false) {
             unset($locales[$key]);
             array_unshift($locales, $appLocale);
         }
-        
+
         $this->available_locales = $locales;
-        
+
         if (empty($this->land) && session()->has('kompass_last_land')) {
             $this->land = session('kompass_last_land');
         }
@@ -88,8 +106,12 @@ class MenuTable extends Component
     public function selectItem($itemId, $action)
     {
         $this->selectedItem = $itemId;
-        if ($action == 'add') $this->FormAdd = true;
-        if ($action == 'delete') $this->FormDelete = true;
+        if ($action == 'add') {
+            $this->FormAdd = true;
+        }
+        if ($action == 'delete') {
+            $this->FormDelete = true;
+        }
         if ($action == 'clone') {
             $this->FormClone = true;
             $this->cloneLand = Menu::find($itemId)->land ?? config('app.locale', 'de');
@@ -100,21 +122,21 @@ class MenuTable extends Component
     {
         $id = $this->selectedItem;
         $originalMenu = Menu::findOrFail($id);
-        
+
         $newMenu = $originalMenu->replicate();
-        $newMenu->name = $originalMenu->name . ' (copy)';
+        $newMenu->name = $originalMenu->name.' (copy)';
         $newMenu->land = $this->cloneLand;
         $newMenu->push();
 
-        $items = \Secondnetwork\Kompass\Models\Menuitem::where('menu_id', $id)->whereNull('subgroup')->get();
-        
+        $items = Menuitem::where('menu_id', $id)->whereNull('subgroup')->get();
+
         foreach ($items as $item) {
             $newItem = $item->replicate();
             $newItem->menu_id = $newMenu->id;
             $newItem->push();
 
             // Handle children
-            $children = \Secondnetwork\Kompass\Models\Menuitem::where('subgroup', $item->id)->get();
+            $children = Menuitem::where('subgroup', $item->id)->get();
             foreach ($children as $child) {
                 $newChild = $child->replicate();
                 $newChild->menu_id = $newMenu->id;
@@ -124,6 +146,7 @@ class MenuTable extends Component
         }
 
         $this->FormClone = false;
+
         return redirect()->to('/admin/menus/show/'.$newMenu->id);
     }
 
@@ -131,11 +154,12 @@ class MenuTable extends Component
     {
         $this->validate();
         $menu = Menu::create([
-            'name' => $this->name, 
+            'name' => $this->name,
             'group' => $this->group,
             'land' => $this->land ?: config('app.locale', 'de'),
         ]);
         $this->FormAdd = false;
+
         return redirect()->to('/admin/menus/show/'.$menu->id);
     }
 
@@ -173,11 +197,15 @@ class MenuTable extends Component
     {
         $menus = Menu::orderBy('order', 'ASC')->get();
         $movedItemIndex = $menus->search(fn ($menu) => $menu->id == $item);
-        if ($movedItemIndex === false) return;
+        if ($movedItemIndex === false) {
+            return;
+        }
         $movedItem = $menus->pull($movedItemIndex);
         $menus->splice($position, 0, [$movedItem]);
         foreach ($menus->values() as $index => $menu) {
-            if ($menu->order !== $index) $menu->update(['order' => $index]);
+            if ($menu->order !== $index) {
+                $menu->update(['order' => $index]);
+            }
         }
         $this->call_emit_reset();
     }
@@ -192,7 +220,7 @@ class MenuTable extends Component
     public function sortBy($field)
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;

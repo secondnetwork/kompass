@@ -8,8 +8,11 @@ use Secondnetwork\Kompass\Models\Setting;
 class Backendmenu extends Component
 {
     public $show_posts = true;
+
     public $show_categories = true;
+
     public $show_pages = true;
+
     public $show_medialibrary = true;
 
     public function mount()

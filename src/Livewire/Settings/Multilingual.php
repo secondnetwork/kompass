@@ -2,15 +2,18 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Secondnetwork\Kompass\Models\Setting;
-use Illuminate\Support\Facades\Cache;
 
 class Multilingual extends Component
 {
     public $multilingual;
+
     public $available_locales = [];
+
     public $new_locale;
+
     public $all_locales = [
         ['name' => 'German', 'id' => 'de'],
         ['name' => 'English', 'id' => 'en'],
@@ -54,7 +57,7 @@ class Multilingual extends Component
         $globalSettings = Setting::global()->get()->keyBy('key');
 
         $this->multilingual = (bool) optional($globalSettings->get('multilingual'))->data ?? false;
-        
+
         $localesData = optional($globalSettings->get('available_locales'))->data;
         if ($localesData) {
             $this->available_locales = is_array($localesData) ? $localesData : json_decode($localesData, true);
@@ -81,7 +84,7 @@ class Multilingual extends Component
 
     public function removeLocale($locale)
     {
-        $this->available_locales = array_values(array_filter($this->available_locales, fn($l) => $l !== $locale));
+        $this->available_locales = array_values(array_filter($this->available_locales, fn ($l) => $l !== $locale));
         $this->saveLocales();
     }
 

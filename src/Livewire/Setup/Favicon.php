@@ -2,23 +2,27 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Features\FaviconGenerator;
 use Secondnetwork\Kompass\Models\Setting;
-use Illuminate\Support\Str;
 
 class Favicon extends Component
 {
     use WithFileUploads;
 
     public $favicon_light;
+
     public $favicon_dark;
+
     public $color_theme;
 
     private $dbKeyFaviconLight = 'favicon_light_image_path';
+
     private $dbKeyFaviconDark = 'favicon_dark_image_path';
+
     private $dbKeyColorTheme = 'favicon_theme_color';
 
     public function mount()
@@ -63,7 +67,7 @@ class Favicon extends Component
             $this->favicon_dark = '/storage/favicon/'.$newFilename;
 
             $this->updateSettingInDatabase($this->dbKeyFaviconDark, '/storage/favicon/'.$newFilename);
-            
+
             $storage->put('favicon/'.$newFilename, $value->get());
 
             $value = null;
@@ -96,10 +100,10 @@ class Favicon extends Component
     private function deleteFaviconFile(?string $publicPath)
     {
         if ($publicPath && Str::startsWith($publicPath, '/storage/')) {
-             $relativePath = str_replace('/storage/', '', $publicPath);
-             if (Storage::disk('public')->exists($relativePath)) {
-                 Storage::disk('public')->delete($relativePath);
-             }
+            $relativePath = str_replace('/storage/', '', $publicPath);
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
         }
     }
 
@@ -110,7 +114,7 @@ class Favicon extends Component
         $this->favicon_light = '';
     }
 
-     public function deleteFaviconDark()
+    public function deleteFaviconDark()
     {
         $this->deleteFaviconFile($this->favicon_dark);
         $this->updateSettingInDatabase($this->dbKeyFaviconDark, '');

@@ -2,19 +2,21 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 use Secondnetwork\Kompass\Models\Setting;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Str;
 
 class AdminPanel extends Component
 {
     use WithFileUploads;
 
     public $logo;
+
     public $newLogo;
+
     public $copyright;
 
     public function mount()
@@ -27,19 +29,19 @@ class AdminPanel extends Component
     {
         if ($this->newLogo) {
             $extension = $this->newLogo->getClientOriginalExtension();
-            $newFilename = 'logo.' . $extension;
-            
+            $newFilename = 'logo.'.$extension;
+
             $path = $this->newLogo->storeAs('images', $newFilename, 'public');
             $this->logo = Storage::disk('public')->url($path);
         }
 
         if ($this->logo) {
-             Setting::updateOrCreate(
+            Setting::updateOrCreate(
                 ['key' => 'logo', 'group' => 'global'],
                 ['data' => $this->logo, 'name' => 'Admin Logo', 'type' => 'image']
             );
         }
-        
+
         if ($this->copyright) {
             Setting::updateOrCreate(
                 ['key' => 'copyright', 'group' => 'global'],
@@ -55,10 +57,10 @@ class AdminPanel extends Component
         $imagePath = $this->logo;
 
         if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
-             $relativePath = str_replace('/storage/', '', $imagePath);
-             if (Storage::disk('public')->exists($relativePath)) {
-                 Storage::disk('public')->delete($relativePath);
-             }
+            $relativePath = str_replace('/storage/', '', $imagePath);
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
         }
 
         $this->logo = '';

@@ -2,25 +2,34 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Secondnetwork\Kompass\Models\Setting;
 use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Livewire\WithFileUploads;
+use Secondnetwork\Kompass\Models\Setting;
 
 class Logo extends Component
 {
     use WithFileUploads;
 
     public $logo_type;
+
     public $logo_image_src;
+
     public $logo_svg_string;
+
     public $logo_height;
+
     public $logo_image;
 
     private $dbKeyLogoType = 'logo_type';
+
     private $dbKeyLogoImageSrc = 'logo_image_src';
+
     private $dbKeyLogoSvgString = 'logo_svg_string';
+
     private $dbKeyLogoHeight = 'logo_height';
 
     public function mount()
@@ -35,28 +44,28 @@ class Logo extends Component
 
     public function saveSvg()
     {
-        \Illuminate\Support\Facades\Log::info('saveSvg called, string: ' . $this->logo_svg_string);
+        Log::info('saveSvg called, string: '.$this->logo_svg_string);
         $this->updateSettingInDatabase($this->dbKeyLogoSvgString, $this->logo_svg_string);
         $this->logo_type = 'svg';
         $this->updateSettingInDatabase($this->dbKeyLogoType, 'svg');
-        
+
         session()->flash('message', 'SVG erfolgreich gespeichert.');
     }
 
     public function updatedLogoImage()
     {
-        if ($this->logo_image instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+        if ($this->logo_image instanceof TemporaryUploadedFile) {
             $this->deleteLogoImageFile($this->logo_image_src);
 
             $extension = $this->logo_image->getClientOriginalExtension();
-            $newFilename = 'logo.' . $extension;
+            $newFilename = 'logo.'.$extension;
 
             $path = $this->logo_image->storeAs('images/logo', $newFilename, 'public');
             $publicPath = Storage::disk('public')->url($path);
 
             $this->logo_image_src = $publicPath;
             $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, $publicPath);
-            
+
             $this->logo_type = 'image';
             $this->updateSettingInDatabase($this->dbKeyLogoType, 'image');
         }
@@ -89,10 +98,10 @@ class Logo extends Component
     private function deleteLogoImageFile(?string $publicPath)
     {
         if ($publicPath && Str::startsWith($publicPath, '/storage/')) {
-             $relativePath = str_replace('/storage/', '', $publicPath);
-             if (Storage::disk('public')->exists($relativePath)) {
-                 Storage::disk('public')->delete($relativePath);
-             }
+            $relativePath = str_replace('/storage/', '', $publicPath);
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
         }
     }
 

@@ -40,7 +40,7 @@ class DatafieldItem extends Component
 
     }
 
-    #[on('refreshmedia')]
+    #[On('refreshmedia')]
     public function reestPage()
     {
         // $this->FormMedia = false;
@@ -52,7 +52,7 @@ class DatafieldItem extends Component
         Datafield::whereId($id)->update(['data' => null]);
     }
 
-    #[on('saveTheDatafield')]
+    #[On('saveTheDatafield')]
     public function saveTheDatafield()
     {
 
