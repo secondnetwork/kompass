@@ -20,7 +20,7 @@
     "require": {
         "php": "^8.2|^8.3|^8.4",
         "intervention/image": "^4.0.0",
-        "laravel/head": "^0.1",
+        "laravel/head": "^0.1 || ^0.2",
         "laravel/passkeys": "^0.1 || ^0.2",
         "livewire/livewire": "^4.2.1",
         "secondnetwork/blade-tabler-icons": "^3.40.1",
