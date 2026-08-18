@@ -2,8 +2,8 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Secondnetwork\Kompass\Models\Meta;
 use Livewire\Component;
+use Secondnetwork\Kompass\Models\Meta;
 
 class EditableMeta extends Component
 {

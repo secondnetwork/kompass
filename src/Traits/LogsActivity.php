@@ -2,7 +2,7 @@
 
 namespace Secondnetwork\Kompass\Traits;
 
-use Illuminate\Support\Str;
+use Spatie\Activitylog\Support\LogOptions;
 
 trait LogsActivity
 {
@@ -16,7 +16,7 @@ trait LogsActivity
         if (class_exists(\Spatie\Activitylog\Models\Concerns\LogsActivity::class)) {
             $class = static::class;
             $class::macro('getActivitylogOptions', function () {
-                return \Spatie\Activitylog\Support\LogOptions::defaults()
+                return LogOptions::defaults()
                     ->logAll();
             });
         }

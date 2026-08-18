@@ -2,13 +2,13 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Secondnetwork\Kompass\Models\Category;
-use Illuminate\Support\Facades\File;
 
 class CategoryTable extends Component
 {
@@ -24,23 +24,36 @@ class CategoryTable extends Component
     public $orderAsc = true;
 
     public $name;
+
     public $slug;
+
     public $description;
+
     public $color = 'primary';
+
     public $icon = '';
+
     public $iconSearch = '';
+
     public $selectedIcon = '';
+
     public $filteredIcons = [];
+
     public $order = 0;
+
     public $perPage = 20;
+
     public $headers;
+
     public $data;
 
     #[Locked]
     public $selectedItem;
 
     public $FormDelete = false;
+
     public $FormAdd = false;
+
     public $FormEdit = false;
 
     protected function rules(): array
@@ -57,7 +70,7 @@ class CategoryTable extends Component
 
     protected function headerTable(): array
     {
-        return ['name', 'color', 'icon' ,''];
+        return ['name', 'color', 'icon', ''];
     }
 
     protected function dataTable(): array
@@ -76,7 +89,7 @@ class CategoryTable extends Component
     {
         $possiblePaths = [
             base_path('vendor/secondnetwork/blade-tabler-icons/resources/svg'),
-            dirname(base_path()) . '/vendor/secondnetwork/blade-tabler-icons/resources/svg',
+            dirname(base_path()).'/vendor/secondnetwork/blade-tabler-icons/resources/svg',
             public_path('vendor/blade-tabler-icons'),
         ];
 
@@ -94,33 +107,32 @@ class CategoryTable extends Component
         $this->filteredIcons = [];
 
         $iconPath = $this->getIconPath();
-        
-        if (empty($iconPath) || !is_dir($iconPath)) {
+
+        if (empty($iconPath) || ! is_dir($iconPath)) {
             return;
         }
 
         try {
             $files = File::files($iconPath);
-            
+
             if (empty($files)) {
                 return;
             }
-            
+
             $icons = collect($files)
-                ->map(fn($file) => str_replace('.svg', '', $file->getFilename()))
+                ->map(fn ($file) => str_replace('.svg', '', $file->getFilename()))
                 ->sort()
                 ->values();
 
             if ($this->iconSearch) {
                 $search = strtolower(trim($this->iconSearch));
-                if (!empty($search)) {
-                    $icons = $icons->filter(fn($name) =>
-                        str_contains(strtolower($name), $search)
+                if (! empty($search)) {
+                    $icons = $icons->filter(fn ($name) => str_contains(strtolower($name), $search)
                     );
                 }
             }
 
-            $this->filteredIcons = $icons->take(100)->map(fn($name) => [
+            $this->filteredIcons = $icons->take(100)->map(fn ($name) => [
                 'id' => $name,
                 'name' => $name,
                 'display' => $name,
@@ -140,11 +152,11 @@ class CategoryTable extends Component
         if (empty($icon)) {
             return '';
         }
-        
-        if (!str_starts_with($icon, 'tabler-')) {
-            return 'tabler-' . $icon;
+
+        if (! str_starts_with($icon, 'tabler-')) {
+            return 'tabler-'.$icon;
         }
-        
+
         return $icon;
     }
 
@@ -163,7 +175,7 @@ class CategoryTable extends Component
     public function sortBy($field)
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
+            $this->orderAsc = ! $this->orderAsc;
         } else {
             $this->orderBy = $field;
             $this->orderAsc = true;
@@ -177,6 +189,7 @@ class CategoryTable extends Component
             $results->where('name', 'like', '%'.$this->search.'%')
                 ->orWhere('slug', 'like', '%'.$this->search.'%');
         }
+
         return $results->orderBy($this->orderBy, $this->orderAsc ? 'ASC' : 'DESC')->paginate($this->perPage);
     }
 
@@ -191,7 +204,9 @@ class CategoryTable extends Component
             $this->FormEdit = true;
             $this->loadCategory($itemId);
         }
-        if ($action == 'delete') $this->FormDelete = true;
+        if ($action == 'delete') {
+            $this->FormDelete = true;
+        }
     }
 
     private function resetFields()

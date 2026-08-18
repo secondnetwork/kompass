@@ -3,9 +3,10 @@
 namespace Secondnetwork\Kompass;
 
 use Illuminate\Support\Facades\Facade;
+use Secondnetwork\Kompass\Skeleton\SkeletonClass;
 
 /**
- * @see \Secondnetwork\Kompass\Skeleton\SkeletonClass
+ * @see SkeletonClass
  */
 class KompassFacade extends Facade
 {

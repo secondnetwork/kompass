@@ -2,22 +2,23 @@
 
 namespace Secondnetwork\Kompass\Livewire;
 
-use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Component;
 use Secondnetwork\Kompass\Models\Blockfields;
 
 class FieldEditor extends Component
 {
-
     public Blockfields $field;
 
-
     public $name;
-    public $grid;
-    public $type;
-    public $selectedItem;
-    public $FormDelete = false;
 
+    public $grid;
+
+    public $type;
+
+    public $selectedItem;
+
+    public $FormDelete = false;
 
     protected function rules(): array
     {
@@ -62,7 +63,7 @@ class FieldEditor extends Component
 
         ]);
 
-        session()->flash('message-field-' . $this->field->id, 'Feld gespeichert.');
+        session()->flash('message-field-'.$this->field->id, 'Feld gespeichert.');
         $this->dispatch('block-resetpage');
     }
 

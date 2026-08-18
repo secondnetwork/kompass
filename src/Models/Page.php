@@ -13,8 +13,8 @@ class Page extends Model
 {
     use HasFactory;
     use HasMeta;
-    use SoftDeletes;
     use LogsActivity;
+    use SoftDeletes;
 
     protected $casts = [
         'content' => 'array',

@@ -2,32 +2,40 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
-use Secondnetwork\Kompass\Models\Setting;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str; // Import Str for startsWith
+use Secondnetwork\Kompass\Models\Setting;
+
+ // Import Str for startsWith
 
 class PageInformation extends Component
 {
     use WithFileUploads;
 
     public $webtitle;
+
     public $supline;
+
     public $description;
+
     public $image;
+
     public $footer_textarea;
+
     public $email_address;
+
     public $phone;
+
     public $copyright;
 
     private $imageKey = 'ogimage_src';
 
     #[On('component:refresh')]
-    public function handleRefresh(): void
-    {
-    }
+    public function handleRefresh(): void {}
 
     public function mount()
     {
@@ -47,19 +55,20 @@ class PageInformation extends Component
     public function updating($property, $value)
     {
         if ($property == 'image') {
-            if ($value instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                 $filename = $value->getClientOriginalName();
-                 $extension = $value->getClientOriginalExtension();
-                 $newFilename = 'ogimage.' . $extension;
+            if ($value instanceof TemporaryUploadedFile) {
+                $filename = $value->getClientOriginalName();
+                $extension = $value->getClientOriginalExtension();
+                $newFilename = 'ogimage.'.$extension;
 
-                 $path = $value->storeAs('images', $newFilename, 'public');
+                $path = $value->storeAs('images', $newFilename, 'public');
 
-                 $publicPath = Storage::disk('public')->url($path);
+                $publicPath = Storage::disk('public')->url($path);
 
-                 $this->image = $publicPath;
+                $this->image = $publicPath;
 
-                 $this->updateSettingInDatabase($this->imageKey, $publicPath);
+                $this->updateSettingInDatabase($this->imageKey, $publicPath);
             }
+
             return;
         }
 
@@ -85,17 +94,17 @@ class PageInformation extends Component
         $imagePath = $this->image;
 
         if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
-             $relativePath = str_replace('/storage/', '', $imagePath);
-             if (Storage::disk('public')->exists($relativePath)) {
-                 Storage::disk('public')->delete($relativePath);
-             }
+            $relativePath = str_replace('/storage/', '', $imagePath);
+            if (Storage::disk('public')->exists($relativePath)) {
+                Storage::disk('public')->delete($relativePath);
+            }
         }
 
         $this->updateSettingInDatabase($this->imageKey, '');
 
         $this->image = '';
 
-        //$this->js('savedMessageOpen()');
+        // $this->js('savedMessageOpen()');
     }
 
     public function render()

@@ -3,9 +3,9 @@
 namespace Secondnetwork\Kompass;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
 use Secondnetwork\Kompass\Http\Controllers\KompassController;
 use Secondnetwork\Kompass\Livewire\AccountForm;
+use Secondnetwork\Kompass\Livewire\Auth\PasskeySetup;
 use Secondnetwork\Kompass\Livewire\BlocksData;
 use Secondnetwork\Kompass\Livewire\BlocksTable;
 use Secondnetwork\Kompass\Livewire\CategoryTable;
@@ -21,7 +21,6 @@ use Secondnetwork\Kompass\Livewire\QuerySources;
 use Secondnetwork\Kompass\Livewire\Roles;
 use Secondnetwork\Kompass\Livewire\Settings;
 use Secondnetwork\Kompass\Livewire\Settings\Profile;
-use Secondnetwork\Kompass\Livewire\Auth\PasskeySetup;
 
 // Asset Routes
 Route::get('assets/{path?}', [KompassController::class, 'assets'])->name('kompass_asset');

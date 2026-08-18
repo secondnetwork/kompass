@@ -26,7 +26,7 @@ class EditableName extends Component
     {
         $this->isEditing = ! $this->isEditing;
         $this->dispatch('focus-input');
-        
+
     }
 
     public function savename()

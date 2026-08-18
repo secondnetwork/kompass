@@ -132,9 +132,7 @@ class MenuData extends Component
     public $timestamps = false;
 
     #[On('refreshComponentGroup')]
-    public function handleRefresh(): void
-    {
-    }
+    public function handleRefresh(): void {}
 
     protected function rules(): array
     {

@@ -4,6 +4,7 @@ namespace Secondnetwork\Kompass\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
@@ -98,7 +99,7 @@ class UpdateCommand extends Command
         if (isset($commands[$packageManager])) {
             warning('Running: '.$commands[$packageManager]);
 
-            $result = \Illuminate\Support\Facades\Process::forever()->run(
+            $result = Process::forever()->run(
                 $commands[$packageManager],
                 function (string $type, string $output): void {
                     $this->output->write('    '.$output);

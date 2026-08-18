@@ -44,7 +44,7 @@ class Menu extends Model
 
     private function createSlug($anme)
     {
-        $businessNameURL = Str::slug($anme, '-', 'de'); //Convert Input to Str Slug
+        $businessNameURL = Str::slug($anme, '-', 'de'); // Convert Input to Str Slug
 
         $placeObj = new Page;
 
@@ -52,7 +52,7 @@ class Menu extends Model
         if ($this->land) {
             $query->where('land', $this->land);
         }
-        
+
         $checkSlug = $query->exists();
 
         if ($checkSlug) {
@@ -60,19 +60,19 @@ class Menu extends Model
             while (1) {
                 $newSlug = $businessNameURL.'-'.$numericalPrefix++;
                 $newSlug = Str::slug($newSlug, '-', 'de');
-                
+
                 $query = static::whereSlug($newSlug);
                 if ($this->land) {
                     $query->where('land', $this->land);
                 }
-                
+
                 if (! $query->exists()) {
-                    return $newSlug; //New Slug
+                    return $newSlug; // New Slug
                 }
             }
         }
 
-        //Slug do not exists. Just use the selected Slug.
+        // Slug do not exists. Just use the selected Slug.
         return $businessNameURL;
     }
 }

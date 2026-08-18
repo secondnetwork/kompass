@@ -2,6 +2,4 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
-class PageAppearance
-{
-}
+class PageAppearance {}
