@@ -1,4 +1,8 @@
 @props([
+    'childrensub' => [],
+    'fields' => null,
+    'page' => null,
+    'copyToPage' => false,
     'fullWidth' => false,
 ])
 
