@@ -11,6 +11,11 @@
     $hasChildren = $itemblocks->children->isNotEmpty();
     $showNest = $isContainer || $hasChildren;
 
+    // Accordion items always render full-width and stacked on the frontend, so the
+    // backend preview should ignore the configurable layout grid for its children.
+    $isAccordion = $itemblocks->type === 'accordiongroup';
+    $childGridCols = $isAccordion ? 1 : $itemblocks->layoutgrid;
+
     // Colour coding by block type, resolved from the central block-type registry.
     $style = block_registry()->styling($itemblocks->type);
 
@@ -50,15 +55,6 @@
                 <x-tabler-grip-vertical class="cursor-move stroke-current size-5 md:size-6 mr-1" />
             </span>
 
-            @if ($hasChildren)
-                <button type="button" @click="expanded = !expanded"
-                    class="shrink-0 mr-1 {{ $accentClass }} transition-transform duration-200"
-                    @if ($accentStyle) style="{{ $accentStyle }}" @endif
-                    :class="expanded ? 'rotate-90' : ''" title="{{ __('Expand / collapse') }}">
-                    <x-tabler-chevron-right class="size-5" />
-                </button>
-            @endif
-
             <span class="shrink-0 mr-2 flex items-center justify-center size-7 rounded-md {{ $accentClass }}"
                 @if ($accentStyle) style="{{ $accentStyle }}" @endif>
                 @switch($itemblocks->type)
@@ -84,6 +80,15 @@
 
         {{-- Right: actions --}}
         <div class="flex items-center gap-1 shrink-0 ">
+
+            @if ($hasChildren)
+                <button type="button" @click="expanded = !expanded"
+                    class="shrink-0 {{ $accentClass }} transition-transform duration-200"
+                    @if ($accentStyle) style="{{ $accentStyle }}" @endif
+                    :class="expanded ? 'rotate-180' : ''" title="{{ __('Expand / collapse') }}">
+                    <x-tabler-chevron-down class="size-5" />
+                </button>
+            @endif
 
             @if ($isContainer)
 
@@ -279,8 +284,8 @@
         <div x-show="expanded" x-collapse x-cloak class="border-l-2 {{ $railClass }} bg-base-300/40 rounded-b-md p-1.5"
             @if ($railStyle) style="{{ $railStyle }}" @endif>
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
-                class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
-                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" />
+                class="grid grid-cols-{{ $childGridCols }} gap-2">
+                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" :full-width="$isAccordion" />
             </div>
         </div>
     @elseif ($isContainer)
@@ -289,14 +294,14 @@
             @if ($railStyle) style="{{ $railStyle }}" @endif
             :class="dragging ? 'p-1.5' : ''">
             <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="{{ $itemblocks->id }}"
-                class="relative grid grid-cols-{{ $itemblocks->layoutgrid }} transition-[min-height] duration-200">
+                class="relative grid grid-cols-{{ $childGridCols }} transition-[min-height] duration-200">
             </div>
         </div>
     @elseif ($hasChildren)
 
         <div x-show="expanded" x-collapse x-cloak class="bg-base-300/40 rounded-b-md p-1.5">
-            <div class="grid grid-cols-{{ $itemblocks->layoutgrid }} gap-2">
-                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" />
+            <div class="grid grid-cols-{{ $childGridCols }} gap-2">
+                <x-kompass::blocksgroupsub :childrensub="$itemblocks->children->sortBy('order')" :fields="$itemblocks->datafield" :page="$page" :copy-to-page="$copyToPage" :full-width="$isAccordion" />
             </div>
         </div>
     @endif
