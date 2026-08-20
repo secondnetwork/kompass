@@ -289,7 +289,7 @@ return [
             'container' => false,
             'default_fields' => [['type' => 'gallery', 'order' => 1, 'data' => []]],
             'styling' => ['rail' => 'border-l-blue-500', 'badge' => 'bg-blue-500', 'bar' => 'bg-blue-500/10', 'accent' => 'text-blue-600'],
-            'controls' => ['layout', 'gallery', 'color', 'advanced'],
+            'controls' => ['layout', 'gallery', 'visibility', 'color', 'advanced'],
             'palette' => true,
             'palette_image' => 'icons-blocks/gallery.png',
             'palette_image_class' => 'rounded',

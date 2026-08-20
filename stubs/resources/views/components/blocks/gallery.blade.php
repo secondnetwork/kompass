@@ -24,6 +24,12 @@
     $isLightbox = ! $isSlider && get_meta($item, 'lightbox') === 'true';
     $cols = (int) ($item->grid ?: 3);
 
+    $visibilityClass = match (get_meta($item, 'visibility')) {
+        'mobile' => 'md:hidden',
+        'desktop' => 'hidden md:block',
+        default => '',
+    };
+
     // Full-size URLs of the image files (for the lightbox), in gallery order.
     $lightboxImages = [];
     if ($isLightbox) {
@@ -52,7 +58,7 @@
         @keydown.arrow-right.window="lbOpen && lbNext()"
         @keydown.arrow-left.window="lbOpen && lbPrev()"
     @endif
-    {{ $attributes->merge(['class' => 'relative group ' . $gridCols . ' ' . $colSpan]) }}>
+    {{ $attributes->merge(['class' => 'relative group ' . $gridCols . ' ' . $colSpan . ' ' . $visibilityClass]) }}>
     @if ($isSlider)
         {{-- Slider: autoplaying scroll-snap track with prev/next + dots, looping --}}
         <div

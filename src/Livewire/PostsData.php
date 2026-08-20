@@ -431,6 +431,15 @@ class PostsData extends Component
                 ]);
             }
         }
+        if ($set == 'visibility') {
+            if ($status === '' || $status === null) {
+                $setblock->deleteMeta('visibility');
+            } else {
+                $setblock->saveMeta([
+                    'visibility' => $status,
+                ]);
+            }
+        }
 
         $this->resetPageComponent();
     }

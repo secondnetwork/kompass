@@ -641,6 +641,7 @@ class PagesData extends Component
             'order' => 'order',
             'align' => 'align',
             'color' => 'color',
+            'visibility' => 'visibility',
         ];
 
         if (isset($metaKeyMap[$set])) {

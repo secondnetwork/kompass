@@ -1234,5 +1234,10 @@
     "New block with format": "Nouveau bloc avec format",
     "Move or configure": "Déplacer ou configurer",
     "Go to slide": "Aller à la diapositive",
-    "Lightbox": "Lightbox"
+    "Lightbox": "Lightbox",
+    "Visibility": "Visibilité",
+    "Show on": "Afficher sur",
+    "All devices": "Tous les appareils",
+    "Mobile only": "Mobile uniquement",
+    "Desktop only": "Bureau uniquement"
 }
