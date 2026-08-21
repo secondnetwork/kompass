@@ -1,8 +1,4 @@
-<div class="l h-auto grid  gap-4" x-data="{
-    {{-- supline: @entangle('supline').live, --}}
-    image: @entangle('image'),
-
-}">
+<div class="l h-auto grid  gap-4">
 
 
     <div class="max-w-2xl py-2">
@@ -28,13 +24,9 @@
                 {{ __('Minimum dimension of 1200×630 pixels and an aspect ratio of 1.91:1 and file size requirement of less than 1MB.') }}
             </p>
         </div>
-        <div wire:loading wire:target="image">Uploading...</div>
-
-
-        <x-kompass::upload-image 
-            wire:model="image"
-            :image="$image" 
-            deleteAction="deleteImage" 
+        <x-kompass::settings-image-picker
+            :image="$image"
+            :setting-id="$getId"
             label=""
             class="lg:w-1/2"
         />

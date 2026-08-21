@@ -1,7 +1,5 @@
 <div
     x-data="{
-        logo_image: @entangle('logo_image'),
-        logo_image_src: @entangle('logo_image_src'),
         logo_svg_string: @entangle('logo_svg_string'),
         logo_type: @entangle('logo_type')
         {{-- image_uploaded: @entangle('image_uploaded') --}}
@@ -27,10 +25,9 @@
             </div>
             <div class="mt-2 w-full bg-base-100">
                 <div x-show="logo_type == 'image'" class="rounded-lg">
-                    <x-kompass::upload-image 
-                        wire:model.live="logo_image"
-                        :image="$logo_image_src" 
-                        deleteAction="deleteLogoImage" 
+                    <x-kompass::settings-image-picker
+                        :image="$logo_image_src"
+                        :setting-id="$getId"
                         label=""
                     />
                 </div>
@@ -48,11 +45,7 @@
             </div>
         </div>
 
-        <div class="pt-5">
-            @error('logo_image') <span class="mt-1 text-sm text-red-400">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="pb-3 w-full">
+        <div class="pb-3 w-full pt-5">
             <label class="block text-sm font-medium leading-6 text-gray-900">Logo {{ __('height') }} (in rem)</label>
         </div>
         <div class="w-full h-auto">

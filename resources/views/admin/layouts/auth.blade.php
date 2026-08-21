@@ -32,8 +32,8 @@
 <div class="grid grid-cols-11 h-screen items-center justify-center bg-base-100">
 <div class="grid col-start-1 lg:col-end-5 col-end-12 gap-y-8 p-12">
     <div class="logo w-50">
-        @if (!empty(setting('global.adminlogo')))
-        <img src="{{ setting('global.adminlogo') }}" alt="">
+        @if (!empty(setting_image('global.adminlogo')))
+        <img src="{{ setting_image('global.adminlogo') }}" alt="">
         @else
         <img src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         @endif

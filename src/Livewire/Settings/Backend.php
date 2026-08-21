@@ -2,17 +2,12 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Backend extends Component
 {
-    use WithFileUploads;
-
     public $registration_can_user;
 
     public $password_login_enabled;
@@ -22,6 +17,10 @@ class Backend extends Component
     public $adminlogo;
 
     public $dashboard_docs_card;
+
+    public $FormMedia = false;
+
+    public $getId;
 
     private $dbKeyRegistration = 'registration_can_user';
 
@@ -36,10 +35,19 @@ class Backend extends Component
             ? (bool) optional($globalSettings->get('password_login_enabled'))->data
             : config('kompass.auth.password_login_enabled', false);
         $this->admincopyright = optional($globalSettings->get('admincopyright'))->data ?? '';
-        $this->adminlogo = optional($globalSettings->get($this->imageKey))->data ?? '';
         $this->dashboard_docs_card = optional($globalSettings->get('dashboard_docs_card'))->data !== null
             ? (bool) optional($globalSettings->get('dashboard_docs_card'))->data
             : true;
+
+        $logoSetting = $globalSettings->get($this->imageKey)
+            ?? Setting::create([
+                'key' => $this->imageKey,
+                'group' => 'global',
+                'name' => ucwords(str_replace(['_', '.'], ' ', $this->imageKey)),
+            ]);
+
+        $this->getId = $logoSetting->id;
+        $this->adminlogo = Setting::resolveImageUrl($logoSetting->data) ?? '';
     }
 
     public function updating($property, $value)
@@ -56,26 +64,30 @@ class Backend extends Component
         if ($property === 'dashboard_docs_card') {
             $this->updateSettingInDatabase('dashboard_docs_card', (string) $value);
         }
-        if ($property == 'adminlogo') {
-            if ($value instanceof TemporaryUploadedFile) {
-                $this->validateOnly('adminlogo', [
-                    'adminlogo' => ['image', 'mimes:jpeg,png,gif,webp,svg', 'max:2048'],
-                ]);
+    }
 
-                $extension = $value->getClientOriginalExtension();
-                $newFilename = 'adminlogo.'.$extension;
-
-                $path = $value->storeAs('images', $newFilename, 'public');
-
-                $publicPath = Storage::disk('public')->url($path);
-
-                $this->adminlogo = $publicPath;
-
-                $this->updateSettingInDatabase($this->imageKey, $publicPath);
-            }
-
-            return;
+    public function selectItem($itemId, $action)
+    {
+        if ($action === 'addMedia') {
+            $this->getId = $itemId;
+            $this->FormMedia = true;
+            $this->dispatch('getIdField_changnd', $this->getId, 'setting');
         }
+    }
+
+    #[On('refresh-setting')]
+    public function refreshLogo()
+    {
+        $this->FormMedia = false;
+
+        $setting = Setting::find($this->getId);
+        $this->adminlogo = Setting::resolveImageUrl($setting?->data) ?? '';
+    }
+
+    public function removemedia($id)
+    {
+        Setting::whereId($id)->update(['data' => null]);
+        $this->adminlogo = '';
     }
 
     private function updateSettingInDatabase($key, $value)
@@ -90,24 +102,6 @@ class Backend extends Component
                 'name' => ucwords(str_replace(['_', '.'], ' ', $key)),
             ]
         );
-    }
-
-    public function deleteImage()
-    {
-        $imagePath = $this->adminlogo;
-
-        if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
-            $relativePath = str_replace('/storage/', '', $imagePath);
-            if (Storage::disk('public')->exists($relativePath)) {
-                Storage::disk('public')->delete($relativePath);
-            }
-        }
-
-        $this->updateSettingInDatabase($this->imageKey, '');
-
-        $this->adminlogo = '';
-
-        // $this->js('savedMessageOpen()');
     }
 
     public function render()

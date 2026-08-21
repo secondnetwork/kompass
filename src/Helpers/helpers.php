@@ -12,6 +12,7 @@ use Secondnetwork\Kompass\Helpers\EditorMigrationHelper;
 use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File as Files;
 use Secondnetwork\Kompass\Models\QuerySource;
+use Secondnetwork\Kompass\Models\Setting;
 
 if (! function_exists('getImageID')) {
     /**
@@ -286,6 +287,17 @@ if (! function_exists('setting')) {
         }
 
         return $default;
+    }
+}
+
+if (! function_exists('setting_image')) {
+    /**
+     * Like setting(), but resolves an image-type setting's stored media library
+     * File id (or legacy full-path string) to a displayable path.
+     */
+    function setting_image($key = null, $default = null)
+    {
+        return Setting::resolveImageUrl(setting($key)) ?? $default;
     }
 }
 

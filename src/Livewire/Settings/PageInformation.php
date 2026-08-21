@@ -2,20 +2,12 @@
 
 namespace Secondnetwork\Kompass\Livewire\Settings;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\Setting;
-
- // Import Str for startsWith
 
 class PageInformation extends Component
 {
-    use WithFileUploads;
-
     public $webtitle;
 
     public $supline;
@@ -31,6 +23,10 @@ class PageInformation extends Component
     public $phone;
 
     public $copyright;
+
+    public $FormMedia = false;
+
+    public $getId;
 
     private $imageKey = 'ogimage_src';
 
@@ -49,30 +45,48 @@ class PageInformation extends Component
         $this->phone = optional($globalSettings->get('phone'))->data ?? '';
         $this->copyright = optional($globalSettings->get('copyright'))->data ?? '';
 
-        $this->image = optional($globalSettings->get($this->imageKey))->data ?? '';
+        $ogImageSetting = $globalSettings->get($this->imageKey)
+            ?? Setting::create([
+                'key' => $this->imageKey,
+                'group' => 'global',
+                'name' => ucwords(str_replace('_', ' ', $this->imageKey)),
+            ]);
+
+        $this->getId = $ogImageSetting->id;
+        $this->image = Setting::resolveImageUrl($ogImageSetting->data) ?? '';
     }
 
     public function updating($property, $value)
     {
-        if ($property == 'image') {
-            if ($value instanceof TemporaryUploadedFile) {
-                $filename = $value->getClientOriginalName();
-                $extension = $value->getClientOriginalExtension();
-                $newFilename = 'ogimage.'.$extension;
-
-                $path = $value->storeAs('images', $newFilename, 'public');
-
-                $publicPath = Storage::disk('public')->url($path);
-
-                $this->image = $publicPath;
-
-                $this->updateSettingInDatabase($this->imageKey, $publicPath);
-            }
-
+        if (in_array($property, ['image', 'FormMedia', 'getId'], true)) {
             return;
         }
 
         $this->updateSettingInDatabase($property, $value);
+    }
+
+    public function selectItem($itemId, $action)
+    {
+        if ($action === 'addMedia') {
+            $this->getId = $itemId;
+            $this->FormMedia = true;
+            $this->dispatch('getIdField_changnd', $this->getId, 'setting');
+        }
+    }
+
+    #[On('refresh-setting')]
+    public function refreshImage()
+    {
+        $this->FormMedia = false;
+
+        $setting = Setting::find($this->getId);
+        $this->image = Setting::resolveImageUrl($setting?->data) ?? '';
+    }
+
+    public function removemedia($id)
+    {
+        Setting::whereId($id)->update(['data' => null]);
+        $this->image = '';
     }
 
     private function updateSettingInDatabase($key, $value)
@@ -87,24 +101,6 @@ class PageInformation extends Component
                 'name' => ucwords(str_replace('_', ' ', $key)),
             ]
         );
-    }
-
-    public function deleteImage()
-    {
-        $imagePath = $this->image;
-
-        if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
-            $relativePath = str_replace('/storage/', '', $imagePath);
-            if (Storage::disk('public')->exists($relativePath)) {
-                Storage::disk('public')->delete($relativePath);
-            }
-        }
-
-        $this->updateSettingInDatabase($this->imageKey, '');
-
-        $this->image = '';
-
-        // $this->js('savedMessageOpen()');
     }
 
     public function render()

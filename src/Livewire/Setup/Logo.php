@@ -3,17 +3,12 @@
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Logo extends Component
 {
-    use WithFileUploads;
-
     public $logo_type;
 
     public $logo_image_src;
@@ -22,7 +17,9 @@ class Logo extends Component
 
     public $logo_height;
 
-    public $logo_image;
+    public $FormMedia = false;
+
+    public $getId;
 
     private $dbKeyLogoType = 'logo_type';
 
@@ -37,9 +34,18 @@ class Logo extends Component
         $globalSettings = Setting::global()->get()->keyBy('key');
 
         $this->logo_type = optional($globalSettings->get($this->dbKeyLogoType))->data ?? 'text';
-        $this->logo_image_src = optional($globalSettings->get($this->dbKeyLogoImageSrc))->data ?? '';
         $this->logo_svg_string = optional($globalSettings->get($this->dbKeyLogoSvgString))->data ?? '';
         $this->logo_height = optional($globalSettings->get($this->dbKeyLogoHeight))->data ?? '8';
+
+        $logoImageSetting = $globalSettings->get($this->dbKeyLogoImageSrc)
+            ?? Setting::create([
+                'key' => $this->dbKeyLogoImageSrc,
+                'group' => 'global',
+                'name' => ucwords(str_replace(['_', '.'], ' ', $this->dbKeyLogoImageSrc)),
+            ]);
+
+        $this->getId = $logoImageSetting->id;
+        $this->logo_image_src = Setting::resolveImageUrl($logoImageSetting->data) ?? '';
     }
 
     public function saveSvg()
@@ -52,23 +58,30 @@ class Logo extends Component
         session()->flash('message', 'SVG erfolgreich gespeichert.');
     }
 
-    public function updatedLogoImage()
+    public function selectItem($itemId, $action)
     {
-        if ($this->logo_image instanceof TemporaryUploadedFile) {
-            $this->deleteLogoImageFile($this->logo_image_src);
-
-            $extension = $this->logo_image->getClientOriginalExtension();
-            $newFilename = 'logo.'.$extension;
-
-            $path = $this->logo_image->storeAs('images/logo', $newFilename, 'public');
-            $publicPath = Storage::disk('public')->url($path);
-
-            $this->logo_image_src = $publicPath;
-            $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, $publicPath);
-
-            $this->logo_type = 'image';
-            $this->updateSettingInDatabase($this->dbKeyLogoType, 'image');
+        if ($action === 'addMedia') {
+            $this->getId = $itemId;
+            $this->FormMedia = true;
+            $this->dispatch('getIdField_changnd', $this->getId, 'setting');
         }
+    }
+
+    #[On('refresh-setting')]
+    public function refreshLogoImage()
+    {
+        $this->FormMedia = false;
+
+        $setting = Setting::find($this->getId);
+        $this->logo_image_src = Setting::resolveImageUrl($setting?->data) ?? '';
+        $this->logo_type = 'image';
+        $this->updateSettingInDatabase($this->dbKeyLogoType, 'image');
+    }
+
+    public function removemedia($id)
+    {
+        Setting::whereId($id)->update(['data' => null]);
+        $this->logo_image_src = '';
     }
 
     // Hook für einfache Felder
@@ -93,24 +106,6 @@ class Logo extends Component
                 'name' => ucwords(str_replace(['_', '.'], ' ', $key)),
             ]
         );
-    }
-
-    private function deleteLogoImageFile(?string $publicPath)
-    {
-        if ($publicPath && Str::startsWith($publicPath, '/storage/')) {
-            $relativePath = str_replace('/storage/', '', $publicPath);
-            if (Storage::disk('public')->exists($relativePath)) {
-                Storage::disk('public')->delete($relativePath);
-            }
-        }
-    }
-
-    public function deleteLogoImage()
-    {
-        $this->deleteLogoImageFile($this->logo_image_src);
-        $this->updateSettingInDatabase($this->dbKeyLogoImageSrc, '');
-        $this->logo_image_src = '';
-        $this->logo_image = null;
     }
 
     public function render()

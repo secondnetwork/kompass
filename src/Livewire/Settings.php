@@ -178,7 +178,14 @@ class Settings extends Component
     public function resetView()
     {
         $this->FormMedia = false;
-        $this->loadSetting();
+
+        // 'refresh-setting' is a shared broadcast dispatched by every media picker
+        // backed by Medialibrary's 'setting' case, including ones outside the
+        // "Global Settings" tab (Logo, Admin Logo, OG image). Only reload here
+        // when this tab actually has a selected row to avoid findOrFail(null).
+        if ($this->selectedItem) {
+            $this->loadSetting();
+        }
     }
 
     public function selectItem($itemId, $action)

@@ -20,6 +20,34 @@ class Setting extends Model
         return $query->where('group', 'global');
     }
 
+    /**
+     * Resolve a setting's stored image value to a displayable path.
+     *
+     * New rows store the media library `File` id (integer), picked via the same
+     * Medialibrary flow used for block/datafield images. Legacy rows may still
+     * hold a full storage path string written by the old raw-upload widget.
+     */
+    public static function resolveImageUrl($data): ?string
+    {
+        if (empty($data)) {
+            return null;
+        }
+
+        if (is_numeric($data)) {
+            $file = File::find($data);
+
+            if (! $file) {
+                return null;
+            }
+
+            $path = $file->path ? $file->path.'/' : '';
+
+            return '/storage/'.$path.$file->slug.'.'.$file->extension;
+        }
+
+        return $data;
+    }
+
     // public $timestamps = fal
     // protected static function boot()
     protected static function boot()

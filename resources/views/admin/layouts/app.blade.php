@@ -35,8 +35,8 @@
       <aside class="sidenav">
         <div class="flex flex-col h-screen">
         <div class="logo">
-          @if (!empty(setting('global.adminlogo')))
-          <img src="{{ setting('global.adminlogo') }}" alt="">
+          @if (!empty(setting_image('global.adminlogo')))
+          <img src="{{ setting_image('global.adminlogo') }}" alt="">
           @else
         <img class="big-logo" src="{{ kompass_asset('kompass_logo.svg') }}" alt="">
         <img class="favicon-logo" src="{{ kompass_asset('favicon/512.png') }}" alt="">

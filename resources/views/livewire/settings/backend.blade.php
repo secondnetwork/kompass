@@ -12,11 +12,10 @@
 
     <hr class="h-px w-full border-none bg-base-300">
     
-    <x-kompass::upload-image 
-        wire:model="adminlogo" 
-        :image="$adminlogo" 
-        delete-action="deleteImage()" 
-        label="Admin Logo" 
+    <x-kompass::settings-image-picker
+        :image="$adminlogo"
+        :setting-id="$getId"
+        label="Admin Logo"
     />
 
     <div class="mb-6 max-w-2xl">
