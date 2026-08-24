@@ -7,6 +7,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\File;
 use Secondnetwork\Kompass\Models\Post;
@@ -217,6 +218,7 @@ class Medialibrary extends Component
         $old_path = ($file->path ? rtrim($file->path, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
         $new_path = ($this->newFolderLocation ? rtrim($this->newFolderLocation, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
         if (Storage::disk($this->filesystem)->move($old_path, $new_path)) {
+            ImageFactory::forgetVariants($old_path);
             $file->update(['path' => $this->newFolderLocation]);
             $this->FormEdit = false;
             $this->dispatch('refresh-media-list');
@@ -245,12 +247,9 @@ class Medialibrary extends Component
             Storage::disk($diskName)->deleteDirectory($full_path);
         } else {
             $directory = $file->path ? $file->path.'/' : '';
-            $filesToDelete = [
-                $directory.$file->slug.'.'.$file->extension,
-                $directory.$file->slug.'.avif',
-                $directory.$file->slug.'_thumbnail.avif',
-            ];
-            Storage::disk($diskName)->delete($filesToDelete);
+            $originalPath = $directory.$file->slug.'.'.$file->extension;
+            ImageFactory::forgetVariants($originalPath);
+            Storage::disk($diskName)->delete($originalPath);
         }
 
         $file->delete();

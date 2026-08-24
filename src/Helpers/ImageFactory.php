@@ -259,6 +259,51 @@ class ImageFactory
         }
     }
 
+    /**
+     * Löscht alle generierten webp/avif/jpeg-Varianten eines Originalbildes
+     * (z. B. vor einem Move oder Delete in der Mediathek), damit keine
+     * verwaisten Dateien am alten Speicherort zurückbleiben.
+     */
+    public static function forgetVariants(string $relativePath): void
+    {
+        $disk = config('kompass.storage.disk', 'public');
+        $storage = Storage::disk($disk);
+
+        $dir = pathinfo($relativePath, PATHINFO_DIRNAME);
+        $filename = pathinfo($relativePath, PATHINFO_FILENAME);
+
+        $searchDirs = array_unique([
+            $dir === '.' ? 'media' : "media/{$dir}",
+            $dir === '.' ? '' : $dir,
+        ]);
+
+        $pattern = '/^'.preg_quote($filename, '/').'-.+\.(webp|avif|jpeg|jpg|png)$/i';
+
+        foreach ($searchDirs as $searchDir) {
+            foreach ($storage->files($searchDir) as $file) {
+                if (preg_match($pattern, basename($file))) {
+                    $storage->delete($file);
+                }
+            }
+        }
+
+        $presets = array_merge(config('kompass.sizes', []), [
+            'fallback' => config('kompass.fallback', []),
+        ]);
+
+        foreach ($presets as $preset) {
+            $width = $preset['width'] ?? null;
+            $height = $preset['height'] ?? null;
+            $method = $preset['method'] ?? 'scaleDown';
+            $dimString = ($width ?? 'auto').'x'.($height ?? 'auto');
+
+            foreach (['avif', 'webp', 'jpeg'] as $format) {
+                $quality = $preset['quality'] ?? config("kompass.quality.{$format}", 75);
+                Cache::forget("img_{$relativePath}_{$format}_{$dimString}_{$method}_{$quality}");
+            }
+        }
+    }
+
     protected static function processImage($sourcePath, $format, $config)
     {
         $width = $config['width'] ?? null;
@@ -278,7 +323,7 @@ class ImageFactory
         $dir = pathinfo($sourcePath, PATHINFO_DIRNAME);
         $filename = pathinfo($sourcePath, PATHINFO_FILENAME);
         $newFilename = "{$filename}-{$dimString}.{$format}";
-        $newPath = $dir === '.' ? "media/{$newFilename}" : "media/{$dir}/{$newFilename}";
+        $newPath = $dir === '.' ? $newFilename : "{$dir}/{$newFilename}";
 
         if ($storage->exists($newPath)) {
             $url = $storage->url($newPath);

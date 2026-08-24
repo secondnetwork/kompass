@@ -47,7 +47,7 @@
         </div>
         <div class="w-48">
             <x-kompass::select id="filter-type" :searchable="false" wire:model.live="filter" placeholder="{{ __('Filter by Type') }}" :options="[
-                ['name' => __('All'), 'id' => null],
+                ['name' => __('All'), 'id' => ''],
                 ['name' => __('Images'), 'id' => 'image'],
                 ['name' => __('Videos'), 'id' => 'video'],
                 ['name' => __('Audio'), 'id' => 'audio'],

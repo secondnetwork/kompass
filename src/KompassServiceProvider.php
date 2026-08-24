@@ -21,6 +21,7 @@ use Secondnetwork\Kompass\Blocks\BlockTypeRegistry;
 use Secondnetwork\Kompass\Blocks\FieldTypeRegistry;
 use Secondnetwork\Kompass\Commands\CreateUserCommand;
 use Secondnetwork\Kompass\Commands\KompassCommand;
+use Secondnetwork\Kompass\Commands\PruneMediaVariantsCommand;
 use Secondnetwork\Kompass\Commands\UpdateCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
 use Secondnetwork\Kompass\DataWriter\Repository;
@@ -298,6 +299,7 @@ class KompassServiceProvider extends ServiceProvider
                 KompassCommand::class,
                 CreateUserCommand::class,
                 UpdateCommand::class,
+                PruneMediaVariantsCommand::class,
             ]);
         }
     }

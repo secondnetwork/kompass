@@ -8,6 +8,7 @@ use Livewire\Attributes\Reactive;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Secondnetwork\Kompass\Helpers\ImageFactory;
 use Secondnetwork\Kompass\Models\File;
 
 class MediaList extends Component
@@ -53,11 +54,9 @@ class MediaList extends Component
                 Storage::disk($disk)->deleteDirectory($full_path);
             } else {
                 $directory = $file->path ? $file->path.'/' : '';
-                Storage::disk($disk)->delete([
-                    $directory.$file->slug.'.'.$file->extension,
-                    $directory.$file->slug.'.avif',
-                    $directory.$file->slug.'_thumbnail.avif',
-                ]);
+                $originalPath = $directory.$file->slug.'.'.$file->extension;
+                ImageFactory::forgetVariants($originalPath);
+                Storage::disk($disk)->delete($originalPath);
             }
             $file->delete();
         });
@@ -74,6 +73,7 @@ class MediaList extends Component
             $old = ($file->path ? rtrim($file->path, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
             $new = ($targetPath ? rtrim($targetPath, '/').'/' : '').$file->slug.($file->extension ? '.'.$file->extension : '');
             if (Storage::disk($disk)->move($old, $new)) {
+                ImageFactory::forgetVariants($old);
                 $file->update(['path' => $targetPath]);
             }
         });

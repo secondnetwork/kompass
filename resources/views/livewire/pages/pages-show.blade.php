@@ -277,7 +277,7 @@
                     label="{{ __('Page') }}" placeholder="{{ __('Select a page') }}" :options="$pages" />
 
                 <button class="btn btn-primary" wire:click="copyToPage" @click="open = false"
-                    :disabled="!copyTargetPageId">
+                    :disabled="!$wire.copyTargetPageId">
                     <x-tabler-copy class="icon-lg" />
                     {{ __('Copy') }}
                 </button>

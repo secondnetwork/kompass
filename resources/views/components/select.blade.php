@@ -154,7 +154,7 @@
                     </div>
                 </template>
 
-                <template x-for="item in filteredOptions" :key="item.id">
+                <template x-for="item in filteredOptions" :key="String(item.id)">
                     <li
                         class="combobox-option group flex w-full cursor-pointer items-center justify-between gap-6 px-4 py-2 text-sm text-base-content hover:bg-base-200 focus-visible:bg-base-200 focus-visible:outline-none"
                         role="option"
