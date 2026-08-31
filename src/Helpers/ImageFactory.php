@@ -210,6 +210,13 @@ class ImageFactory
             $attrString .= ' '.$key.'="'.htmlspecialchars($val).'"';
         }
 
+        if (! isset($attributes['width']) && ! isset($attributes['height'])) {
+            $dimensions = self::resolveDimensions($relativePath, config('kompass.storage.disk', 'public'));
+            if ($dimensions) {
+                $attrString .= ' width="'.$dimensions[0].'" height="'.$dimensions[1].'"';
+            }
+        }
+
         $html = '<picture>';
         if ($avifUrl) {
             $html .= '<source type="image/avif" srcset="'.$avifUrl.'">';
@@ -221,6 +228,30 @@ class ImageFactory
         $html .= '</picture>';
 
         return $html;
+    }
+
+    /**
+     * Intrinsic [width, height] of the original (un-resized) image, so the
+     * <img> tag can carry explicit dimensions and avoid layout shift. Cached
+     * forever since a given path's image never changes in place; invalidated
+     * in forgetVariants() when the source file is moved or deleted.
+     */
+    protected static function resolveDimensions(string $relativePath, string $disk): ?array
+    {
+        return Cache::rememberForever(self::dimensionsCacheKey($relativePath, $disk), function () use ($relativePath, $disk) {
+            try {
+                $image = Image::fromStorage($relativePath, $disk);
+
+                return [$image->width(), $image->height()];
+            } catch (\Throwable $e) {
+                return null;
+            }
+        });
+    }
+
+    private static function dimensionsCacheKey(string $relativePath, string $disk): string
+    {
+        return "img_dimensions_{$disk}_{$relativePath}";
     }
 
     public static function getPlaceholder($cssClass = '')
@@ -268,6 +299,8 @@ class ImageFactory
     {
         $disk = config('kompass.storage.disk', 'public');
         $storage = Storage::disk($disk);
+
+        Cache::forget(self::dimensionsCacheKey($relativePath, $disk));
 
         $dir = pathinfo($relativePath, PATHINFO_DIRNAME);
         $filename = pathinfo($relativePath, PATHINFO_FILENAME);
