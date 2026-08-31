@@ -190,7 +190,7 @@
         <div wire:sort="handleSort" wire:sort:group="blocks" wire:sort:group-id="">
 
             @forelse ($blocks as $itemblocks)
-                <div wire:sort:item="{{ $itemblocks->id }}">
+                <div wire:key="block-item-{{ $itemblocks->id }}" wire:sort:item="{{ $itemblocks->id }}">
                     <x-kompass::blocksgroup :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :copy-to-page="true" :class="'itemblock border border-base-300 rounded-md shadow-sm mt-3'" />
                 </div>
 

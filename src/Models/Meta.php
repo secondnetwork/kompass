@@ -19,6 +19,16 @@ class Meta extends Model
     protected static function boot(): void
     {
         parent::boot();
+
+        static::creating(function (): void {
+            cache()->flush();
+        });
+        static::updating(function (): void {
+            cache()->flush();
+        });
+        static::deleting(function (): void {
+            cache()->flush();
+        });
     }
 
     public function metable()
