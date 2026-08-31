@@ -237,7 +237,7 @@
             <x-slot name="body">
 
                 @foreach ($datafield as $itemblocks)
-                    <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield" :cssclassname="$cssClassname"
+                    <x-kompass::blocks-datafield :itemblocks="$itemblocks" :fields="$itemblocks->datafield"
                         :relationship-search="$relationshipSearch"
                         :class="'itemblock border-blue-400 shadow border-r-4 mt-3'" />
                 @endforeach

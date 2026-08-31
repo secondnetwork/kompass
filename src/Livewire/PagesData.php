@@ -16,7 +16,6 @@ use Secondnetwork\Kompass\Models\Block;
 use Secondnetwork\Kompass\Models\Blocktemplates;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Menuitem;
-use Secondnetwork\Kompass\Models\Meta;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Setting;
 
@@ -130,8 +129,6 @@ class PagesData extends Component
 
     public $newName;
 
-    public $blocktemplates;
-
     public $arrayIdField;
 
     public $iconclass;
@@ -170,8 +167,6 @@ class PagesData extends Component
     public array $relationshipSearch = [];
 
     public $setting;
-
-    public $cssClassname;
 
     public $filteredIcons = [];
 
@@ -226,19 +221,6 @@ class PagesData extends Component
             $this->land = $this->page->land ?? config('app.locale', 'de');
         }
 
-        // These barely ever change but mount() re-runs on every single
-        // interaction (see resetPageComponent()), so they're cached to avoid
-        // re-querying them on every click. Block/Page/Datafield/Meta all
-        // flush the whole cache on write, so this stays fresh automatically.
-        $this->cssClassname = cache()->rememberForever(
-            'meta-css-classname-list',
-            fn () => Meta::where('key', 'css-classname')->get(),
-        );
-
-        $this->blocktemplates = cache()->rememberForever(
-            'blocktemplates-list',
-            fn () => Blocktemplates::orderBy('order')->get(),
-        );
     }
 
     #[On('reload-pages-data')]
