@@ -226,15 +226,19 @@ class PagesData extends Component
             $this->land = $this->page->land ?? config('app.locale', 'de');
         }
 
-        $this->cssClassname = Meta::where('key', 'css-classname')
-            ->get();
+        // These barely ever change but mount() re-runs on every single
+        // interaction (see resetPageComponent()), so they're cached to avoid
+        // re-querying them on every click. Block/Page/Datafield/Meta all
+        // flush the whole cache on write, so this stays fresh automatically.
+        $this->cssClassname = cache()->rememberForever(
+            'meta-css-classname-list',
+            fn () => Meta::where('key', 'css-classname')->get(),
+        );
 
-        $this->blocktemplates = Blocktemplates::orderBy('order')->get();
-
-        $this->pages = Page::orderBy('order', 'asc')
-            ->get()
-            ->map(fn ($page) => ['id' => $page->id, 'name' => $page->title])
-            ->toArray();
+        $this->blocktemplates = cache()->rememberForever(
+            'blocktemplates-list',
+            fn () => Blocktemplates::orderBy('order')->get(),
+        );
     }
 
     #[On('reload-pages-data')]
@@ -278,6 +282,13 @@ class PagesData extends Component
         // Default the picker to the current page, so confirming without
         // changing the selection simply duplicates the block in place.
         $this->copyTargetPageId = $this->page->id;
+        $this->pages = cache()->rememberForever(
+            'pages-picker-list',
+            fn () => Page::orderBy('order', 'asc')
+                ->get()
+                ->map(fn ($page) => ['id' => $page->id, 'name' => $page->title])
+                ->toArray(),
+        );
         $this->FormCopyToPage = true;
     }
 

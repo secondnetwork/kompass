@@ -21,6 +21,21 @@ class Blocktemplates extends Model
     // ];
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (): void {
+            cache()->flush();
+        });
+        static::updating(function (): void {
+            cache()->flush();
+        });
+        static::deleting(function (): void {
+            cache()->flush();
+        });
+    }
+
     /**
      * The field definitions (datafield blueprints) for this template.
      */
