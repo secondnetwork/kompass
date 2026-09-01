@@ -32,7 +32,7 @@ class EditableName extends Component
     public function savename()
     {
         if ($this->newName) {
-            Block::whereId($this->itemblocks->id)->update(['name' => $this->newName]);
+            $this->itemblocks->update(['name' => $this->newName]);
         }
 
         $this->isEditing = false;

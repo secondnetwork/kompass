@@ -507,11 +507,11 @@ class PostsData extends Component
     public function updatestatus($id, $status)
     {
         if ($status == 'draft') {
-            Block::where('id', $id)->update(['status' => 'draft']);
+            Block::findOrFail($id)->update(['status' => 'draft']);
             $this->dispatch('status');
         }
         if ($status == 'published') {
-            Block::where('id', $id)->update(['status' => 'published']);
+            Block::findOrFail($id)->update(['status' => 'published']);
             $this->dispatch('status');
         }
         $this->resetPageComponent();
@@ -520,10 +520,10 @@ class PostsData extends Component
     public function statusPost($id, $status)
     {
         if ($status == 'draft') {
-            Post::where('id', $id)->update(['status' => 'draft']);
+            Post::findOrFail($id)->update(['status' => 'draft']);
         }
         if ($status == 'published') {
-            Post::where('id', $id)->update(['status' => 'published']);
+            Post::findOrFail($id)->update(['status' => 'published']);
         }
 
         $this->resetPageComponent();
@@ -573,7 +573,7 @@ class PostsData extends Component
         }
 
         if ($publisheded == true) {
-            Post::where('id', $id)->update(['status' => 'published']);
+            Post::findOrFail($id)->update(['status' => 'published']);
             $this->dispatch('status');
         }
 
@@ -594,14 +594,14 @@ class PostsData extends Component
 
         if (! empty($validateData['blocks'])) {
             foreach ($validateData['blocks'] as $itemg) {
-                Block::whereId($itemg['id'])->update($itemg);
+                Block::findOrFail($itemg['id'])->update($itemg);
             }
         }
 
         if (! empty($validateData['fields'])) {
 
             foreach ($validateData['fields'] as $itemg) {
-                Datafield::whereId($itemg['id'])->update($itemg);
+                Datafield::findOrFail($itemg['id'])->update($itemg);
                 // foreach($itemg['items'] as $item){
                 //     block::whereId($item['value'])->update(['order' => $item['order']]);
                 // }
@@ -622,14 +622,14 @@ class PostsData extends Component
 
     public function removemediaThumbnails($id)
     {
-        Post::whereId($id)->update(['thumbnails' => null]);
+        Post::findOrFail($id)->update(['thumbnails' => null]);
         $this->post = Post::findOrFail($this->post->id);
         $this->dispatch('status');
     }
 
     public function removemedia($id)
     {
-        Datafield::whereId($id)->update(['data' => null]);
+        Datafield::findOrFail($id)->update(['data' => null]);
         $this->resetPageComponent();
     }
 

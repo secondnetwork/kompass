@@ -56,11 +56,10 @@ class FieldEditor extends Component
     public function saveField() // Umbenannt von Upsave, kein Parameter
     {
 
-        Blockfields::whereId($this->field->id)->update([
+        $this->field->update([
             'name' => $this->name,
             'grid' => $this->grid,
             'type' => $this->type,
-
         ]);
 
         session()->flash('message-field-'.$this->field->id, 'Feld gespeichert.');
