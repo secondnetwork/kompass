@@ -39,13 +39,17 @@
                             <th class="text-right">{{ __('Actions') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody x-data="{ openTenantId: null }">
                         @foreach ($tenants as $tenant)
+                            @php $endpoints = $this->getEndpoints($tenant['uuid']); @endphp
                             <tr wire:key="saml2-tenant-{{ $tenant['id'] }}">
                                 <td class="font-mono text-xs">{{ $tenant['key'] }}</td>
                                 <td class="max-w-[16rem] truncate text-sm">{{ $tenant['idp_entity_id'] }}</td>
                                 <td class="max-w-[16rem] truncate text-sm text-base-content/70">{{ $tenant['idp_login_url'] }}</td>
                                 <td class="text-right whitespace-nowrap">
+                                    <button type="button" @click="openTenantId = (openTenantId === {{ $tenant['id'] }} ? null : {{ $tenant['id'] }})" class="btn btn-ghost btn-xs" title="{{ __('SP endpoints for the IdP') }}">
+                                        <x-tabler-link class="size-4" />
+                                    </button>
                                     <button wire:click="edit({{ $tenant['id'] }})" class="btn btn-ghost btn-xs" title="{{ __('Edit') }}">
                                         <x-tabler-edit class="size-4" />
                                     </button>
@@ -54,6 +58,25 @@
                                             class="btn btn-ghost btn-xs text-error" title="{{ __('Delete') }}">
                                         <x-tabler-trash class="size-4" />
                                     </button>
+                                </td>
+                            </tr>
+                            <tr x-show="openTenantId === {{ $tenant['id'] }}" x-cloak wire:key="saml2-tenant-{{ $tenant['id'] }}-endpoints">
+                                <td colspan="4" class="bg-base-200/60">
+                                    <div class="p-3 grid gap-2">
+                                        <p class="text-xs font-semibold text-base-content/60">{{ __('Give these to your identity provider when registering this app:') }}</p>
+                                        @foreach ([
+                                            __('SP Entity ID / Metadata URL') => $endpoints['metadata'],
+                                            __('ACS URL') => $endpoints['acs'],
+                                            __('SLS URL') => $endpoints['sls'],
+                                        ] as $label => $value)
+                                            <div class="grid gap-1">
+                                                <span class="text-xs text-base-content/50">{{ $label }}</span>
+                                                <input type="text" readonly value="{{ $value }}"
+                                                    onclick="this.select()"
+                                                    class="input input-bordered input-sm font-mono text-xs w-full" />
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
