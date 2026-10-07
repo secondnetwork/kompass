@@ -26,10 +26,12 @@
         hue: 0,
         alpha: 1,
         input: '',
+        saved: '',
         swatches: @js(array_values((array) $palette)),
 
         init() {
             this.parse(@js($value));
+            this.saved = this.build();
         },
 
         // Seed internal state from any incoming value (or empty).
@@ -125,10 +127,12 @@
             if (emit) this.emit();
         },
 
-        // Live-validate the text field; only commit when it parses.
-        commit(v) {
+        // Live-validate the text field and update the preview; pass emit=true only on Enter/blur
+        // so partial values (e.g. #abc while typing #abcdef) are never saved.
+        commit(v, emit = false) {
             if (this.allowEmpty && v.trim() === '') {
-                this.clear();
+                this.empty = true;
+                if (emit) this.emit();
                 return;
             }
             const n = this.normalize(v);
@@ -137,7 +141,10 @@
                 this.hex = n.hex;
                 this.alpha = n.alpha;
                 this.hue = this.hexToHue(n.hex);
-                this.emit();
+                if (emit) this.emit();
+            } else if (emit) {
+                // Invalid on Enter/blur: fall back to the last saved value instead of a never-saved preview.
+                this.parse(this.saved);
             }
         },
 
@@ -162,7 +169,10 @@
         },
 
         // Notify the parent via a bubbling event; $event.detail is the value string.
-        emit() { this.$dispatch('changed', this.build()); },
+        emit() {
+            this.saved = this.build();
+            this.$dispatch('changed', this.saved);
+        },
 
         get alphaPct() { return Math.round(this.alpha * 100); },
         get isValid() { return (this.allowEmpty && this.input.trim() === '') || this.normalize(this.input) !== null; },
@@ -244,7 +254,7 @@
 
             {{-- Hex text input --}}
             <input type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="9"
-                x-model="input" @input="commit($event.target.value)" @blur="sync()"
+                x-model="input" @input="commit($event.target.value)" @change="commit($event.target.value, true)" @blur="sync()"
                 :aria-invalid="!isValid" placeholder="{{ $placeholder }}"
                 class="input input-sm input-bordered w-full font-mono"
                 :class="!isValid ? 'input-error' : ''" />
