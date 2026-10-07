@@ -13,8 +13,11 @@
     ]);
 @endphp
 
+{{-- wire:ignore keeps the picker (and its open panel) intact while Livewire re-renders after a change.
+     Pass a wire:key that changes when the picker should show a different record's value. --}}
 <div
     data-slot="color-picker"
+    wire:ignore
     x-data="{
         open: false,
         allowEmpty: @js((bool) $allowEmpty),
@@ -106,19 +109,20 @@
             return h < 0 ? h + 360 : h;
         },
 
-        setHue(h) {
+        // Sliders update the preview live; pass emit=true only on release to avoid a save per drag step.
+        setHue(h, emit = false) {
             this.empty = false;
             this.hue = Number(h);
             this.hex = this.hslToHex(this.hue);
             this.input = this.build();
-            this.emit();
+            if (emit) this.emit();
         },
 
-        setAlpha(a) {
+        setAlpha(a, emit = false) {
             this.empty = false;
             this.alpha = Number(a) / 100;
             this.input = this.build();
-            this.emit();
+            if (emit) this.emit();
         },
 
         // Live-validate the text field; only commit when it parses.
@@ -214,7 +218,7 @@
             {{-- Hue slider --}}
             <div class="flex flex-col gap-1.5">
                 <input type="range" min="0" max="360" step="1" :value="hue"
-                    @input="setHue($event.target.value)" aria-label="{{ __('Hue') }}"
+                    @input="setHue($event.target.value)" @change="setHue($event.target.value, true)" aria-label="{{ __('Hue') }}"
                     class="range range-sm w-full rounded-full [--range-fill:0] [--range-bg:transparent] [--range-thumb:#fff] [--range-thumb-size:1rem]"
                     style="background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);" />
             </div>
@@ -226,7 +230,7 @@
                     <span x-text="alphaPct + '%'" class="font-mono"></span>
                 </div>
                 <input type="range" min="0" max="100" step="1" :value="alphaPct"
-                    @input="setAlpha($event.target.value)" aria-label="{{ __('Opacity') }}"
+                    @input="setAlpha($event.target.value)" @change="setAlpha($event.target.value, true)" aria-label="{{ __('Opacity') }}"
                     class="range range-sm w-full rounded-full [--range-fill:0] [--range-bg:transparent] [--range-thumb:#fff] [--range-thumb-size:1rem]"
                     :style="`background-image:
                         linear-gradient(to right, transparent, ${hex}),

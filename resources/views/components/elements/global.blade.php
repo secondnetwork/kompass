@@ -103,6 +103,7 @@
                                 @case('color')
                                     <div class="max-w-xs">
                                         <x-kompass::color-picker
+                                            wire:key="global-color-{{ $selectedItem }}"
                                             :value="$valuedata"
                                             @changed="$wire.set('valuedata', $event.detail)"
                                         />

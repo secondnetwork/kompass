@@ -16,6 +16,7 @@
             </div>
             <div class="w-full max-w-xs">
                 <x-kompass::color-picker
+                    wire:key="setup-color-{{ $field }}"
                     :value="$this->{$field}"
                     @changed="$wire.set('{{ $field }}', $event.detail)"
                 />
