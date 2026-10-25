@@ -379,6 +379,7 @@ return [
         'true_false' => ['label' => 'true/false', 'icon' => 'tabler-toggle-left', 'display_component' => 'block.true_false', 'edit_widget' => 'input'],
         'file' => ['label' => 'File', 'icon' => 'tabler-file-zip', 'display_component' => 'block.file', 'edit_widget' => 'input'],
         'color' => ['label' => 'Color', 'icon' => 'tabler-palette', 'display_component' => 'block.color', 'edit_widget' => 'input'],
+        'code' => ['label' => 'Code', 'icon' => 'tabler-code', 'display_component' => 'block.code', 'edit_widget' => 'input'],
         'oembed' => ['label' => 'Video embed', 'icon' => 'tabler-brand-youtube', 'display_component' => 'block.text', 'edit_widget' => 'oembed', 'select' => false],
     ],
 

@@ -297,6 +297,25 @@ class KompassCommand extends Command implements PromptsForMissingInput
 
         // Publish Passkeys config
         $this->callSilent('vendor:publish', ['--tag' => 'kompass.passkeys-config', '--force' => true]);
+
+        // Publish Livewire's compiled frontend assets
+        $this->publishLivewireAssets();
+    }
+
+    /**
+     * Livewire ships its compiled frontend assets in the package's "dist" folder,
+     * which only exists in tagged releases (dev installs have to be built manually).
+     * Publish them so the JavaScript can be served from the public directory.
+     */
+    protected function publishLivewireAssets(): void
+    {
+        if (! File::isDirectory(base_path('vendor/livewire/livewire/dist'))) {
+            warning('Livewire assets not found in vendor/livewire/livewire/dist - skipping.');
+
+            return;
+        }
+
+        $this->callSilent('vendor:publish', ['--tag' => 'livewire:assets', '--force' => true]);
     }
 
     public function runDatabaseMigrations(bool $fresh = false): void

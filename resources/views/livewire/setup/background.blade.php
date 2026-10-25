@@ -1,15 +1,10 @@
-<div
-    x-data="{
-        adminBackground: @entangle('adminBackground'),
-    }"
- class="max-w-2xl">
+<div class="max-w-2xl">
 
       
-<x-kompass::upload-image 
-    wire:model="adminBackground" 
-    :image="$adminBackground" 
-    delete-action="deleteImage()" 
-    label="{{ __('Background Image') }}" 
+<x-kompass::settings-image-picker
+    :image="$adminBackground"
+    :setting-id="$getId"
+    label="{{ __('Background Image') }}"
 />
 <p class="text-sm leading-6 text-gray-400 mt-1">{{ __('Choose a nice background image to use as your authentication background.') }}</p>
     <div class="py-5 mb-5 border-b border-zinc-200">

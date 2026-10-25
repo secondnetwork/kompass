@@ -2,25 +2,20 @@
 
 namespace Secondnetwork\Kompass\Livewire\Setup;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile; // Importiere Str für die Pfadprüfung
-use Livewire\WithFileUploads;
 use Secondnetwork\Kompass\Models\Setting;
 
 class Background extends Component
 {
-    use WithFileUploads;
-
-    public $color;
-
-    public $adminBackground; // Wird den Bildpfad speichern
+    public $adminBackground;
 
     public $image_overlay_color;
 
-    // Definiere die Datenbank-Keys für die Einstellungen
+    public $FormMedia = false;
+
+    public $getId;
+
     private $dbKeyImage = 'background_image';
 
     private $dbKeyOverlayColor = 'background_image_overlay_color';
@@ -30,21 +25,21 @@ class Background extends Component
 
     public function mount()
     {
-        // Lese Einstellungen aus der Datenbank, Gruppe 'global'
         $globalSettings = Setting::global()->get()->keyBy('key');
 
-        // Weise die Werte den Component-Eigenschaften zu
-        // Verwende optional() und ?? '' für sicheren Zugriff
-        $this->adminBackground = optional($globalSettings->get($this->dbKeyImage))->data ?? '';
-        $this->image_overlay_color = optional($globalSettings->get($this->dbKeyOverlayColor))->data ?? ''; // Standardwert
-    }
+        $this->image_overlay_color = optional($globalSettings->get($this->dbKeyOverlayColor))->data ?? '';
 
-    // Updating Hooks werden ausgelöst, BEVOR sich die Eigenschaft ändert (außer bei FileUpload)
-    // Wir speichern hier direkt, da die Eigenschaft beim Aufruf der Methode $value den NEUEN Wert enthält
+        // The image is picked from the media library, so the setting stores the
+        // media file id. Create the row on the fly to get an id for the picker.
+        $imageSetting = $globalSettings->get($this->dbKeyImage)
+            ?? Setting::create([
+                'key' => $this->dbKeyImage,
+                'group' => 'global',
+                'name' => ucwords(str_replace(['_', '.'], ' ', $this->dbKeyImage)),
+            ]);
 
-    public function updatingColor($value)
-    {
-        $this->updateSettingInDatabase($this->dbKeyColor, $value);
+        $this->getId = $imageSetting->id;
+        $this->adminBackground = Setting::resolveImageUrl($imageSetting->data) ?? '';
     }
 
     public function updatingImageOverlayColor($value)
@@ -52,92 +47,45 @@ class Background extends Component
         $this->updateSettingInDatabase($this->dbKeyOverlayColor, $value);
     }
 
-    // Updated Hooks werden ausgelöst, NACHDEM sich die Eigenschaft geändert hat
-    // Dies ist oft besser für FileUploads, aber die updating-Methode funktioniert auch.
-    // Wir behalten hier updated für adminBackground, wie im Originalcode
-    public function updated($property, $value)
+    public function selectItem($itemId, $action)
     {
-        // Handle den Dateiupload für adminBackground
-        if ($property == 'adminBackground') {
-            if ($value instanceof TemporaryUploadedFile) {
-                // Optional: Lösche das alte Bild, bevor du das neue speicherst
-                $this->deleteImageFile(); // Nur die Datei löschen, nicht den DB-Eintrag
-
-                $filename = $value->getClientOriginalName();
-                $extension = $value->getClientOriginalExtension();
-                // Standardisierter Dateiname
-                $newFilename = 'admin_background.'.$extension;
-
-                // Speichere das Bild im public Disk unter images/auth
-                $path = $value->storeAs('images/auth', $newFilename, 'public');
-
-                // Hole den öffentlichen Pfad/URL
-                $publicPath = Storage::disk('public')->url($path);
-
-                // Speichere den öffentlichen Pfad in der Datenbank
-                $this->updateSettingInDatabase($this->dbKeyImage, $publicPath);
-
-                // Setze die Eigenschaft im Component auf den neuen Pfad
-                $this->adminBackground = $publicPath;
-
-                // Kein value = null mehr nötig, Livewire managed das FileInput Property
-            }
-            // Wenn $value null ist (z.B. Upload abgebrochen), passiert hier nichts.
-            // Das Löschen wird über deleteImage() gehandhabt.
+        if ($action === 'addMedia') {
+            $this->getId = $itemId;
+            $this->FormMedia = true;
+            $this->dispatch('getIdField_changnd', $this->getId, 'setting');
         }
     }
 
+    #[On('refresh-setting')]
+    public function refreshBackgroundImage()
+    {
+        $this->FormMedia = false;
+
+        $setting = Setting::find($this->getId);
+        $this->adminBackground = Setting::resolveImageUrl($setting?->data) ?? '';
+    }
+
+    public function removemedia($id)
+    {
+        Setting::whereId($id)->update(['data' => null]);
+        $this->adminBackground = '';
+    }
+
     /**
-     * Speichert oder aktualisiert ein Einstellungs-Schlüssel-Wert-Paar in der Datenbank.
+     * Saves or updates a setting key/value pair in the database.
      */
     private function updateSettingInDatabase($key, $value)
     {
-        // Verwende den vollständigen Namespace \App\Models\Setting
         Setting::updateOrCreate(
             [
                 'key' => $key,
-                'group' => 'global', // Sicherstellen, dass es in der 'global' Gruppe gespeichert wird
+                'group' => 'global',
             ],
             [
-                'data' => $value, // Speichere den eigentlichen Wert in der 'data' Spalte
-                // Füge einen Namen hinzu, falls der Datensatz neu erstellt wird
-                'name' => ucwords(str_replace(['_', '.'], ' ', $key)), // Z.B. 'background_color' wird zu 'Background Color'
+                'data' => $value,
+                'name' => ucwords(str_replace(['_', '.'], ' ', $key)),
             ]
         );
-
-        // Keine Config::write oder Artisan::call('config:clear') mehr nötig
-    }
-
-    /**
-     * Löscht nur die Bilddatei aus dem Speicher.
-     */
-    private function deleteImageFile()
-    {
-        $imagePath = $this->adminBackground; // Hole den aktuellen Bildpfad aus der Eigenschaft
-
-        // Entferne die Datei aus dem Speicher, falls sie existiert und ein Speicherpfad ist
-        if ($imagePath && Str::startsWith($imagePath, '/storage/')) {
-            // Entferne den '/storage/' Teil, um den Pfad relativ zum public Disk Root zu erhalten
-            $relativePath = str_replace('/storage/', '', $imagePath);
-            if (Storage::disk('public')->exists($relativePath)) {
-                Storage::disk('public')->delete($relativePath);
-            }
-        }
-    }
-
-    public function deleteImage()
-    {
-        // Lösche die Datei aus dem Speicher
-        $this->deleteImageFile();
-
-        // Aktualisiere den Datenbankeintrag, um den Bildpfad zu leeren
-        $this->updateSettingInDatabase($this->dbKeyImage, '');
-
-        // Setze die Component-Eigenschaft auf leer, um die Anzeige zu aktualisieren
-        $this->adminBackground = '';
-
-        // Sende eine Benachrichtigung oder ähnliches
-        // $this->js('savedMessageOpen()');
     }
 
     public function render()

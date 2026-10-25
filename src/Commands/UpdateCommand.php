@@ -67,7 +67,28 @@ class UpdateCommand extends Command
             '--force' => true,
         ]);
 
+        $this->publishLivewireAssets();
+
         info('Assets published.');
+    }
+
+    /**
+     * Livewire ships its compiled frontend assets in the package's "dist" folder,
+     * which only exists in tagged releases (dev installs have to be built manually).
+     * Publish them so the JavaScript can be served from the public directory.
+     */
+    protected function publishLivewireAssets(): void
+    {
+        if (! File::isDirectory(base_path('vendor/livewire/livewire/dist'))) {
+            warning('Livewire assets not found in vendor/livewire/livewire/dist - skipping.');
+
+            return;
+        }
+
+        $this->callSilent('vendor:publish', [
+            '--tag' => 'livewire:assets',
+            '--force' => true,
+        ]);
     }
 
     protected function runMigrations(): void

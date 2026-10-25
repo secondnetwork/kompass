@@ -11,6 +11,12 @@
     $hasChildren = $itemblocks->children->isNotEmpty();
     $showNest = $isContainer || $hasChildren;
 
+    // A container can carry its own datafields next to its children (the hero
+    // headline, the profile intro …). Those are edited in the "Edit block"
+    // offcanvas, so the container itself needs an edit action as well — pure
+    // layout containers (group, accordion) without fields stay untouched.
+    $hasOwnFields = $itemblocks->datafield->isNotEmpty();
+
     // Accordion items always render full-width and stacked on the frontend, so the
     // backend preview should ignore the configurable layout grid for its children.
     $isAccordion = $itemblocks->type === 'accordiongroup';
@@ -94,6 +100,11 @@
 
                 {{-- Inline icons: visible when container >= 380px --}}
                 <div class="hidden @[280px]:flex items-center gap-1">
+                    @if ($hasOwnFields)
+                        <span wire:click="edit({{ $itemblocks->id }})" class="flex justify-center" title="{{ __('Edit') }}">
+                            <x-tabler-edit class="cursor-pointer stroke-current text-blue-500 size-5 md:size-6" />
+                        </span>
+                    @endif
                     <x-kompass::nav-itemgroup :itemblocks="$itemblocks" />
                     <span wire:click="selectitem('addBlock', {{ $itemblocks->id }},'page',{{ $itemblocks->id }})">
                         <x-tabler-layout-grid-add class="cursor-pointer stroke-current size-5 md:size-6 text-blue-600" />
@@ -141,6 +152,14 @@
                         x-transition:leave-end="opacity-0 scale-95"
                         class="absolute right-0 top-7 z-50 w-44 bg-base-100 border border-neutral-200 rounded-md shadow-md py-1"
                         x-cloak>
+                        @if ($hasOwnFields)
+                            <button wire:click="edit({{ $itemblocks->id }})" @click="dropdownOpen = false"
+                                class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
+                                <x-tabler-edit class="size-4 text-blue-500 shrink-0" />
+                                {{ __('Edit') }}
+                            </button>
+                            <div class="h-px my-1 bg-neutral-100"></div>
+                        @endif
                         <button wire:click="selectitem('addBlock', {{ $itemblocks->id }},'page',{{ $itemblocks->id }})" @click="dropdownOpen = false"
                             class="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-gray-700 hover:bg-neutral-50">
                             <x-tabler-layout-grid-add class="size-4 text-blue-600 shrink-0" />
