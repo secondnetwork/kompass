@@ -151,7 +151,7 @@
               
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="">
-                    <a href="index.html" class="flex items-center mb-4">
+                    <a href="/" class="flex items-center mb-4">
                            <x-kompass::elements.logo
                     :height="setting('global.logo_height', '2')" {{-- Default height if not set --}}
                     :isImage="(setting('global.logo_type', 'text') == 'image')" {{-- Default type 'text' if not set --}}

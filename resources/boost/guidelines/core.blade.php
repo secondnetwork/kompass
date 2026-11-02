@@ -26,10 +26,10 @@ tree of **blocks** (ordered, morphed onto a page), each block holding **datafiel
 @verbatim
 ```bash
 # content pipeline
-php artisan db:seed --class=SecondnetworkLandingSeeder --force   # idempotent pages/blocks/media/menus
 php artisan tinker --execute="cache()->flush();"                  # after manual DB edits
+php artisan config:clear                                          # after editing config/kompass.php
 
-# host app hygiene (see AGENTS.md)
+# host app hygiene
 vendor/bin/pint --dirty --format agent    # after ANY PHP change
 php artisan test --compact
 bun run build                             # after touching resources/css|js
@@ -44,4 +44,3 @@ bun run build                             # after touching resources/css|js
 | Edit section styling | builder → block Settings → Advanced → `css-classname` / `id-anchor` / `layout` (meta) |
 
 **Full architecture map, recipes and gotchas: load the `kompass-development` skill.**
-Detailed command/style/security rules live in this project's Boost guidelines.

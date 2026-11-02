@@ -78,6 +78,18 @@
           <li><a wire:navigate @if(Route::is('admin.account*')  ) class="active" @endif href="/admin/account"><x-tabler-users class="icon-lg"/><span>{{ __('User account') }}</span></a></li>
           <li><a wire:navigate @if(Route::is('admin.roles*')  ) class="active" @endif href="/admin/roles"><x-tabler-lock-access class="icon-lg"/><span>{{ __('Manage Role') }}</span></a></li>
           @endrole
+
+          @php
+            $adminNav = collect(config('kompass.admin_nav', []))->filter(
+                fn ($navItem) => empty($navItem['roles']) || auth()->user()?->hasAnyRole($navItem['roles'])
+            );
+          @endphp
+          @if ($adminNav->isNotEmpty())
+          <div class="uppercase text-xs mt-5 px-6 text-base-content/70 font-semibold">{{ __('More') }}</div>
+          @foreach ($adminNav as $navItem)
+          <li><a wire:navigate @if(Route::is($navItem['active'] ?? '')) class="active" @endif href="{{ $navItem['url'] }}"><x-dynamic-component :component="$navItem['icon'] ?? 'tabler-point'" class="icon-lg"/><span>{{ __($navItem['label']) }}</span></a></li>
+          @endforeach
+          @endif
         </ul>
 
     

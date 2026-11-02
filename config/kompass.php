@@ -32,6 +32,13 @@ return [
 
     'middleware' => ['web'],
 
+    /*
+    | Extra admin sidebar entries, rendered after the built-in ones.
+    | Each: ['label' => 'Projects', 'icon' => 'tabler-folder', 'url' => '/admin/projects',
+    |        'active' => 'admin.projects*' (route-name pattern), 'roles' => ['admin','editor'] (optional)]
+    */
+    'admin_nav' => [],
+
     'storage' => [
         'disk' => env('FILESYSTEM_DRIVER', 'public'),
     ],

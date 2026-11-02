@@ -25,7 +25,6 @@ use Secondnetwork\Kompass\Commands\PruneMediaVariantsCommand;
 use Secondnetwork\Kompass\Commands\UpdateCommand;
 use Secondnetwork\Kompass\DataWriter\FileWriter;
 use Secondnetwork\Kompass\DataWriter\Repository;
-use Secondnetwork\Kompass\Livewire\Frontend\Pageview;
 use Secondnetwork\Kompass\Models\Datafield;
 use Secondnetwork\Kompass\Models\Page;
 use Secondnetwork\Kompass\Models\Post;
@@ -121,8 +120,6 @@ class KompassServiceProvider extends ServiceProvider
         Livewire::addLocation(
             classNamespace: 'Secondnetwork\\Kompass\\Livewire'
         );
-
-        Livewire::component('pages::page', Pageview::class);
     }
 
     public function register(): void

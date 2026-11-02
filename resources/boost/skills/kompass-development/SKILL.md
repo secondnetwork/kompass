@@ -42,7 +42,7 @@ Page (morph owner, soft deletes)
 | Repo | Path | Contains |
 |---|---|---|
 | Package (git: `github.com/secondnetwork/kompass`) | `webseiten/packages/kompass` | `src/` (registries, Livewire admin, models, migrations, routes), `config/kompass.php`, `resources/views` (`kompass::` namespace: admin UI, block-controls, field widgets), `resources/boost/` (this skill + guidelines), `stubs/` |
-| Host app | `webseiten/kompass-strater-kit` (branch `sn`) | `config/kompass.php` (full copy), **frontend block views** `resources/views/components/blocks/*`, page/layout views, seeders, theme CSS/JS |
+| Host app | `webseiten/kompass-strater-kit` (branch `main`) | `config/kompass.php` (full copy), **frontend block views** `resources/views/components/blocks/*`, page/layout views, seeders, theme CSS/JS |
 
 The package is linked into the host via composer symlink
 `vendor/secondnetwork/kompass → packages/kompass/`.
@@ -77,7 +77,7 @@ block_registry()->defaultFields($type, $blocktemplateId); // datafields created 
 block_registry()->palette();                // tiles of the add-block panel
 
 field_registry()->fieldComponent($type);    // 'block.text' → kompass::block.text
-field_registry()->fieldEditWidget($type);   // input | image | oembed | editor
+field_registry()->fieldEditWidget($type);   // input | image | oembed | editor | gallery
 field_registry()->fieldSelectOptions();     // options for the field-type <select>
 ```
 
@@ -114,8 +114,8 @@ routes/web.php (HOST)           Route::livewire('/', 'pages::page')  +  /{slug}
        └─ resources/views/layouts/main.blade.php            (fonts, header, footer)
             └─ page.blade.php loop over blocks:
                  <section class="{{ getMeta('css-classname') }}" id="{{ getMeta('id-anchor') }}">
-                   <div class="{{ getMeta('layout') ?? 'fullpage' }}">
-                     <x-dynamic-component :component="'blocks.'.$item->type" :item="$item" />
+                   <div class="{{ getMeta('layout') }}">      (skipped for type 'group')
+                     <x-dynamic-component :component="'blocks.'.$item->type" :item="$item" :is-first="$loop->first" />
 ```
 
 * `pages.layout` is **not** a view name — it is the *Page Template* enum
@@ -125,10 +125,8 @@ routes/web.php (HOST)           Route::livewire('/', 'pages::page')  +  /{slug}
 * `page.blade.php` skips a block silently if `view()->exists('components.blocks.'.$type)`
   is false and only prints a dashed red hint when debug mode is on.
 
-> Caveat: the package provider imports `Livewire\Frontend\Pageview` and aliases
-> `pages::page` to it, but that class was deleted on `main`. The host resolves
-> `pages::page` to its own view component. If you ever see "class not found" for
-> `pages::page`, this stale import is the reason — fix it in `src/KompassServiceProvider.php`.
+> `pages::page` is resolved by the **host** (`resources/views/pages/page/page.php`); the package
+> registers no frontend page component.
 
 ## 6. Recipes
 
@@ -184,7 +182,8 @@ routes/web.php (HOST)           Route::livewire('/', 'pages::page')  +  /{slug}
 * `@props(['item' => ''])` — **never a hyphenated prop name** (see pitfalls).
 * Read content with `$item->datafield` (ordered by `order`).
 * Children: `$item->children->sortBy('order')`, rendered with `<x-blocks.components :item="$child" />`.
-* Rich text: `wysiwyg_blocks(null, $fields->get('intro'))` + `<x-blocks.partials.rich :blocks="…" />`.
+* Rich text: `wysiwyg_blocks($item, $field)` returns the blocks to render — see the host's
+  `components/blocks/wysiwyg.blade.php` and `block-master.blade.php`.
 * Section colours/backgrounds come from the page wrapper via meta (see 6.4) — keep the
   root element colour-agnostic and add `not-prose` (the layout wraps content in
   `<main class="prose">`).
@@ -226,7 +225,8 @@ the key to the type's `controls` array. Existing keys: `layout`, `alignment`, `l
 * `layout` → the inner column (`fullpage` | `popout` | `content`)
 
 So section colours are **editable in the builder** (Settings → Advanced → Classname)
-and Blade views stay colour-agnostic. Seeder example:
+and Blade views stay colour-agnostic. Seeder example (`block()`/`rich()` are illustrative
+helpers you define in your own seeder):
 
 ```php
 $this->block($page, [
@@ -239,13 +239,13 @@ $this->block($page, [
 
 ### 6.5 Seed content
 
-`database/seeders/SecondnetworkLandingSeeder.php` (host) is the reference: it is
-idempotent — it deletes the blocks of the pages it owns, rebuilds them, copies media
-into `config('kompass.storage.disk')`, upserts `File` rows and `Menuitem`s, then
-`cache()->flush()`.
+`database/seeders/PageSeeder.php` (host) is the reference: it inserts menus, menu items
+and pages via `DB::table()` / the `Page` and `Datafield` models. Seeders write through
+Eloquent or the query builder, so call `cache()->flush()` at the end (query-builder
+writes do not fire the model `boot()` flush).
 
 ```bash
-php artisan db:seed --class=SecondnetworkLandingSeeder --force
+php artisan db:seed --class=PageSeeder --force
 ```
 
 Verify with:
@@ -274,6 +274,34 @@ Key `PagesData` actions (useful when extending the builder):
 | `selectitem($action, $itemId, …)` | `addBlock` \| `addMedia` \| `deleteblock` \| `copyToPage` |
 | `handleSort($item, $position, $groupId)` | drag & drop incl. moving between containers |
 | `updatestatus($id,$status)` / `savename` / `updateLayoutGrid` / `saveset` | block status, name, grid, meta |
+
+### 6.7 Extend the admin (own pages + sidebar entry)
+
+The built-in sidebar lives in `resources/views/admin/layouts/app.blade.php`. Host apps add
+their own admin pages with a route and an entry in `config('kompass.admin_nav')`:
+
+```php
+// routes/web.php (host) — same gate as the package routes
+Route::middleware(['web', 'auth', 'role:admin|manager|editor'])
+    ->prefix('admin')->name('admin.')
+    ->withHead(robots: 'noindex, nofollow')
+    ->group(function (): void {
+        Route::get('projekte', ProjectsTable::class)->name('projekte');
+    });
+
+// config/kompass.php (host)
+'admin_nav' => [
+    ['label' => 'Projekte', 'icon' => 'tabler-folder', 'url' => '/admin/projekte',
+     'active' => 'admin.projekte*', 'roles' => ['admin', 'manager', 'editor']],
+],
+```
+
+* `roles` is optional (Spatie `hasAnyRole`); `active` is a route-name pattern; `icon` is a
+  Blade Tabler icon component name.
+* Override package views by copying them to `resources/views/vendor/kompass/…`
+  (e.g. `livewire/settings/saml2.blade.php` in `bb_landing_page`).
+* Prefer `role:admin|manager|editor` over bare `verified`, otherwise any logged-in user reaches the page.
+* Requires a Kompass version that ships `admin_nav` (older installs such as v1.2.5 ignore the key).
 
 ## 7. Gotchas & pitfalls
 
@@ -307,30 +335,29 @@ Key `PagesData` actions (useful when extending the builder):
 composer install && php artisan migrate
 vendor/bin/rector process           # static analysis
 php artisan optimize:clear
-bun install && npm run build        # package assets → public/assets/build
+bun install && bun run build        # package assets → public/assets/build (bun.lock is the lockfile in use)
 
 # host app (kompass-strater-kit)
 vendor/bin/pint --dirty --format agent   # after ANY PHP change (required by AGENTS.md)
 php artisan test --compact
 bun run dev | bun run build
-php artisan db:seed --class=SecondnetworkLandingSeeder --force
+php artisan db:seed --class=PageSeeder --force
 
 # boost (host app) — this skill is discovered from resources/boost/skills
 php artisan boost:list-skills
 php artisan boost:update
 ```
 
-## 9. Reference implementation: the secondnetwork port
+## 9. Reference implementation
 
-The host app contains a complete, working port of a real landing page
-(`webseiten/sn_op/index.html`) — the fastest way to see every concept end to end:
+The host app (`kompass-strater-kit`) shows every concept end to end:
 
-* Config: `kompass-strater-kit/config/kompass.php` → 10 `sn*` block types (hero,
-  snprofile, sntimeline, snfeature, sncode, sncta, snstat, snstack, snentry, sncard)
-* Frontend: `resources/views/components/blocks/{hero,snprofile,snstat,…}.blade.php`
-* Design system: `resources/css/theme.css` (`sn-*` utilities, CSS vars, orb animation)
-* Motion: `resources/js/plugins/sn-orb.js` (IntersectionObserver reveal + tilt)
-* Content: `database/seeders/SecondnetworkLandingSeeder.php` (pages, blocks, media, menus)
+* Config: `config/kompass.php` → block types `wysiwyg, group, accordiongroup, button, video,
+  gallery, anchormenu, relationship`; field types `text, wysiwyg, image, gallery, link,
+  true_false, file, color, oembed`
+* Frontend views: `resources/views/components/blocks/*.blade.php` (e.g. `wysiwyg`, `group`,
+  `relationship`) and the wrapper `resources/views/pages/page/page.blade.php`
+* Content: `database/seeders/PageSeeder.php` (pages, menus)
 * Layout/fonts/header/footer: `resources/views/layouts/main.blade.php`
 
 ## 10. Further reading
